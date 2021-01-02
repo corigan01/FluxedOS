@@ -1,3 +1,7 @@
+#clean up
+rm -r isodir
+rm FluxedOS.*
+
 #assemble boot.s file
 as --32 boot.s -o boot.o
 echo "ASM COMPILED"

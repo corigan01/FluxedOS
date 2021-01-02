@@ -1,10 +1,17 @@
 #ifndef KERNAL_CORE
 #define KERNAL_CORE
 
-typedef unsigned char uint9_t;
+typedef unsigned char uint8_t;
 typedef unsigned short uint16_t;
 typedef unsigned int uint32_t;
 typedef uint16_t size_t;
+
+
+typedef unsigned char uint8;
+typedef unsigned short uint16;
+typedef unsigned int uint32;
+
+
 
 #define NULL 0x00
 
