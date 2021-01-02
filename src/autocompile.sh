@@ -27,6 +27,7 @@ cp grub.cfg isodir/boot/grub/grub.cfg
 grub-mkrescue -o FluxedOS.iso isodir
 echo "ISO FILE MADE"
 
+
 #run it in qemu
 screen -d -m qemu-system-x86_64 -cdrom FluxedOS.iso
 echo "QEMU RAN"
