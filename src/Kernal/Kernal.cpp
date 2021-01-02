@@ -9,22 +9,12 @@ int kernal_entry() {
     print_string("FLUXED OS -------");
     print_new_line();
 
-    char keystore = 0;
-    while(1) {
-        char keycode = get_input_keycode();
+    String str;
 
-        if (keystore != keycode) {
+    str = "test";
+    str = str + str;
 
-            if (keycode == KEY_ENTER) {
-                print_new_line();
-            }
-            else {
-                char ch = get_ascii_char(keycode);
-                print_char(ch);
-            }
-            keystore = keycode;
-        }
-    }
+    print_string((char*)str.c_str());
 
     while(1){};
     return 0;

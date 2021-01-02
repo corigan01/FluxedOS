@@ -29,6 +29,7 @@ enum vga_color {
     YELLOW,
     WHITE,
 };
+
 //index for video buffer array
 uint32 vga_index;
 //counter to store new lines

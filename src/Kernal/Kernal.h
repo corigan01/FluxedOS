@@ -3,7 +3,7 @@
 
 #include "Term/Term.h"
 #include "IO/Keyboard.h"
-
+#include "String/String.h"
 
 
 #endif // !KERNAL_H_
