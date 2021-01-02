@@ -1,7 +1,7 @@
-#include "core.h"
-
 #ifndef STRING_KERNAL
 #define STRING_KERNAL KERNAL_NEEDED
+
+#include "../core/core.h"
 
 class String
 {
@@ -19,9 +19,7 @@ public:
 		this->Data = _str_i;
 	}
 
-	String operator+(String _str_i) {
-		char* _tem_move = _str_i.c_str();
-	}
+
 
 	uint16_t size() {
 		return this->_Size;
