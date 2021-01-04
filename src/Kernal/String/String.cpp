@@ -14,6 +14,11 @@ const char* String::c_str() {
 		return Data;
 }
 
+char * String::cs_ctr() {
+	return (char*)Data;
+}
+
+
 void String::operator=(const char* _str_i) {
 		this->_Size = find_size(_str_i);
 
@@ -48,3 +53,4 @@ size_t String::find_size(const char* _str_i) {
 String::~String()
 {
 }
+

@@ -10,6 +10,8 @@ public:
 	~String();
 
 	const char* c_str();
+	char *cs_ctr();
+
 	uint16_t size();
 
 	void operator=(const char* _str_i);
@@ -25,6 +27,7 @@ private:
 	int _Size;
 
 };
+
 
 
 
