@@ -8,21 +8,17 @@
 # "by Main Menu - QUEST"
 #
 
-#clean up
-rm -r isodir &> /dev/null
-rm FluxedOS.* &> /dev/null
-
-
-#assemble boot.s file
-as --32 boot.s -o boot.o
-echo "ASM COMPILED"
-
+echo "FluxedCpp Started!"
 awk '{if ($1 == $1) print $1, $2, $3 + 1;}' Kernal/BUILD.h > temp.txt
 cp temp.txt Kernal/BUILD.h 
 rm temp.txt
 
 printf "%s" "$(<Kernal/BUILD.h)"
 echo
+
+#assemble boot.s file
+as --32 boot.s -o boot.o
+echo "ASM COMPILED"
 
 compile() {
     OUTPUT="$1"
@@ -72,6 +68,7 @@ echo "CPP COMPILED"
 #linking the kernel with kernel.o and boot.o files
 if ld -m elf_i386 -T linker.ld *.o -o FluxedOS.bin -nostdlib &> "LINKOUTPUT.txt"; then
         echo "CPP + ASM LINKED"
+        rm *.o &> /dev/null
 else
 
             #ouput the errors
@@ -97,5 +94,13 @@ echo "ISO FILE MADE"
 
 
 #run it in qemu
-screen -d -m qemu-system-x86_64 -cdrom FluxedOS.iso
+#screen -d -m 
+qemu-system-x86_64 -cdrom FluxedOS.iso
 echo "QEMU RAN"
+
+#clean up
+rm -r isodir &> /dev/null
+rm FluxedOS.* &> /dev/null
+rm G++OUTPUT.txt &> /dev/null
+rm $(find ./ -type f -iregex '.*/.*\.\(gch\)$') &> /dev/null
+echo "CLEANED FILES"
