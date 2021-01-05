@@ -2,6 +2,9 @@
 #define STRING_KERNAL KERNAL_NEEDED
 
 #include "../core/core.h"
+
+extern "C++"
+
 class String
 {
 public:
@@ -16,6 +19,7 @@ public:
 
 	void operator=(const char* _str_i);
 	void operator=(String *str);
+	char operator[](int i);
 	
 	String operator+(String str);
 

@@ -39,6 +39,10 @@ String String::operator+(String str) {
     return String(s);
 }
 
+char String::operator[](int i) {
+	return Data[i];
+}
+
 uint16_t String::size() {
 		return this->_Size;
 }

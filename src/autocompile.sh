@@ -1,3 +1,4 @@
+echo "FluxedCpp Started!"
 #      ________                    __   ______          
 #     / ____/ /_  ___  _____  ____/ /  / ____/___  ____ 
 #    / /_  / / / / / |/_/ _ \/ __  /  / /   / __ \/ __ \
@@ -8,10 +9,13 @@
 # "by Main Menu - QUEST"
 #
 
-echo "FluxedCpp Started!"
 awk '{if ($1 == $1) print $1, $2, $3 + 1;}' Kernal/BUILD.h > temp.txt
 cp temp.txt Kernal/BUILD.h 
 rm temp.txt
+
+rm *.o &> /dev/null
+echo "CLEANED LIB FILES"
+
 
 printf "%s" "$(<Kernal/BUILD.h)"
 echo
@@ -31,7 +35,7 @@ compile() {
     #else
         #md5sum $OUTPUT > "$f_name old.txt"
 
-        if g++ -m32 -c $OUTPUT  -ffreestanding -O2 -Wall -Wextra -Wl,-ekernal_entry -fdiagnostics-color=always &> "G++OUTPUT.txt"; then
+        if g++ -m32 -lgcc_s -c $OUTPUT  -ffreestanding -O2 -Wall -Wextra -Wl,-ekernal_entry -fdiagnostics-color=always -lstdc++  &> "G++OUTPUT.txt"; then
             echo -e "$OUTPUT  DONE" 
         else
 
@@ -49,6 +53,14 @@ compile() {
             echo ""
             echo " ------------------- G++ DONE! ------------------- "
             #rm temp.txt
+
+            rm -r isodir &> /dev/null
+            rm FluxedOS.* &> /dev/null
+            rm G++OUTPUT.txt &> /dev/null
+            rm $(find ./ -type f -iregex '.*/.*\.\(gch\)$') &> /dev/null
+            rm *.o &> /dev/null
+            echo "CLEANED FILES"
+
             exit
         fi
     #fi
@@ -66,7 +78,7 @@ rm temp.txt &> /dev/null
 echo "CPP COMPILED"
 
 #linking the kernel with kernel.o and boot.o files
-if ld -m elf_i386 -T linker.ld *.o -o FluxedOS.bin -nostdlib &> "LINKOUTPUT.txt"; then
+if g++ -m32 -T linker.ld *.o -o FluxedOS.bin -nostdlib -lstdc++ -lgcc_s &> "LINKOUTPUT.txt"; then
         echo "CPP + ASM LINKED"
         rm *.o &> /dev/null
 else
@@ -77,6 +89,14 @@ else
             echo ""
             echo " ------------------- LINK DONE! ------------------- "
             #rm temp.txt
+
+            rm -r isodir &> /dev/null
+            rm FluxedOS.* &> /dev/null
+            rm G++OUTPUT.txt &> /dev/null
+            rm $(find ./ -type f -iregex '.*/.*\.\(gch\)$') &> /dev/null
+            rm *.o &> /dev/null
+            echo "CLEANED FILES"
+
             exit
 fi
 
@@ -103,4 +123,5 @@ rm -r isodir &> /dev/null
 rm FluxedOS.* &> /dev/null
 rm G++OUTPUT.txt &> /dev/null
 rm $(find ./ -type f -iregex '.*/.*\.\(gch\)$') &> /dev/null
+rm *.o &> /dev/null
 echo "CLEANED FILES"

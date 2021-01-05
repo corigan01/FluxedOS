@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef Term_H_
 #define Term_H_
 
@@ -7,7 +9,7 @@
 #define VGA_ADDRESS 0xB8000
 #define BUFSIZE 2200
 
-uint16* vga_buffer;
+static uint16* vga_buffer;
 
 
 
@@ -31,13 +33,13 @@ enum vga_color {
 };
 
 //index for video buffer array
-uint32 vga_index;
+static uint32 vga_index;
 //counter to store new lines
 static uint32 next_line_index = 1;
 //fore & back color values
-uint8 g_fore_color = WHITE, g_back_color = BLUE;
+static uint8 g_fore_color = WHITE, g_back_color = BLUE;
 //digit ascii code for printing integers
-int digit_ascii_codes[10] = {0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39};
+static int digit_ascii_codes[10] = {0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39};
 
 /*
 16 bit video buffer elements(register ax)
@@ -48,7 +50,7 @@ int digit_ascii_codes[10] = {0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x3
 8 bits(al) lower :
   8 bits : ASCII character to print
 */
-uint16 vga_entry(unsigned char ch, uint8 fore_color, uint8 back_color) 
+static uint16 vga_entry(unsigned char ch, uint8 fore_color, uint8 back_color) 
 {
   uint16 ax = 0;
   uint8 ah = 0, al = 0;
@@ -65,7 +67,7 @@ uint16 vga_entry(unsigned char ch, uint8 fore_color, uint8 back_color)
 }
 
 //clear video buffer array
-void clear_vga_buffer(uint16 **buffer, uint8 fore_color, uint8 back_color)
+static void clear_vga_buffer(uint16 **buffer, uint8 fore_color, uint8 back_color)
 {
   uint32 i;
   for(i = 0; i < BUFSIZE; i++){
@@ -76,7 +78,7 @@ void clear_vga_buffer(uint16 **buffer, uint8 fore_color, uint8 back_color)
 }
 
 //initialize vga buffer
-void init_vga(uint8 fore_color, uint8 back_color)
+static void init_vga(uint8 fore_color, uint8 back_color)
 {
   vga_buffer = (uint16*)VGA_ADDRESS;
   clear_vga_buffer(&vga_buffer, fore_color, back_color);
@@ -87,7 +89,7 @@ void init_vga(uint8 fore_color, uint8 back_color)
 /*
 increase vga_index by width of row(80)
 */
-void print_new_line()
+static void print_new_line()
 {
   if(next_line_index >= 55){
     next_line_index = 0;
@@ -98,14 +100,15 @@ void print_new_line()
 }
 
 //assign ascii character to video buffer
-void print_char(char ch)
+static void print_char(char ch, int Fcolor = g_fore_color, int Bcolor = g_back_color, bool hold_ind = false)
 {
-  vga_buffer[vga_index] = vga_entry(ch, g_fore_color, g_back_color);
-  vga_index++;
+  vga_buffer[vga_index] = vga_entry(ch, Fcolor, Bcolor);
+  if (!hold_ind)
+    vga_index++;
 }
 
 
-uint32 strlen(const char* str)
+static uint32 strlen(const char* str)
 {
   uint32 length = 0;
   while(str[length])
@@ -113,7 +116,7 @@ uint32 strlen(const char* str)
   return length;
 }
 
-uint32 digit_count(int num)
+static uint32 digit_count(int num)
 {
   uint32 count = 0;
   if(num == 0)
@@ -125,7 +128,7 @@ uint32 digit_count(int num)
   return count;
 }
 
-void itoa(int num, char *number)
+static void itoa(int num, char *number)
 {
   int dgcount = digit_count(num);
   int index = dgcount - 1;
@@ -145,22 +148,22 @@ void itoa(int num, char *number)
 }
 
 //print string by calling print_char
-void print_string(char *str)
+static void print_string(char *str, int Fcolor = g_fore_color, int Bcolor = g_back_color, bool hold_ind = false)
 {
   uint32 index = 0;
   while(str[index]){
-    print_char(str[index]);
+    print_char(str[index], Fcolor, Bcolor, hold_ind);
     index++;
   }
 }
 
 //print int by converting it into string
 //& then printing string
-void print_int(int num)
+static void print_int(int num, bool hold_ind = false)
 {
   char str_num[digit_count(num)+1];
   itoa(num, str_num);
-  print_string(str_num);
+  print_string(str_num, g_fore_color, g_back_color, hold_ind);
 }
 
 
