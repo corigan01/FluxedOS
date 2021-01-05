@@ -1,0 +1,11 @@
+#ifndef KERN_SRT_H
+#define KERN_SRT_H
+
+#include "core/core.h"
+#include "Term/Term.h"
+
+EXTNC_ int KernStart();
+
+#endif // !KERN_SRT_H
+
+

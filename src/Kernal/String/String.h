@@ -3,41 +3,35 @@
 
 #include "../core/core.h"
 
+extern "C++"
+
 class String
 {
 public:
 	String();
+	String(const char* _str_i);
 	~String();
 
-	const char* c_str() {
-		return Data;
-	}
+	const char* c_str();
+	char *cs_ctr();
 
-	void operator=(const char* _str_i) {
-		this->_Size = find_size(_str_i);
+	uint16_t size();
 
-		this->Data = _str_i;
-	}
-
-
-
-	uint16_t size() {
-		return this->_Size;
-	}
+	void operator=(const char* _str_i);
+	void operator=(String *str);
+	char operator[](int i);
+	
+	String operator+(String str);
 
 private:
 
-	size_t find_size(const char* _str_i) {
-		size_t ret = 0;
-		while (_str_i[ret] != 0)
-			ret++;
-		return ret;
-	}
+	size_t find_size(const char* _str_i);
 
 	const char* Data;
 	int _Size;
 
 };
+
 
 
 
