@@ -19,24 +19,9 @@ enum D_PART {
     UNKNOWN,
 };
 
-extern "C++"
-class displayout {
 
-public:
-    displayout();
-    ~displayout();
+void out(int enu, int core_part, String str);
 
-    void out(int enu, int core_part, String str);
-
-private:
-
-    char* D_debug[4] = {"INFO", "DEBUG", "ERROR", "WARNING"};
-    char* D_part[3] = {"Kernel", "External", "Unknown"};
-
-    int color_R[4] = {WHITE, BLUE, RED, YELLOW};
-
-
-};
 
 #endif // !DISPLAYOUT_H_
 

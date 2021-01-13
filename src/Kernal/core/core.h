@@ -13,7 +13,7 @@ typedef unsigned int uint32;
 
 
 
-#define NULL 0x00
+#define NULL (char)0x00
 
 
 #define KERNAL_NEEDED (int)0x00// That file is required for boot
@@ -25,8 +25,6 @@ typedef unsigned int uint32;
 #define ECTNC_END }
 
 
-
-#define Kernal_main kernel_entry
 
 
 

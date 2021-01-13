@@ -20,9 +20,13 @@ char * String::cs_ctr() {
 
 
 void String::operator=(const char* _str_i) {
+	if (_str_i != "")
 		this->_Size = find_size(_str_i);
+	else
+		this->_Size = 0;
+	
 
-		this->Data = _str_i;
+	this->Data = _str_i;
 }
 
 void String::operator=(String *str) {
@@ -52,6 +56,23 @@ size_t String::find_size(const char* _str_i) {
 		while (_str_i[ret] != 0)
 			ret++;
 		return ret;
+}
+
+bool String::operator==(const char* _str_i) {
+	if (this->Data == _str_i) {
+		return true;
+	}
+	return false;
+
+}
+
+bool String::operator==(String *str) {
+	if (this->Data == str->Data) {
+		return true;
+	}
+	return false;
+
+
 }
 
 String::~String()

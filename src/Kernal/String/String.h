@@ -21,6 +21,9 @@ public:
 	void operator=(String *str);
 	char operator[](int i);
 	
+	bool operator==(const char* _str_i);
+	bool operator==(String *str);
+	
 	String operator+(String str);
 
 private:

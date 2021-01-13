@@ -94,7 +94,7 @@ uint8 inb(uint16 port)
 
 void outb(uint16 port, uint8 data)
 {
-  asm volatile("outb %0, %1" : "=a"(data) : "d"(port));
+  asm volatile("outb %0, %1" : "=a"(data) : "d"(port)); 
 }
 
 char get_input_keycode()
