@@ -1,22 +1,16 @@
-
-
 #include "displayout.h"
 
+char* D_debug[4] = {"INFO", "DEBUG", "ERROR", "WARNING"};
+char* D_part[3] = {"Kernel", "External", "Unknown"};
+int color_R[4] = {WHITE, BLUE, RED, YELLOW};
 
-displayout::displayout() {
-    print_char('#');
-}
 
-displayout::~displayout() {
-
-}
-
-void displayout::out(int enu, int core_part, String str) {
-    print_char('[', color_R[enu]);
+void out(int enu, int core_part, String str) {
+    print_string("[ ", color_R[enu]);
     print_string(D_debug[enu], color_R[enu]);
     print_string(" - ", color_R[enu]);
-    print_string(D_part[enu], color_R[enu]);
-    print_string("] --> ", color_R[enu]);
+    print_string(D_part[core_part], color_R[enu]);
+    print_string(" ] --> ", color_R[enu]);
 
     for (int i = 0; i < str.size(); i++) {
         char ch = str[i];
@@ -37,6 +31,5 @@ void displayout::out(int enu, int core_part, String str) {
     }
 
     print_new_line();
+
 }
-
-
