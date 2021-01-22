@@ -2,6 +2,7 @@
 #define KEYBOARD_H
 
 #include "../core/core.h"
+#include "port.h"
 
 #define KEYBOARD_PORT 0x60
 
@@ -100,7 +101,7 @@ void outb(uint16 port, uint8 data)
 char get_input_keycode()
 {
   char ch = 0;
-  ch = inb(KEYBOARD_PORT);
+  ch = port_byte_in(KEYBOARD_PORT);
   if(ch > 0)
     return ch;
   
