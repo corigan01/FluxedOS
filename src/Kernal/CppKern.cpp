@@ -1,8 +1,8 @@
 #include "CppKern.h"
 #include "Kernal.h"
 #include "BUILD.h"
-#include "Vector/vector.h"
-#include "console/console.h"
+#include "../lib/Vector/vector.h"
+#include "../lib/console/console.h"
 
 void wait(int how_much) {
 
@@ -45,39 +45,27 @@ int KernStart() {
 
     con.print_tal();
 
+    uint8* buf;
+    int buf_size = 0;
+
+    bool keyup = true;
+    char key_hold = NULL;
+
     while(1) {
-        char key = get_input_keycode();
         
-
-        switch (key)
-        {
-        case KEY_ENTER:
-            print_new_line();
-            con.parse_command(str);
-            
-
-            str = "";
-            str_index = 0;
-            con.print_tal();
-
-            
-            break;
         
-        default:
-            print_char(get_ascii_char(key), MAGENTA, BLACK);
-            
-            str[str_index] = get_ascii_char(key);
-            str_index++;
-
-            //print_string((char*)str);
-            break;
+        char key = get_ascii_char(get_input_keycode());
+        print_char(key);
+        if (key == NULL) {
+            keyup = true;
         }
-
-        if (get_line_index() > 25) {
-            print_int(get_vga_index());
-            con.cls();
+        else if (key_hold != key && keyup) {
+            print_char('=');
+            print_char(key);
+            key_hold = key;
+            keyup = false;
         }
-
+        
         wait(2);
     }
     

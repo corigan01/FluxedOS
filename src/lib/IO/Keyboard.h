@@ -100,10 +100,10 @@ void outb(uint16 port, uint8 data)
 char get_input_keycode()
 {
   char ch = 0;
-  while((ch = inb(KEYBOARD_PORT)) != 0){
-    if(ch > 0)
-      return ch;
-  }
+  ch = inb(KEYBOARD_PORT);
+  if(ch > 0)
+    return ch;
+  
   return ch;
 }
 

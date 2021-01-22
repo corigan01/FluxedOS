@@ -1,1 +1,0 @@
-g++: error: *.o: No such file or directory

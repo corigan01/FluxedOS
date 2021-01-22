@@ -10,7 +10,6 @@ void out(int enu, int core_part, const char* str) {
     print_string((char*)D_debug[enu], color_R[enu]);
     print_string(" - ", color_R[enu]);
     print_string((char*)D_part[core_part], color_R[enu]);
-    print_string(" ");
     print_string(" ] --> ", color_R[enu]);
 
     //print_int(str.size());
