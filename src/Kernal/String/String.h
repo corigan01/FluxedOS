@@ -30,7 +30,7 @@ private:
 
 	size_t find_size(const char* _str_i);
 
-	const char* Data;
+	const char* Data = "";
 	int _Size;
 
 };

@@ -13,6 +13,15 @@ awk '{if ($1 == $1) print $1, $2, $3 + 1;}' Kernal/BUILD.h > temp.txt
 cp temp.txt Kernal/BUILD.h 
 rm temp.txt
 
+clean() {
+    rm -r isodir &> /dev/null
+    rm FluxedOS.* &> /dev/null
+    rm G++OUTPUT.txt &> /dev/null
+    rm $(find ./ -type f -iregex '.*/.*\.\(gch\)$') &> /dev/null
+    rm *.o &> /dev/null
+    echo "CLEANED FILES"
+}
+
 rm *.o &> /dev/null
 echo "CLEANED LIB FILES"
 
@@ -21,10 +30,44 @@ printf "%s" "$(<Kernal/BUILD.h)"
 echo
 
 #assemble boot.s file
-as --32 boot.s -o boot.o
+compilea() {
+    OUTPUT="$1"
+
+    if fasm  $OUTPUT.s $.o  &> "A++OUTPUT.txt"; then
+            echo -e "$OUTPUT  DONE" 
+        else
+
+            #delete old checksum files because we need to get the error again
+            #for OUTPUT in $(find ./ -type f -iregex '.*/.*\.\(c\|cpp\|h\)$')
+            #do
+                #echo "$OUTPUT" > temp.txt
+                #f_name="checksum/$(md5sum temp.txt)"
+                #rm "$f_name old.txt" &> /dev/null
+            #done
+
+            #ouput the errors
+            echo " ------------------ ASM FAILED! ------------------ "
+            printf "%s" "$(<A++OUTPUT.txt)"
+            echo ""
+            echo " ------------------- ASM DONE! ------------------- "
+            #rm temp.txt
+
+            clean
+
+            exit
+        fi
+
+    
+    
+}
+
+compilea boot/boot
+compilea boot/loader
+
 echo "ASM COMPILED"
 
-compile() {
+
+compilec() {
     OUTPUT="$1"
     #echo "$OUTPUT" > temp.txt
     #f_name="checksum/$(md5sum temp.txt)"
@@ -46,20 +89,16 @@ compile() {
                 #f_name="checksum/$(md5sum temp.txt)"
                 #rm "$f_name old.txt" &> /dev/null
             #done
+            
 
             #ouput the errors
             echo " ------------------ CPP FAILED! ------------------ "
             printf "%s" "$(<G++OUTPUT.txt)"
             echo ""
-            echo " ------------------- G++ DONE! ------------------- "
+            echo " ------------------- CPP DONE! ------------------- "
             #rm temp.txt
 
-            rm -r isodir &> /dev/null
-            rm FluxedOS.* &> /dev/null
-            rm G++OUTPUT.txt &> /dev/null
-            rm $(find ./ -type f -iregex '.*/.*\.\(gch\)$') &> /dev/null
-            rm *.o &> /dev/null
-            echo "CLEANED FILES"
+            clean
 
             exit
         fi
@@ -69,8 +108,11 @@ compile() {
 #compile .cpp and .h file
 for OUTPUT in $(find ./ -type f -iregex '.*/.*\.\(c\|cpp\|h\)$')
 do
-compile $OUTPUT
+    
+    compilec $OUTPUT 
+
 done
+
 wait
 
 rm temp.txt &> /dev/null
@@ -90,20 +132,31 @@ else
             echo " ------------------- LINK DONE! ------------------- "
             #rm temp.txt
 
-            rm -r isodir &> /dev/null
-            rm FluxedOS.* &> /dev/null
-            rm G++OUTPUT.txt &> /dev/null
-            rm $(find ./ -type f -iregex '.*/.*\.\(gch\)$') &> /dev/null
-            rm *.o &> /dev/null
-            echo "CLEANED FILES"
+            clean    
+
 
             exit
 fi
 
 
 #check FluxedOS.bin file is x86 multiboot file or not
-grub-file --is-x86-multiboot FluxedOS.bin
-echo "GRUB FILE MADE"
+
+if grub-file --is-x86-multiboot FluxedOS.bin &> "GRUB.txt"; then
+        echo "GRUB FILE MADE"
+        rm *.o &> /dev/null
+else
+
+            #ouput the errors
+            echo " ------------------ GRUB FAILED! ------------------ "
+            printf "%s" "$(<GRUB.txt)"
+            echo ""
+            echo " ------------------- GRUB DONE! ------------------- "
+  
+  
+            clean
+
+            exit
+fi
 
 #building the iso file
 mkdir -p isodir/boot/grub &> "isoLOG.txt"
@@ -112,16 +165,12 @@ cp grub.cfg isodir/boot/grub/grub.cfg &>> "isoLOG.txt"
 grub-mkrescue -o FluxedOS.iso isodir &>> "isoLOG.txt"
 echo "ISO FILE MADE"
 
+cp FluxedOS.iso ../ISO/
 
 #run it in qemu
 #screen -d -m 
-qemu-system-x86_64 -cdrom FluxedOS.iso
+qemu-system-x86_64 -cdrom FluxedOS.iso -display gtk -vga std
 echo "QEMU RAN"
 
 #clean up
-rm -r isodir &> /dev/null
-rm FluxedOS.* &> /dev/null
-rm G++OUTPUT.txt &> /dev/null
-rm $(find ./ -type f -iregex '.*/.*\.\(gch\)$') &> /dev/null
-rm *.o &> /dev/null
-echo "CLEANED FILES"
+clean

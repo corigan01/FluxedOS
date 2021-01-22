@@ -16,7 +16,7 @@ class console {
     void cls();
 
     // Prints to the screen
-    void print(String str);
+    void print(const char* str);
 
     // Goes to the next line
     void nextline();
@@ -30,12 +30,10 @@ class console {
     // Goes to a line and resets it with the string given
     void drawover(int line, String str);
 
-    void parse_command(String command);
+    void parse_command(const char* command);
 
 
-    void print_tal() {
-        print_string("> ");
-    }
+    void print_tal();
 
     private:
 

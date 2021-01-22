@@ -14,10 +14,11 @@ console::~console() {
 // clears the screen
 void console::cls() {
     clear_screen();
+    this->print_tal();
 }
 
 // Prints to the screen
-void console::print(String str) {
+void console::print(const char* str) {
     out(D_INFO, KERNEL, str);
 }
 
@@ -42,13 +43,20 @@ void console::drawover(int line, String str) {
 }
 
 
-void console::parse_command(String command) {
+void console::parse_command(const char* command) {
     if (command == "CLS") {
         cls();
     }
     else {
+        print_string((char*)command);
+        print_new_line();
         out(D_ERROR, KERNEL, "Console could not find that command!");
     }
 
 
+}
+
+
+void console::print_tal()  {
+        print_string(": \0");
 }

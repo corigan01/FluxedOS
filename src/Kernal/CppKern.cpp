@@ -30,43 +30,59 @@ int KernStart() {
     //str = "dfsdf";
     //str.c_str();
 
-    print_string("test");
-    print_new_line();
+
 
     console con;
 
-    con.print("test");
-    con.print_tal();
+
     
+    
+    char* str = "";
+
+    
+
+    int str_index = 0;
+
+    con.print_tal();
+
     while(1) {
         char key = get_input_keycode();
-        String str;
+        
 
         switch (key)
         {
         case KEY_ENTER:
             print_new_line();
             con.parse_command(str);
+            
 
-
-            str = " ";
+            str = "";
+            str_index = 0;
             con.print_tal();
+
+            
             break;
         
         default:
-            str = str + (char*)get_ascii_char(key);
-            print_char(get_ascii_char(key), BLUE, BLACK);
+            print_char(get_ascii_char(key), MAGENTA, BLACK);
+            
+            str[str_index] = get_ascii_char(key);
+            str_index++;
+
+            //print_string((char*)str);
             break;
+        }
+
+        if (get_line_index() > 25) {
+            print_int(get_vga_index());
+            con.cls();
         }
 
         wait(2);
     }
-    con.print_tal();
     
     
 
-    print_string("test2");
-    print_new_line();
 
     print_new_line();
     print_string("======= OS =======", GREEN);

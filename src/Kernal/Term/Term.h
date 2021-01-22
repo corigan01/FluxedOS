@@ -81,4 +81,8 @@ void print_hold_int(int num);
 
 void clear_screen();
 
+int get_vga_index();
+
+int get_line_index();
+
 #endif
