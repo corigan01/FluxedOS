@@ -57,12 +57,36 @@ echo "---------------- BUILDING ASM -------------------"
 # Compile the asm files
 compilea boot/boot
 
+compileProc() {
+    OUTPUT="$1"
+    OUTNAME="$2"
 
+    mkdir log &> /dev/null
 
+    if g++ -m32 -lgcc_s $OUTPUT -o "$FILES.exc" -ffreestanding -O2 -Wall -Wextra -fdiagnostics-color=always -lstdc++  &> "log/G++OUTPUT.txt"; then
+         printf "%-40s%-4s\e[0;32mDONE\e[0;34m\n"  "${OUTPUT:0:40}" " "
+    else
+
+        #ouput the errors
+        echo -e "\e[0;31m ------------------ CPP FAILED! ------------------ "
+        printf "%s" "$(<log/G++OUTPUT.txt)"
+        echo ""
+        echo -e "\e[0;31m ------------------- CPP DONE! ------------------- "
+        #rm temp.txt
+
+        clean
+
+        exit
+    fi
+
+    mv "$FILES.exc" ../../bin/
+}
 
 #compile the given file with g++
 compilec() {
     OUTPUT="$1"
+
+    mkdir log &> /dev/null
 
     if g++ -m32 -lgcc_s -c $OUTPUT -ffreestanding -O2 -Wall -Wextra -Wl,-ekernal_entry -fdiagnostics-color=always -lstdc++  &> "log/G++OUTPUT.txt"; then
          printf "%-40s%-4s\e[0;32mDONE\e[0;34m\n"  "${OUTPUT:0:40}" " "
@@ -81,13 +105,42 @@ compilec() {
     fi
 }
 
-echo "---------------- BUILDING CPP -------------------"
+echo "---------------- BUILDING PROC ------------------"
+
 #compile .c , .cpp , and .h file
 mkdir obj &> /dev/null
 
+cd Proc
+for FILES in $(dir)
+do
+cd $FILES
+
+    echo "=== BUILDING $FILES ==="
+
+    for SUB_FILE in $(find ./ -type f -iregex '.*/.*\.\(c\|cpp\|h\)$')
+    do
+        compileProc $SUB_FILE $FILES
+    done
+
+
+cd ..
+
+done
+
+cd ..
+
+echo "---------------- BUILDING CPP -------------------"
+
 for OUTPUT in $(find ./ -type f -iregex '.*/.*\.\(c\|cpp\|h\)$')
 do
-    compilec $OUTPUT 
+    if [[ $OUTPUT == *"Proc"* ]]; then
+        printf "%-40s%-4s\e[0;33mSKIP\e[0;34m\n"  "${OUTPUT:0:40}" " "
+    else
+        compilec $OUTPUT 
+
+    fi
+
+
 done
 
 mv *.o obj/
@@ -138,6 +191,8 @@ fi
 echo "---------------- BUILDING ISO -------------------"
 #building the iso file
 mkdir -p isodir/boot/grub &> "log/isoLOG.txt"
+mkdir -p isodir/programs &> "log/isoLOG.txt"
+cp bin/* isodir/programs &> "log/isoLOG.txt"
 cp FluxedOS.bin isodir/boot/FluxedOS.bin &>> "log/isoLOG.txt"
 cp grub.cfg isodir/boot/grub/grub.cfg &>> "log/isoLOG.txt"
 grub-mkrescue -o FluxedOS.iso isodir &>> "log/isoLOG.txt"

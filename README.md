@@ -1,10 +1,21 @@
 # FluxedOS
 A hobbyist OS project!
 
-This os is planning to be a ongoing project, if you would like to help out just submit a pull request!
 
-## Note
-* This OS is going to use all "our" code, you should try not to import any library or use code already written. 
-* You can write code in any language, but C++ is recommended.
-* I do allow other languages and their compilers / executables to import. Just not the core OS!. 
+# What is this project?
+To create an OS in C/C++ that is fast, and is built for modern computers from the ground up
+
+
+# How do I contribute?
+1. Fork the project
+2. Change the code in your project file
+3. Submit a pull request with good context on what you changed
+4. If the pull request is good, the code is now in the main project!
+
+
+# How to I compile?
+1. install tools (sudo bash installTools.sh) NOTE: You only need to do this step once
+2. Run the autocompile.sh script
+the autocompile script builds and runs the project
+
 

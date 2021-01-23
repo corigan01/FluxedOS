@@ -31,15 +31,11 @@ int KernStart() {
     //str.c_str();
 
 
-
     console con;
 
 
-    
-    
     char* str = "";
 
-    
 
     int str_index = 0;
 
