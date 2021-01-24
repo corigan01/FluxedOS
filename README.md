@@ -18,4 +18,3 @@ To create an OS in C/C++ that is fast, and is built for modern computers from th
 2. Run the autocompile.sh script
 the autocompile script builds and runs the project
 
-

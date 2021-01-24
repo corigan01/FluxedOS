@@ -30,39 +30,34 @@ int KernStart() {
     //str = "dfsdf";
     //str.c_str();
 
+    char keybuf[80*60] = {};
+    int keybufIndex = 0;
 
-    console con;
-
-
-    char* str = "";
-
-
-    int str_index = 0;
-
-    con.print_tal();
-
-    uint8* buf;
-    int buf_size = 0;
-
-    bool keyup = true;
-    char key_hold = NULL;
-
+    char key = getKeydown();
     while(1) {
         
         
-        char key = get_ascii_char(get_input_keycode());
-        print_char(key);
-        if (key == NULL) {
-            keyup = true;
-        }
-        else if (key_hold != key && keyup) {
-            print_char('=');
+        if (key != '_') {
+            if (keybufIndex < (80 * 60) - 2) {
+                keybuf[keybufIndex] = key;
+                keybufIndex++;
+            }
+            else {
+                for (int i = 0; i < (80 * 60); i++) {
+                    keybuf[i] = NULL;
+                }
+                keybufIndex = 0;
+
+                keybuf[keybufIndex] = key;
+                keybufIndex++;
+                
+                clear_screen();
+            }
             print_char(key);
-            key_hold = key;
-            keyup = false;
         }
         
-        wait(2);
+        key = getKeydown();
+        
     }
     
     

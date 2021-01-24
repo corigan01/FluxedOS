@@ -9,13 +9,19 @@ echo -e "\e[0;34m-- The easy auto \e[0;31mC++\e[0;34m compiler that runs in your
 echo -e "            A \e[0;35mMain Menu\e[0;34m - \e[0;35mQUEST\e[0;34m project!"
 echo
 
-# add one to the build number
-echo "---------------- ADDING TO BUILD ----------------"
-awk '{if ($1 == $1) print $1, $2, $3 + 1;}' Kernal/BUILD.h > temp.txt
-cp temp.txt Kernal/BUILD.h 
-rm temp.txt
-printf "%s" "$(<Kernal/BUILD.h)"
-echo
+
+addToBuild() {
+    # add one to the build number
+    echo "---------------- ADDING TO BUILD ----------------"
+    awk '{if ($1 == $1) print $1, $2, $3 + 1;}' Kernal/BUILD.h > temp.txt
+    cp temp.txt Kernal/BUILD.h 
+    rm temp.txt
+    printf "%s" "$(<Kernal/BUILD.h)"
+    echo
+}
+
+addToBuild &
+
 
 #clean up files
 clean() {
@@ -55,7 +61,7 @@ compilea() {
 
 echo "---------------- BUILDING ASM -------------------"
 # Compile the asm files
-compilea boot/boot
+compilea boot/boot 
 
 compileProc() {
     OUTPUT="$1"
@@ -119,10 +125,10 @@ cd $FILES
 
     for SUB_FILE in $(find ./ -type f -iregex '.*/.*\.\(c\|cpp\|h\)$')
     do
-        compileProc $SUB_FILE $FILES
+        compileProc $SUB_FILE $FILES &
     done
 
-
+    wait
 cd ..
 
 done
@@ -136,16 +142,19 @@ do
     if [[ $OUTPUT == *"Proc"* ]]; then
         printf "%-40s%-4s\e[0;33mSKIP\e[0;34m\n"  "${OUTPUT:0:40}" " "
     else
-        compilec $OUTPUT 
+        compilec $OUTPUT &
+        
 
     fi
 
 
 done
 
+wait
+
 mv *.o obj/
 
-wait
+
 
 rm temp.txt &> /dev/null
 
@@ -199,11 +208,19 @@ grub-mkrescue -o FluxedOS.iso isodir &>> "log/isoLOG.txt"
 
 
 echo "---------------- COPYING ISO --------------------"
-cp FluxedOS.iso ../ISO/
+mkdir ../ISO/ &> /dev/null &
+cp FluxedOS.iso ../ISO/ &
 
-#run
+
+#run 
 echo "---------------- RUNNING BUILD ------------------"
-qemu-system-x86_64 -cdrom FluxedOS.iso -display gtk -vga std
+qemu-system-x86_64 -cdrom FluxedOS.iso -vga std 
+
+
+
+
+
+
 
 #clean up
 clean
