@@ -62,11 +62,13 @@ void print_new_line()
 }
 
 //assign ascii character to video buffer
-void print_char(char ch, int Fcolor, int Bcolor)
+void print_char(char ch, int Fcolor, int Bcolor, int charback)
 {
+  vga_index = vga_index - charback;
   vga_buffer[vga_index] = vga_entry(ch, Fcolor, Bcolor);
 
-  vga_index++;
+  if (charback > 0)
+    vga_index++;
 }
 
 

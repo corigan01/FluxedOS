@@ -4,7 +4,6 @@
 EXTNC_ int kernal_entry() {
     KernStart();
 
-    
 
     
     print_new_line();
@@ -15,7 +14,7 @@ EXTNC_ int kernal_entry() {
 
         asm volatile("nop");
         
-        print_hold_int(i / 56000);
+        print_hold_int(i / 55000);
     };
     return 0;
 }

@@ -59,7 +59,7 @@ increase vga_index by width of row(80)
 void print_new_line();
 
 //assign ascii character to video buffer
-void print_char(char ch, int Fcolor = g_fore_color, int Bcolor = g_back_color);
+void print_char(char ch, int Fcolor = g_fore_color, int Bcolor = g_back_color, int charback = 0);
 
 
 uint32 strlen(const char* str);

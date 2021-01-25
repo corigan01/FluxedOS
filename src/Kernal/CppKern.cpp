@@ -49,12 +49,19 @@ int KernStart() {
 
     print_char('>');
 
-    while(1) {
+
+
+    while(!con.shouldReturn()) {
         
         
         if (key != NULL) {
-
-            if (key == KEYCODE_ENTER) {
+            if (key == KEY_BACKSPACE) {
+                print_char('-', WHITE, BLACK, 1);
+                keybufIndex--;
+                keybuf[keybufIndex] = NULL;
+                
+            }
+            else if (key == KEYCODE_ENTER) {
                 print_new_line();
                 con.parse_command(keybuf);
                 print_char('>');

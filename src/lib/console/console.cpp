@@ -46,7 +46,7 @@ void console::drawover(int line, String str) {
 
 void console::parse_command(const char* command) {
     if (strcmp(command, "clear") == 0) {
-        //cls();
+        cls();
     }
     else if (strcmp(command, "test") == 0) {
         print_char('t', RED);
@@ -54,6 +54,9 @@ void console::parse_command(const char* command) {
         print_char('s', BLUE);
         print_char('t', YELLOW);
         print_new_line();
+    }
+    else if (strcmp(command, "halt") == 0) {
+        closed = true;
     }
     else {
         print_char('\"');
@@ -69,4 +72,8 @@ void console::parse_command(const char* command) {
 
 void console::print_tal()  {
         print_string(": \0");
+}
+
+bool console::shouldReturn() {
+    return this->closed;
 }
