@@ -1,8 +1,8 @@
 #include "CppKern.h"
 #include "Kernal.h"
 #include "BUILD.h"
-#include "Vector/vector.h"
-#include "console/console.h"
+#include "../lib/Vector/vector.h"
+#include "../lib/console/console.h"
 
 void wait(int how_much) {
 
@@ -19,54 +19,75 @@ void wait(int how_much) {
 int KernStart() {
     init_vga(WHITE, BLACK);
 
-    print_string("FLUXED OS ------- build ", GREEN);
-    print_int(BUILD);
-    print_char('!', GREEN);
-    print_new_line();
-
+    char* t = "test";
+    if (t == "test") {
+        print_string("FLUXED OS ------- build ", GREEN);
+        print_int(BUILD);
+        print_char('!', GREEN);
+        print_new_line();
+    }
     wait(2);
+
+
+    
 
     //String str;
     //str = "dfsdf";
     //str.c_str();
 
-    print_string("test");
-    print_new_line();
-
     console con;
-
-    con.print("test");
-    con.print_tal();
     
-    while(1) {
-        char key = get_input_keycode();
-        String str;
 
-        switch (key)
-        {
-        case KEY_ENTER:
-            print_new_line();
-            con.parse_command(str);
+    char *keybuf;
+    int keybufIndex = 0;
 
-
-            str = " ";
-            con.print_tal();
-            break;
-        
-        default:
-            str = str + (char*)get_ascii_char(key);
-            print_char(get_ascii_char(key), BLUE, BLACK);
-            break;
-        }
-
-        wait(2);
+    for (int i = 0; i < (80 * 24); i++) {
+        keybuf[i] = NULL;
     }
-    con.print_tal();
+
+    char key = getKeydown();
+
+    
+
+    while(1) {
+        
+        
+        if (key != NULL) {
+
+            if (key == KEYCODE_ENTER) {
+                print_new_line();
+                con.parse_command(keybuf);
+                print_char('>');
+
+                for (int i = 0; i < (80 * 24); i++) {
+                    keybuf[i] = NULL;
+                }
+                keybufIndex = 0;
+                key = ' ';
+            }
+            else if (keybufIndex < (80*24) - 2) {
+                keybuf[keybufIndex] = key;
+                keybufIndex++;
+
+                print_char(key);
+            }
+            else {
+                for (int i = 0; i < (80 * 24); i++) {
+                    keybuf[i] = NULL;
+                }
+                keybufIndex = 0;
+
+                clear_screen();
+            }
+           
+        }
+        
+        key = getKeydown();
+        
+    }
     
     
 
-    print_string("test2");
-    print_new_line();
 
     print_new_line();
     print_string("======= OS =======", GREEN);

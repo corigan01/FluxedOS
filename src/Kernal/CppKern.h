@@ -1,8 +1,8 @@
 #ifndef KERN_SRT_H
 #define KERN_SRT_H
 
-#include "core/core.h"
-#include "Term/Term.h"
+#include "../lib/core/core.h"
+#include "../lib/Term/Term.h"
 
 EXTNC_ int KernStart();
 

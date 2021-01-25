@@ -2,8 +2,8 @@
 #define KERNAL_H_
 
 
-#include "IO/Keyboard.h"
-#include "DisplayOut/displayout.h"
+#include "../lib/IO/Keyboard.h"
+#include "../lib/DisplayOut/displayout.h"
 
 
 

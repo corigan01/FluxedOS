@@ -20,7 +20,7 @@ enum D_PART {
 };
 
 
-void out(int enu, int core_part, String str);
+void out(int enu, int core_part, const char* str);
 
 
 #endif // !DISPLAYOUT_H_

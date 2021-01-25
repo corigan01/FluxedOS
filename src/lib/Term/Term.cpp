@@ -6,6 +6,9 @@ uint32 vga_index;
 //counter to store new lines
 uint32 next_line_index = 1;
 
+
+
+
 uint16 vga_entry(unsigned char ch, uint8 fore_color, uint8 back_color) 
 {
   uint16 ax = 0;
@@ -66,7 +69,7 @@ void print_char(char ch, int Fcolor, int Bcolor)
 uint32 strlen(const char* str)
 {
   uint32 length = 0;
-  while(str[length])
+  while(str[length] != '\0')
     length++;
   return length;
 }
@@ -151,4 +154,13 @@ void clear_screen() {
     }
   }
   clear_vga_buffer(&vga_buffer, WHITE, BLACK);
+}
+
+
+int get_vga_index() {
+  return vga_index;
+}
+
+int get_line_index() {
+  return next_line_index - 1;
 }

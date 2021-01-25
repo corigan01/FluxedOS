@@ -1,127 +1,226 @@
-echo "FluxedCpp Started!"
-#      ________                    __   ______          
-#     / ____/ /_  ___  _____  ____/ /  / ____/___  ____ 
-#    / /_  / / / / / |/_/ _ \/ __  /  / /   / __ \/ __ \
-#   / __/ / / /_/ />  </  __/ /_/ /  / /___/ /_/ / /_/ /
-#  /_/   /_/\__,_/_/|_|\___/\__,_/   \____/ .___/ .___/ 
-#                                        /_/   /_/      
-# "-- The easy auto C++ compiler scheduler that runs in your terminal! --"
-# "by Main Menu - QUEST"
-#
-
-awk '{if ($1 == $1) print $1, $2, $3 + 1;}' Kernal/BUILD.h > temp.txt
-cp temp.txt Kernal/BUILD.h 
-rm temp.txt
-
-rm *.o &> /dev/null
-echo "CLEANED LIB FILES"
-
-
-printf "%s" "$(<Kernal/BUILD.h)"
+# Display the welcome
+echo "      ________                    __   ______          "
+echo "     / ____/ /_  ___  _____  ____/ /  / ____/___  ____ "
+echo "    / /_  / / / / / |/_/ _ \/ __  /  / /   / __ \\/ __ \\"
+echo "   / __/ / / /_/ />  </  __/ /_/ /  / /___/ /_/ / /_/ /"
+echo "  /_/   /_/\__,_/_/|_|\___/\__,_/   \____/ .___/ .___/ "
+echo "                                        /_/   /_/      "
+echo -e "\e[0;34m-- The easy auto \e[0;31mC++\e[0;34m compiler that runs in your terminal! --"
+echo -e "            A \e[0;35mMain Menu\e[0;34m - \e[0;35mQUEST\e[0;34m project!"
 echo
 
+
+addToBuild() {
+    # add one to the build number
+    echo "---------------- ADDING TO BUILD ----------------"
+    awk '{if ($1 == $1) print $1, $2, $3 + 1;}' Kernal/BUILD.h > temp.txt
+    cp temp.txt Kernal/BUILD.h 
+    rm temp.txt
+    printf "%s" "$(<Kernal/BUILD.h)"
+    echo
+}
+
+addToBuild &
+
+
+#clean up files
+clean() {
+    echo -e "\e[0;33m---------------- CLEANED UP FILES ---------------"
+    rm -r isodir &> /dev/null
+    rm FluxedOS.* &> /dev/null
+    rm G++OUTPUT.txt &> /dev/null
+    rm $(find ./ -type f -iregex '.*/.*\.\(gch\)$') &> /dev/null
+    rm *.o &> /dev/null
+    rm boot/boot.o &> /dev/null
+    rm -r obj &> /dev/null
+    
+}
+
 #assemble boot.s file
-as --32 boot.s -o boot.o
-echo "ASM COMPILED"
-
-compile() {
+compilea() {
     OUTPUT="$1"
-    #echo "$OUTPUT" > temp.txt
-    #f_name="checksum/$(md5sum temp.txt)"
-    #md5sum  $OUTPUT > "$f_name new.txt"
 
-    #if diff "$f_name new.txt" "$f_name old.txt" &> /dev/null; then
-    #    echo "$OUTPUT NOT CHANGED!"
-    #else
-        #md5sum $OUTPUT > "$f_name old.txt"
-
-        if g++ -m32 -lgcc_s -c $OUTPUT  -ffreestanding -O2 -Wall -Wextra -Wl,-ekernal_entry -fdiagnostics-color=always -lstdc++  &> "G++OUTPUT.txt"; then
-            echo -e "$OUTPUT  DONE" 
+    if as --32 $OUTPUT.s -o boot.o  &> "log/A++OUTPUT.txt"; then
+            echo -e "$OUTPUT \t\t\t\t    \e[0;32mDONE\e[0;34m" 
         else
 
-            #delete old checksum files because we need to get the error again
-            #for OUTPUT in $(find ./ -type f -iregex '.*/.*\.\(c\|cpp\|h\)$')
-            #do
-                #echo "$OUTPUT" > temp.txt
-                #f_name="checksum/$(md5sum temp.txt)"
-                #rm "$f_name old.txt" &> /dev/null
-            #done
-
             #ouput the errors
-            echo " ------------------ CPP FAILED! ------------------ "
-            printf "%s" "$(<G++OUTPUT.txt)"
+            echo -e "\e[0;31m ------------------ ASM FAILED! ------------------ "
+            printf "%s" "$(<A++OUTPUT.txt)"
             echo ""
-            echo " ------------------- G++ DONE! ------------------- "
+            echo -e "\e[0;31m ------------------- ASM DONE! ------------------- "
             #rm temp.txt
 
-            rm -r isodir &> /dev/null
-            rm FluxedOS.* &> /dev/null
-            rm G++OUTPUT.txt &> /dev/null
-            rm $(find ./ -type f -iregex '.*/.*\.\(gch\)$') &> /dev/null
-            rm *.o &> /dev/null
-            echo "CLEANED FILES"
+            clean
 
             exit
         fi
-    #fi
+
 }
 
-#compile .cpp and .h file
+
+echo "---------------- BUILDING ASM -------------------"
+# Compile the asm files
+compilea boot/boot 
+
+compileProc() {
+    OUTPUT="$1"
+    OUTNAME="$2"
+
+    mkdir log &> /dev/null
+
+    if g++ -m32 -lgcc_s $OUTPUT -o "$FILES.exc" -ffreestanding -O2 -Wall -Wextra -fdiagnostics-color=always -lstdc++  &> "log/G++OUTPUT.txt"; then
+         printf "%-40s%-4s\e[0;32mDONE\e[0;34m\n"  "${OUTPUT:0:40}" " "
+    else
+
+        #ouput the errors
+        echo -e "\e[0;31m ------------------ CPP FAILED! ------------------ "
+        printf "%s" "$(<log/G++OUTPUT.txt)"
+        echo ""
+        echo -e "\e[0;31m ------------------- CPP DONE! ------------------- "
+        #rm temp.txt
+
+        clean
+
+        exit
+    fi
+
+    mv "$FILES.exc" ../../bin/
+}
+
+#compile the given file with g++
+compilec() {
+    OUTPUT="$1"
+
+    mkdir log &> /dev/null
+
+    if g++ -m32 -lgcc_s -c $OUTPUT -ffreestanding -O2 -Wall -Wextra -Wl,-ekernal_entry -fdiagnostics-color=always -lstdc++  &> "log/G++OUTPUT.txt"; then
+         printf "%-40s%-4s\e[0;32mDONE\e[0;34m\n"  "${OUTPUT:0:40}" " "
+    else
+
+        #ouput the errors
+        echo -e "\e[0;31m ------------------ CPP FAILED! ------------------ "
+        printf "%s" "$(<log/G++OUTPUT.txt)"
+        echo ""
+        echo -e "\e[0;31m ------------------- CPP DONE! ------------------- "
+        #rm temp.txt
+
+        clean
+
+        exit
+    fi
+}
+
+echo "---------------- BUILDING PROC ------------------"
+
+#compile .c , .cpp , and .h file
+mkdir obj &> /dev/null
+
+cd Proc
+for FILES in $(dir)
+do
+cd $FILES
+
+    echo "=== BUILDING $FILES ==="
+
+    for SUB_FILE in $(find ./ -type f -iregex '.*/.*\.\(c\|cpp\|h\)$')
+    do
+        compileProc $SUB_FILE $FILES &
+    done
+
+    wait
+cd ..
+
+done
+
+cd ..
+
+echo "---------------- BUILDING CPP -------------------"
+
 for OUTPUT in $(find ./ -type f -iregex '.*/.*\.\(c\|cpp\|h\)$')
 do
-compile $OUTPUT
+    if [[ $OUTPUT == *"Proc"* ]]; then
+        printf "%-40s%-4s\e[0;33mSKIP\e[0;34m\n"  "${OUTPUT:0:40}" " "
+    else
+        compilec $OUTPUT &
+        
+
+    fi
+
+
 done
+
 wait
+
+mv *.o obj/
+
+
 
 rm temp.txt &> /dev/null
 
-echo "CPP COMPILED"
+
+echo "---------------- LINKING BUILDS -----------------"
 
 #linking the kernel with kernel.o and boot.o files
-if g++ -m32 -T linker.ld *.o -o FluxedOS.bin -nostdlib -lstdc++ -lgcc_s &> "LINKOUTPUT.txt"; then
-        echo "CPP + ASM LINKED"
-        rm *.o &> /dev/null
+if g++ -m32 -T linker.ld obj/*.o -o FluxedOS.bin -nostdlib -lstdc++ -fdiagnostics-color=always -lgcc_s &> "log/LINKOUTPUT.txt"; then
+    echo "hi" &> /dev/null
 else
 
             #ouput the errors
-            echo " ------------------ LINK FAILED! ------------------ "
-            printf "%s" "$(<LINKOUTPUT.txt)"
+            echo -e "\e[0;31m ------------------ LINK FAILED! ------------------ "
+            printf "%s" "$(<log/LINKOUTPUT.txt)"
             echo ""
-            echo " ------------------- LINK DONE! ------------------- "
+            echo -e "\e[0;31m ------------------- LINK DONE! ------------------- "
             #rm temp.txt
 
-            rm -r isodir &> /dev/null
-            rm FluxedOS.* &> /dev/null
-            rm G++OUTPUT.txt &> /dev/null
-            rm $(find ./ -type f -iregex '.*/.*\.\(gch\)$') &> /dev/null
-            rm *.o &> /dev/null
-            echo "CLEANED FILES"
+            clean    
+
 
             exit
 fi
 
-
+echo "---------------- CREATING GRUB ------------------"
 #check FluxedOS.bin file is x86 multiboot file or not
-grub-file --is-x86-multiboot FluxedOS.bin
-echo "GRUB FILE MADE"
+if grub-file --is-x86-multiboot FluxedOS.bin &> "log/GRUB.txt"; then
+    echo "hi" &> /dev/null
+else
 
+            #ouput the errors
+            echo -e "\e[0;31m ------------------ GRUB FAILED! ------------------ "
+            printf "%s" "$(<log/GRUB.txt)"
+            echo ""
+            echo -e "\e[0;31m ------------------- GRUB DONE! ------------------- "
+  
+  
+            clean
+
+            exit
+fi
+
+echo "---------------- BUILDING ISO -------------------"
 #building the iso file
-mkdir -p isodir/boot/grub &> "isoLOG.txt"
-cp FluxedOS.bin isodir/boot/FluxedOS.bin &>> "isoLOG.txt"
-cp grub.cfg isodir/boot/grub/grub.cfg &>> "isoLOG.txt"
-grub-mkrescue -o FluxedOS.iso isodir &>> "isoLOG.txt"
-echo "ISO FILE MADE"
+mkdir -p isodir/boot/grub &> "log/isoLOG.txt"
+mkdir -p isodir/programs &> "log/isoLOG.txt"
+cp bin/* isodir/programs &> "log/isoLOG.txt"
+cp FluxedOS.bin isodir/boot/FluxedOS.bin &>> "log/isoLOG.txt"
+cp grub.cfg isodir/boot/grub/grub.cfg &>> "log/isoLOG.txt"
+grub-mkrescue -o FluxedOS.iso isodir &>> "log/isoLOG.txt"
 
 
-#run it in qemu
-#screen -d -m 
-qemu-system-x86_64 -cdrom FluxedOS.iso
-echo "QEMU RAN"
+echo "---------------- COPYING ISO --------------------"
+mkdir ../ISO/ &> /dev/null &
+cp FluxedOS.iso ../ISO/ &
+
+
+#run 
+echo "---------------- RUNNING BUILD ------------------"
+qemu-system-x86_64 -cdrom FluxedOS.iso -vga std 
+
+
+
+
+
+
 
 #clean up
-rm -r isodir &> /dev/null
-rm FluxedOS.* &> /dev/null
-rm G++OUTPUT.txt &> /dev/null
-rm $(find ./ -type f -iregex '.*/.*\.\(gch\)$') &> /dev/null
-rm *.o &> /dev/null
-echo "CLEANED FILES"
+clean

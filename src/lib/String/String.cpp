@@ -77,5 +77,7 @@ bool String::operator==(String *str) {
 
 String::~String()
 {
+	//delete this->Data;
+	//delete &this->_Size;
 }
 

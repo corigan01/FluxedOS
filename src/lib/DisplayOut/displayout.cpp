@@ -1,18 +1,21 @@
 #include "displayout.h"
 
-char* D_debug[4] = {"INFO", "DEBUG", "ERROR", "WARNING"};
-char* D_part[3] = {"Kernel", "External", "Unknown"};
+const char* D_debug[4] = {"INFO", "DEBUG", "ERROR", "WARNING"};
+const char* D_part[3] = {"Kernel", "External", "Unknown"};
 int color_R[4] = {WHITE, BLUE, RED, YELLOW};
 
 
-void out(int enu, int core_part, String str) {
+void out(int enu, int core_part, const char* str) {
     print_string("[ ", color_R[enu]);
-    print_string(D_debug[enu], color_R[enu]);
+    print_string((char*)D_debug[enu], color_R[enu]);
     print_string(" - ", color_R[enu]);
-    print_string(D_part[core_part], color_R[enu]);
+    print_string((char*)D_part[core_part], color_R[enu]);
     print_string(" ] --> ", color_R[enu]);
 
-    for (int i = 0; i < str.size(); i++) {
+    //print_int(str.size());
+    //print_new_line();
+    for (int i = 0; i < strlen(str); i++) {
+    
         char ch = str[i];
 
         switch (ch)

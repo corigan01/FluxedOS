@@ -1,4 +1,5 @@
 #include "console.h"
+#include "../compare/compare.h"
 
 
 console::console() {
@@ -14,10 +15,11 @@ console::~console() {
 // clears the screen
 void console::cls() {
     clear_screen();
+    this->print_tal();
 }
 
 // Prints to the screen
-void console::print(String str) {
+void console::print(const char* str) {
     out(D_INFO, KERNEL, str);
 }
 
@@ -42,13 +44,29 @@ void console::drawover(int line, String str) {
 }
 
 
-void console::parse_command(String command) {
-    if (command == "CLS") {
-        cls();
+void console::parse_command(const char* command) {
+    if (strcmp(command, "clear") == 0) {
+        //cls();
+    }
+    else if (strcmp(command, "test") == 0) {
+        print_char('t', RED);
+        print_char('e', GREEN);
+        print_char('s', BLUE);
+        print_char('t', YELLOW);
+        print_new_line();
     }
     else {
+        print_char('\"');
+        print_string((char*)command);
+        print_char('\"');
+        print_new_line();
         out(D_ERROR, KERNEL, "Console could not find that command!");
     }
 
 
+}
+
+
+void console::print_tal()  {
+        print_string(": \0");
 }
