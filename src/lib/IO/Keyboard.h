@@ -86,9 +86,12 @@
 #define KEY_TAB 0x0F
 #define KEY_UP 0x48
 
+#define KEYCODE_ENTER 1
+
 char get_input_keycode();
 
 char get_ascii_char(uint8 key_code);
 
 char getKeydown();
+char getKeyCodedown();
 #endif

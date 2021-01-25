@@ -61,6 +61,7 @@ char get_ascii_char(uint8 key_code)
     case KEY_DOT : return '.';
     case KEY_FORESLHASH : return '/';
     case KEY_SPACE : return ' ';
+    case KEY_ENTER : return KEYCODE_ENTER;
     default : return 0;
   }
 }
@@ -80,5 +81,19 @@ char getKeydown() {
   
   __key_hold = key;
 
-  return '_';
+  return NULL;
+}
+
+char getKeyCodedown() {
+  char key = (get_input_keycode());
+  
+  if (__key_hold != key && key != NULL) {
+      __key_hold = key;
+      return key;
+
+  }
+  
+  __key_hold = key;
+
+  return NULL;
 }

@@ -1,4 +1,5 @@
 #include "console.h"
+#include "../compare/compare.h"
 
 
 console::console() {
@@ -44,11 +45,20 @@ void console::drawover(int line, String str) {
 
 
 void console::parse_command(const char* command) {
-    if (command == "CLS") {
-        cls();
+    if (strcmp(command, "clear") == 0) {
+        //cls();
+    }
+    else if (strcmp(command, "test") == 0) {
+        print_char('t', RED);
+        print_char('e', GREEN);
+        print_char('s', BLUE);
+        print_char('t', YELLOW);
+        print_new_line();
     }
     else {
+        print_char('\"');
         print_string((char*)command);
+        print_char('\"');
         print_new_line();
         out(D_ERROR, KERNEL, "Console could not find that command!");
     }

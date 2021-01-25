@@ -19,41 +19,67 @@ void wait(int how_much) {
 int KernStart() {
     init_vga(WHITE, BLACK);
 
-    print_string("FLUXED OS ------- build ", GREEN);
-    print_int(BUILD);
-    print_char('!', GREEN);
-    print_new_line();
-
+    char* t = "test";
+    if (t == "test") {
+        print_string("FLUXED OS ------- build ", GREEN);
+        print_int(BUILD);
+        print_char('!', GREEN);
+        print_new_line();
+    }
     wait(2);
+
+
+    
 
     //String str;
     //str = "dfsdf";
     //str.c_str();
 
-    char keybuf[80*60] = {};
+    console con;
+    
+
+    char *keybuf;
     int keybufIndex = 0;
 
+    for (int i = 0; i < (80 * 24); i++) {
+        keybuf[i] = NULL;
+    }
+
     char key = getKeydown();
+
+    
+
     while(1) {
         
         
-        if (key != '_') {
-            if (keybufIndex < (80 * 60) - 2) {
+        if (key != NULL) {
+
+            if (key == KEYCODE_ENTER) {
+                print_new_line();
+                con.parse_command(keybuf);
+                print_char('>');
+
+                for (int i = 0; i < (80 * 24); i++) {
+                    keybuf[i] = NULL;
+                }
+                keybufIndex = 0;
+                key = ' ';
+            }
+            else if (keybufIndex < (80*24) - 2) {
                 keybuf[keybufIndex] = key;
                 keybufIndex++;
+
+                print_char(key);
             }
             else {
-                for (int i = 0; i < (80 * 60); i++) {
+                for (int i = 0; i < (80 * 24); i++) {
                     keybuf[i] = NULL;
                 }
                 keybufIndex = 0;
 
-                keybuf[keybufIndex] = key;
-                keybufIndex++;
-                
                 clear_screen();
             }
-            print_char(key);
+           
         }
         
         key = getKeydown();
