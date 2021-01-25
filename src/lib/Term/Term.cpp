@@ -49,6 +49,10 @@ increase vga_index by width of row(80)
 */
 void print_new_line()
 {
+  if (next_line_index > 24) {
+    clear_screen();
+    return;
+  }
   if(next_line_index >= 55){
     next_line_index = 0;
     clear_vga_buffer(&vga_buffer, g_fore_color, g_back_color);

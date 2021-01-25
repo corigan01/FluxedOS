@@ -1,32 +1,27 @@
-[01m[K./lib/Term/Term.cpp:[m[K In function ‘[01m[Kvoid clear_screen()[m[K’:
-[01m[K./lib/Term/Term.cpp:151:21:[m[K [01;35m[Kwarning: [m[Kcomparison of integer expressions of different signedness: ‘[01m[Kint[m[K’ and ‘[01m[Kuint32[m[K’ {aka ‘[01m[Kunsigned int[m[K’} [[01;35m[K-Wsign-compare[m[K]
-  151 |   for (int i = 0; [01;35m[Ki < vga_index[m[K; i++) {
-      |                   [01;35m[K~~^~~~~~~~~~~[m[K
+[01m[K./lib/Term/Term.h:1:9:[m[K [01;35m[Kwarning: [m[K#pragma once in main file
+    1 | #pragma [01;35m[Konce[m[K
+      |         [01;35m[K^~~~[m[K
+[01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+    9 |     print_string([01;35m[K"[ "[m[K, color_R[enu]);
+      |                  [01;35m[K^~~~[m[K
+[01m[K./lib/DisplayOut/displayout.cpp:11:18:[m[K [0In file included from [01m[K./lib/Term/Term.cpp:1[m[K:
 [01m[K./lib/Term/Term.h:[m[K At global scope:
 [01m[K./lib/Term/Term.h:39:12:[m[K [01;35m[Kwarning: [m[K‘[01m[Kdigit_ascii_codes[m[K’ defined but not used [[01;35m[K-Wunused-variable[m[K]
    39 | static int [01;35m[Kdigit_ascii_codes[m[K[10] = {0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39};
       |            [01;35m[K^~~~~~~~~~~~~~~~~[m[K
-[m[K]
-   37 | void console::rewrite(int line, int col, [01;35m[KString str[m[K) {
-      |                                          [01;35m[K~~~~~~~^~~[m[K
-[01m[K./lib/console/console.cpp:[m[K In member function ‘[01m[Kvoid console::drawover(int, String)[m[K’:
-[01m[K./lib/console/console.cpp:42:28:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kline[m[K’ [[01;35m[K-Wunused-parameter[m[K]
-   42 | void console::drawover([01;35m[Kint line[m[K, String str) {
-      |                        [01;35m[K~~~~^~~~[m[K
-[01m[K./lib/console/console.cpp:42:41:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Kstr[m[K’ [[01;35m[K-Wunused-parameter[m[K]
-   42 | void console::drawover(int line, [01;35m[KString str[m[K) {
-      |                                  [01;35m[K~~~~~~~^~~[m[K
-[01m[K./lib/console/console.cpp:[m[K In member function ‘[01m[Kvoid console::print_tal()[m[K’:
-[01m[K./lib/console/console.cpp:71:22:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   71 |         print_string([01;35m[K": \0"[m[K);
-      |                      [01;35m[K^~~~~~[m[K
-In file included from [01m[K./lib/console/../DisplayOut/displayout.h:5[m[K,
-                 from [01m[K./lib/console/console.h:5[m[K,
-                 from [01m[K./lib/console/console.cpp:1[m[K:
-[01m[K./lib/console/../DisplayOut/../Term/Term.h:[m[K At global scope:
-[01m[K./lib/console/../DisplayOut/../Term/Term.h:39:12:[m[K [01;35m[Kwarning: [m[K‘[01m[Kdigit_ascii_codes[m[K’ defined but not used [[01;35m[K-Wunused-variable[m[K]
+int_string([01;35m[K" ] --> "[m[K, color_R[enu]);
+      |                  [01;35m[K^~~~~~~~~[m[K
+[01m[K./lib/DisplayOut/displayout.cpp:17:23:[m[K [01;35m[Kwarning: [m[Kcomparison of integer expressions of different signedness: ‘[01m[Kint[m[K’ and ‘[01m[Kuint32[m[K’ {aka ‘[01m[Kunsigned int[m[K’} [[01;35m[K-Wsign-compare[m[K]
+   17 |     for (int i = 0; [01;35m[Ki < strlen(str)[m[K; i++) {
+      |                     [01;35m[K~~^~~~~~~~~~~~~[m[K
+In file included from [01m[K./lib/DisplayOut/displayout.h:5[m[K:
+[01m[K./lib/DisplayOut/../Term/Term.h:[m[K At global scope:
+[01m[K./lib/DisplayOut/../Term/Term.h:39:12:[m[K [01;35m[Kwarning: [m[K‘[01m[Kdigit_ascii_codes[m[K’ defined but not used [[01;35m[K-Wunused-variable[m[K]
    39 | static int [01;35m[Kdigit_ascii_codes[m[K[10] = {0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39};
       |            [01;35m[K^~~~~~~~~~~~~~~~~[m[K
-[01m[K./lib/console/../DisplayOut/../Term/Term.h:12:16:[m[K [01;35m[Kwarning: [m[K‘[01m[Kvga_buffer[m[K’ defined but not used [[01;35m[K-Wunused-variable[m[K]
+[01m[K./lib/DisplayOut/../Term/Term.h:12:16:[m[K [01;35m[Kwarning: [m[K‘[01m[Kvga_buffer[m[K’ defined but not used [[01;35m[K-Wunused-variable[m[K]
    12 | static uint16* [01;35m[Kvga_buffer[m[K;
       |                [01;35m[K^~~~~~~~~~[m[K
+[K [01;35m[Kwarning: [m[K‘[01m[Kkeybuf[m[K’ is used uninitialized in this function [[01;35m[K-Wuninitialized[m[K]
+   41 |     char *[01;35m[Kkeybuf[m[K;
+      |           [01;35m[K^~~~~~[m[K

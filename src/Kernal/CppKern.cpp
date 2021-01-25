@@ -30,7 +30,7 @@ int KernStart() {
 
 
     
-
+    
     //String str;
     //str = "dfsdf";
     //str.c_str();
@@ -47,7 +47,7 @@ int KernStart() {
 
     char key = getKeydown();
 
-    
+    print_char('>');
 
     while(1) {
         
