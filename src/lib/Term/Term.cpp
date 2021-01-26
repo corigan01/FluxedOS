@@ -67,7 +67,7 @@ void print_char(char ch, int Fcolor, int Bcolor, int charback)
   vga_index = vga_index - charback;
   vga_buffer[vga_index] = vga_entry(ch, Fcolor, Bcolor);
 
-  if (charback > 0)
+  if (charback == 0)
     vga_index++;
 }
 
