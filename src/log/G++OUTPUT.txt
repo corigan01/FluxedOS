@@ -1,30 +1,3 @@
-[01m[K./lib/DisplayOut/displayout.cpp:[m[K In function ‘[01m[Kvoid out(int, int, const char*)[m[K’:
-[01m[K./lib/DisplayOut/displayout.cpp:9:18:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-    9 |     print_string([01;35m[K"[ "[m[K, color_R[enu]);
-      |                  [01;35m[K^~~~[m[K
-[01m[K./lib/DisplayOut/displayout.cpp:11:18:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   11 |     print_string([01;35m[K" - "[m[K, color_R[enu]);
-      |                  [01;35m[K^~~~~[m[K
-[01m[K./lib/DisplayOut/displayout.cpp:13:18:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   13 |     print_string([01;35m[K" ] --> "[m[K, color_R[enu]);
-      |                  [01;35m[K^~~~~~~~~[m[K
-[01m[K./lib/DisplayOut/displayout.cpp:17:23:[m[K [01;35m[Kwarning: [m[Kcomparison of integer expressions of different signedness: ‘[01m[Kint[m[K’ and ‘[01m[Kuint32[m[K’ {aka ‘[01m[Kunsigned int[m[K’} [[01;35m[K-Wsign-compare[m[K]
-   17 |     for (int i = 0; [01;35m[Ki < strlen(str)[m[K; i++) {
-      |                     [01;35m[K~~^~~~~~~~~~~~~[m[K
-In file included from [01m[K./lib/DisplayOut/displayout.h:5[m[K,
-                 from [01m[K./lib/DisplayOut/displayout.cpp:1[m[K:
-[01m[K./lib/DisplayOut/../Term/Term.h:[m[K At global scope:
-[01m[K./lib/DisplayOut/../Term/Term.h:39:12:[m[K [01;35m[Kwarning: [m[K‘[01m[Kdigit_ascii_codes[m[K’ defined but not used [[01;35m[K-Wunused-variable[m[K]
-   39 | static int [01;35m[Kdigit_ascii_codes[m[K[10] = {0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39};
-      |            [01;35m[K^~~~~~~~~~~~~~~~~[m[K
-[01m[K./lib/Dis[01m[K./Kernal/CppKern.cpp:[m[K In function ‘[01m[Kint KernStart()[m[K’:
-[01m[K./Kernal/CppKern.cpp:41:11:[m[K [01;35m[Kwarning: [m[K‘[01m[Kkeybuf[m[K’ is used uninitialized in this function [[01;35m[K-Wuninitialized[m[K]
-   41 |     char *[01;35m[Kkeybuf[m[K;
-      |           [01;35m[K^~~~~~[m[K
-ib/console/../DisplayOut/../Term/Term.h:[m[K At global scope:
-[01m[K./lib/console/../DisplayOut/../Term/Term.h:39:12:[m[K [01;35m[Kwarning: [m[K‘[01m[Kdigit_ascii_codes[m[K’ defined but not used [[01;35m[K-Wunused-variable[m[K]
-   39 | static int [01;35m[Kdigit_ascii_codes[m[K[10] = {0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39};
-      |            [01;35m[K^~~~~~~~~~~~~~~~~[m[K
-[01m[K./lib/console/../DisplayOut/../Term/Term.h:12:16:[m[K [01;35m[Kwarning: [m[K‘[01m[Kvga_buffer[m[K’ defined but not used [[01;35m[K-Wunused-variable[m[K]
-   12 | static uint16* [01;35m[Kvga_buffer[m[K;
-      |                [01;35m[K^~~~~~~~~~[m[K
+[01m[K./lib/Term/Term.h:1:9:[m[K [01;35m[Kwarning: [m[K#pragma once in main file
+    1 | #pragma [01;35m[Konce[m[K
+      |         [01;35m[K^~~~[m[K

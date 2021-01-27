@@ -4,20 +4,29 @@
 #include "../lib/Vector/vector.h"
 #include "../lib/console/console.h"
 
+
+
 void wait(int how_much) {
 
-    uint32 timer_count = (uint32)how_much * 0x02FFFFFF;
+    print_new_line();
+    print_string("System stopped for: s", YELLOW);
+    int i = 0;
+    while((i / 55000) < how_much){
+        i++;
 
-    while(1){
-    asm volatile("nop");
-    timer_count--;
-    if(timer_count <= 0)
-      break;
-    }
+        asm volatile("nop");
+        
+        
+        print_hold_int(i / 55000);
+    };
 }
 
 int KernStart() {
     init_vga(WHITE, BLACK);
+
+
+    
+    
 
     char* t = "test";
     if (t == "test") {
@@ -27,6 +36,8 @@ int KernStart() {
         print_new_line();
     }
     wait(2);
+
+    
 
 
     
@@ -49,21 +60,24 @@ int KernStart() {
 
     print_char('>');
 
-
+   
+    
 
     while(!con.shouldReturn()) {
         
         
         if (key != NULL) {
-            if (key == KEY_BACKSPACE) {
-                print_char('-', WHITE, BLACK, 1);
-                keybufIndex--;
-                keybuf[keybufIndex] = NULL;
-                
+            if (key == KEY_BACKSPACE ) {
+                if (keybufIndex > 0) {
+                    print_char(' ', WHITE, BLACK, 1);
+                    keybufIndex--;
+                    keybuf[keybufIndex] = NULL;
+                }
             }
             else if (key == KEYCODE_ENTER) {
                 print_new_line();
-                con.parse_command(keybuf);
+                if (keybufIndex > 0)
+                    con.parse_command(keybuf);
                 print_char('>');
 
                 for (int i = 0; i < (80 * 24); i++) {
@@ -100,7 +114,6 @@ int KernStart() {
     print_string("======= OS =======", GREEN);
 
 
-   
 
     return 0;
 }
