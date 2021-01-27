@@ -195,7 +195,7 @@ rm temp.txt &> /dev/null
 echo "---------------- LINKING BUILDS -----------------"
 
 #linking the kernel with kernel.o and boot.o files
-if g++ -m32 -libstd -T linker.ld  obj/*.o -o FluxedOS.bin  &> "log/LINKOUTPUT.txt"; then
+if g++ -m32 -lstdc++ -nostartfiles -T linker.ld  obj/*.o -o FluxedOS.bin  &> "log/LINKOUTPUT.txt"; then
     echo "hi" &> /dev/null
 else
 

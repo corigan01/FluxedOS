@@ -42,7 +42,7 @@ extern void _isr31();
 //This means that the entry is present, is running kernel level, and has the lower 5 bits
 void isr_install()
 {
-    printf("Installing ISRs...");
+    //printf("Installing ISRs...");
     idt_set_gate(0, (unsigned)_isr0, 0x08, 0x8E);
     idt_set_gate(1, (unsigned)_isr1, 0x08, 0x8E);
     idt_set_gate(2, (unsigned)_isr2, 0x08, 0x8E);
@@ -131,7 +131,7 @@ void fault_handler(struct regs *r)
     {
         print_string(exception_messages[r->int_no], RED, BLACK);
         print_string(" Exception. System Halted!\n", RED, BLACK);
-        while(1);
+        //while(1);
     }
 }
 

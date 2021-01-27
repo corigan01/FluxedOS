@@ -1,4 +1,5 @@
 #include "CppKern.h"
+#include "../lib/Term/Term.h"
 #include "../cpu/cpu.h"
 
 
@@ -10,9 +11,12 @@ int kernal_entry() {
     
 
     //enable the interrupts
-    __asm__ __volatile__("sti");
+    asm volatile("sti");
 
+    //print_string("t: ", WHITE, BLACK);
+    //print_int( 0 / 0 );
 
+    //while(1);
 
     KernStart();
 

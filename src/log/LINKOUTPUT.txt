@@ -1,2 +1,0 @@
-/usr/bin/ld: cannot find -libstd
-collect2: error: ld returned 1 exit status

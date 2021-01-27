@@ -51,7 +51,7 @@ void gdt_set_gate(int num, unsigned long base, unsigned long limit, unsigned cha
 *  new segment registers */
 void gdt_install()
 {
-    printf("Initializing GDT...");
+    //printf("Initializing GDT...");
     /* Setup the GDT pointer and limit */
     gp.limit = (sizeof(struct gdt_entry) * 3) - 1;
     gp.base = (unsigned int)&gdt;
