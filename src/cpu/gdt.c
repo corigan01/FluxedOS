@@ -52,6 +52,8 @@ void gdt_set_gate(int num, unsigned long base, unsigned long limit, unsigned cha
 void gdt_install()
 {
     //printf("Initializing GDT...");
+    print_string("Installing GDT...", WHITE, BLACK);
+    
     /* Setup the GDT pointer and limit */
     gp.limit = (sizeof(struct gdt_entry) * 3) - 1;
     gp.base = (unsigned int)&gdt;
@@ -74,4 +76,5 @@ void gdt_install()
     /* Flush out the old GDT and install the new changes! */
     _gdt_flush();
     print_string("OK", GREEN, BLACK);
+    print_new_line();
 }

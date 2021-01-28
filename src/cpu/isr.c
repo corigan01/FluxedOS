@@ -42,7 +42,7 @@ extern void _isr31();
 //This means that the entry is present, is running kernel level, and has the lower 5 bits
 void isr_install()
 {
-    //printf("Installing ISRs...");
+    print_string("Installing ISRs...", WHITE, BLACK);
     idt_set_gate(0, (unsigned)_isr0, 0x08, 0x8E);
     idt_set_gate(1, (unsigned)_isr1, 0x08, 0x8E);
     idt_set_gate(2, (unsigned)_isr2, 0x08, 0x8E);
@@ -79,6 +79,8 @@ void isr_install()
     idt_set_gate(30, (unsigned)_isr30, 0x08, 0x8E);
     idt_set_gate(31, (unsigned)_isr31, 0x08, 0x8E);
     print_string("OK", GREEN, BLACK);
+    print_new_line();
+
 }
 
 //let's define an array of strings to represent the exception messages for our ISRs
@@ -92,7 +94,6 @@ char *exception_messages[] =
     "Out of Bounds",
     "Invalid Opcode",
     "No Coprocessor",
-
     "Double Fault",
     "Coprocessor Segment Overrun",
     "Bad TSS",
@@ -101,7 +102,6 @@ char *exception_messages[] =
     "General Protection Fault",
     "Page Fault",
     "Unknown Interrupt",
-
     "Coprocessor Fault",
     "Alignment Check",
     "Machine Check",
@@ -110,7 +110,6 @@ char *exception_messages[] =
     "Reserved",
     "Reserved",
     "Reserved",
-
     "Reserved",
     "Reserved",
     "Reserved",
@@ -127,11 +126,15 @@ char *exception_messages[] =
 //and this function will check the registers and find the exception message
 void fault_handler(struct regs *r)
 {
+    init_vga(WHITE, BLACK);
     if (r->int_no < 32)
     {
         print_string(exception_messages[r->int_no], RED, BLACK);
         print_string(" Exception. System Halted!\n", RED, BLACK);
-        //while(1);
+        while(1);
+    }
+    else {
+        print_string(exception_messages[r->int_no], RED, BLACK);
     }
 }
 

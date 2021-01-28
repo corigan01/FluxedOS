@@ -44,6 +44,7 @@ void idt_set_gate(unsigned char num, unsigned long base, unsigned short sel, uns
 //to install the IDT, we can use the following function
 void idt_install(){
     //printf("Initializing IDT...");
+    print_string("Installing IDT...", WHITE, BLACK);
     //set the special IDT pointer just like we did in gdt.c
     idtp.limit = (sizeof(struct idt_entry)*256)-1;
     idtp.base = (unsigned int)&idt; //point the base of IDT pointer to our idt_entry's address
@@ -54,4 +55,6 @@ void idt_install(){
     //tell the processor to point the internal register to the new IDT
     load_idt();
     print_string("OK", GREEN, BLACK);
+    print_new_line();
+
 }

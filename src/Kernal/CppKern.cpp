@@ -22,6 +22,7 @@ void wait(int how_much) {
 }
 
 int KernStart() {
+    asm volatile("sti");
     init_vga(WHITE, BLACK);
 
 
@@ -35,9 +36,9 @@ int KernStart() {
         print_char('!', GREEN);
         print_new_line();
     }
-    wait(2);
+  
 
-    
+
 
 
     

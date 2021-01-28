@@ -1,9 +1,10 @@
-#include "CppKern.h"
+//#include "CppKern.h"
 #include "../lib/Term/Term.h"
 #include "../cpu/cpu.h"
 
 
 int kernal_entry() {
+    init_vga(WHITE, BLACK);
     gdt_install();
     idt_install();
     isr_install();
@@ -11,10 +12,8 @@ int kernal_entry() {
     
 
     //enable the interrupts
-    asm volatile("sti");
+    asm ("sti");
 
-    //print_string("t: ", WHITE, BLACK);
-    //print_int( 0 / 0 );
 
     //while(1);
 
@@ -23,7 +22,7 @@ int kernal_entry() {
 
     
     print_new_line();
-    print_string("System stopped for: s", YELLOW, BLACK);
+    print_string("System stopped for: ", YELLOW, BLACK);
     while(1){
         static int i = 0;
         i++;

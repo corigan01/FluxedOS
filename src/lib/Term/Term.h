@@ -12,7 +12,7 @@ extern "C" {
 #define VGA_ADDRESS 0xB8000
 #define BUFSIZE 8000
 
-static uint16* vga_buffer;
+
 
 
 enum vga_color {

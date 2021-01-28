@@ -74,6 +74,7 @@ void irq_remap(void){
 //into the correct IDT entries
 
 void irq_install(){
+    print_string("Installing IRQs...", WHITE, BLACK);
     //printf("Installing IRQs...");
     irq_remap();
 
@@ -95,6 +96,8 @@ void irq_install(){
     idt_set_gate(46, (unsigned)_irq14, 0x08, 0x8E);
     idt_set_gate(47, (unsigned)_irq15, 0x08, 0x8E);
     print_string("OK", GREEN, BLACK);
+    print_new_line();
+
 }
 
 //now we use a irq_handler instead of fault_handler

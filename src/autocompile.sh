@@ -170,11 +170,11 @@ do
     if [[ $OUTPUT == *"Proc"* ]]; then
         printf "%-40s%-4s\e[0;33mSKIP\e[0;34m\n"  "${OUTPUT:0:40}" " "
     elif [[ $OUTPUT == *".cpp"* ]]; then
-        compilec $OUTPUT
+        compilec $OUTPUT &
     elif [[ $OUTPUT == *".c"* ]]; then
-        compilec_ $OUTPUT
+        compilec_ $OUTPUT &
     else
-        compilec $OUTPUT
+        printf "%-40s%-4s\e[0;32mDONE\e[0;34m\n"  "${OUTPUT:0:40}" " "
          
         
 

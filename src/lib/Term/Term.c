@@ -8,7 +8,7 @@ uint32 next_line_index = 1;
 
 int buffer_reset = 0;
 
-
+uint16* vga_buffer = (uint16*)VGA_ADDRESS;
 
 uint16 vga_entry(unsigned char ch, uint8 fore_color, uint8 back_color) 
 {
@@ -39,7 +39,6 @@ void clear_vga_buffer(uint16 **buffer, uint8 fore_color, uint8 back_color)
 //initialize vga buffer
 void init_vga(uint8 fore_color, uint8 back_color)
 {
-  vga_buffer = (uint16*)VGA_ADDRESS;
   clear_vga_buffer(&vga_buffer, fore_color, back_color);
   g_fore_color = fore_color;
   g_back_color = back_color;
