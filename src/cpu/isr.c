@@ -42,7 +42,7 @@ extern void _isr31();
 //This means that the entry is present, is running kernel level, and has the lower 5 bits
 void isr_install()
 {
-    print_string("Installing ISRs...", WHITE, BLACK);
+    print_string("ISRs -->", WHITE, BLACK);
     idt_set_gate(0, (unsigned)_isr0, 0x08, 0x8E);
     idt_set_gate(1, (unsigned)_isr1, 0x08, 0x8E);
     idt_set_gate(2, (unsigned)_isr2, 0x08, 0x8E);
@@ -120,10 +120,7 @@ char *exception_messages[] =
     "Reserved"
 };
 
-//the following function is the fault_handler
-//this tells us what exception occured during the run-time
-//as we declared in boot.asm, all ISRs point to this function
-//and this function will check the registers and find the exception message
+
 void fault_handler(struct regs *r)
 {
     init_vga(WHITE, BLACK);

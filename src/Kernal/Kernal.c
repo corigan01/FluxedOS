@@ -15,7 +15,6 @@ int kernal_entry() {
     asm ("sti");
 
 
-    //while(1);
 
     KernStart();
 
