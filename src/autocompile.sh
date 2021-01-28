@@ -1,4 +1,5 @@
 # Display the welcome
+tis=$(date +%s%N)
 echo "      ________                    __   ______          "
 echo "     / ____/ /_  ___  _____  ____/ /  / ____/___  ____ "
 echo "    / /_  / / / / / |/_/ _ \/ __  /  / /   / __ \\/ __ \\"
@@ -40,13 +41,13 @@ clean() {
 compilea() {
     OUTPUT="$1"
 
-    if as --32 $OUTPUT.s -o boot.o  &> "log/A++OUTPUT.txt"; then
+    if nasm -f elf $OUTPUT.s -o boot.o  &> "log/A++OUTPUT.txt"; then
             echo -e "$OUTPUT \t\t\t\t    \e[0;32mDONE\e[0;34m" 
         else
 
             #ouput the errors
             echo -e "\e[0;31m ------------------ ASM FAILED! ------------------ "
-            printf "%s" "$(<A++OUTPUT.txt)"
+            printf "%s" "$(<log/A++OUTPUT.txt)"
             echo ""
             echo -e "\e[0;31m ------------------- ASM DONE! ------------------- "
             #rm temp.txt
@@ -89,13 +90,40 @@ compileProc() {
 }
 
 #compile the given file with g++
+compilec_() {
+    OUTPUT="$1"
+
+    mkdir log &> /dev/null
+    local ts=$(date +%s%N)
+
+    if gcc -m32 -elf_i386 -Wall -O -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-builtin -c  $OUTPUT -fdiagnostics-color=always  &> "log/G++COUTPUT.txt"; then
+         local PFD=$((($(date +%s%N) - $ts)/1000000))
+         printf "%-40s%-4s\e[0;32mDONE - $PFD ms\e[0;34m\n"  "${OUTPUT:0:40}" " "
+    else
+
+        #ouput the errors
+        echo -e "\e[0;31m ------------------ C FAILED! -------------------- "
+        printf "%s" "$(<log/G++COUTPUT.txt)"
+        echo ""
+        echo -e "\e[0;31m ------------------- C DONE! --------------------- "
+        #rm temp.txt
+
+        clean
+
+        exit
+    fi
+}
+
+#compile the given file with g++
 compilec() {
     OUTPUT="$1"
 
     mkdir log &> /dev/null
+    local ts=$(date +%s%N)
 
-    if g++ -m32 -lgcc_s -c $OUTPUT -ffreestanding -O2 -Wall -Wextra -Wl,-ekernal_entry -fdiagnostics-color=always -lstdc++  &> "log/G++OUTPUT.txt"; then
-         printf "%-40s%-4s\e[0;32mDONE\e[0;34m\n"  "${OUTPUT:0:40}" " "
+    if g++ -m32 -elf_i386 -Wall -O -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-builtin -c  $OUTPUT -fdiagnostics-color=always  &> "log/G++OUTPUT.txt"; then
+         local PFD=$((($(date +%s%N) - $ts)/1000000))
+         printf "%-40s%-4s\e[0;32mDONE - $PFD ms\e[0;34m\n"  "${OUTPUT:0:40}" " "
     else
 
         #ouput the errors
@@ -141,8 +169,13 @@ for OUTPUT in $(find ./ -type f -iregex '.*/.*\.\(c\|cpp\|h\)$')
 do
     if [[ $OUTPUT == *"Proc"* ]]; then
         printf "%-40s%-4s\e[0;33mSKIP\e[0;34m\n"  "${OUTPUT:0:40}" " "
-    else
+    elif [[ $OUTPUT == *".cpp"* ]]; then
         compilec $OUTPUT &
+    elif [[ $OUTPUT == *".c"* ]]; then
+        compilec_ $OUTPUT &
+    else
+        printf "%-40s%-4s\e[0;32mDONE\e[0;34m\n"  "${OUTPUT:0:40}" " "
+         
         
 
     fi
@@ -162,7 +195,7 @@ rm temp.txt &> /dev/null
 echo "---------------- LINKING BUILDS -----------------"
 
 #linking the kernel with kernel.o and boot.o files
-if g++ -m32 -T linker.ld obj/*.o -o FluxedOS.bin -nostdlib -lstdc++ -fdiagnostics-color=always -lgcc_s &> "log/LINKOUTPUT.txt"; then
+if g++ -m32 -lstdc++ -nostartfiles -T linker.ld  obj/*.o -o FluxedOS.bin  &> "log/LINKOUTPUT.txt"; then
     echo "hi" &> /dev/null
 else
 
@@ -211,7 +244,7 @@ echo "---------------- COPYING ISO --------------------"
 mkdir ../ISO/ &> /dev/null &
 cp FluxedOS.iso ../ISO/ &
 
-
+echo "BUILD IN $((($(date +%s%N) - $tis)/1000000)) ms" &
 #run 
 echo "---------------- RUNNING BUILD ------------------"
 qemu-system-x86_64 -cdrom FluxedOS.iso -vga std 
@@ -224,3 +257,4 @@ qemu-system-x86_64 -cdrom FluxedOS.iso -vga std
 
 #clean up
 clean
+

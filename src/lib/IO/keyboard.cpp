@@ -62,6 +62,7 @@ char get_ascii_char(uint8 key_code)
     case KEY_FORESLHASH : return '/';
     case KEY_SPACE : return ' ';
     case KEY_ENTER : return KEYCODE_ENTER;
+    case KEY_BACKSPACE : return KEY_BACKSPACE;
     default : return 0;
   }
 }

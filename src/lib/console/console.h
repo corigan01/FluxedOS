@@ -35,8 +35,12 @@ class console {
 
     void print_tal();
 
+
+    bool shouldReturn();
+
     private:
 
+    bool closed = false;
     //Vector<String> Data;
 
         

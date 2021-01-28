@@ -1,5 +1,12 @@
-sudo apt install g++
-sudo apt install gcc-multilib
-sudo apt install g++-multilib
-sudo apt install qemu-system-x86
-sudo apt install xorriso
+echo "UPDATING YOUR SYSTEM"
+sudo apt update
+echo "UPGRADING YOUR SYSTEM"
+sudo apt upgrade -y
+
+echo "INSTALLING PACKAGES TO BUILD FluxedOS"
+sudo apt install git -y
+sudo apt install g++ -y
+sudo apt install gcc-multilib -y
+sudo apt install g++-multilib -y 
+sudo apt install qemu-system-x86 -y
+sudo apt install xorriso -y

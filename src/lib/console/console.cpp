@@ -45,23 +45,96 @@ void console::drawover(int line, String str) {
 
 
 void console::parse_command(const char* command) {
-    if (strcmp(command, "clear") == 0) {
-        //cls();
+    char* var[6][4] = {{"test", "tt", "", ""}, {"cls", "clear", "flush", "new"}, {"echo", "printf", "disp", "display"}, {"info", "stat", "dispinfo", ""}, {"help", "", "", ""}, {"halt", "shutdown", "kill", "stop"}};
+
+    enum dipInf {
+      dipInfTEST = 1,
+      dipInfCLS,
+      dipInfECHO,
+      dipInfINFO,  
+      dipInfHELP,
+      dipInfHALT,
+    };
+
+    int pos = 0;
+
+    char * spliced_command = "";
+    int splcommand = 0;
+
+    for (int i = 0; i < 6; i ++) {
+        for (int e = 0; e < 4; e++) {
+            
+            if (strcmp(command, (const char*)var[i][e]) == 0) {
+                pos = i + 1;
+                //print_string((char*)command);
+                //print_string(" was ");
+                //print_string(var[i][e]);
+                //print_new_line();
+
+                goto EN;
+                // take away the rest of the string
+                //for (int f = 0; f < strlen(var[i][e]); f++) {
+                //    spliced_command[splcommand] = var[i][e][f];
+                //    splcommand++;
+                //}
+            }
+
+            else {
+                //print_string(var[i][e]);
+                //print_string(" = ");
+                //print_string((char*)command);
+                //print_new_line();
+            }
+        }
     }
-    else if (strcmp(command, "test") == 0) {
-        print_char('t', RED);
-        print_char('e', GREEN);
-        print_char('s', BLUE);
-        print_char('t', YELLOW);
+
+    EN:
+
+
+    switch (pos)
+    {
+    case dipInfTEST:
+        print_string("TEST", RED, GREEN);
+        break;
+
+    case dipInfCLS:
+        this->cls();
+        break;
+
+    case dipInfECHO:
+        print_string(spliced_command, GREEN);
+        break;
+
+    case dipInfINFO:
+        print_string("An Hobbiest OS project", GREEN);
         print_new_line();
-    }
-    else {
-        print_char('\"');
-        print_string((char*)command);
-        print_char('\"');
+        print_string("A OS made by Quest (aka corigan01)!", GREEN);
+        break;
+
+    case dipInfHELP:
+        print_string("{test, tt} --------------- displays test text", GREEN);
         print_new_line();
-        out(D_ERROR, KERNEL, "Console could not find that command!");
+        print_string("{cls, clear, flush, new} --------------- clears the screen", GREEN);
+        print_new_line();
+        print_string("{echo, printf, disp, display} --------------- displays", GREEN);
+        print_new_line();
+        print_string("{info, stat, dispinfo} --------------- displays info about the OS", GREEN);
+        print_new_line();
+        print_string("{halt, shutdown, stop, kill} --------------- will stop the os", GREEN);
+        print_new_line();
+        print_string("{help} --------------- displays this", GREEN);
+        break;
+
+    case dipInfHALT:
+        closed = true;
+        break;
+
+    default:
+        out(D_ERROR, KERNEL, "Console could not find a command of that name!");
+        break;
     }
+
+    print_new_line();
 
 
 }
@@ -69,4 +142,8 @@ void console::parse_command(const char* command) {
 
 void console::print_tal()  {
         print_string(": \0");
+}
+
+bool console::shouldReturn() {
+    return this->closed;
 }

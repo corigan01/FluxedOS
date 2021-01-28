@@ -5,11 +5,14 @@
 
 #include "../core/core.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define VGA_ADDRESS 0xB8000
 #define BUFSIZE 8000
 
-static uint16* vga_buffer;
+
 
 
 enum vga_color {
@@ -58,8 +61,12 @@ increase vga_index by width of row(80)
 */
 void print_new_line();
 
+#ifdef __cplusplus
 //assign ascii character to video buffer
-void print_char(char ch, int Fcolor = g_fore_color, int Bcolor = g_back_color);
+void print_char(char ch, int Fcolor = g_fore_color, int Bcolor = g_back_color, int charback = 0);
+#else
+void print_char(char ch, int Fcolor, int Bcolor, int charback);
+#endif
 
 
 uint32 strlen(const char* str);
@@ -68,9 +75,12 @@ uint32 digit_count(int num);
 
 void itoa(int num, char *number);
 
+#ifdef __cplusplus
 //print string by calling print_char
 void print_string(char *str, int Fcolor = g_fore_color, int Bcolor = g_back_color);
-
+#else
+void print_string(char *str, int Fcolor, int Bcolor);
+#endif
 
 //print int by converting it into string
 //& then printing string
@@ -84,5 +94,12 @@ void clear_screen();
 int get_vga_index();
 
 int get_line_index();
+
+void printf(const char* format, ...);
+
+#ifdef __cplusplus
+}
+#endif
+
 
 #endif
