@@ -1,5 +1,6 @@
 #include "console.h"
 #include "../compare/compare.h"
+#include "../IO/Keyboard.h"
 
 
 console::console() {
@@ -43,9 +44,12 @@ void console::drawover(int line, String str) {
 
 }
 
+void looper_test() {
+    
+}
 
 void console::parse_command(const char* command) {
-    char* var[6][4] = {{"test", "tt", "", ""}, {"cls", "clear", "flush", "new"}, {"echo", "printf", "disp", "display"}, {"info", "stat", "dispinfo", ""}, {"help", "", "", ""}, {"halt", "shutdown", "kill", "stop"}};
+    char* var[7][4] = {{"test", "tt", "", ""}, {"cls", "clear", "flush", "new"}, {"echo", "printf", "disp", "display"}, {"info", "stat", "dispinfo", ""}, {"help", "", "", ""}, {"halt", "shutdown", "kill", "stop"}, {"edit", "", "", ""}};
 
     enum dipInf {
       dipInfTEST = 1,
@@ -54,6 +58,8 @@ void console::parse_command(const char* command) {
       dipInfINFO,  
       dipInfHELP,
       dipInfHALT,
+      dipInfEDIT,
+
     };
 
     int pos = 0;
@@ -61,7 +67,7 @@ void console::parse_command(const char* command) {
     char * spliced_command = "";
     int splcommand = 0;
 
-    for (int i = 0; i < 6; i ++) {
+    for (int i = 0; i < 7; i ++) {
         for (int e = 0; e < 4; e++) {
             
             if (strcmp(command, (const char*)var[i][e]) == 0) {
@@ -127,6 +133,62 @@ void console::parse_command(const char* command) {
 
     case dipInfHALT:
         closed = true;
+        break;
+
+    case dipInfEDIT:
+        {
+            clear_screen();
+            char key = getKeydown();
+
+            char* keybuf;
+            int keybufIndex = 0;
+
+            while(key != KEY_ESC ) {
+            
+            
+                if (key != NULL) {
+                    if (key == KEY_BACKSPACE ) {
+                        if (keybufIndex > 0) {
+                            print_char(' ', WHITE, BLACK, 1);
+                            keybufIndex--;
+                            keybuf[keybufIndex] = NULL;
+                        }
+                    }
+                    else if (key == KEYCODE_ENTER) {
+                        print_new_line();
+
+
+                        for (int i = 0; i < (80 * 24); i++) {
+                            keybuf[i] = NULL;
+                        }
+                        keybufIndex = 0;
+                        key = ' ';
+                    }
+                    else if (keybufIndex < (80*24) - 2) {
+                        keybuf[keybufIndex] = key;
+                        keybufIndex++;
+
+                        print_char(key);
+                    }
+                    else {
+                        for (int i = 0; i < (80 * 24); i++) {
+                            keybuf[i] = NULL;
+                        }
+                        keybufIndex = 0;
+
+                        clear_screen();
+                    }
+                }
+            
+            
+            
+                key = getKeydown();
+            delete[] keybuf;
+            }   
+            
+            print_new_line();
+            print_string("Exiting edit...", RED, BLACK);
+        }
         break;
 
     default:

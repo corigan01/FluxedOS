@@ -123,7 +123,7 @@ char *exception_messages[] =
 
 void fault_handler(struct regs *r)
 {
-    init_vga(WHITE, BLACK);
+    //init_vga(WHITE, BLACK);
     if (r->int_no < 32)
     {
         print_string(exception_messages[r->int_no], RED, BLACK);

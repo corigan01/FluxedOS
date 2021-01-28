@@ -12,14 +12,14 @@ int kernal_entry() {
     
 
     //enable the interrupts
-    asm ("sti");
+    asm volatile("sti");
 
 
 
     KernStart();
 
 
-    
+    init_vga(WHITE, BLACK);
     print_new_line();
     print_string("System stopped for: ", YELLOW, BLACK);
     while(1){
