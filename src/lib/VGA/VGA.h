@@ -64,6 +64,7 @@ namespace VGA
     void PRINT_STR(const char * str);
     void SET_COLOR(uint8 fore_color, uint8 back_color);
     void kprintf(const char* format, ...);
+    void PRINT_INT(int in);
 
 
 

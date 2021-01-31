@@ -1,0 +1,20 @@
+[01m[K./lib/VGA/VGA.cpp:[m[K In function ‘[01m[Kvoid VGA::PRINT_STR(const char*)[m[K’:
+[01m[K./lib/VGA/VGA.cpp:134:22:[m[K [01;35m[Kwarning: [m[Kcomparison of integer expressions of different signedness: ‘[01m[Kint[m[K’ and ‘[01m[Kuint32[m[K’ {aka ‘[01m[Kunsigned int[m[K’} [[01;35m[K-Wsign-compare[m[K]
+  134 |    for (int i = 0; [01;35m[Ki < length[m[K; i++) {
+      |                    [01;35m[K~~^~~~~~~~[m[K
+[01m[K./lib/VGA/VGA.cpp:[m[K In function ‘[01m[Kvoid VGA::kprintf(const char*, ...)[m[K’:
+[01m[K./lib/VGA/VGA.cpp:156:12:[m[K [01;35m[Kwarning: [m[Kunused variable ‘[01m[KChopped_args[m[K’ [[01;35m[K-Wunused-variable[m[K]
+  156 |     char **[01;35m[KChopped_args[m[K;
+      |            [01;35m[K^~~~~~~~~~~~[m[K
+In file included from [01m[K./lib/VGA/VGA.cpp:2[m[K:
+[01m[K./lib/VGA/../Term/Term.h:[m[K At global scope:
+[01m[K./lib/VGA/../Term/Term.h:42:12:[m[K [01;35m[Kwarning: [m[K‘[01m[Kdigit_ascii_codes[m[K’ defined but not used [[01;35m[K-Wunused-variable[m[K]
+   42 | static int [01;35m[Kdigit_ascii_codes[m[K[10] = {0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39};
+      |            [01;35m[K^~~~~~~~~~~~~~~~~[m[K
+[01m[K./lib/VGA/VGA.cpp:[m[K In function ‘[01m[Kvoid VGA::kprintf(const char*, ...)[m[K’:
+[01m[K./lib/VGA/VGA.cpp:165:12:[m[K [01;35m[Kwarning: [m[K‘[01m[KinputText[m[K’ is used uninitialized in this function [[01;35m[K-Wuninitialized[m[K]
+  165 |     char * [01;35m[KFirstText[m[K = inputText[0];
+      |            [01;35m[K^~~~~~~~~[m[K
+[01m[K./lib/VGA/VGA.cpp:190:33:[m[K [01;35m[Kwarning: [m[K‘[01m[Kin[m[K’ may be used uninitialized in this function [[01;35m[K-Wmaybe-uninitialized[m[K]
+  190 |                             [01;35m[Kitoa((int)inputText[usedVarIndex++], in)[m[K;
+      |                             [01;35m[K~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K

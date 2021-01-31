@@ -2,8 +2,8 @@
 #include "Kernal.h"
 #include "BUILD.h"
 #include "../lib/Vector/vector.h"
-#include "../lib/console/console.h"
 #include "../lib/VGA/VGA.h"
+#include "../lib/VirtualConsole/VirtualConsole.h"
 
 
 
@@ -13,16 +13,27 @@ int KernStart() {
     VGA::INIT_DISPLAY();
 
     VGA::SET_COLOR(VGA::COLORS::GREEN, VGA::COLORS::BLACK);
-    VGA::PRINT_STR("Hello from FluxedOS ------\n\n\n\ttest\n");
-
-    VGA::SET_COLOR(VGA::COLORS::WHITE, VGA::COLORS::BLACK);
-    VGA::PRINT_STR("The big test\n\n");
-
-    VGA::kprintf("test %s test3", "test2");
+    VGA::kprintf("Fluxed OS ====== BUILD %d\n", BUILD);
 
 
+    VirtualConsole console;
 
-    while (1);
+    console.Handle();
+
+
+
+
+
+
+
+
+
+
+    VGA::PRINT_STR("\n\n");
+    VGA::SET_COLOR(VGA::COLORS::RED, VGA::COLORS::BLACK);
+    VGA::PRINT_STR("Kernel has exited!");
+
+    //while(1);
     
     //return 1;
     return 0;

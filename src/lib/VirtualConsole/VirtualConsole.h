@@ -2,13 +2,23 @@
 #define VIRT_CONOSL_H
 
 #include "../VGA/VGA.h"
+#include "../IO/Keyboard.h"
+
 
 
 class VirtualConsole {
 public:
 
     VirtualConsole() {
+        VGA::PRINT_STR("\nStarted VirtualConsole\n");
+    }
+    ~VirtualConsole() {
+        VGA::PRINT_STR("\nExiting VirtualConsole\n");
+    }
+
+    void Handle() {
         
+    
     }
 
 

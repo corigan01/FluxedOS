@@ -1,4 +1,5 @@
 #include "VGA.h"
+#include "../Term/Term.h"
 
 
 namespace STORE {
@@ -32,6 +33,8 @@ namespace BUFFERS {
 
 
 void VGA::INIT_DISPLAY() {
+    BUFFERS::DEFAULT_BUFFER.line_number = 0;
+    BUFFERS::DEFAULT_BUFFER.size = 0;
     BUFFERS::DEFAULT_BUFFER.Buff = VGA_PLACEMENT VGA_ADDRESS;
 
     VGA::CLEAR_DISPLAY();
@@ -99,9 +102,10 @@ void VGA::PRINT_CHAR(char ch){
             }
             BUFFERS::DEFAULT_BUFFER.size = 80 * BUFFERS::DEFAULT_BUFFER.line_number;
             BUFFERS::DEFAULT_BUFFER.line_number++;
+            incLine(); 
         break;
     case '\r':
-            BUFFERS::DEFAULT_BUFFER.line_number = 0;
+            BUFFERS::DEFAULT_BUFFER.line_number--;
         break;
     case '\t':
             for (int i = 0; i < 5; i ++) {
@@ -109,6 +113,12 @@ void VGA::PRINT_CHAR(char ch){
             }
         break;
     default:
+        if (BUFFERS::DEFAULT_BUFFER.line_number > 0) {
+            if (BUFFERS::DEFAULT_BUFFER.size / (BUFFERS::DEFAULT_BUFFER.line_number ) > 80) {
+                VGA::PRINT_CHAR('\n');
+            }
+        }
+        
         BUFFERS::DEFAULT_BUFFER.Buff[BUFFERS::DEFAULT_BUFFER.size] = VGA::VGA_ENTRY(ch, STORE::__MODS[3], STORE::__MODS[2]);
         BUFFERS::DEFAULT_BUFFER.size++;
         break;
@@ -134,100 +144,68 @@ void VGA::SET_COLOR(uint8 fore_color, uint8 back_color) {
 }
 
 
-void INT_TO_A(uint8_t *INPUT_BUFFER, uint32_t base, uint32_t d) {
-   uint8_t *p = INPUT_BUFFER;
-   uint8_t *p1, *p2;
-   uint32_t ud = d;
-   uint32_t divisor = 10;
-
-   if(base == 'd' && d < 0) {
-       *p++ = '-';
-       INPUT_BUFFER++;
-       ud = -d;
-   } else
-     if (base == 'x')
-         divisor = 16;
-
-   do{
-       uint32_t remainder = ud % divisor;
-       *p++ = (remainder < 10) ? remainder + '0' : remainder + 'a' - 10;
-   } while (ud /= divisor);
-
-   *p = 0;
-   p1 = INPUT_BUFFER;
-   p2 = p - 1;
-   while (p1 < p2) {
-     uint8_t tmp = *p1;
-     *p1 = *p2;
-     *p2 = tmp;
-     p1++;
-     p2--;
-   }
+void VGA::PRINT_INT(int in) { 
+    char str_num[digit_count(in)+1];
+    itoa(in, str_num);
+    VGA::PRINT_STR(str_num);
 }
 
-
 void VGA::kprintf(const char* format, ...) {
-    uint8_t **ARGS = (uint8_t **) &format;
-    uint8_t CHA;
-    uint8_t INPUT_BUFFER[20];
+    char **ARGS = (char **) &format;
+    int InputVarSize = 0;
+    char **Chopped_args;
 
-    ARGS++;
 
-    while((CHA = *format++) != 0) {
+    char** inputText;
+    char *c;
+    while ((c = *ARGS++) != 0) {
+        inputText[InputVarSize++] = c;
+    }
 
-        if (CHA != '%')
-            VGA::PRINT_CHAR (CHA);
+    char * FirstText = inputText[0];
+    int usedVarIndex = 1;
+    
+    if (InputVarSize > 0) {
+        int FirstTextSize = strlen(FirstText);
+        for (int i = 0; i < FirstTextSize; i++) {
+            if (FirstText[i] == '%') {
+                if (FirstTextSize > i) {
+                    if (usedVarIndex >= InputVarSize) {
+                        PRINT_STR("%[That VAR was not given!]");
+                    }
+                    else {
+                        switch (FirstText[i + 1])
+                        {
+                        case ' ':
+                        case '\0':
+                            PRINT_CHAR('%');
+                            i--;
+                            break;
+                        case 's':
+                            PRINT_STR(inputText[usedVarIndex++]);
+                            break;
 
-        else {
-            uint8_t *p, *p2;
-            int pad0 = 0, pad = 0;
-
-            CHA = *format++;
-
-            if (CHA == '0') {
-                pad0 = 1;
-                CHA = *format++;
-            }
-
-            if (CHA >= '0' && CHA <= '9') {
-                pad = CHA - '0';
-                CHA = *format++;
-            }
-
-            switch (CHA) {
-            case 'X':
-            case 'd':
-            case 'u':
-            case 'x':
-                INT_TO_A(INPUT_BUFFER, CHA, *((int *) ARGS++));
-                p = INPUT_BUFFER;
-                goto string;
-
-                break;
-
-            case 's':
-                p = *ARGS++;
-
-                if (! p)
-                    p = (uint8_t*)"(null)";
-
-                string:
-
-                for (p2 = p; *p2; p2++) {};
-                for (; p2 < p + pad; p2++) {
-                    VGA::PRINT_CHAR(pad0 ? '0' : ' ');
+                        case 'd':
+                            char* in;
+                            itoa((int)inputText[usedVarIndex++], in);
+                            PRINT_STR(in);
+                            break;
+                        
+                        default:
+                            PRINT_STR("%[Unknown char \'");
+                            PRINT_CHAR(FirstText[i + 1]);
+                            PRINT_STR("\'!]");
+                            break;
+                        }
+                    }
+                    i++;
                 }
-
-                while (*p) {
-                    VGA::PRINT_CHAR(*p++);
-                }
-
-                break;
-
-            default:
-                VGA::PRINT_CHAR(*((int *) ARGS++));
-                break;
+            }
+            else {
+                PRINT_CHAR(FirstText[i]);
             }
         }
     }
+
+    PRINT_STR("\n");
 }

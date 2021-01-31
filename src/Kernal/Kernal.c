@@ -4,7 +4,7 @@
 
 
 int kernal_entry() {
-    init_vga(WHITE, BLACK);
+    
     gdt_install();
     idt_install();
     isr_install();
@@ -14,12 +14,12 @@ int kernal_entry() {
     //enable the interrupts
     asm volatile("sti");
 
-
+    print_string("Starting CPP Kernel entry point...", YELLOW, BLACK);
 
     KernStart();
 
 
-    init_vga(WHITE, BLACK);
+    
     print_new_line();
     print_string("System stopped for: ", YELLOW, BLACK);
     while(1){
