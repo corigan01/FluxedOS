@@ -33,11 +33,12 @@ namespace BUFFERS {
 
 
 void VGA::INIT_DISPLAY() {
-    BUFFERS::DEFAULT_BUFFER.line_number = 0;
-    BUFFERS::DEFAULT_BUFFER.size = 0;
+    BUFFERS::DEFAULT_BUFFER.line_number = getLine();
+    BUFFERS::DEFAULT_BUFFER.size = getBuf();
     BUFFERS::DEFAULT_BUFFER.Buff = VGA_PLACEMENT VGA_ADDRESS;
 
-    VGA::CLEAR_DISPLAY();
+    //VGA::CLEAR_DISPLAY();
+    VGA::PRINT_CHAR('\n');
 
 }
 
@@ -106,11 +107,16 @@ void VGA::PRINT_CHAR(char ch){
         break;
     case '\r':
             BUFFERS::DEFAULT_BUFFER.line_number--;
+            VGA::PRINT_CHAR('\n');
         break;
     case '\t':
             for (int i = 0; i < 5; i ++) {
                 VGA::PRINT_CHAR(' ');
             }
+        break;
+    case '\e':
+        BUFFERS::DEFAULT_BUFFER.size--;
+        BUFFERS::DEFAULT_BUFFER.Buff[BUFFERS::DEFAULT_BUFFER.size] = VGA_ENTRY(' ', WHITE, BLACK);
         break;
     default:
         if (BUFFERS::DEFAULT_BUFFER.line_number > 0) {
@@ -170,6 +176,7 @@ void VGA::kprintf(const char* format, ...) {
         for (int i = 0; i < FirstTextSize; i++) {
             if (FirstText[i] == '%') {
                 if (FirstTextSize > i) {
+                    VGA::PRINT_INT(usedVarIndex);
                     if (usedVarIndex >= InputVarSize) {
                         PRINT_STR("%[That VAR was not given!]");
                     }
@@ -195,6 +202,7 @@ void VGA::kprintf(const char* format, ...) {
                             PRINT_STR("%[Unknown char \'");
                             PRINT_CHAR(FirstText[i + 1]);
                             PRINT_STR("\'!]");
+                            usedVarIndex++;
                             break;
                         }
                     }

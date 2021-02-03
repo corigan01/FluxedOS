@@ -12,9 +12,13 @@ int kernal_entry() {
     
 
     //enable the interrupts
-    asm volatile("sti");
+    __asm__ __volatile__ ("sti");
 
     print_string("Starting CPP Kernel entry point...", YELLOW, BLACK);
+
+    
+
+
 
     KernStart();
 
@@ -22,14 +26,19 @@ int kernal_entry() {
     
     print_new_line();
     print_string("System stopped for: ", YELLOW, BLACK);
-    while(1){
-        static int i = 0;
+        
+    int i = 1;
+    while((i / 10000) < 100){
         i++;
 
         asm volatile("nop");
         
-        print_hold_int(i / 55000);
+        print_hold_int( ( (i / 10000)) );
     };
+
+    __asm__ __volatile__("cli");
+
+    
     return 0;
 }
 
