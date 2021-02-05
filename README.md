@@ -10,6 +10,7 @@ To create an OS in C/C++ that is fast, and is built for modern computers from th
 ![](https://github.com/corigan01/FluxedOS/blob/main/os_pictures/commands.png)
 
 # How to I compile?
+All of these commands are in src!
 ```bash
 # This installs the required packages to build [TESTED ON (UBUNTU / LINUX MINT)] 
 # NOTE :: You only need to do this step once
