@@ -6,8 +6,29 @@ A hobbyist OS project!
 # What is this project?
 To create an OS in C/C++ that is fast, and is built for modern computers from the ground up
 
-![](https://github.com/corigan01/FluxedOS/blob/main/os_pictures/files.png)
+# Commands and stuff inside the os
+![](https://github.com/corigan01/FluxedOS/blob/main/os_pictures/commands.png)
 
+# How to I compile?
+```bash
+# This installs the required packages to build [TESTED ON (UBUNTU / LINUX MINT)] 
+# NOTE :: You only need to do this step once
+# WARNING :: This script uses sudo / apt, please look over any script before you run as sudo
+# If you would like to install the packages on your own, or use don't use apt, the packages are
+# git 
+# g++ 
+# gcc
+# gcc-multilib 
+# g++-multilib -
+# qemu-system-x86 
+# xorriso 
+&> sudo bash install.sh 
+
+# This line will build and run the OS. 
+&> bash autocompile.sh
+```
+### This is what the build should look like
+![](https://github.com/corigan01/FluxedOS/blob/main/os_pictures/build.png)
 
 # How do I contribute?
 1. Fork the project
@@ -15,17 +36,11 @@ To create an OS in C/C++ that is fast, and is built for modern computers from th
 3. Submit a pull request with good context on what you changed
 4. If the pull request is good, the code is now in the main project!
 
-
-# How to I compile?
-1. install tools (sudo bash installTools.sh) NOTE: You only need to do this step once
-2. Run the autocompile.sh script
-the autocompile script builds and runs the project
-
-![](https://github.com/corigan01/FluxedOS/blob/main/os_pictures/build.png)
+## File structure
+![](https://github.com/corigan01/FluxedOS/blob/main/os_pictures/files.png)
 
 
-# Commands and stuff inside the os
-![](https://github.com/corigan01/FluxedOS/blob/main/os_pictures/commands.png)
+
 
 
 
