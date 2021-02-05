@@ -27,7 +27,7 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Install
-        run: src/install.sh
+        run: sudo src/install.sh
         
       - name: Compile
         run: src/autocompile.sh
