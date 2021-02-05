@@ -1,7 +1,24 @@
 # FluxedOS
+![](https://github.com/corigan01/FluxedOS/blob/main/os_pictures/home%20screen.png)
+
 A hobbyist OS project!
 
-![](https://github.com/corigan01/FluxedOS/blob/main/os_pictures/home%20screen.png)
+## Goals of this project so far
+- [x] Interupts
+- [x] TEXT MODE VGA 
+- [x] C++ Loaded from C
+- [ ] ATA (ide) Driver
+- [ ] File system
+- [ ] Read and Write
+- [ ] Install to Drive
+- [ ] Boot from Drive
+- [ ] Heap / Memory management 
+- [ ] Threading
+- [ ] Running External Programs 
+- [ ] VGA GRAPHICS MODE
+- [ ] Basic VGA commands like Draw , DrawLine , DrawBox
+- [ ] Really Basic UI for running Programs
+- [ ] Add more to the list after all of these are done! :)
 
 # What is this project?
 To create an OS in C/C++ that is fast, and is built for modern computers from the ground up
