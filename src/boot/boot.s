@@ -30,7 +30,7 @@ mboot:
 stublet:
     extern kernal_entry
     call kernal_entry
-    jmp stublet
+    jmp $
 
 global _gdt_flush
 extern gp

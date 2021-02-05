@@ -28,17 +28,18 @@ int kernal_entry() {
     print_string("System stopped for: ", YELLOW, BLACK);
         
     int i = 1;
-    while((i / 10000) < 100){
+    while((i / 50000) < 100){
         i++;
 
         asm volatile("nop");
         
-        print_hold_int( ( (i / 10000)) );
+        print_hold_int( ( (i / 50000)) );
     };
 
     __asm__ __volatile__("cli");
 
-    
+    print_new_line();
+    print_string("Goodbye!", RED, WHITE);
     return 0;
 }
 

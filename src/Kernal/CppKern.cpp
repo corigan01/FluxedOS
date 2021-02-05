@@ -7,7 +7,6 @@
 #include "../cpu/cpu.h"
 
 
-
 int KernStart() {
     asm volatile("sti");
     VGA::INIT_DISPLAY();
@@ -15,13 +14,13 @@ int KernStart() {
     VGA::SET_COLOR(VGA::COLORS::GREEN, VGA::COLORS::BLACK);
     VGA::kprintf("Fluxed OS ====== BUILD %d\n", BUILD);
 
-    VGA::kprintf("Testing VGA commands\nShould be a new line\n Should be %s = %d \nShould not look broken \'T-\eE-\eS-\eT\'\nShould be broken %t %s %d\nDONE!", "ten", 10);
+    VGA::kprintf("Testing VGA commands\nAll statments should be true!\n%s = %d\nYou should not see \'-\' in \'T-\eE-\eS-\eT\'\nShould be broken %t %s %d\nDONE!", "ten", 10);
 
     VirtualConsole console;
 
     console.Handle();
 
-
+     
 
     
 

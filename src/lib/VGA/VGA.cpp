@@ -159,13 +159,30 @@ void VGA::PRINT_INT(int in) {
 void VGA::kprintf(const char* format, ...) {
     char **ARGS = (char **) &format;
     int InputVarSize = 0;
-    char **Chopped_args;
 
 
     char** inputText;
     char *c;
-    while ((c = *ARGS++) != 0) {
-        inputText[InputVarSize++] = c;
+    while (c = *ARGS++) {
+        int i = 0; while(c[i++] != 0);
+
+        // FIXME
+        // InputVarSize is always = 6
+        // This was added to fix the problem, and inded it did to an extent
+        // This broke all numbers as it set them to ~104399 or something
+        // Also new lines are broken as it takes some text and moves it to the other line 
+        // 
+        // Test Output:
+        // This is some te
+        // at is working! xt th
+        //
+        // What it should look like:
+        // This is some te
+        // xt that is working!
+        //
+        //if (i > 1) {
+            inputText[InputVarSize++] = c;
+        //}
     }
 
     char * FirstText = inputText[0];
@@ -176,9 +193,10 @@ void VGA::kprintf(const char* format, ...) {
         for (int i = 0; i < FirstTextSize; i++) {
             if (FirstText[i] == '%') {
                 if (FirstTextSize > i) {
-                    VGA::PRINT_INT(usedVarIndex);
+                    
                     if (usedVarIndex >= InputVarSize) {
                         PRINT_STR("%[That VAR was not given!]");
+                        
                     }
                     else {
                         switch (FirstText[i + 1])
@@ -216,4 +234,6 @@ void VGA::kprintf(const char* format, ...) {
     }
 
     PRINT_STR("\n");
+
+
 }

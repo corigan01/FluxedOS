@@ -1,20 +1,26 @@
-[01m[K./lib/VGA/VGA.cpp:[m[K In function ‘[01m[Kvoid VGA::PRINT_STR(const char*)[m[K’:
-[01m[K./lib/VGA/VGA.cpp:140:22:[m[K [01;35m[Kwarning: [m[Kcomparison of integer expressions of different signedness: ‘[01m[Kint[m[K’ and ‘[01m[Kuint32[m[K’ {aka ‘[01m[Kunsigned int[m[K’} [[01;35m[K-Wsign-compare[m[K]
-  140 |    for (int i = 0; [01;35m[Ki < length[m[K; i++) {
-      |                    [01;35m[K~~^~~~~~~~[m[K
-[01m[K./lib/VGA/VGA.cpp:[m[K In function ‘[01m[Kvoid VGA::kprintf(const char*, ...)[m[K’:
-[01m[K./lib/VGA/VGA.cpp:162:12:[m[K [01;35m[Kwarning: [m[Kunused variable ‘[01m[KChopped_args[m[K’ [[01;35m[K-Wunused-variable[m[K]
-  162 |     char **[01;35m[KChopped_args[m[K;
-      |            [01;35m[K^~~~~~~~~~~~[m[K
-In file included from [01m[K./lib/VGA/VGA.cpp:2[m[K:
-[01m[K./lib/VGA/../Term/Term.h:[m[K At global scope:
-[01m[K./lib/VGA/../Term/Term.h:42:12:[m[K [01;35m[Kwarning: [m[K‘[01m[Kdigit_ascii_codes[m[K’ defined but not used [[01;35m[K-Wunused-variable[m[K]
+[01m[K./lib/String/String.cpp:[m[K In member function ‘[01m[Kvoid String::operator=(const char*)[m[K’:
+[01m[K./lib/String/String.cpp:23:16:[m[K [01;35m[Kwarning: [m[Kcomparison with string literal results in unspecified behavior [[01;35m[K-Waddress[m[K]
+   23 |  if (_str_i != [01;35m[K""[m[K)
+      |                [01;35m[K^~[m[K
+   |                  [01;35m[K^~~~[m[K
+[01m[K./lib/DisplayOut/displayout.cpp:11:18:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   11 |     print_string([01;35m[K" - "[m[K, color_R[enu]);
+      |                  [01;35m[K^~~~~[m[K
+[01m[K./lib/DisplayOut/displayout.cpp:13:18:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   13 |     print_string([01;35m[K" ] --> "[m[K, color_R[enu]);
+      |                  [01;35m[K^~~~~~~~~[m[K
+[01m[K./lib/DisplayOut/displayout.cpp:17:23:[m[K [01;35m[Kwarning: [m[Kcomparison of integer expressions of different signedness: ‘[01m[Kint[m[K’ and ‘[01m[Kuint32[m[K’ {aka ‘[01m[Kunsigned int[m[K’} [[01;35m[K-Wsign-compare[m[K]
+   17 |     for (int i = 0; [01;35m[Ki < strlen(str)[m[K; i++) {
+      |                     [01;35m[K~~^~~~~~~~~~~~~[m[K
+In file included from [01m[K./lib/DisplayOut/displayout.h:5[m[K,
+                 from [01m[K./lib/DisplayOut/displayout.cpp:1[m[K:
+[01m[K./lib/DisplayOut/../Term/Term.h:[m[K At global scope:
+[01m[K./lib/DisplayOut/../Term/Term.h:42:12:[m[K [01;35m[Kwarning: [m[K‘[01m[Kdigit_ascii_codes[m[K’ defined but not used [[01;35m[K-Wunused-variable[m[K]
    42 | static int [01;35m[Kdigit_ascii_codes[m[K[10] = {0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39};
       |            [01;35m[K^~~~~~~~~~~~~~~~~[m[K
-[01m[K./lib/VGA/VGA.cpp:[m[K In function ‘[01m[Kvoid VGA::kprintf(const char*, ...)[m[K’:
-[01m[K./lib/VGA/VGA.cpp:171:12:[m[K [01;35m[Kwarning: [m[K‘[01m[KinputText[m[K’ is used uninitialized in this function [[01;35m[K-Wuninitialized[m[K]
-  171 |     char * [01;35m[KFirstText[m[K = inputText[0];
+./lib/VGA/VGA.cpp:188:12:[m[K [01;35m[Kwarning: [m[K‘[01m[KinputText[m[K’ is used uninitialized in this function [[01;35m[K-Wuninitialized[m[K]
+  188 |     char * [01;35m[KFirstText[m[K = inputText[0];
       |            [01;35m[K^~~~~~~~~[m[K
-[01m[K./lib/VGA/VGA.cpp:197:33:[m[K [01;35m[Kwarning: [m[K‘[01m[Kin[m[K’ may be used uninitialized in this function [[01;35m[K-Wmaybe-uninitialized[m[K]
-  197 |                             [01;35m[Kitoa((int)inputText[usedVarIndex++], in)[m[K;
+[01m[K./lib/VGA/VGA.cpp:215:33:[m[K [01;35m[Kwarning: [m[K‘[01m[Kin[m[K’ may be used uninitialized in this function [[01;35m[K-Wmaybe-uninitialized[m[K]
+  215 |                             [01;35m[Kitoa((int)inputText[usedVarIndex++], in)[m[K;
       |                             [01;35m[K~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
