@@ -1,8 +1,7 @@
-[01m[K./lib/String/String.cpp:[m[K In member function ‘[01m[Kvoid String::operator=(const char*)[m[K’:
-[01m[K./lib/String/String.cpp:23:16:[m[K [01;35m[Kwarning: [m[Kcomparison with string literal results in unspecified behavior [[01;35m[K-Waddress[m[K]
-   23 |  if (_str_i != [01;35m[K""[m[K)
-      |                [01;35m[K^~[m[K
-   |                  [01;35m[K^~~~[m[K
+[01m[K./lib/DisplayOut/displayout.cpp:[m[K In function ‘[01m[Kvoid out(int, int, const char*)[m[K’:
+[01m[K./lib/DisplayOut/displayout.cpp:9:18:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+    9 |     print_string([01;35m[K"[ "[m[K, color_R[enu]);
+      |                  [01;35m[K^~~~[m[K
 [01m[K./lib/DisplayOut/displayout.cpp:11:18:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
    11 |     print_string([01;35m[K" - "[m[K, color_R[enu]);
       |                  [01;35m[K^~~~~[m[K

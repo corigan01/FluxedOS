@@ -165,7 +165,7 @@ void VGA::kprintf(const char* format, ...) {
     char *c;
     while (c = *ARGS++) {
         int i = 0; while(c[i++] != 0);
-
+        
         // FIXME
         // InputVarSize is always = 6
         // This was added to fix the problem, and inded it did to an extent

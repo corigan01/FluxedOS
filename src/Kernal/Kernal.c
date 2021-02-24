@@ -16,12 +16,8 @@ int kernal_entry() {
 
     print_string("Starting CPP Kernel entry point...", YELLOW, BLACK);
 
-    
-
-
 
     KernStart();
-
 
     
     print_new_line();

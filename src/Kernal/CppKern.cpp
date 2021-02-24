@@ -6,31 +6,45 @@
 #include "../lib/VirtualConsole/VirtualConsole.h"
 #include "../cpu/cpu.h"
 
+class KernelEntry {
+public:
+    
+    KernelEntry() {
+        asm volatile("sti");
+        VGA::INIT_DISPLAY();
+
+        VGA::SET_COLOR(VGA::COLORS::GREEN, VGA::COLORS::BLACK);
+        VGA::kprintf("Fluxed OS ====== BUILD %d\n", BUILD);
+    }
+
+    ~KernelEntry() {
+        VGA::PRINT_STR("\n\n");
+        VGA::SET_COLOR(VGA::COLORS::RED, VGA::COLORS::BLACK);
+        VGA::PRINT_STR("Kernel has exited!");
+    }
+
+    void Test() {
+        VGA::SET_COLOR(VGA::COLORS::MAGENTA, VGA::COLORS::BLACK);
+        VGA::kprintf("Testing VGA commands\nAll statments should be true!\n%s = %d\nYou should not see \'-\' in \'T-\eE-\eS-\eT\'\nShould be broken %t %s %d\nDONE!", "ten", 10);
+
+        // test tripping the isr
+        
+    }
+
+    void kern() {
+        VGA::SET_COLOR(VGA::COLORS::WHITE, VGA::COLORS::BLACK);
+        VirtualConsole console;
+
+        console.Handle();
+        
+    }
+};
 
 int KernStart() {
-    asm volatile("sti");
-    VGA::INIT_DISPLAY();
+    KernelEntry krnl;
 
-    VGA::SET_COLOR(VGA::COLORS::GREEN, VGA::COLORS::BLACK);
-    VGA::kprintf("Fluxed OS ====== BUILD %d\n", BUILD);
+    krnl.Test();
+    krnl.kern();
 
-    VGA::kprintf("Testing VGA commands\nAll statments should be true!\n%s = %d\nYou should not see \'-\' in \'T-\eE-\eS-\eT\'\nShould be broken %t %s %d\nDONE!", "ten", 10);
-
-    VirtualConsole console;
-
-    console.Handle();
-
-     
-
-    
-
-
-    VGA::PRINT_STR("\n\n");
-    VGA::SET_COLOR(VGA::COLORS::RED, VGA::COLORS::BLACK);
-    VGA::PRINT_STR("Kernel has exited!");
-
-    //while(1);
-    
-    //return 1;
     return 0;
 }
