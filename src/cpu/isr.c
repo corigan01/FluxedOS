@@ -78,6 +78,7 @@ void isr_install()
     idt_set_gate(29, (unsigned)_isr29, 0x08, 0x8E);
     idt_set_gate(30, (unsigned)_isr30, 0x08, 0x8E);
     idt_set_gate(31, (unsigned)_isr31, 0x08, 0x8E);
+
     print_string("OK", GREEN, BLACK);
     print_new_line();
 
@@ -123,7 +124,8 @@ char *exception_messages[] =
 
 void fault_handler(struct regs *r)
 {
-    init_vga(WHITE, BLACK);
+    //init_vga(WHITE, BLACK);
+    print_string("FAULT ----", RED, BLACK);
     if (r->int_no < 32)
     {
         print_string(exception_messages[r->int_no], RED, BLACK);
@@ -132,6 +134,9 @@ void fault_handler(struct regs *r)
     }
     else {
         print_string(exception_messages[r->int_no], RED, BLACK);
+        print_string("-=", RED, BLACK);
+        print_int(r->int_no + 10);
+        print_string("=-", RED, BLACK);
     }
 }
 

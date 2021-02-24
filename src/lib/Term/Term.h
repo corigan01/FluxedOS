@@ -95,6 +95,11 @@ int get_vga_index();
 
 int get_line_index();
 
+void incLine();
+
+int getLine();
+int getBuf();
+
 void printf(const char* format, ...);
 
 #ifdef __cplusplus

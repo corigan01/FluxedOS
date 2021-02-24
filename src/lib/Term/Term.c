@@ -265,3 +265,15 @@ void printf(const char* format, ...) {
             }
         }
 }
+
+void incLine() {
+  next_line_index++;
+}
+
+int getLine() {
+  return next_line_index;
+}
+
+int getBuf() {
+  return vga_index;
+}

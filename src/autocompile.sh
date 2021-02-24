@@ -257,4 +257,3 @@ qemu-system-x86_64 -cdrom FluxedOS.iso -vga std
 
 #clean up
 clean
-

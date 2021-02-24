@@ -3,7 +3,6 @@
 
 #include "../core/core.h"
 
-extern "C++"
 
 class String
 {

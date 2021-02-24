@@ -1,119 +1,25 @@
-[01m[K./lib/String/String.cpp:[m[K In member function ‘[01m[Kvoid String::operator=(const char*)[m[K’:
-[01m[K./lib/String/String.cpp:23:16:[m[K [01;35m[Kwarning: [m[Kcomparison with string literal results in unspecified behavior [[01;35m[K-Waddress[m[K]
-   23 |  if (_str_i != [01;35m[K""[m[K)
-      |                [01;35m[K^~[m[K
-, "", ""}, {"cls", "clear", "flush", "new"}, {"echo", "printf", "disp", "display"}, {"info", "stat", "dispinfo", ""}, {"help", "", "", ""}, {"halt", "shutdown", "kill", "stop"}};
-      |                         [01;35m[K^~~~~~[m[K
-[01m[K./lib/console/console.cpp:48:33:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   48 |     char* var[6][4] = {{"test", [01;35m[K"tt"[m[K, "", ""}, {"cls", "clear", "flush", "new"}, {"echo", "printf", "disp", "display"}, {"info", "stat", "dispinfo", ""}, {"help", "", "", ""}, {"halt", "shutdown", "kill", "stop"}};
-      |                                 [01;35m[K^~~~[m[K
-[01m[K./lib/console/console.cpp:48:39:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   48 |     char* var[6][4] = {{"test", "tt", [01;35m[K""[m[K, ""}, {"cls", "clear", "flush", "new"}, {"echo", "printf", "disp", "display"}, {"info", "stat", "dispinfo", ""}, {"help", "", "", ""}, {"halt", "shutdown", "kill", "stop"}};
-      |                                       [01;35m[K^~[m[K
-[01m[K./lib/console/console.cpp:48:43:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   48 |     char* var[6][4] = {{"test", "tt", "", [01;35m[K""[m[K}, {"cls", "clear", "flush", "new"}, {"echo", "printf", "disp", "display"}, {"info", "stat", "dispinfo", ""}, {"help", "", "", ""}, {"halt", "shutdown", "kill", "stop"}};
-      |                                           [01;35m[K^~[m[K
-[01m[K./lib/console/console.cpp:48:49:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   48 |     char* var[6][4] = {{"test", "tt", "", ""}, {[01;35m[K"cls"[m[K, "clear", "flush", "new"}, {"echo", "printf", "disp", "display"}, {"info", "stat", "dispinfo", ""}, {"help", "", "", ""}, {"halt", "shutdown", "kill", "stop"}};
-      |                                                 [01;35m[K^~~~~[m[K
-[01m[K./lib/console/console.cpp:48:56:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   48 |     char* var[6][4] = {{"test", "tt", "", ""}, {"cls", [01;35m[K"clear"[m[K, "flush", "new"}, {"echo", "printf", "disp", "display"}, {"info", "stat", "dispinfo", ""}, {"help", "", "", ""}, {"halt", "shutdown", "kill", "stop"}};
-      |                                                        [01;35m[K^~~~~~~[m[K
-[01m[K./lib/console/console.cpp:48:65:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   48 |     char* var[6][4] = {{"test", "tt", "", ""}, {"cls", "clear", [01;35m[K"flush"[m[K, "new"}, {"echo", "printf", "disp", "display"}, {"info", "stat", "dispinfo", ""}, {"help", "", "", ""}, {"halt", "shutdown", "kill", "stop"}};
-      |                                                                 [01;35m[K^~~~~~~[m[K
-[01m[K./lib/console/console.cpp:48:74:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   48 |     char* var[6][4] = {{"test", "tt", "", ""}, {"cls", "clear", "flush", [01;35m[K"new"[m[K}, {"echo", "printf", "disp", "display"}, {"info", "stat", "dispinfo", ""}, {"help", "", "", ""}, {"halt", "shutdown", "kill", "stop"}};
-      |                                                                          [01;35m[K^~~~~[m[K
-[01m[K./lib/console/console.cpp:48:83:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   48 |     char* var[6][4] = {{"test", "tt", "", ""}, {"cls", "clear", "flush", "new"}, {[01;35m[K"echo"[m[K, "printf", "disp", "display"}, {"info", "stat", "dispinfo", ""}, {"help", "", "", ""}, {"halt", "shutdown", "kill", "stop"}};
-      |                                                                                   [01;35m[K^~~~~~[m[K
-[01m[K./lib/console/console.cpp:48:91:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   48 |     char* var[6][4] = {{"test", "tt", "", ""}, {"cls", "clear", "flush", "new"}, {"echo", [01;35m[K"printf"[m[K, "disp", "display"}, {"info", "stat", "dispinfo", ""}, {"help", "", "", ""}, {"halt", "shutdown", "kill", "stop"}};
-      |                                                                                           [01;35m[K^~~~~~~~[m[K
-[01m[K./lib/console/console.cpp:48:101:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   48 |     char* var[6][4] = {{"test", "tt", "", ""}, {"cls", "clear", "flush", "new"}, {"echo", "printf", [01;35m[K"disp"[m[K, "display"}, {"info", "stat", "dispinfo", ""}, {"help", "", "", ""}, {"halt", "shutdown", "kill", "stop"}};
-      |                                                                                                     [01;35m[K^~~~~~[m[K
-[01m[K./lib/console/console.cpp:48:109:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   48 |     char* var[6][4] = {{"test", "tt", "", ""}, {"cls", "clear", "flush", "new"}, {"echo", "printf", "disp", [01;35m[K"display"[m[K}, {"info", "stat", "dispinfo", ""}, {"help", "", "", ""}, {"halt", "shutdown", "kill", "stop"}};
-      |                                                                                                             [01;35m[K^~~~~~~~~[m[K
-[01m[K./lib/console/console.cpp:48:122:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   48 |     char* var[6][4] = {{"test", "tt", "", ""}, {"cls", "clear", "flush", "new"}, {"echo", "printf", "disp", "display"}, {[01;35m[K"info"[m[K, "stat", "dispinfo", ""}, {"help", "", "", ""}, {"halt", "shutdown", "kill", "stop"}};
-      |                                                                                                                          [01;35m[K^~~~~~[m[K
-[01m[K./lib/console/console.cpp:48:130:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   48 |     char* var[6][4] = {{"test", "tt", "", ""}, {"cls", "clear", "flush", "new"}, {"echo", "printf", "disp", "display"}, {"info", [01;35m[K"stat"[m[K, "dispinfo", ""}, {"help", "", "", ""}, {"halt", "shutdown", "kill", "stop"}};
-      |                                                                                                                                  [01;35m[K^~~~~~[m[K
-[01m[K./lib/console/console.cpp:48:138:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   48 |     char* var[6][4] = {{"test", "tt", "", ""}, {"cls", "clear", "flush", "new"}, {"echo", "printf", "disp", "display"}, {"info", "stat", [01;35m[K"dispinfo"[m[K, ""}, {"help", "", "", ""}, {"halt", "shutdown", "kill", "stop"}};
-      |                                                                                                                                          [01;35m[K^~~~~~~~~~[m[K
-[01m[K./lib/console/console.cpp:48:150:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   48 |     char* var[6][4] = {{"test", "tt", "", ""}, {"cls", "clear", "flush", "new"}, {"echo", "printf", "disp", "display"}, {"info", "stat", "dispinfo", [01;35m[K""[m[K}, {"help", "", "", ""}, {"halt", "shutdown", "kill", "stop"}};
-      |                                                                                                                                                      [01;35m[K^~[m[K
-[01m[K./lib/console/console.cpp:48:156:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   48 |     char* var[6][4] = {{"test", "tt", "", ""}, {"cls", "clear", "flush", "new"}, {"echo", "printf", "disp", "display"}, {"info", "stat", "dispinfo", ""}, {[01;35m[K"help"[m[K, "", "", ""}, {"halt", "shutdown", "kill", "stop"}};
-      |                                                                                                                                                            [01;35m[K^~~~~~[m[K
-[01m[K./lib/console/console.cpp:48:164:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   48 |     char* var[6][4] = {{"test", "tt", "", ""}, {"cls", "clear", "flush", "new"}, {"echo", "printf", "disp", "display"}, {"info", "stat", "dispinfo", ""}, {"help", [01;35m[K""[m[K, "", ""}, {"halt", "shutdown", "kill", "stop"}};
-      |                                                                                                                                                                    [01;35m[K^~[m[K
-[01m[K./lib/console/console.cpp:48:168:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   48 |     char* var[6][4] = {{"test", "tt", "", ""}, {"cls", "clear", "flush", "new"}, {"echo", "printf", "disp", "display"}, {"info", "stat", "dispinfo", ""}, {"help", "", [01;35m[K""[m[K, ""}, {"halt", "shutdown", "kill", "stop"}};
-      |                                                                                                                                                                        [01;35m[K^~[m[K
-[01m[K./lib/console/console.cpp:48:172:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   48 |     char* var[6][4] = {{"test", "tt", "", ""}, {"cls", "clear", "flush", "new"}, {"echo", "printf", "disp", "display"}, {"info", "stat", "dispinfo", ""}, {"help", "", "", [01;35m[K""[m[K}, {"halt", "shutdown", "kill", "stop"}};
-      |                                                                                                                                                                            [01;35m[K^~[m[K
-[01m[K./lib/console/console.cpp:48:178:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   48 |     char* var[6][4] = {{"test", "tt", "", ""}, {"cls", "clear", "flush", "new"}, {"echo", "printf", "disp", "display"}, {"info", "stat", "dispinfo", ""}, {"help", "", "", ""}, {[01;35m[K"halt"[m[K, "shutdown", "kill", "stop"}};
-      |                                                                                                                                                                                  [01;35m[K^~~~~~[m[K
-[01m[K./lib/console/console.cpp:48:186:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   48 |     char* var[6][4] = {{"test", "tt", "", ""}, {"cls", "clear", "flush", "new"}, {"echo", "printf", "disp", "display"}, {"info", "stat", "dispinfo", ""}, {"help", "", "", ""}, {"halt", [01;35m[K"shutdown"[m[K, "kill", "stop"}};
-      |                                                                                                                                                                                          [01;35m[K^~~~~~~~~~[m[K
-[01m[K./lib/console/console.cpp:48:198:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   48 |     char* var[6][4] = {{"test", "tt", "", ""}, {"cls", "clear", "flush", "new"}, {"echo", "printf", "disp", "display"}, {"info", "stat", "dispinfo", ""}, {"help", "", "", ""}, {"halt", "shutdown", [01;35m[K"kill"[m[K, "stop"}};
-      |                                                                                                                                                                                                      [01;35m[K^~~~~~[m[K
-[01m[K./lib/console/console.cpp:48:206:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   48 |     char* var[6][4] = {{"test", "tt", "", ""}, {"cls", "clear", "flush", "new"}, {"echo", "printf", "disp", "display"}, {"info", "stat", "dispinfo", ""}, {"help", "", "", ""}, {"halt", "shutdown", "kill", [01;35m[K"stop"[m[K}};
-      |                                                                                                                                                                                                              [01;35m[K^~~~~~[m[K
-[01m[K./lib/console/console.cpp:61:30:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   61 |     char * spliced_command = [01;35m[K""[m[K;
-      |                              [01;35m[K^~[m[K
-[01m[K./lib/console/console.cpp:97:22:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   97 |         print_string([01;35m[K"TEST"[m[K, RED, GREEN);
-      |                      [01;35m[K^~~~~~[m[K
-[01m[K./lib/console/console.cpp:109:22:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-  109 |         print_string([01;35m[K"An Hobbiest OS project"[m[K, GREEN);
-      |                      [01;35m[K^~~~~~~~~~~~~~~~~~~~~~~~[m[K
-[01m[K./lib/console/console.cpp:111:22:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-  111 |         print_string([01;35m[K"A OS made by Quest (aka corigan01)!"[m[K, GREEN);
-      |                      [01;35m[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
-[01m[K./lib/console/console.cpp:115:22:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-  115 |         print_string([01;35m[K"{test, tt} --------------- displays test text"[m[K, GREEN);
-      |                      [01;35m[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
-[01m[K./lib/console/console.cpp:117:22:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-  117 |         print_string([01;35m[K"{cls, clear, flush, new} --------------- clears the screen"[m[K, GREEN);
-      |                      [01;35m[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
-[01m[K./lib/console/console.cpp:119:22:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-  119 |         print_string([01;35m[K"{echo, printf, disp, display} --------------- displays"[m[K, GREEN);
-      |                      [01;35m[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
-[01m[K./lib/console/console.cpp:121:22:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-  121 |         print_string([01;35m[K"{info, stat, dispinfo} --------------- displays info about the OS"[m[K, GREEN);
-      |                      [01;35m[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
-[01m[K./lib/console/console.cpp:123:22:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-  123 |         print_string([01;35m[K"{halt, shutdown, stop, kill} --------------- will stop the os"[m[K, GREEN);
-      |                      [01;35m[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
-[01m[K./lib/console/console.cpp:125:22:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-  125 |         print_string([01;35m[K"{help} --------------- displays this"[m[K, GREEN);
-      |                      [01;35m[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
-[01m[K./lib/console/console.cpp:62:9:[m[K [01;35m[Kwarning: [m[Kunused variable ‘[01m[Ksplcommand[m[K’ [[01;35m[K-Wunused-variable[m[K]
-   62 |     int [01;35m[Ksplcommand[m[K = 0;
-      |         [01;35m[K^~~~~~~~~~[m[K
-[01m[K./lib/console/console.cpp:[m[K In member function ‘[01m[Kvoid console::print_tal()[m[K’:
-[01m[K./lib/console/console.cpp:144:22:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-  144 |         print_string([01;35m[K": \0"[m[K);
-      |                      [01;35m[K^~~~~~[m[K
-In file included from [01m[K./lib/console/../DisplayOut/displayout.h:5[m[K,
-                 from [01m[K./lib/console/console.h:5[m[K,
-                 from [01m[K./lib/console/console.cpp:1[m[K:
-[01m[K./lib/console/../DisplayOut/../Term/Term.h:[m[K At global scope:
-[01m[K./lib/console/../DisplayOut/../Term/Term.h:42:12:[m[K [01;35m[Kwarning: [m[K‘[01m[Kdigit_ascii_codes[m[K’ defined but not used [[01;35m[K-Wunused-variable[m[K]
+[01m[K./lib/DisplayOut/displayout.cpp:[m[K In function ‘[01m[Kvoid out(int, int, const char*)[m[K’:
+[01m[K./lib/DisplayOut/displayout.cpp:9:18:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+    9 |     print_string([01;35m[K"[ "[m[K, color_R[enu]);
+      |                  [01;35m[K^~~~[m[K
+[01m[K./lib/DisplayOut/displayout.cpp:11:18:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   11 |     print_string([01;35m[K" - "[m[K, color_R[enu]);
+      |                  [01;35m[K^~~~~[m[K
+[01m[K./lib/DisplayOut/displayout.cpp:13:18:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   13 |     print_string([01;35m[K" ] --> "[m[K, color_R[enu]);
+      |                  [01;35m[K^~~~~~~~~[m[K
+[01m[K./lib/DisplayOut/displayout.cpp:17:23:[m[K [01;35m[Kwarning: [m[Kcomparison of integer expressions of different signedness: ‘[01m[Kint[m[K’ and ‘[01m[Kuint32[m[K’ {aka ‘[01m[Kunsigned int[m[K’} [[01;35m[K-Wsign-compare[m[K]
+   17 |     for (int i = 0; [01;35m[Ki < strlen(str)[m[K; i++) {
+      |                     [01;35m[K~~^~~~~~~~~~~~~[m[K
+In file included from [01m[K./lib/DisplayOut/displayout.h:5[m[K,
+                 from [01m[K./lib/DisplayOut/displayout.cpp:1[m[K:
+[01m[K./lib/DisplayOut/../Term/Term.h:[m[K At global scope:
+[01m[K./lib/DisplayOut/../Term/Term.h:42:12:[m[K [01;35m[Kwarning: [m[K‘[01m[Kdigit_ascii_codes[m[K’ defined but not used [[01;35m[K-Wunused-variable[m[K]
    42 | static int [01;35m[Kdigit_ascii_codes[m[K[10] = {0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39};
       |            [01;35m[K^~~~~~~~~~~~~~~~~[m[K
+./lib/VGA/VGA.cpp:188:12:[m[K [01;35m[Kwarning: [m[K‘[01m[KinputText[m[K’ is used uninitialized in this function [[01;35m[K-Wuninitialized[m[K]
+  188 |     char * [01;35m[KFirstText[m[K = inputText[0];
+      |            [01;35m[K^~~~~~~~~[m[K
+[01m[K./lib/VGA/VGA.cpp:215:33:[m[K [01;35m[Kwarning: [m[K‘[01m[Kin[m[K’ may be used uninitialized in this function [[01;35m[K-Wmaybe-uninitialized[m[K]
+  215 |                             [01;35m[Kitoa((int)inputText[usedVarIndex++], in)[m[K;
+      |                             [01;35m[K~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K

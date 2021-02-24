@@ -2,119 +2,49 @@
 #include "Kernal.h"
 #include "BUILD.h"
 #include "../lib/Vector/vector.h"
-#include "../lib/console/console.h"
+#include "../lib/VGA/VGA.h"
+#include "../lib/VirtualConsole/VirtualConsole.h"
+#include "../cpu/cpu.h"
 
+class KernelEntry {
+public:
+    
+    KernelEntry() {
+        asm volatile("sti");
+        VGA::INIT_DISPLAY();
 
+        VGA::SET_COLOR(VGA::COLORS::GREEN, VGA::COLORS::BLACK);
+        VGA::kprintf("Fluxed OS ====== BUILD %d\n", BUILD);
+    }
 
-void wait(int how_much) {
+    ~KernelEntry() {
+        VGA::PRINT_STR("\n\n");
+        VGA::SET_COLOR(VGA::COLORS::RED, VGA::COLORS::BLACK);
+        VGA::PRINT_STR("Kernel has exited!");
+    }
 
-    print_new_line();
-    print_string("System stopped for: s", YELLOW);
-    int i = 0;
-    while((i / 55000) < how_much){
-        i++;
+    void Test() {
+        VGA::SET_COLOR(VGA::COLORS::MAGENTA, VGA::COLORS::BLACK);
+        VGA::kprintf("Testing VGA commands\nAll statments should be true!\n%s = %d\nYou should not see \'-\' in \'T-\eE-\eS-\eT\'\nShould be broken %t %s %d\nDONE!", "ten", 10);
 
-        asm volatile("nop");
+        // test tripping the isr
         
+    }
+
+    void kern() {
+        VGA::SET_COLOR(VGA::COLORS::WHITE, VGA::COLORS::BLACK);
+        VirtualConsole console;
+
+        console.Handle();
         
-        print_hold_int(i / 55000);
-    };
-}
+    }
+};
 
 int KernStart() {
-    asm volatile("sti");
-    init_vga(WHITE, BLACK);
+    KernelEntry krnl;
 
-
-    
-    
-
-    char* t = "test";
-    if (t == "test") {
-        print_string("FLUXED OS ------- build ", GREEN);
-        print_int(BUILD);
-        print_char('!', GREEN);
-        print_new_line();
-    }
-  
-
-
-
-
-    
-    
-    //String str;
-    //str = "dfsdf";
-    //str.c_str();
-
-    console con;
-    
-
-    char *keybuf;
-    int keybufIndex = 0;
-
-    for (int i = 0; i < (80 * 24); i++) {
-        keybuf[i] = NULL;
-    }
-
-    char key = getKeydown();
-
-    print_char('>');
-
-   
-    
-
-    while(!con.shouldReturn()) {
-        
-        
-        if (key != NULL) {
-            if (key == KEY_BACKSPACE ) {
-                if (keybufIndex > 0) {
-                    print_char(' ', WHITE, BLACK, 1);
-                    keybufIndex--;
-                    keybuf[keybufIndex] = NULL;
-                }
-            }
-            else if (key == KEYCODE_ENTER) {
-                print_new_line();
-                if (keybufIndex > 0)
-                    con.parse_command(keybuf);
-                print_char('>');
-
-                for (int i = 0; i < (80 * 24); i++) {
-                    keybuf[i] = NULL;
-                }
-                keybufIndex = 0;
-                key = ' ';
-            }
-            else if (keybufIndex < (80*24) - 2) {
-                keybuf[keybufIndex] = key;
-                keybufIndex++;
-
-                print_char(key);
-            }
-            else {
-                for (int i = 0; i < (80 * 24); i++) {
-                    keybuf[i] = NULL;
-                }
-                keybufIndex = 0;
-
-                clear_screen();
-            }
-           
-        }
-        
-        key = getKeydown();
-        
-    }
-    
-    
-
-
-    print_new_line();
-    print_string("======= OS =======", GREEN);
-
-
+    krnl.Test();
+    krnl.kern();
 
     return 0;
 }
