@@ -1,5 +1,6 @@
 #include "VGA.h"
 #include "../Term/Term.h"
+#include "../mem/mem.h"
 
 
 namespace STORE {
@@ -56,13 +57,17 @@ void VGA::SET_MODS(MODS::__VGA__MOD modID, int mod){
 }
 
 void VGA::CLEAR_DISPLAY() {
+
     VGA::RESET();
+
     for (int i = 0; i < BUFFERS::DEFAULT_BUFFER.size; i++) {
         for (int e = 0; e < 80; e++) {
             VGA::PRINT_CHAR(' ');
         }
     }
+
     VGA::RESET();
+    VGA::PRINT_CHAR('\n');
 }
 
 void VGA::RESET(){
@@ -93,17 +98,28 @@ void VGA::PRINT_CHAR(char ch){
     switch (ch)
     {
     case '\n':
-            if (BUFFERS::DEFAULT_BUFFER.line_number > 24) {
+            if (BUFFERS::DEFAULT_BUFFER.line_number >= 24) {
+                uint16 * VBUF;
+                memcpy(VBUF, BUFFERS::DEFAULT_BUFFER.Buff, 80*24);
+
                 VGA::CLEAR_DISPLAY();
-                return;
+
+                int VGA_INT = 0;
+                for (int i = 80; i < 80*24 ; i++) {
+                    BUFFERS::DEFAULT_BUFFER.Buff[VGA_INT++] = VBUF[i];
+                }
+
+                BUFFERS::DEFAULT_BUFFER.line_number = 24;
+                BUFFERS::DEFAULT_BUFFER.size = 80 * 24;
+
+                VGA::PRINT_CHAR(':');
             }
-            if(BUFFERS::DEFAULT_BUFFER.line_number >= 55){
-                BUFFERS::DEFAULT_BUFFER.line_number = 0;
-                VGA::RESET();
+            else {
+                BUFFERS::DEFAULT_BUFFER.size = 80 * BUFFERS::DEFAULT_BUFFER.line_number;
+                BUFFERS::DEFAULT_BUFFER.line_number++;
+                incLine(); 
             }
-            BUFFERS::DEFAULT_BUFFER.size = 80 * BUFFERS::DEFAULT_BUFFER.line_number;
-            BUFFERS::DEFAULT_BUFFER.line_number++;
-            incLine(); 
+            
         break;
     case '\r':
             BUFFERS::DEFAULT_BUFFER.line_number--;
