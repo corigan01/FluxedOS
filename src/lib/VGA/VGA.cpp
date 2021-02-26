@@ -98,21 +98,27 @@ void VGA::PRINT_CHAR(char ch){
     switch (ch)
     {
     case '\n':
-            if (BUFFERS::DEFAULT_BUFFER.line_number >= 24) {
+            if (BUFFERS::DEFAULT_BUFFER.line_number > 24 || true) {
+                
                 uint16 * VBUF;
-                memcpy(VBUF, BUFFERS::DEFAULT_BUFFER.Buff, 80*24);
-
-                VGA::CLEAR_DISPLAY();
+                int bufS = 80*80;
+                memcpy(VBUF, BUFFERS::DEFAULT_BUFFER.Buff, bufS);
 
                 int VGA_INT = 0;
-                for (int i = 80; i < 80*24 ; i++) {
+                for (int i = 80 ; i < bufS - 80*2 ; i++) {
                     BUFFERS::DEFAULT_BUFFER.Buff[VGA_INT++] = VBUF[i];
                 }
 
                 BUFFERS::DEFAULT_BUFFER.line_number = 24;
-                BUFFERS::DEFAULT_BUFFER.size = 80 * 24;
+                BUFFERS::DEFAULT_BUFFER.size = 80*24;
 
-                VGA::PRINT_CHAR(':');
+                for (int i = 0; i < 80; i++) {
+                    BUFFERS::DEFAULT_BUFFER.Buff[BUFFERS::DEFAULT_BUFFER.size + i] = VGA::VGA_ENTRY(' ', VGA::COLORS::WHITE, VGA::COLORS::BLACK);
+                }
+
+                
+
+                
             }
             else {
                 BUFFERS::DEFAULT_BUFFER.size = 80 * BUFFERS::DEFAULT_BUFFER.line_number;
@@ -136,9 +142,12 @@ void VGA::PRINT_CHAR(char ch){
         break;
     default:
         if (BUFFERS::DEFAULT_BUFFER.line_number > 0) {
-            if (BUFFERS::DEFAULT_BUFFER.size / (BUFFERS::DEFAULT_BUFFER.line_number ) > 80) {
-                VGA::PRINT_CHAR('\n');
-            }
+
+            // Fix me [Chars can go off screen]
+            //if (BUFFERS::DEFAULT_BUFFER.size / (BUFFERS::DEFAULT_BUFFER.line_number ) > 80) {
+            //
+                //VGA::PRINT_CHAR('\n');
+            //}
         }
         
         BUFFERS::DEFAULT_BUFFER.Buff[BUFFERS::DEFAULT_BUFFER.size] = VGA::VGA_ENTRY(ch, STORE::__MODS[3], STORE::__MODS[2]);

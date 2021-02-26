@@ -1,31 +1,31 @@
-[01m[K./lib/String/String.cpp:[m[K In member function ‘[01m[Kvoid String::operator=(const char*)[m[K’:
-[01m[K./lib/String/String.cpp:23:16:[m[K [01;35m[Kwarning: [m[Kcomparison with string literal results in unspecified behavior [[01;35m[K-Waddress[m[K]
-   23 |  if (_str_i != [01;35m[K""[m[K)
-      |                [01;35m[K^~[m[K
-   |                  [01;35m[K^~~~[m[K
-[01m[K./lib/DisplayOut/displayout.cpp:11:18:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   11 |     print_string([01;35m[K" - "[m[K, color_R[enu]);
-      |                  [01;35m[K^~~~~[m[K
-[01m[K./lib/DisplayOut/displayout.cpp:13:18:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   13 |     print_string([01;35m[K" ] --> "[m[K, color_R[enu]);
-      |                  [01;35m[K^~~~~~~~~[m[K
-[01m[K./lib/DisplayOut/displayout.cpp:17:23:[m[K [01;35m[Kwarning: [m[Kcomparison of integer expressions of different signedness: ‘[01m[Kint[m[K’ and ‘[01m[Kuint32[m[K’ {aka ‘[01m[Kunsigned int[m[K’} [[01;35m[K-Wsign-compare[m[K]
-   17 |     for (int i = 0; [01;35m[Ki < strlen(str)[m[K; i++) {
-      |                     [01;35m[K~~^~~~~~~~~~~~~[m[K
-In file included from [01m[K./lib/DisplayOut/displayout.h:5[m[K,
-                 from [01m[K./lib/DisplayOut/displayout.cpp:1[m[K:
-[01m[K./lib/DisplayOut/../Term/Term.h:[m[K At global scope:
-[01m[K./lib/DisplayOut/../Term/Term.h:42:12:[m[K [01;35m[Kwarning: [m[K‘[01m[Kdigit_ascii_codes[m[K’ defined but not used [[01;35m[K-Wunused-variable[m[K]
+[01m[K./lib/VGA/VGA.cpp:[m[K In function ‘[01m[Kvoid VGA::PRINT_STR(const char*)[m[K’:
+[01m[K./lib/VGA/VGA.cpp:165:22:[m[K [01;35m[Kwarning: [m[Kcomparison of integer expressions of different signedness: ‘[01m[Kint[m[K’ and ‘[01m[Kuint32[m[K’ {aka ‘[01m[Kunsigned int[m[K’} [[01;35m[K-Wsign-compare[m[K]
+  165 |    for (int i = 0; [01;35m[Ki < length[m[K; i++) {
+      |                    [01;35m[K~~^~~~~~~~[m[K
+[01m[K./lib/VGA/VGA.cpp:[m[K In function ‘[01m[Kvoid VGA::kprintf(const char*, ...)[m[K’:
+[01m[K./lib/VGA/VGA.cpp:191:14:[m[K [01;35m[Kwarning: [m[Ksuggest parentheses around assignment used as truth value [[01;35m[K-Wparentheses[m[K]
+  191 |     while ([01;35m[Kc = *ARGS++[m[K) {
+      |            [01;35m[K~~^~~~~~~~~[m[K
+[01m[K./lib/VGA/VGA.cpp:192:20:[m[K [01;35m[Kwarning: [m[Kthis ‘[01m[Kwhile[m[K’ clause does not guard... [[01;35m[K-Wmisleading-indentation[m[K]
+  192 |         int i = 0; [01;35m[Kwhile[m[K(c[i++] != 0);
+      |                    [01;35m[K^~~~~[m[K
+[01m[K./lib/VGA/VGA.cpp:209:13:[m[K [01;36m[Knote: [m[K...this statement, but the latter is misleadingly indented as if it were guarded by the ‘[01m[Kwhile[m[K’
+  209 |             [01;36m[KinputText[m[K[InputVarSize++] = c;
+      |             [01;36m[K^~~~~~~~~[m[K
+In file included from [01m[K./lib/VGA/VGA.cpp:2[m[K:
+[01m[K./lib/VGA/../Term/Term.h:[m[K At global scope:
+[01m[K./lib/VGA/../Term/Term.h:42:12:[m[K [01;35m[Kwarning: [m[K‘[01m[Kdigit_ascii_codes[m[K’ defined but not used [[01;35m[K-Wunused-variable[m[K]
    42 | static int [01;35m[Kdigit_ascii_codes[m[K[10] = {0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39};
       |            [01;35m[K^~~~~~~~~~~~~~~~~[m[K
-./lib/VGA/VGA.cpp:204:12:[m[K [01;35m[Kwarning: [m[K‘[01m[KinputText[m[K’ is used uninitialized in this function [[01;35m[K-Wuninitialized[m[K]
-  204 |     char * [01;35m[KFirstText[m[K = inputText[0];
+[01m[K./lib/VGA/VGA.cpp:[m[K In function ‘[01m[Kvoid VGA::kprintf(const char*, ...)[m[K’:
+[01m[K./lib/VGA/VGA.cpp:213:12:[m[K [01;35m[Kwarning: [m[K‘[01m[KinputText[m[K’ is used uninitialized in this function [[01;35m[K-Wuninitialized[m[K]
+  213 |     char * [01;35m[KFirstText[m[K = inputText[0];
       |            [01;35m[K^~~~~~~~~[m[K
 [01m[K./lib/VGA/VGA.cpp:[m[K In function ‘[01m[Kvoid VGA::PRINT_CHAR(char)[m[K’:
-[01m[K./lib/VGA/VGA.cpp:103:23:[m[K [01;35m[Kwarning: [m[K‘[01m[KVBUF[m[K’ may be used uninitialized in this function [[01;35m[K-Wmaybe-uninitialized[m[K]
-  103 |                 [01;35m[Kmemcpy(VBUF, BUFFERS::DEFAULT_BUFFER.Buff, 80*24)[m[K;
-      |                 [01;35m[K~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+[01m[K./lib/VGA/VGA.cpp:105:23:[m[K [01;35m[Kwarning: [m[K‘[01m[KVBUF[m[K’ may be used uninitialized in this function [[01;35m[K-Wmaybe-uninitialized[m[K]
+  105 |                 [01;35m[Kmemcpy(VBUF, BUFFERS::DEFAULT_BUFFER.Buff, bufS)[m[K;
+      |                 [01;35m[K~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
 [01m[K./lib/VGA/VGA.cpp:[m[K In function ‘[01m[Kvoid VGA::kprintf(const char*, ...)[m[K’:
-[01m[K./lib/VGA/VGA.cpp:231:33:[m[K [01;35m[Kwarning: [m[K‘[01m[Kin[m[K’ may be used uninitialized in this function [[01;35m[K-Wmaybe-uninitialized[m[K]
-  231 |                             [01;35m[Kitoa((int)inputText[usedVarIndex++], in)[m[K;
+[01m[K./lib/VGA/VGA.cpp:240:33:[m[K [01;35m[Kwarning: [m[K‘[01m[Kin[m[K’ may be used uninitialized in this function [[01;35m[K-Wmaybe-uninitialized[m[K]
+  240 |                             [01;35m[Kitoa((int)inputText[usedVarIndex++], in)[m[K;
       |                             [01;35m[K~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K

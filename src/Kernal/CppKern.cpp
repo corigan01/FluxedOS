@@ -37,6 +37,10 @@ public:
 
         console.Handle();
         
+        //VGA::PRINT_STR(">\n\n\n\n\n\n>\n>\nline\n>test\n>wut\nthis is a lot of printing on this line oh yea");
+
+        //while(1);
+
     }
 };
 

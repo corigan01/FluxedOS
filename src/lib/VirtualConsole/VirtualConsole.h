@@ -5,6 +5,7 @@
 #include "../IO/Keyboard.h"
 #include "../compare/compare.h"
 #include "../mem/mem.h"
+#include "../String/String.h"
 
 namespace ConsoleInternalCommands
 {
@@ -149,13 +150,14 @@ public:
 
                     
 
-                    VGA::PRINT_STR("Args --> \'");
+                    /*VGA::PRINT_STR("Args --> \'");
                     VGA::PRINT_STR(args[argNum]);
                     VGA::PRINT_STR("\' (Start/End) = {");
                     VGA::PRINT_INT(argStart);
                     VGA::PRINT_STR(" , ");
                     VGA::PRINT_INT(argEnd);
                     VGA::PRINT_STR("} \n");
+                    */
 
                     argCharNum = 0;
                     argNum++;
@@ -190,8 +192,69 @@ public:
             VGA::SET_COLOR(VGA::COLORS::RED, VGA::COLORS::BLACK);
             VGA::PRINT_CHAR('T');
         }
-        else if (strcmp(command, "memedit") == 0) {
+        else if (strcmp(command, "memset") == 0) {
+            if (argNum == 2) {
+                char *inpLoc = args[0];
+                char *inpDat = args[1];
 
+                char *value = ((char*)stoi(inpLoc));
+                memcpy(value, inpDat, sizeof(char));
+
+
+
+                VGA::SET_COLOR(VGA::COLORS::GREEN, VGA::COLORS::BLACK);
+                VGA::PRINT_STR("Done!");
+                
+            }
+            else {
+                VGA::SET_COLOR(VGA::COLORS::RED, VGA::COLORS::BLACK);
+                VGA::PRINT_STR("You must enter two values (adr*, vlu)!");
+            }
+        }
+        else if (strcmp(command, "memread") == 0) {
+            if (argNum == 1) {
+                char *inpLoc = args[0];
+
+                char *value = ((char*)stoi(inpLoc));
+
+                VGA::SET_COLOR(VGA::COLORS::GREEN, VGA::COLORS::BLACK);
+                VGA::PRINT_STR("Data: ");
+                VGA::PRINT_STR(value);
+
+                VGA::PRINT_STR("\nDone!");
+
+            }
+            else {
+                VGA::SET_COLOR(VGA::COLORS::RED, VGA::COLORS::BLACK);
+                VGA::PRINT_STR("You must enter one value (adr*)!");
+            }
+        }
+        else if (strcmp(command, "echo") == 0) {
+            if (argNum > 0) {
+                for (int i = 0; i < argNum; i++) {
+                    VGA::PRINT_STR(args[i]);
+                    VGA::PRINT_STR(" ");
+                }
+            }
+            else {
+                VGA::PRINT_STR("\n");
+            }
+        }
+        else if (strcmp(command, "help") == 0) {
+            VGA::PRINT_STR(R"(
+Help ----------
+Internal Commands :
+
+-    MEMORY   
+'memset'  (adr*, vlu) 
+'memread' (adr*)     
+-    DISPLAY  
+'echo' (...) 
+-    SYSTEM   
+'exit' (void)
+-    DEBUG    
+'test' (void)
+)");
         }
         else {
             VGA::SET_COLOR(VGA::COLORS::RED, VGA::COLORS::BLACK);
