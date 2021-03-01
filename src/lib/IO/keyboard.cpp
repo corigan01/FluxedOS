@@ -68,9 +68,6 @@ char get_ascii_char(uint8 key_code)
   }
 }
 
-
-
-
 char __key_hold = ' ';
 char getKeydown() {
   char key = get_ascii_char(get_input_keycode());

@@ -34,6 +34,9 @@ private:
 
 };
 
+int stoi(char* str);
+
+
 
 
 

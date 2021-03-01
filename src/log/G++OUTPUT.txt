@@ -1,25 +1,27 @@
-[01m[K./lib/DisplayOut/displayout.cpp:[m[K In function ‘[01m[Kvoid out(int, int, const char*)[m[K’:
-[01m[K./lib/DisplayOut/displayout.cpp:9:18:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-    9 |     print_string([01;35m[K"[ "[m[K, color_R[enu]);
-      |                  [01;35m[K^~~~[m[K
-[01m[K./lib/DisplayOut/displayout.cpp:11:18:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   11 |     print_string([01;35m[K" - "[m[K, color_R[enu]);
-      |                  [01;35m[K^~~~~[m[K
-[01m[K./lib/DisplayOut/displayout.cpp:13:18:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   13 |     print_string([01;35m[K" ] --> "[m[K, color_R[enu]);
-      |                  [01;35m[K^~~~~~~~~[m[K
-[01m[K./lib/DisplayOut/displayout.cpp:17:23:[m[K [01;35m[Kwarning: [m[Kcomparison of integer expressions of different signedness: ‘[01m[Kint[m[K’ and ‘[01m[Kuint32[m[K’ {aka ‘[01m[Kunsigned int[m[K’} [[01;35m[K-Wsign-compare[m[K]
-   17 |     for (int i = 0; [01;35m[Ki < strlen(str)[m[K; i++) {
-      |                     [01;35m[K~~^~~~~~~~~~~~~[m[K
-In file included from [01m[K./lib/DisplayOut/displayout.h:5[m[K,
-                 from [01m[K./lib/DisplayOut/displayout.cpp:1[m[K:
-[01m[K./lib/DisplayOut/../Term/Term.h:[m[K At global scope:
-[01m[K./lib/DisplayOut/../Term/Term.h:42:12:[m[K [01;35m[Kwarning: [m[K‘[01m[Kdigit_ascii_codes[m[K’ defined but not used [[01;35m[K-Wunused-variable[m[K]
+In file included from [01m[K./Kernal/CppKern.cpp:6[m[K:
+[01m[K./Kernal/../lib/VirtualConsole/VirtualConsole.h:[m[K In member function ‘[01m[Kvoid VirtualConsole::parse(char*)[m[K’:
+[01m[K./Kernal/../lib/VirtualConsole/VirtualConsole.h:100:31:[m[K [01;35m[Kwarning: [m[Kcomparison of integer expressions of different signedness: ‘[01m[Kint[m[K’ and ‘[01m[Kunsigned int[m[K’ [[01;35m[K-Wsign-compare[m[K]
+  100 |             for (int i = 0; [01;35m[Ki < len[m[K; i++) {
+      |                             [01;35m[K~~^~~~~[m[K
+[01m[K./Kernal/../lib/VirtualConsole/VirtualConsole.h:110:31:[m[K [01;35m[Kwarning: [m[Kcomparison of integer expressions of different signedness: ‘[01m[Kint[m[K’ and ‘[01m[Kunsigned int[m[K’ [[01;35m[K-Wsign-compare[m[K]
+  110 |         for (int i = start; [01;35m[Ki < len[m[K; i++) {
+      |                             [01;35m[K~~^~~~~[m[K
+[01m[K./Kernal/../lib/VirtualConsole/VirtualConsole.h:122:31:[m[K [01;35m[Kwarning: [m[Kcomparison of integer expressions of different signedness: ‘[01m[Kint[m[K’ and ‘[01m[Kunsigned int[m[K’ [[01;35m[K-Wsign-compare[m[K]
+  122 |         for (int i = start; [01;35m[Ki < end[m[K; i++) {
+      |                             [01;35m[K~~^~~~~[m[K
+[01m[K./Kernal/../lib/VirtualConsole/VirtualConsole.h:133:36:[m[K [01;35m[Kwarning: [m[Kcomparison of integer expressions of different signedness: ‘[01m[Kint[m[K’ and ‘[01m[Kunsigned int[m[K’ [[01;35m[K-Wsign-compare[m[K]
+  133 |             for (int i = argEnd; [01;35m[Ki < len[m[K; i ++) {
+      |                                  [01;35m[K~~^~~~~[m[K
+[01m[K./Kernal/../lib/VirtualConsole/VirtualConsole.h:142:38:[m[K [01;35m[Kwarning: [m[Kcomparison of integer expressions of different signedness: ‘[01m[Kint[m[K’ and ‘[01m[Kunsigned int[m[K’ [[01;35m[K-Wsign-compare[m[K]
+  142 |             for (int i = argStart; [01;35m[Ki < len[m[K; i++) {
+      |                                    [01;35m[K~~^~~~~[m[K
+[01m[K./Kernal/../lib/VirtualConsole/VirtualConsole.h:146:46:[m[K [01;35m[Kwarning: [m[Kcomparison of integer expressions of different signedness: ‘[01m[Kint[m[K’ and ‘[01m[Kunsigned int[m[K’ [[01;35m[K-Wsign-compare[m[K]
+  146 |                     for (int e = argStart; [01;35m[Ke < argEnd[m[K; e++) {
+      |                                            [01;35m[K~~^~~~~~~~[m[K
+[01m[K./Kernal/../lib/VirtualConsole/VirtualConsole.h:234:35:[m[K [01;35m[Kwarning: [m[Kcomparison of integer expressions of different signed[01m[K./lib/VGA/VGA.cpp:[m[K In function ‘[01m[Kvoid VGA::kprintf(const char*, ...)[m[K’:
+[01m[K./lib/VGA/VGA.cpp:240:33:[m[K [01;35m[Kwarning: [m[K‘[01m[Kin[m[K’ may be used uninitialized in this function [[01;35m[K-Wmaybe-uninitialized[m[K]
+  240 |                             [01;35m[Kitoa((int)inputText[usedVarIndex++], in)[m[K;
+      |                             [01;35m[K~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+:[m[K [01;35m[Kwarning: [m[K‘[01m[Kdigit_ascii_codes[m[K’ defined but not used [[01;35m[K-Wunused-variable[m[K]
    42 | static int [01;35m[Kdigit_ascii_codes[m[K[10] = {0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39};
       |            [01;35m[K^~~~~~~~~~~~~~~~~[m[K
-./lib/VGA/VGA.cpp:188:12:[m[K [01;35m[Kwarning: [m[K‘[01m[KinputText[m[K’ is used uninitialized in this function [[01;35m[K-Wuninitialized[m[K]
-  188 |     char * [01;35m[KFirstText[m[K = inputText[0];
-      |            [01;35m[K^~~~~~~~~[m[K
-[01m[K./lib/VGA/VGA.cpp:215:33:[m[K [01;35m[Kwarning: [m[K‘[01m[Kin[m[K’ may be used uninitialized in this function [[01;35m[K-Wmaybe-uninitialized[m[K]
-  215 |                             [01;35m[Kitoa((int)inputText[usedVarIndex++], in)[m[K;
-      |                             [01;35m[K~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
