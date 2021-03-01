@@ -29,3 +29,4 @@ uint32_t port_long_in(uint32_t port) {
     __asm__ __volatile__("inl %%dx,%%eax":"=a" (result):"d"(port));
     return result;
 }
+
