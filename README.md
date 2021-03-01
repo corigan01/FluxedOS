@@ -25,7 +25,22 @@ A hobbyist OS project!
 To create an OS in C/C++ that is fast, and is built for modern computers from the ground up
 
 # Commands and stuff inside the os
-![](https://github.com/corigan01/FluxedOS/blob/main/os_pictures/commands.png)
+```bash
+# Please note I only update this once and awhile, so commands can change or even be removed completly
+
+you can use help to get this info
+
+-    MEMORY   
+'memset'  (adr*, vlu) 
+'memread' (adr*)     
+-    DISPLAY  
+'echo' (...) 
+-    SYSTEM   
+'exit' (void)
+-    DEBUG    
+'test' (void)
+
+```
 
 # How to I compile?
 All of these commands are in src!
