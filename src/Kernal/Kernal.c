@@ -14,7 +14,8 @@ int kernal_entry() {
     //enable the interrupts
     __asm__ __volatile__ ("sti");
 
-    print_string("Starting CPP Kernel entry point...", YELLOW, BLACK);
+    print_string("Starting C++ Kernel entry point...", YELLOW, BLACK);
+    print_string("If you see this screen for more then a few seconds, your build is broken", YELLOW, BLACK);
 
 
     KernStart();
