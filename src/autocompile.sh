@@ -7,7 +7,7 @@ echo "   / __/ / / /_/ />  </  __/ /_/ /  / /___/ /_/ / /_/ /"
 echo "  /_/   /_/\__,_/_/|_|\___/\__,_/   \____/ .___/ .___/ "
 echo "                                        /_/   /_/      "
 echo -e "\e[0;34m-- The easy auto \e[0;31mC++\e[0;34m compiler that runs in your terminal! --"
-echo -e "            A \e[0;35mMain Menu\e[0;34m - \e[0;35mQUEST\e[0;34m project!"
+echo -e "            A \e[0;35mMain Menu\e[0;34m aka \e[0;35mcorigan01\e[0;34m project!"
 echo
 
 
@@ -22,6 +22,7 @@ addToBuild() {
 }
 
 addToBuild &
+
 
 
 #clean up files
@@ -70,7 +71,7 @@ compileProc() {
 
     mkdir log &> /dev/null
 
-    if g++ -m32 -lgcc_s $OUTPUT -o "$FILES.exc" -ffreestanding -O2 -Wall -Wextra -fdiagnostics-color=always -lstdc++  &> "log/G++OUTPUT.txt"; then
+    if g++ -m32 -elf_i386 -nostdinc -nostartfiles -lgcc_s $OUTPUT -o "$FILES.exc" -ffreestanding -O2 -Wall -Wextra -fdiagnostics-color=always -lstdc++  &> "log/G++OUTPUT.txt"; then
          printf "%-40s%-4s\e[0;32mDONE\e[0;34m\n"  "${OUTPUT:0:40}" " "
     else
 
@@ -121,21 +122,22 @@ compilec() {
     mkdir log &> /dev/null
     local ts=$(date +%s%N)
 
-    if g++ -m32 -elf_i386 -Wall -O -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-builtin -c  $OUTPUT -fdiagnostics-color=always  &> "log/G++OUTPUT.txt"; then
+    if g++ -m32 -elf_i386  -O -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-builtin -c  $OUTPUT -fdiagnostics-color=always  &> "log/G++OUTPUT.txt"; then
          local PFD=$((($(date +%s%N) - $ts)/1000000))
          printf "%-40s%-4s\e[0;32mDONE - $PFD ms\e[0;34m\n"  "${OUTPUT:0:40}" " "
     else
-
+        printf "%-40s%-4s\e[0;31mFAILED\e[0;34m\n"  "${OUTPUT:0:40}" " "
         #ouput the errors
-        echo -e "\e[0;31m ------------------ CPP FAILED! ------------------ "
+
+        g++ -m32 -elf_i386  -O -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-builtin -c  $OUTPUT -fdiagnostics-color=always  &> "log/G++OUTPUT.txt"
         printf "%s" "$(<log/G++OUTPUT.txt)"
         echo ""
-        echo -e "\e[0;31m ------------------- CPP DONE! ------------------- "
         #rm temp.txt
 
         clean
 
         exit
+
     fi
 }
 
@@ -167,6 +169,7 @@ echo "---------------- BUILDING CPP -------------------"
 
 for OUTPUT in $(find ./ -type f -iregex '.*/.*\.\(c\|cpp\|h\)$')
 do
+    
     if [[ $OUTPUT == *"Proc"* ]]; then
         printf "%-40s%-4s\e[0;33mSKIP\e[0;34m\n"  "${OUTPUT:0:40}" " "
     elif [[ $OUTPUT == *".cpp"* ]]; then
@@ -175,28 +178,25 @@ do
         compilec_ $OUTPUT &
     else
         printf "%-40s%-4s\e[0;32mDONE\e[0;34m\n"  "${OUTPUT:0:40}" " "
-         
-        
-
     fi
-
-
 done
 
 wait
 
-mv *.o obj/
-
-
-
-rm temp.txt &> /dev/null
-
 
 echo "---------------- LINKING BUILDS -----------------"
 
+TEx="Moving object files"
+printf "%-40s%-4s\e[0;32mDONE\e[0;34m\n"  "${TEx:0:40}" " "
+mv *.o obj/ > /dev/null
+rm temp.txt &> /dev/null
+
+ts=$(date +%s%N)
 #linking the kernel with kernel.o and boot.o files
 if g++ -m32 -lstdc++ -nostartfiles -T linker.ld  obj/*.o -o FluxedOS.bin  &> "log/LINKOUTPUT.txt"; then
-    echo "hi" &> /dev/null
+    TEx="Linking FluxedOS.bin"
+    PFD=$((($(date +%s%N) - $ts)/1000000))
+    printf "%-40s%-4s\e[0;32mDONE - $PFD ms\e[0;34m\n"  "${TEx:0:40}" " "
 else
 
             #ouput the errors
@@ -212,10 +212,11 @@ else
             exit
 fi
 
-echo "---------------- CREATING GRUB ------------------"
+echo "---------------- BUILDING ISO -------------------"
 #check FluxedOS.bin file is x86 multiboot file or not
 if grub-file --is-x86-multiboot FluxedOS.bin &> "log/GRUB.txt"; then
-    echo "hi" &> /dev/null
+    TEx="Generating grub files"
+    printf "%-40s%-4s\e[0;32mDONE\e[0;34m\n"  "${TEx:0:40}" " " 
 else
 
             #ouput the errors
@@ -230,25 +231,38 @@ else
             exit
 fi
 
-echo "---------------- BUILDING ISO -------------------"
+
 #building the iso file
+TEx="Making boot/grub"
+printf "%-40s%-4s\e[0;32mDONE\e[0;34m\n"  "${TEx:0:40}" " "
 mkdir -p isodir/boot/grub &> "log/isoLOG.txt"
+TEx="Making boot/programs"
+printf "%-40s%-4s\e[0;32mDONE\e[0;34m\n"  "${TEx:0:40}" " "
 mkdir -p isodir/programs &> "log/isoLOG.txt"
+TEx="Moving programs"
+printf "%-40s%-4s\e[0;32mDONE\e[0;34m\n"  "${TEx:0:40}" " "
 cp bin/* isodir/programs &> "log/isoLOG.txt"
+TEx="Moving FluxedOS.bin"
+printf "%-40s%-4s\e[0;32mDONE\e[0;34m\n"  "${TEx:0:40}" " "
 cp FluxedOS.bin isodir/boot/FluxedOS.bin &>> "log/isoLOG.txt"
+TEx="Copying grub.cfg"
+printf "%-40s%-4s\e[0;32mDONE\e[0;34m\n"  "${TEx:0:40}" " "
 cp grub.cfg isodir/boot/grub/grub.cfg &>> "log/isoLOG.txt"
+TEx="Generating ISO"
+printf "%-40s%-4s\e[0;32mDONE\e[0;34m\n"  "${TEx:0:40}" " "
 grub-mkrescue -o FluxedOS.iso isodir &>> "log/isoLOG.txt"
 
 
-echo "---------------- COPYING ISO --------------------"
+TEx="Moving ISO to ISO/"
+printf "%-40s%-4s\e[0;32mDONE\e[0;34m\n"  "${TEx:0:40}" " "
 mkdir ../ISO/ &> /dev/null &
 cp FluxedOS.iso ../ISO/ &
 
 echo "BUILD IN $((($(date +%s%N) - $tis)/1000000)) ms" &
 #run 
 echo "---------------- RUNNING BUILD ------------------"
-qemu-system-x86_64 -cdrom FluxedOS.iso -vga std 
-
+qemu-system-x86_64 -cdrom FluxedOS.iso -vga std -display gtk 
+printf "%-40s%-4s\e[0;32mDONE\e[0;34m\n"  "${TEx:0:40}" " "
 
 
 
