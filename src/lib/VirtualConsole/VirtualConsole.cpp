@@ -215,6 +215,15 @@ void VirtualConsole::parse(char * inp) {
             VGA::PRINT_STR("\n");
         }
     }
+    else if (strcmp(command, "fluxed") == 0) {
+        VGA::PRINT_STR(R"(    ________                    ______  _____
+   / ____/ /_  ___  _____  ____/ / __ \/ ___/
+  / /_  / / / / / |/_/ _ \/ __  / / / /\__ \ 
+ / __/ / / /_/ />  </  __/ /_/ / /_/ /___/ / 
+/_/   /_/\__,_/_/|_|\___/\__,_/\____//____/  
+A hobby OS Project! Made by Main Menu aka corigan01 
+)");
+    }
     else if (strcmp(command, "help") == 0) {
         VGA::PRINT_STR(R"(
 Help ----------
