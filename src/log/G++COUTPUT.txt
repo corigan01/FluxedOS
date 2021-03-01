@@ -1,15 +1,14 @@
-[01m[K./Kernal/Kernal.c:[m[K In function ‘[01m[Kkernal_entry[m[K’:
-[01m[K./Kernal/Kernal.c:21:5:[m[K [01;35m[Kwarning: [m[Kimplicit declaration of function ‘[01m[KKernStart[m[K’ [[01;35m[K-Wimplicit-function-declaration[m[K]
-   21 |     [01;35m[KKernStart[m[K();
-      |     [01;35m[K^~~~~~~~~[m[K
-In file included from [01m[K./Kernal/Kernal.c:2[m[K:
-At top level:
-[01m[K./Kernal/../lib/Term/Term.h:42:12:[m[K [01;35m[Kwarning: [m[K‘[01m[Kdigit_ascii_codes[m[K’ defined but not used [[01;35m[K-Wunused-variable[m[K]
+In file included from [01m[K./cpu/isr.c:1[m[K:
+[01m[K./cpu/../lib/Term/Term.h:42:12:[m[K [01;35m[Kwarning: [m[K‘[01m[Kdigit_ascii_codes[m[K’ defined but not used [[01;35m[K-Wunused-variable[m[K]
    42 | static int [01;35m[Kdigit_ascii_codes[m[K[10] = {0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39};
       |            [01;35m[K^~~~~~~~~~~~~~~~~[m[K
-[01m[K./Kernal/../lib/Term/Term.h:40:36:[m[K [01;35m[Kwarning: [m[K‘[01m[Kg_back_color[m[K’ defined but not used [[01;35m[K-Wunused-variable[m[K]
+[01m[K./cpu/../lib/Term/Term.h:40:36:[m[K [01;35m[Kwarning: [m[K‘[01m[Kg_back_color[m[K’ defined but not used [[01;35m[K-Wunused-variable[m[K]
    40 | static uint8 g_fore_color = WHITE, [01;35m[Kg_back_color[m[K = BLACK;
       |                                    [01;35m[K^~~~~~~~~~~~[m[K
+[01m[K./cpu/../lib/Term/Term.h:40:14:[m[K [01;35m[Kwarning: [m[K‘[01m[Kg_fore_color[m[K’ defined but not used [[01;35m[K-Wunused-variable[m[K]
+   40 | static uint8 [01;35m[Kg_fore_color[m[K = WHITE, g_back_color = BLACK;
+      |              [01;35m[K^~~~~~~~~~~~[m[K
+ |                                    [01;35m[K^~~~~~~~~~~~[m[K
 [01m[K./Kernal/../lib/Term/Term.h:40:14:[m[K [01;35m[Kwarning: [m[K‘[01m[Kg_fore_color[m[K’ defined but not used [[01;35m[K-Wunused-variable[m[K]
    40 | static uint8 [01;35m[Kg_fore_color[m[K = WHITE, g_back_color = BLACK;
       |              [01;35m[K^~~~~~~~~~~~[m[K

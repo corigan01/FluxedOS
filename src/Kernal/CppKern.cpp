@@ -10,7 +10,7 @@ class KernelEntry {
 public:
     
     KernelEntry() {
-        asm volatile("sti");
+        //asm volatile("sti");
         VGA::INIT_DISPLAY();
 
         VGA::SET_COLOR(VGA::COLORS::GREEN, VGA::COLORS::BLACK);

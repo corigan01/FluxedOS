@@ -247,7 +247,7 @@ cp FluxedOS.iso ../ISO/ &
 echo "BUILD IN $((($(date +%s%N) - $tis)/1000000)) ms" &
 #run 
 echo "---------------- RUNNING BUILD ------------------"
-qemu-system-x86_64 -cdrom FluxedOS.iso -vga std 
+qemu-system-x86_64 -cdrom FluxedOS.iso -vga std -display gtk 
 
 
 
