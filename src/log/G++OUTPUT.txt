@@ -1,0 +1,12 @@
+[01m[K./lib/VirtualConsole/VirtualConsole.cpp:222:44:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
+  222 |  / __/ / / /_/ />  </  __/ /_/ / /_/ /___/ /
+      |                                             
+to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+    9 |     print_string([01;35m[K"[ "[m[K, color_R[enu]);
+      |                  [01;35m[K^~~~[m[K
+[01m[K./lib/DisplayOut/displayout.cpp:11:18:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   11 |     print_string([01;35m[K" - "[m[K, color_R[enu]);
+      |                  [01;35m[K^~~~~[m[K
+[01m[K./lib/DisplayOut/displayout.cpp:13:18:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   13 |     print_string([01;35m[K" ] --> "[m[K, color_R[enu]);
+      |                  [01;35m[K^~~~~~~~~[m[K

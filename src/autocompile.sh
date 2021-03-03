@@ -261,7 +261,15 @@ cp FluxedOS.iso ../ISO/ &
 echo "BUILD IN $((($(date +%s%N) - $tis)/1000000)) ms" &
 #run 
 echo "---------------- RUNNING BUILD ------------------"
-qemu-system-x86_64 -cdrom FluxedOS.iso -vga std -display gtk 
+qemu-img create Diskimg.img 50m &> "log/imgcreate.txt"
+TEx="Creating Diskimg.img"
+printf "%-40s%-4s\e[0;32mDONE\e[0;34m\n"  "${TEx:0:40}" " "
+
+qemu-system-x86_64 -cdrom FluxedOS.iso -vga std -display gtk -drive file=Diskimg.img,if=ide,format=raw 
+TEx="Running qemu"
+rm -r Diskimg.img
+printf "%-40s%-4s\e[0;32mDONE\e[0;34m\n"  "${TEx:0:40}" " "
+TEx="Removing Diskimg.img"
 printf "%-40s%-4s\e[0;32mDONE\e[0;34m\n"  "${TEx:0:40}" " "
 
 
