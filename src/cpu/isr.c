@@ -130,7 +130,34 @@ void fault_handler(struct regs *r)
     {
         print_string(exception_messages[r->int_no], RED, BLACK);
         print_string(" Exception. System Halted!\n", RED, BLACK);
-        while(1);
+        print_string("More INFO : ", RED, BLACK);
+        print_int(r->cs);
+        print_string(" : ", RED, BLACK);
+        print_int(r->ds);
+        print_string(" : ", RED, BLACK);
+        print_int(r->eax);
+        print_string(" : ", RED, BLACK);
+        print_int(r->ebx);
+        print_string(" : ", RED, BLACK);
+        print_int(r->ecx);
+        print_string(" : ", RED, BLACK);
+        print_int(r->edx);
+        print_string(" : ", RED, BLACK);
+        print_int(r->edi);
+        print_string(" : ", RED, BLACK);
+        print_int(r->eip);
+        print_string(" : ", RED, BLACK);
+        print_int(r->err_code);
+        print_string(" : ", RED, BLACK);
+        print_int(r->es);
+        print_string("\n", RED, BLACK);
+        
+        //utb(0xA0, 0x20);
+        //outb(0x20, 0x20);
+        for (int i = 0; i < 100000000; i++) {
+            i = i + 2 + 3 + 4 + 5;
+            i -= 2 + 3 + 4 + 5; 
+        }
     }
     else {
         print_string(exception_messages[r->int_no], RED, BLACK);

@@ -143,13 +143,6 @@ void VirtualConsole::parse(char * inp) {
         }
     }
     
-    
-    
-    
-    
-
-
-    
 
     if (strcmp(command, "exit") == 0) {
         ShouldClose = true;

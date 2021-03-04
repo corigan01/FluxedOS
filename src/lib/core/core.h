@@ -20,7 +20,6 @@ typedef unsigned int uint32;
 #define KERNAL_BACKUP (int)0xff// This will not be automaticly loaded, only loaded if a system error is detected
 
 
-
 #ifdef __cplusplus
 #define EXTNC_ extern "C"
 #else

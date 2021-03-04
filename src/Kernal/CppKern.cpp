@@ -10,7 +10,7 @@ class KernelEntry {
 public:
     
     KernelEntry() {
-        //asm volatile("sti");
+        asm volatile("sti");
         VGA::INIT_DISPLAY();
 
         VGA::SET_COLOR(VGA::COLORS::GREEN, VGA::COLORS::BLACK);
@@ -18,6 +18,7 @@ public:
     }
 
     ~KernelEntry() {
+        
         VGA::PRINT_STR("\n\n");
         VGA::SET_COLOR(VGA::COLORS::RED, VGA::COLORS::BLACK);
         VGA::PRINT_STR("Kernel has exited!");
@@ -36,6 +37,7 @@ public:
         VirtualConsole console;
 
         console.Handle();
+        asm volatile("cli");
         
         //VGA::PRINT_STR(">\n\n\n\n\n\n>\n>\nline\n>test\n>wut\nthis is a lot of printing on this line oh yea");
 
@@ -49,6 +51,8 @@ int KernStart() {
 
     krnl.Test();
     krnl.kern();
+
+
 
     return 0;
 }
