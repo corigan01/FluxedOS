@@ -10,7 +10,7 @@ class KernelEntry {
 public:
     
     KernelEntry() {
-        //asm volatile("sti");
+        asm volatile("sti");
         VGA::INIT_DISPLAY();
 
         VGA::SET_COLOR(VGA::COLORS::GREEN, VGA::COLORS::BLACK);
@@ -18,10 +18,11 @@ public:
     }
 
     ~KernelEntry() {
-        VGA::PRINT_STR("\n\n");
         VGA::SET_COLOR(VGA::COLORS::RED, VGA::COLORS::BLACK);
-        VGA::PRINT_STR("Kernel has exited!");
+
+        VGA::PRINT_STR("\nKernel Exitting...");
     }
+   
 
     void Test() {
         VGA::SET_COLOR(VGA::COLORS::MAGENTA, VGA::COLORS::BLACK);
@@ -37,18 +38,41 @@ public:
 
         console.Handle();
         
+        
         //VGA::PRINT_STR(">\n\n\n\n\n\n>\n>\nline\n>test\n>wut\nthis is a lot of printing on this line oh yea");
 
-        //while(1);
+        
 
     }
 };
 
 int KernStart() {
-    KernelEntry krnl;
+    {
+        KernelEntry krnl;
 
-    krnl.Test();
-    krnl.kern();
+        krnl.Test();
+        krnl.kern();
+    }
 
-    return 0;
+    
+    
+    print_string("System stopped for: ", YELLOW, BLACK);
+        
+    int i = 1;
+    while(1){
+        i++;
+
+        asm volatile("nop");
+        
+        print_hold_int( ( (i / 5000)) );
+    };
+
+    
+
+   
+    
+
+
+    while(1);
+
 }

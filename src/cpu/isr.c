@@ -4,7 +4,6 @@
 
 
 
-//define our ISRs here
 extern void _isr0();
 extern void _isr1();
 extern void _isr2();
@@ -38,8 +37,7 @@ extern void _isr29();
 extern void _isr30();
 extern void _isr31();
 
-//we'll set sel to 0x08 and flags to 0x8e
-//This means that the entry is present, is running kernel level, and has the lower 5 bits
+
 void isr_install()
 {
     print_string("ISRs -->", WHITE, BLACK);
@@ -84,7 +82,7 @@ void isr_install()
 
 }
 
-//let's define an array of strings to represent the exception messages for our ISRs
+
 char *exception_messages[] =
 {
     "Division By Zero",
@@ -130,13 +128,39 @@ void fault_handler(struct regs *r)
     {
         print_string(exception_messages[r->int_no], RED, BLACK);
         print_string(" Exception. System Halted!\n", RED, BLACK);
+        /*print_string("More INFO : ", RED, BLACK);
+        print_int(r->cs);
+        print_string(" : ", RED, BLACK);
+        print_int(r->ds);
+        print_string(" : ", RED, BLACK);
+        print_int(r->eax);
+        print_string(" : ", RED, BLACK);
+        print_int(r->ebx);
+        print_string(" : ", RED, BLACK);
+        print_int(r->ecx);
+        print_string(" : ", RED, BLACK);
+        print_int(r->edx);
+        print_string(" : ", RED, BLACK);
+        print_int(r->edi);
+        print_string(" : ", RED, BLACK);
+        print_int(r->eip);
+        print_string(" : ", RED, BLACK);
+        print_int(r->err_code);
+        print_string(" : ", RED, BLACK);
+        print_int(r->es);
+        print_string("\n", RED, BLACK);*/
+        
+        //utb(0xA0, 0x20);
+        //outb(0x20, 0x20);
+
+        // FIXME this needs to not be this sad
         while(1);
     }
     else {
         print_string(exception_messages[r->int_no], RED, BLACK);
-        print_string("-=", RED, BLACK);
+        print_string("^^", RED, BLACK);
         print_int(r->int_no + 10);
-        print_string("=-", RED, BLACK);
+        print_string("^^", RED, BLACK);
     }
 }
 

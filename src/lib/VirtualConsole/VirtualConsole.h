@@ -3,26 +3,21 @@
 
 #include "../core/core.h"
 
-namespace ConsoleInternalCommands
+
+
+struct VirtualConsoleParsed
 {
-    enum Commands {
-        TEST = 0,
-        HELLO,
-
-        PRINT,
-        INFO,
-        NOTES,
-
-    };
-
-} // namespace ConsoleInternalCommands
-
+    char *  Command     = "";
+    int     CommandLen  = 0;
+    char ** Args        = {};
+    int     NumArgs     = 0;
+};
 
 class VirtualConsole {
 public:
 
     VirtualConsole();
-    ~VirtualConsole();
+    
 
     void Handle();
 
@@ -31,7 +26,8 @@ public:
 
     private:
 
-    void parse(char * inp);
+    VirtualConsoleParsed parse(char * inp);
+    int tee(VirtualConsoleParsed arg);
 
     bool ShouldClose = false;
 

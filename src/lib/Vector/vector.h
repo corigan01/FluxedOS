@@ -2,7 +2,7 @@
 #define VECTOR_H_
 
 #include "../core/core.h"
-#include "../DisplayOut/displayout.h"
+
 
 template <class T>
 class Vector {
@@ -18,7 +18,7 @@ class Vector {
     
     T operator[](int ind){
         if (ind > index || ind < 0) {
-            out(D_ERROR, KERNEL, "Index must be in range[]");
+            //out(D_ERROR, KERNEL, "Index must be in range[]");
         }
 
         return h[ind];

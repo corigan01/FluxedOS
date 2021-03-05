@@ -123,7 +123,7 @@ void VGA::PRINT_CHAR(char ch){
             else {
                 BUFFERS::DEFAULT_BUFFER.size = 80 * BUFFERS::DEFAULT_BUFFER.line_number;
                 BUFFERS::DEFAULT_BUFFER.line_number++;
-                incLine(); 
+                //incLine(); 
             }
             
         break;
@@ -149,9 +149,10 @@ void VGA::PRINT_CHAR(char ch){
                 //VGA::PRINT_CHAR('\n');
             //}
         }
-        
+       
         BUFFERS::DEFAULT_BUFFER.Buff[BUFFERS::DEFAULT_BUFFER.size] = VGA::VGA_ENTRY(ch, STORE::__MODS[3], STORE::__MODS[2]);
         BUFFERS::DEFAULT_BUFFER.size++;
+
         break;
     }
 

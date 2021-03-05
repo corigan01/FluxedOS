@@ -19,7 +19,8 @@ typedef unsigned int uint32;
 #define KERNAL_OPTION (int)0x80// This file will not be required for boot
 #define KERNAL_BACKUP (int)0xff// This will not be automaticly loaded, only loaded if a system error is detected
 
-
+void die();
+void ThrowISR(int n);
 
 #ifdef __cplusplus
 #define EXTNC_ extern "C"

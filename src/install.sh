@@ -10,3 +10,5 @@ sudo apt install gcc-multilib -y
 sudo apt install g++-multilib -y 
 sudo apt install qemu-system-x86 -y
 sudo apt install xorriso -y
+
+echo "Done! Now run ./autocompile.sh or bash autocompile.sh to build FluxedOS"
