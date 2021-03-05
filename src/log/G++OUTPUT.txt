@@ -1,3 +1,8 @@
-[01m[K./lib/VirtualConsole/VirtualConsole.cpp:215:44:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
-  215 |  / __/ / / /_/ />  </  __/ /_/ / /_/ /___/ /
-      |                                             
+In file included from [01m[K./Kernal/CppKern.cpp:6[m[K:
+[01m[K./Kernal/../lib/VirtualConsole/VirtualConsole.h:10:27:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   10 |     char *  Command     = [01;35m[K""[m[K;
+      |                           [01;35m[K^~[m[K
+[01m[K./Kernal/CppKern.cpp:[m[K In function ‘[01m[Kint KernStart()[m[K’:
+[01m[K./Kernal/CppKern.cpp:59:18:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   59 |     print_string([01;35m[K"System stopped for: "[m[K, YELLOW, BLACK);
+      |                  [01;35m[K^~~~~~~~~~~~~~~~~~~~~~[m[K

@@ -130,7 +130,5 @@ DisDone() {
     OUTPUT="$1"
 
     printf "%-40s%-4s\e[0;32mDONE\e[0;34m\n"  "${OUTPUT:0:40}" " "
-
-
-
 }
+

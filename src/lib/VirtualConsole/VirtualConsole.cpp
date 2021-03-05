@@ -6,16 +6,26 @@
 #include "../String/String.h"
 #include "../Term/Term.h"
 
+
+
+
+
 VirtualConsole::VirtualConsole() {
     VGA::PRINT_STR("\nStarted VirtualConsole\n");
 }
 
-VirtualConsole::~VirtualConsole() {
-    VGA::PRINT_STR("\nExiting VirtualConsole\n");
-}
+
 
 void VirtualConsole::Handle() {
+    
+
+   
+
+    
+
     VGA::PRINT_CHAR('>');
+    
+
     while (!ShouldClose) {
         if (key != NULL) {
             if (key == KEY_BACKSPACE ) {
@@ -29,11 +39,15 @@ void VirtualConsole::Handle() {
                 VGA::PRINT_CHAR('\n');
                 
 
-                if (keybufIndex > 0)
-                    this->parse(keybuf);
+                if (keybufIndex > 0) {
+                    int e = tee(parse(keybuf));
 
-                VGA::SET_COLOR(VGA::COLORS::WHITE, VGA::COLORS::BLACK);
+
+                }
+
                 VGA::PRINT_CHAR('\n');
+                VGA::SET_COLOR(VGA::COLORS::WHITE, VGA::COLORS::BLACK);
+                
 
                 VGA::PRINT_CHAR('>');
 
@@ -56,16 +70,104 @@ void VirtualConsole::Handle() {
         key = getKeydown();
     }
 
-    return;
+    
 }
 
-void VirtualConsole::parse(char * inp) {
+int VirtualConsole::tee(VirtualConsoleParsed arg) {
+    static const char *internalCommands[16] = {
+        "exit",
+        "fluxed",
+        "test",
+        "memread",
+        "memset"
+
+    };
+
+    arg.Command[arg.CommandLen] = '\0';
+
+    int numSelected = -1;
+    for (int i = 0; i < 16; i++) {
+        if (strcmp(internalCommands[i], arg.Command) == 0) {
+            numSelected = i;
+            break;
+        }
+    }
+
+    switch (numSelected)
+    {
+    case 0:
+        ShouldClose = 1;
+        break;
+
+    case 1:
+        VGA::PRINT_STR(R"(    ________                    ______  _____
+   / ____/ /_  ___  _____  ____/ / __ \/ ___/
+  / /_  / / / / / |/_/ _ \/ __  / / / /\__ \ 
+ / __/ / / /_/ />  </  __/ /_/ / /_/ /___/ / 
+/_/   /_/\__,_/_/|_|\___/\__,_/\____//____/  
+A hobby OS Project! Made by Main Menu aka corigan01 )");
+        break;
+
+    case 2:
+        VGA::SET_COLOR(VGA::COLORS::CYAN, VGA::COLORS::BLACK);
+        VGA::PRINT_CHAR('T');
+
+        VGA::SET_COLOR(VGA::COLORS::GREEN, VGA::COLORS::BLACK);
+        VGA::PRINT_CHAR('E');
+
+        VGA::SET_COLOR(VGA::COLORS::YELLOW, VGA::COLORS::BLACK);
+        VGA::PRINT_CHAR('S');
+
+        VGA::SET_COLOR(VGA::COLORS::RED, VGA::COLORS::BLACK);
+        VGA::PRINT_CHAR('T');
+        break;
+
+    case 3:
+    {
+        char *inpLoc = arg.Args[0];
+        char *value = ((char*)stoi(inpLoc));
+
+        VGA::SET_COLOR(VGA::COLORS::GREEN, VGA::COLORS::BLACK);
+        VGA::PRINT_STR("Data: ");
+        VGA::PRINT_STR(value);
+
+        VGA::PRINT_STR("\nDone!");
+    }
+        break;
+    
+    case 4:
+    {
+        char *inpLoc = arg.Args[0];
+        char *inpDat = arg.Args[1];
+
+        char *value = ((char*)stoi(inpLoc));
+        memcpy(value, inpDat, sizeof(char));
+
+
+
+        VGA::SET_COLOR(VGA::COLORS::GREEN, VGA::COLORS::BLACK);
+        VGA::PRINT_STR("Done!");
+    }
+        break;
+
+    default:
+        VGA::SET_COLOR(VGA::COLORS::RED, VGA::COLORS::BLACK);
+        VGA::PRINT_STR("ERROR Could not find \'"); 
+        VGA::PRINT_STR(arg.Command);
+        VGA::PRINT_STR("\'!\nDrive and Internal returned \'NOT FOUND\'!");
+        break;
+    }
+
+    return 0;
+}
+
+VirtualConsoleParsed VirtualConsole::parse(char * inp) {
     unsigned int len = strlen(inp);
     inp[len] = ' ';
     len++;
     
     if (len == 0 || len < 0) {
-        return;
+        return {};
     }
 
     unsigned int start = 0;
@@ -90,9 +192,8 @@ void VirtualConsole::parse(char * inp) {
     }
 
     unsigned int commandLen = 0;
-    char command[255] = "";
-
-    char args[16][255] = {};
+    char *command = "";
+    char **args = {};
 
     for (int i = start; i < end; i++) {
         command[commandLen++] = inp[i];
@@ -123,17 +224,6 @@ void VirtualConsole::parse(char * inp) {
 
                 }
 
-                
-
-                /*VGA::PRINT_STR("Args --> \'");
-                VGA::PRINT_STR(args[argNum]);
-                VGA::PRINT_STR("\' (Start/End) = {");
-                VGA::PRINT_INT(argStart);
-                VGA::PRINT_STR(" , ");
-                VGA::PRINT_INT(argEnd);
-                VGA::PRINT_STR("} \n");
-                */
-
                 argCharNum = 0;
                 argNum++;
                 argStart = argEnd;
@@ -142,102 +232,10 @@ void VirtualConsole::parse(char * inp) {
             }
         }
     }
+
+    
     
 
-    if (strcmp(command, "exit") == 0) {
-        ShouldClose = true;
-    }
-    else if (strcmp(command, "test") == 0) {
-        VGA::SET_COLOR(VGA::COLORS::CYAN, VGA::COLORS::BLACK);
-        VGA::PRINT_CHAR('T');
-
-        VGA::SET_COLOR(VGA::COLORS::GREEN, VGA::COLORS::BLACK);
-        VGA::PRINT_CHAR('E');
-
-        VGA::SET_COLOR(VGA::COLORS::YELLOW, VGA::COLORS::BLACK);
-        VGA::PRINT_CHAR('S');
-
-        VGA::SET_COLOR(VGA::COLORS::RED, VGA::COLORS::BLACK);
-        VGA::PRINT_CHAR('T');
-    }
-    else if (strcmp(command, "memset") == 0) {
-        if (argNum == 2) {
-            char *inpLoc = args[0];
-            char *inpDat = args[1];
-
-            char *value = ((char*)stoi(inpLoc));
-            memcpy(value, inpDat, sizeof(char));
-
-
-
-            VGA::SET_COLOR(VGA::COLORS::GREEN, VGA::COLORS::BLACK);
-            VGA::PRINT_STR("Done!");
-            
-        }
-        else {
-            VGA::SET_COLOR(VGA::COLORS::RED, VGA::COLORS::BLACK);
-            VGA::PRINT_STR("You must enter two values (adr*, vlu)!");
-        }
-    }
-    else if (strcmp(command, "memread") == 0) {
-        if (argNum == 1) {
-            char *inpLoc = args[0];
-
-            char *value = ((char*)stoi(inpLoc));
-
-            VGA::SET_COLOR(VGA::COLORS::GREEN, VGA::COLORS::BLACK);
-            VGA::PRINT_STR("Data: ");
-            VGA::PRINT_STR(value);
-
-            VGA::PRINT_STR("\nDone!");
-
-        }
-        else {
-            VGA::SET_COLOR(VGA::COLORS::RED, VGA::COLORS::BLACK);
-            VGA::PRINT_STR("You must enter one value (adr*)!");
-        }
-    }
-    else if (strcmp(command, "echo") == 0) {
-        if (argNum > 0) {
-            for (int i = 0; i < argNum; i++) {
-                VGA::PRINT_STR(args[i]);
-                VGA::PRINT_STR(" ");
-            }
-        }
-        else {
-            VGA::PRINT_STR("\n");
-        }
-    }
-    else if (strcmp(command, "fluxed") == 0) {
-        VGA::PRINT_STR(R"(    ________                    ______  _____
-   / ____/ /_  ___  _____  ____/ / __ \/ ___/
-  / /_  / / / / / |/_/ _ \/ __  / / / /\__ \ 
- / __/ / / /_/ />  </  __/ /_/ / /_/ /___/ / 
-/_/   /_/\__,_/_/|_|\___/\__,_/\____//____/  
-A hobby OS Project! Made by Main Menu aka corigan01 
-)");
-    }
-    else if (strcmp(command, "help") == 0) {
-        VGA::PRINT_STR(R"(
-Help ----------
-Internal Commands :
-
--    MEMORY   
-'memset'  (adr*, vlu) 
-'memread' (adr*)     
--    DISPLAY  
-'echo' (...) 
--    SYSTEM   
-'exit' (void)
--    DEBUG    
-'test' (void)
-)");
-    }
-    else {
-        VGA::SET_COLOR(VGA::COLORS::RED, VGA::COLORS::BLACK);
-        VGA::PRINT_STR("ERROR Could not find \'"); 
-        VGA::PRINT_STR(command);
-        VGA::PRINT_STR("\'!\nDrive and Internal returned \'NOT FOUND\'!");
-    }
+    return {command, commandLen, args, argNum};
 
 }
