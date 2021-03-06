@@ -5,6 +5,7 @@
 #include "../lib/VGA/VGA.h"
 #include "../lib/VirtualConsole/VirtualConsole.h"
 #include "../cpu/cpu.h"
+#include "../lib/mem/mem.h"
 
 class KernelEntry {
 public:
@@ -14,7 +15,10 @@ public:
         VGA::INIT_DISPLAY();
 
         VGA::SET_COLOR(VGA::COLORS::GREEN, VGA::COLORS::BLACK);
-        VGA::kprintf("Fluxed OS ====== BUILD %d\n", BUILD);
+        VGA::kprintf("Fluxed OS ====== BUILD %d", BUILD);
+        VGA::PRINT_STR("Memory : ");
+        VGA::PRINT_INT(Getmemory());
+        VGA::PRINT_STR("\n");
     }
 
     ~KernelEntry() {

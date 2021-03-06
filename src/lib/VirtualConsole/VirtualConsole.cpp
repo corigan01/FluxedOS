@@ -18,11 +18,6 @@ VirtualConsole::VirtualConsole() {
 
 void VirtualConsole::Handle() {
     
-
-   
-
-    
-
     VGA::PRINT_CHAR('>');
     
 
@@ -79,7 +74,8 @@ int VirtualConsole::tee(VirtualConsoleParsed arg) {
         "fluxed",
         "test",
         "memread",
-        "memset"
+        "memset",
+        "help"
 
     };
 
