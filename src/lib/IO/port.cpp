@@ -30,3 +30,11 @@ uint32_t port_long_in(uint32_t port) {
     return result;
 }
 
+void insl(unsigned reg, unsigned int *buffer, int quads)
+{
+    int index;
+    for(index = 0; index < quads; index++)
+    {
+        buffer[index] = port_long_in(reg);
+    }
+}

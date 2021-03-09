@@ -12,5 +12,6 @@ void port_word_out (unsigned short port, unsigned short data);
 void port_long_out(uint32_t port, uint32_t value);
 uint32_t port_long_in(uint32_t port);
 
+void insl(unsigned reg, unsigned int *buffer, int quads);
 
 #endif // !KERNEL_PORT_H

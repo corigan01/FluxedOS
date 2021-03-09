@@ -1,7 +1,7 @@
 #include "core.h"
 #include "../Term/Term.h"
 
-void die() {
+EXTNC_ void die() {
     clear_screen();
     init_vga(RED, WHITE);
 
@@ -19,7 +19,7 @@ void die() {
 asm volatile(stringizer(int zz)); \
 break; 
 
-void ThrowISR(int n) {
+EXTNC_ void ThrowISR(int n) {
     switch (n)
     {
     coriCase (0, $0x00);

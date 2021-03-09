@@ -157,7 +157,7 @@ A hobby OS Project! Made by Main Menu aka corigan01 )");
     return 0;
 }
 
-VirtualConsoleParsed VirtualConsole::parse(char * inp) {
+VirtualConsoleParsed VirtualConsole::parse(char * inp) { 
     unsigned int len = strlen(inp);
     inp[len] = ' ';
     len++;

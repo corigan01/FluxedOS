@@ -1,4 +1,0 @@
-[01m[K./Kernal/Kernal.c:[m[K In function ‘[01m[Kkernal_entry[m[K’:
-[01m[K./Kernal/Kernal.c:27:5:[m[K [01;35m[Kwarning: [m[Kimplicit declaration of function ‘[01m[KKernStart[m[K’ [[01;35m[K-Wimplicit-function-declaration[m[K]
-   27 |     [01;35m[KKernStart[m[K();
-      |     [01;35m[K^~~~~~~~~[m[K

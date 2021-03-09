@@ -2,10 +2,14 @@
 #include "Kernal.h"
 #include "BUILD.h"
 #include "../lib/Vector/vector.h"
-#include "../lib/VGA/VGA.h"
 #include "../lib/VirtualConsole/VirtualConsole.h"
 #include "../cpu/cpu.h"
 #include "../lib/mem/mem.h"
+#include "../lib/core/core.h"
+#include "../lib/IO/ide.h"
+#include "../cpu/pic.h"
+#include "../lib/cpu/cpu.h"
+#include "../lib/VGA/VGA.h"
 
 class KernelEntry {
 public:
@@ -19,6 +23,9 @@ public:
         VGA::PRINT_STR("Memory : ");
         VGA::PRINT_INT(Getmemory());
         VGA::PRINT_STR("\n");
+
+       pic_init();
+       pic_send(10);
     }
 
     ~KernelEntry() {
@@ -33,6 +40,7 @@ public:
         VGA::kprintf("Testing VGA commands\nAll statments should be true!\n%s = %d\nYou should not see \'-\' in \'T-\eE-\eS-\eT\'\nShould be broken %t %s %d\nDONE!", "ten", 10);
 
         // test tripping the isr
+        //asm volatile ("int $0x01");
         
     }
 
