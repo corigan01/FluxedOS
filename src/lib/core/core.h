@@ -28,8 +28,14 @@ typedef unsigned int uint32;
 #define EXTNC_START {
 #define ECTNC_END }
 
+#define MacroStrCon(x) #x
+
 EXTNC_ void die();
 EXTNC_ void ThrowISR(int n);
+
+#define Vasm(x) asm volatile(x);
+#define NO_INSTRUCTION Vasm("nop");
+#define HALT while(1) { NO_INSTRUCTION; } 
 
 
 

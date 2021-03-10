@@ -6,7 +6,7 @@ static uint8    ide_irq_invoked = 0;
 static uint8    atapi_packet[12] = {0xA8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 ATA::channel channels[2];
-ATA::ide_device ide_devices[4];
+ATA::devices ide_devices[4];
 
 // R/W
 uint8 ATA::ide_read  (uint8 channel, uint8 reg) {
@@ -160,18 +160,18 @@ void ATA::ide_init(uint32 BAR0, uint32 BAR1, uint32 BAR2, uint32 BAR3, uint32 BA
             // (IV) Probe for ATAPI Devices:
             VGA::PRINT_STR("Probe ATAPI\n");
             if (err != 0) {
-            unsigned char cl = ide_read(i, ATA_REG_LBA1);
-            unsigned char ch = ide_read(i, ATA_REG_LBA2);
+                unsigned char cl = ide_read(i, ATA_REG_LBA1);
+                unsigned char ch = ide_read(i, ATA_REG_LBA2);
 
-            if (cl == 0x14 && ch ==0xEB)
-                type = IDE_ATAPI;
-            else if (cl == 0x69 && ch == 0x96)
-                type = IDE_ATAPI;
-            else
-                continue; // Unknown Type (may not be a device).
+                if (cl == 0x14 && ch ==0xEB)
+                    type = IDE_ATAPI;
+                else if (cl == 0x69 && ch == 0x96)
+                    type = IDE_ATAPI;
+                else
+                    continue; // Unknown Type (may not be a device).
 
-            ide_write(i, ATA_REG_COMMAND, ATA_CMD_IDENTIFY_PACKET);
-            sleep(1);
+                ide_write(i, ATA_REG_COMMAND, ATA_CMD_IDENTIFY_PACKET);
+                sleep(1);
             }
 
             uint32 * ide_buf;

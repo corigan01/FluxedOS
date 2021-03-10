@@ -73,5 +73,18 @@ namespace VGA
 
 } // namespace VGA
 
+#define panic(x) \
+    VGA::CLEAR_DISPLAY(); \
+    VGA::SET_COLOR(VGA::COLORS::RED, VGA::COLORS::BLACK); \
+    VGA::PRINT_STR("==KERNEL PANIC== [ERROR TYPE: UNRECOVERABLE]\n trace: ["); \
+    VGA::PRINT_STR(__FILE__); \
+    VGA::PRINT_STR(": "); \ 
+    VGA::PRINT_INT(__LINE__); \ 
+    VGA::PRINT_STR("]\n cause --> \'"); \
+    VGA::PRINT_STR(x); \
+    VGA::PRINT_STR("\' \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"); \
+    HALT; 
+
+
 
 #endif // !TEXT_MODE_H_

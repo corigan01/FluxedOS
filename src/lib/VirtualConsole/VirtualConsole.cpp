@@ -5,8 +5,7 @@
 #include "../mem/mem.h"
 #include "../String/String.h"
 #include "../Term/Term.h"
-
-
+#include "../hal/hal.h"
 
 
 
@@ -75,7 +74,9 @@ int VirtualConsole::tee(VirtualConsoleParsed arg) {
         "test",
         "memread",
         "memset",
-        "help"
+        "help",
+        "panic",
+        "reset"
 
     };
 
@@ -144,6 +145,17 @@ A hobby OS Project! Made by Main Menu aka corigan01 )");
         VGA::SET_COLOR(VGA::COLORS::GREEN, VGA::COLORS::BLACK);
         VGA::PRINT_STR("Done!");
     }
+        break;
+    
+    case 5:
+        break;
+
+    case 6:
+        panic("PANIC called from TERM");
+        break;
+
+    case 7:
+        SYS::reset();
         break;
 
     default:

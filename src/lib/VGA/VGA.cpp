@@ -1,6 +1,7 @@
 #include "VGA.h"
 #include "../Term/Term.h"
 #include "../mem/mem.h"
+#include "../hal/hal.h"
 
 
 namespace STORE {
