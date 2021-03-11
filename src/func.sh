@@ -4,10 +4,10 @@
 addToBuild() {
     # add one to the build number
     echo "---------------- ADDING TO BUILD ----------------"
-    awk '{if ($1 == $1) print $1, $2, $3 + 1;}' Kernal/BUILD.h > temp.txt
-    cp temp.txt Kernal/BUILD.h 
+    awk '{if ($1 == $1) print $1, $2, $3 + 1;}' Kernel/BUILD.h > temp.txt
+    cp temp.txt Kernel/BUILD.h 
     rm temp.txt
-    printf "%s" "$(<Kernal/BUILD.h)"
+    printf "%s" "$(<Kernel/BUILD.h)"
     echo
 }
 

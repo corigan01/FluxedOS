@@ -18,14 +18,25 @@ public:
         asm volatile("sti");
         VGA::INIT_DISPLAY();
 
+        VGA::SET_COLOR(VGA::COLORS::WHITE, VGA::COLORS::BLACK);
+
+        gdt_install();
+        idt_install();
+        isr_install();
+        irq_install();
+        pic_init();
+
         VGA::SET_COLOR(VGA::COLORS::GREEN, VGA::COLORS::BLACK);
+
+
         VGA::kprintf("Fluxed OS ====== BUILD %d", BUILD);
         VGA::PRINT_STR("Memory : ");
         VGA::PRINT_INT(Getmemory());
         VGA::PRINT_STR("\n");
-
-       pic_init();
-       pic_send(10);
+        
+        //enable the interrupts
+        Vasm("sti");
+       //pic_send(10);
     }
 
     ~KernelEntry() {
@@ -66,25 +77,5 @@ int KernStart() {
         krnl.kern();
     }
 
-    
-    
-    print_string("System stopped for: ", YELLOW, BLACK);
-        
-    int i = 1;
-    while(1){
-        i++;
-
-        asm volatile("nop");
-        
-        print_hold_int( ( (i / 5000)) );
-    };
-
-    
-
-   
-    
-
-
-    while(1);
-
+    panic("Kernel should not quit!");
 }

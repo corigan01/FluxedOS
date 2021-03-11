@@ -1,6 +1,5 @@
-#include "../lib/Term/Term.h"
 #include "idt.h"
-
+#include "../lib/VGA/cVGA.h"
 
 //define a structure for the IDT entry
 struct idt_entry
@@ -40,14 +39,16 @@ void idt_set_gate(unsigned char num, unsigned long base, unsigned short sel, uns
 
 
 void idt_install(){
-    print_string("IDT -->", WHITE, BLACK);
+    PRINT_STR("IDT INIT ");
 
     idtp.limit = (sizeof(struct idt_entry)*256)-1;
     idtp.base = (unsigned int)&idt; 
 
     
     load_idt();
-    print_string("OK", GREEN, BLACK);
-    print_new_line();
+    SET_COLOR(__GREEN, __BLACK);
+    PRINT_STR("OK");
+    SET_COLOR(__WHITE, __BLACK);
+    PRINT_CHAR('\n');
 
 }

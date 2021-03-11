@@ -1,5 +1,5 @@
 
-#include "../lib/Term/Term.h"
+#include "../lib/VGA/cVGA.h"
 #include "idt.h"
 #include "isr.h"
 #include "irq.h"
@@ -60,7 +60,7 @@ void irq_remap(void){
 
 
 void irq_install(){
-    print_string("IRQs -->", WHITE, BLACK);
+    PRINT_STR("IRQs INIT ");
     irq_remap();
 
     //mapping the IRQs to 32-47 IDT entries
@@ -82,8 +82,10 @@ void irq_install(){
     idt_set_gate(47, (unsigned)_irq15, 0x08, 0x8E);
 
     
-    print_string("OK", GREEN, BLACK);
-    print_new_line();
+    SET_COLOR(__GREEN, __BLACK);
+    PRINT_STR("OK");
+    SET_COLOR(__WHITE, __BLACK);
+    PRINT_CHAR('\n');
 
 }
 
@@ -98,6 +100,8 @@ void irq_handler(struct regs *r){
 
     if(handler){
         handler(r);
+        
+
     }
 
     if(r->int_no >= 40){
@@ -106,5 +110,6 @@ void irq_handler(struct regs *r){
 
     //in other cases,we do the following
     port_byte_out(0x20, 0x20);
+
 
 }

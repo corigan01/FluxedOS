@@ -1,8 +1,8 @@
 #include "VGA.h"
-#include "../Term/Term.h"
 #include "../mem/mem.h"
 #include "../hal/hal.h"
-
+#include "../String/String.h"
+#include "cVGA.h"
 
 namespace STORE {
     int __MODE_SELC = VGA::MODES::TEXT;
@@ -35,8 +35,8 @@ namespace BUFFERS {
 
 
 void VGA::INIT_DISPLAY() {
-    BUFFERS::DEFAULT_BUFFER.line_number = getLine();
-    BUFFERS::DEFAULT_BUFFER.size = getBuf();
+    BUFFERS::DEFAULT_BUFFER.line_number = 25;
+    BUFFERS::DEFAULT_BUFFER.size = 0;
     BUFFERS::DEFAULT_BUFFER.Buff = VGA_PLACEMENT VGA_ADDRESS;
 
     //VGA::CLEAR_DISPLAY();
@@ -139,7 +139,7 @@ void VGA::PRINT_CHAR(char ch){
         break;
     case '\e':
         BUFFERS::DEFAULT_BUFFER.size--;
-        BUFFERS::DEFAULT_BUFFER.Buff[BUFFERS::DEFAULT_BUFFER.size] = VGA_ENTRY(' ', WHITE, BLACK);
+        BUFFERS::DEFAULT_BUFFER.Buff[BUFFERS::DEFAULT_BUFFER.size] = VGA_ENTRY(' ', VGA::COLORS::WHITE, VGA::COLORS::BLACK);
         break;
     default:
         if (BUFFERS::DEFAULT_BUFFER.line_number > 0) {
@@ -263,4 +263,26 @@ void VGA::kprintf(const char* format, ...) {
     PRINT_STR("\n");
 
 
+}
+
+
+
+EXTNC_ void CLEAR_DISPLAY() {
+    VGA::CLEAR_DISPLAY();
+}
+
+EXTNC_ void PRINT_CHAR(char c) {
+    VGA::PRINT_CHAR(c);
+}
+
+EXTNC_ void PRINT_STR(const char * s) {
+    VGA::PRINT_STR(s);
+}
+
+EXTNC_ void SET_COLOR(uint8 a, uint8 b) {
+    VGA::SET_COLOR(a, b);
+}
+
+EXTNC_ void PRINT_INT(int i) {
+    VGA::PRINT_INT(i);
 }

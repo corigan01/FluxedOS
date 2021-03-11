@@ -4,7 +4,6 @@
 #include "../compare/compare.h"
 #include "../mem/mem.h"
 #include "../String/String.h"
-#include "../Term/Term.h"
 #include "../hal/hal.h"
 
 
@@ -76,7 +75,9 @@ int VirtualConsole::tee(VirtualConsoleParsed arg) {
         "memset",
         "help",
         "panic",
-        "reset"
+        "reset",
+        "shutdown",
+        "throw"
 
     };
 
@@ -156,6 +157,14 @@ A hobby OS Project! Made by Main Menu aka corigan01 )");
 
     case 7:
         SYS::reset();
+        break;
+
+    case 8:
+        SYS::shutdown();
+        break;
+
+    case 9:
+        ThrowISR(stoi(arg.Args[0]));
         break;
 
     default:

@@ -1,4 +1,4 @@
-#include "../lib/Term/Term.h"
+#include "../lib/VGA/cVGA.h"
 #include "idt.h"
 #include "isr.h"
 
@@ -40,7 +40,7 @@ extern void _isr31();
 
 void isr_install()
 {
-    print_string("ISRs -->", WHITE, BLACK);
+    PRINT_STR("ISRs INIT ");
     idt_set_gate(0, (unsigned)_isr0, 0x08, 0x8E);
     idt_set_gate(1, (unsigned)_isr1, 0x08, 0x8E);
     idt_set_gate(2, (unsigned)_isr2, 0x08, 0x8E);
@@ -77,8 +77,10 @@ void isr_install()
     idt_set_gate(30, (unsigned)_isr30, 0x08, 0x8E);
     idt_set_gate(31, (unsigned)_isr31, 0x08, 0x8E);
 
-    print_string("OK", GREEN, BLACK);
-    print_new_line();
+    SET_COLOR(__GREEN, __BLACK);
+    PRINT_STR("OK");
+    SET_COLOR(__WHITE, __BLACK);
+    PRINT_CHAR('\n');
 
 }
 
@@ -122,14 +124,16 @@ char *exception_messages[] =
 
 void fault_handler(struct regs *r)
 {
+    
     //init_vga(WHITE, BLACK);
-    print_string("FAULT ----", RED, BLACK);
+    SET_COLOR(__RED, __BLACK);
+    PRINT_STR("FAULT ----");
     if (r->int_no < 32)
     {
-        print_string(exception_messages[r->int_no], RED, BLACK);
-        print_string(" Exception. System Halted!\n", RED, BLACK);
-        /*print_string("More INFO : ", RED, BLACK);
-        print_int(r->cs);
+        PRINT_STR(exception_messages[r->int_no]);
+        PRINT_STR(" Exception. System Halted!\n\n\n");
+        PRINT_STR("More INFO : ");
+        /*print_int(r->cs);
         print_string(" : ", RED, BLACK);
         print_int(r->ds);
         print_string(" : ", RED, BLACK);
@@ -157,10 +161,10 @@ void fault_handler(struct regs *r)
         while(1);
     }
     else {
-        print_string(exception_messages[r->int_no], RED, BLACK);
-        print_string("^^", RED, BLACK);
-        print_int(r->int_no + 10);
-        print_string("^^", RED, BLACK);
+        PRINT_STR(exception_messages[r->int_no]);
+        PRINT_STR("^^");
+        PRINT_STR(r->int_no + 10);
+        PRINT_STR("^^");
     }
 }
 

@@ -1,5 +1,5 @@
 #include "gdt.h"
-#include "../lib/Term/Term.h"
+#include "../lib/VGA/cVGA.h"
 
 struct gdt_entry
 {
@@ -43,7 +43,7 @@ void gdt_set_gate(int num, unsigned long base, unsigned long limit, unsigned cha
 
 void gdt_install()
 {
-    print_string("GDT -->", WHITE, BLACK);
+    PRINT_STR("GDT INIT ");
     
     /* Setup the GDT pointer and limit */
     gp.limit = (sizeof(struct gdt_entry) * 3) - 1;
@@ -58,6 +58,8 @@ void gdt_install()
 
     /* Flush out the old GDT and install the new changes! */
     _gdt_flush();
-    print_string("OK", GREEN, BLACK);
-    print_new_line();
+    SET_COLOR(__GREEN, __BLACK);
+    PRINT_STR("OK");
+    SET_COLOR(__WHITE, __BLACK);
+    PRINT_CHAR('\n');
 }

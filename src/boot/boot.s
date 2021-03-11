@@ -36,6 +36,7 @@ stublet:
     extern kernal_entry
     call kernal_entry
     
+    
 
 
 SECTION .bss

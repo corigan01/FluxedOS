@@ -1,22 +1,10 @@
 #include "core.h"
-#include "../Term/Term.h"
-
-EXTNC_ void die() {
-    clear_screen();
-    init_vga(RED, WHITE);
-
-    print_string("System Died! line called : ", RED, WHITE);
-    print_int(__LINE__);
-
-    while(1) {
-        asm volatile ("nop");
-    }
-}
 
 
-#define stringizer(xx) #xx
+
+
 #define coriCase(xy, zz) case xy: \
-asm volatile(stringizer(int zz)); \
+asm volatile(MacroStrCon(int zz)); \
 break; 
 
 EXTNC_ void ThrowISR(int n) {

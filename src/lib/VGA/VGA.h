@@ -65,24 +65,24 @@ namespace VGA
     void SET_COLOR(uint8 fore_color, uint8 back_color);
     void kprintf(const char* format, ...);
     void PRINT_INT(int in);
-
-
-
-
-
-
 } // namespace VGA
 
+
+
+
 #define panic(x) \
+    VGA::SET_COLOR(VGA::COLORS::WHITE, VGA::COLORS::RED); \
     VGA::CLEAR_DISPLAY(); \
-    VGA::SET_COLOR(VGA::COLORS::RED, VGA::COLORS::BLACK); \
-    VGA::PRINT_STR("==KERNEL PANIC== [ERROR TYPE: UNRECOVERABLE]\n trace: ["); \
+    VGA::PRINT_STR("==KERNEL PANIC== [ERROR TYPE: UNRECOVERABLE]                                        \n trace: ["); \
     VGA::PRINT_STR(__FILE__); \
     VGA::PRINT_STR(": "); \ 
     VGA::PRINT_INT(__LINE__); \ 
-    VGA::PRINT_STR("]\n cause --> \'"); \
+    VGA::PRINT_STR("]                                                                                   \n cause --> \'"); \
     VGA::PRINT_STR(x); \
-    VGA::PRINT_STR("\' \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"); \
+    VGA::PRINT_STR("\'"); \
+    for (int i = 0; i < 22; i++) { \
+        VGA::PRINT_STR("                                                                                \n"); \
+    } \
     HALT; 
 
 

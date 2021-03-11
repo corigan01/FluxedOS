@@ -35,9 +35,9 @@ private:
 };
 
 int stoi(char* str);
-
-
-
+uint32 strlen(const char* str);
+uint32 digit_count(int num);
+void itoa(int num, char *number);
 
 
 

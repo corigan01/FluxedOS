@@ -2,7 +2,7 @@
 #define KERN_SRT_H
 
 #include "../lib/core/core.h"
-#include "../lib/Term/Term.h"
+
 
 EXTNC_ int KernStart();
 
