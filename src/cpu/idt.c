@@ -24,7 +24,7 @@ struct idt_entry idt[256];
 struct idt_ptr idtp;
 
 //we call the following function in boot.asm
-extern void load_idt();
+ void load_idt() {}
 
 void idt_set_gate(unsigned char num, unsigned long base, unsigned short sel, unsigned char flags){
 

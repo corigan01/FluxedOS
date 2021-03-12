@@ -262,25 +262,25 @@ extern fault_handler
 ;kernel registers, push other stuff onto the stack and then calls the fault_handler function
 ;after that it will restore the CPU state.
 isr_common_stub:
-    pusha
-    push ds
-    push es
-    push fs
-    push gs
-    mov ax, 0x10
-    mov ds, ax
-    mov es, ax
-    mov fs, ax
-    mov gs, ax
-    mov eax, esp
-    push eax
-    mov eax, fault_handler
-    call eax
-    pop eax
-    pop gs
-    pop fs
-    pop es
-    pop ds
-    popa
-    add esp, 8
-    iret
+;    pusha
+;    push ds
+;    push es
+;    push fs
+;    push gs
+;    mov ax, 0x10
+;    mov ds, ax
+;    mov es, ax
+;    mov fs, ax
+;    mov gs, ax
+;    mov eax, esp
+;    push eax
+;    mov eax, fault_handler
+;    call eax
+;    pop eax
+;    pop gs
+;    pop fs
+;    pop es
+;    pop ds
+;    popa
+;    add esp, 8
+;    iret

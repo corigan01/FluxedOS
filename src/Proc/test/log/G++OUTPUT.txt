@@ -1,1 +1,1 @@
-/usr/bin/ld: warning: cannot find entry symbol lf_i386; defaulting to 0000000000001000
+/usr/bin/ld: warning: cannot find entry symbol lf_i686; defaulting to 0000000000001000

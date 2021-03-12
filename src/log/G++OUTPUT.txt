@@ -1,12 +1,31 @@
-In file included from [01m[K./lib/IO/ide.h:7[m[K,
-                 from [01m[K./lib/IO/ide.cpp:1[m[K:
-[01m[K./lib/IO/../VGA/VGA.h:78:27:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
+In file included from [01m[K./lib/VirtualConsole/VirtualConsole.cpp:2[m[K:
+[01m[K./lib/VirtualConsole/../VGA/VGA.h:78:27:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
    78 |     VGA::PRINT_STR(": "); \
       |                            
-[01m[K./lib/IO/../VGA/VGA.h:79:31:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
+[01m[K./lib/VirtualConsole/../VGA/VGA.h:79:31:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
    79 |     VGA::PRINT_INT(__LINE__); \
       |                                
-[01m[K./lib/IO/ide.cpp:[m[K In function ‘[01m[Kuint8 ATA::ide_ata_access(uint8, uint8, uint32, uint8, uint16, uint32)[m[K’:
-[01m[K./lib/IO/ide.cpp:222:1:[m[K [01;35m[Kwarning: [m[Kno return statement in function returning non-void [[01;35m[K-Wreturn-type[m[K]
-  222 | [01;35m[K}[m[K
-      | [01;35m[K^[m[K
+[01m[K./lib/VirtualConsole/VirtualConsole.cpp:104:44:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
+  104 |  / __/ / / /_/ />  </  __/ /_/ / /_/ /___/ /
+      |                                             
+In file included from [01m[K./lib/VirtualConsole/VirtualConsole.cpp:1[m[K:
+[01m[K./lib/VirtualConsole/VirtualConsole.h:10:27:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   10 |     char *  Command     = [01;35m[K""[m[K;
+      |                           [01;35m[K^~[m[K
+[01m[K./lib/VirtualConsole/VirtualConsole.cpp:[m[K In member function ‘[01m[Kint VirtualConsole::tee(VirtualConsoleParsed)[m[K’:
+[01m[K./lib/VirtualConsole/VirtualConsole.cpp:126:42:[m[K [01;35m[Kwarning: [m[Kcast to pointer from integer of different size [[01;35m[K-Wint-to-pointer-cast[m[K]
+  126 |         char *value = ((char*)stoi(inpLoc[01;35m[K)[m[K);
+      |                                          [01;35m[K^[m[K
+[01m[K./lib/VirtualConsole/VirtualConsole.cpp:141:42:[m[K [01;35m[Kwarning: [m[Kcast to pointer from integer of different size [[01;35m[K-Wint-to-pointer-cast[m[K]
+  141 |         char *value = ((char*)stoi(inpLoc[01;35m[K)[m[K);
+      |                                          [01;35m[K^[m[K
+[01m[K./lib/VirtualConsole/VirtualConsole.cpp:[m[K In member function ‘[01m[KVirtualConsoleParsed VirtualConsole::parse(char*)[m[K’:
+[01m[K./lib/VirtualConsole/VirtualConsole.cpp:212:21:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+  212 |     char *command = [01;35m[K""[m[K;
+      |                     [01;35m[K^~[m[K
+[01m[K./lib/VirtualConsole/VirtualConsole.cpp:256:22:[m[K [01;35m[Kwarning: [m[Knarrowing conversion of ‘[01m[KcommandLen[m[K’ from ‘[01m[Kunsigned int[m[K’ to ‘[01m[Kint[m[K’ [[01;35m[K-Wnarrowing[m[K]
+  256 |     return {command, [01;35m[KcommandLen[m[K, args, argNum};
+      |                      [01;35m[K^~~~~~~~~~[m[K
+[01m[K./lib/VirtualConsole/VirtualConsole.cpp:256:40:[m[K [01;35m[Kwarning: [m[Knarrowing conversion of ‘[01m[KargNum[m[K’ from ‘[01m[Kunsigned int[m[K’ to ‘[01m[Kint[m[K’ [[01;35m[K-Wnarrowing[m[K]
+  256 |     return {command, commandLen, args, [01;35m[KargNum[m[K};
+      |                                        [01;35m[K^~~~~~[m[K

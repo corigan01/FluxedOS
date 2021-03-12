@@ -93,7 +93,7 @@ rm temp.txt &> /dev/null
 
 ts=$(date +%s%N)
 #linking the kernel with kernel.o and boot.o files
-if g++ -m32 -lstdc++ -nostartfiles -T linker.ld  obj/*.o -o FluxedOS.bin  &> "log/LINKOUTPUT.txt"; then
+if g++ -m64 -lstdc++ -nostartfiles -T linker.ld  obj/*.o -o FluxedOS.bin  &> "log/LINKOUTPUT.txt"; then
     DisDone "Linking FluxedOS.bin"
     PFD=$((($(date +%s%N) - $ts)/1000000))
     printf "%-40s%-4s\e[0;32mDONE - $PFD ms\e[0;34m\n"  "${TEx:0:40}" " "
@@ -114,7 +114,7 @@ fi
 
 echo "---------------- BUILDING ISO -------------------"
 #check FluxedOS.bin file is x86 multiboot file or not
-if grub-file --is-x86-multiboot FluxedOS.bin &> "log/GRUB.txt"; then
+if echo ""; then #grub-file --is-x86-multiboot FluxedOS.bin &> "log/GRUB.txt"; then
     DisDone "Generating grub files"
      
 else
@@ -123,6 +123,7 @@ else
             echo -e "\e[0;31m ------------------ GRUB FAILED! ------------------ "
             printf "%s" "$(<log/GRUB.txt)"
             echo ""
+            echo "FluxedOS.bin is not a multiboot x86 file"
             echo -e "\e[0;31m ------------------- GRUB DONE! ------------------- "
   
   

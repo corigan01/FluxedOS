@@ -6,7 +6,7 @@
 #include "../cpu/cpu.h"
 #include "../lib/mem/mem.h"
 #include "../lib/core/core.h"
-#include "../lib/IO/ide.h"
+
 #include "../cpu/pic.h"
 #include "../lib/hal/hal.h"
 #include "../lib/VGA/VGA.h"
@@ -25,7 +25,7 @@ public:
         idt_install();
         gdt_install();
         //pic_init();
-        
+
 
         VGA::SET_COLOR(VGA::COLORS::GREEN, VGA::COLORS::BLACK);
 

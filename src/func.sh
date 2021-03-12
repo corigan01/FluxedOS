@@ -28,7 +28,7 @@ clean() {
 compilea() {
     OUTPUT="$1"
 
-    if nasm -f elf $OUTPUT -o $OUTPUT.o  &> "../log/A++OUTPUT.txt"; then
+    if nasm -f elf64 $OUTPUT -o $OUTPUT.o  &> "../log/A++OUTPUT.txt"; then
             printf "%-40s%-4s\e[0;32mDONE\e[0;34m\n"  "${OUTPUT:0:40}" " "
         else
 
@@ -52,7 +52,7 @@ compileProc() {
 
     mkdir log &> /dev/null
 
-    if g++ -m32 -elf_i386 -nostdinc -nostartfiles -lgcc_s $OUTPUT -o "$FILES.exc" -ffreestanding -O2 -Wall -Wextra -fdiagnostics-color=always -lstdc++  &> "log/G++OUTPUT.txt"; then
+    if g++ -m64 -elf_i686 -nostdinc -nostartfiles -lgcc_s $OUTPUT -o "$FILES.exc" -ffreestanding -O2 -Wall -Wextra -fdiagnostics-color=always -lstdc++  &> "log/G++OUTPUT.txt"; then
          printf "%-40s%-4s\e[0;32mDONE\e[0;34m\n"  "${OUTPUT:0:40}" " "
     else
 
@@ -79,14 +79,14 @@ compilec_() {
     local ts=$(date +%s%N)
 
 
-    if gcc -m32 -elf_i386  -O -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-builtin -c  $OUTPUT -fdiagnostics-color=always  &> "log/GccOUTPUT.txt"; then
+    if gcc -m64 -elf_i686  -O -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-builtin -c  $OUTPUT -fdiagnostics-color=always  &> "log/GccOUTPUT.txt"; then
          local PFD=$((($(date +%s%N) - $ts)/1000000))
          printf "%-40s%-4s\e[0;32mDONE - $PFD ms\e[0;34m\n"  "${OUTPUT:0:40}" " "
     else
         printf "%-40s%-4s\e[0;31mFAILED\e[0;34m\n"  "${OUTPUT:0:40}" " "
         #ouput the errors
 
-        gcc -m32 -elf_i386 -O -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-builtin -c  $OUTPUT -fdiagnostics-color=always  &> "log/GccOUTPUT.txt"
+        gcc -m64 -elf_i686 -O -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-builtin -c  $OUTPUT -fdiagnostics-color=always  &> "log/GccOUTPUT.txt"
         printf "%s" "$(<log/GccOUTPUT.txt)"
         echo ""
         #rm temp.txt
@@ -106,14 +106,14 @@ compilec() {
     mkdir log &> /dev/null
     local ts=$(date +%s%N)
 
-    if g++ -m32 -elf_i386  -O -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-builtin -c  $OUTPUT -fdiagnostics-color=always  &> "log/G++OUTPUT.txt"; then
+    if g++ -m64 -elf_i686  -O -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-builtin -c  $OUTPUT -fdiagnostics-color=always  &> "log/G++OUTPUT.txt"; then
          local PFD=$((($(date +%s%N) - $ts)/1000000))
          printf "%-40s%-4s\e[0;32mDONE - $PFD ms\e[0;34m\n"  "${OUTPUT:0:40}" " "
     else
         printf "%-40s%-4s\e[0;31mFAILED\e[0;34m\n"  "${OUTPUT:0:40}" " "
         #ouput the errors
 
-        g++ -m32 -elf_i386  -O -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-builtin -c  $OUTPUT -fdiagnostics-color=always  &> "log/G++OUTPUT.txt"
+        g++ -m64 -elf_i686  -O -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-builtin -c  $OUTPUT -fdiagnostics-color=always  &> "log/G++OUTPUT.txt"
         printf "%s" "$(<log/G++OUTPUT.txt)"
         echo ""
         #rm temp.txt

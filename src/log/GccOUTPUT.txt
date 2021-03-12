@@ -1,0 +1,107 @@
+[01m[K./cpu/isr.c:[m[K In function ‘[01m[Kisr_install[m[K’:
+[01m[K./cpu/isr.c:44:21:[m[K [01;35m[Kwarning: [m[Kcast from pointer to integer of different size [[01;35m[K-Wpointer-to-int-cast[m[K]
+   44 |     idt_set_gate(0, [01;35m[K([m[Kunsigned)_isr0, 0x08, 0x8E);
+      |                     [01;35m[K^[m[K
+[01m[K./cpu/isr.c:45:21:[m[K [01;35m[Kwarning: [m[Kcast from pointer to integer of different size [[01;35m[K-Wpointer-to-int-cast[m[K]
+   45 |     idt_set_gate(1, [01;35m[K([m[Kunsigned)_isr1, 0x08, 0x8E);
+      |                     [01;35m[K^[m[K
+[01m[K./cpu/isr.c:46:21:[m[K [01;35m[Kwarning: [m[Kcast from pointer to integer of different size [[01;35m[K-Wpointer-to-int-cast[m[K]
+   46 |     idt_set_gate(2, [01;35m[K([m[Kunsigned)_isr2, 0x08, 0x8E);
+      |                     [01;35m[K^[m[K
+[01m[K./cpu/isr.c:47:21:[m[K [01;35m[Kwarning: [m[Kcast from pointer to integer of different size [[01;35m[K-Wpointer-to-int-cast[m[K]
+   47 |     idt_set_gate(3, [01;35m[K([m[Kunsigned)_isr3, 0x08, 0x8E);
+      |                     [01;35m[K^[m[K
+[01m[K./cpu/isr.c:48:21:[m[K [01;35m[Kwarning: [m[Kcast from pointer to integer of different size [[01;35m[K-Wpointer-to-int-cast[m[K]
+   48 |     idt_set_gate(4, [01;35m[K([m[Kunsigned)_isr4, 0x08, 0x8E);
+      |                     [01;35m[K^[m[K
+[01m[K./cpu/isr.c:49:21:[m[K [01;35m[Kwarning: [m[Kcast from pointer to integer of different size [[01;35m[K-Wpointer-to-int-cast[m[K]
+   49 |     idt_set_gate(5, [01;35m[K([m[Kunsigned)_isr5, 0x08, 0x8E);
+      |                     [01;35m[K^[m[K
+[01m[K./cpu/isr.c:50:21:[m[K [01;35m[Kwarning: [m[Kcast from pointer to integer of different size [[01;35m[K-Wpointer-to-int-cast[m[K]
+   50 |     idt_set_gate(6, [01;35m[K([m[Kunsigned)_isr6, 0x08, 0x8E);
+      |                     [01;35m[K^[m[K
+[01m[K./cpu/isr.c:51:21:[m[K [01;35m[Kwarning: [m[Kcast from pointer to integer of different size [[01;35m[K-Wpointer-to-int-cast[m[K]
+   51 |     idt_set_gate(7, [01;35m[K([m[Kunsigned)_isr7, 0x08, 0x8E);
+      |                     [01;35m[K^[m[K
+[01m[K./cpu/isr.c:53:21:[m[K [01;35m[Kwarning: [m[Kcast from pointer to integer of different size [[01;35m[K-Wpointer-to-int-cast[m[K]
+   53 |     idt_set_gate(8, [01;35m[K([m[Kunsigned)_isr8, 0x08, 0x8E);
+      |                     [01;35m[K^[m[K
+[01m[K./cpu/isr.c:54:21:[m[K [01;35m[Kwarning: [m[Kcast from pointer to integer of different size [[01;35m[K-Wpointer-to-int-cast[m[K]
+   54 |     idt_set_gate(9, [01;35m[K([m[Kunsigned)_isr9, 0x08, 0x8E);
+      |                     [01;35m[K^[m[K
+[01m[K./cpu/isr.c:55:22:[m[K [01;35m[Kwarning: [m[Kcast from pointer to integer of different size [[01;35m[K-Wpointer-to-int-cast[m[K]
+   55 |     idt_set_gate(10, [01;35m[K([m[Kunsigned)_isr10, 0x08, 0x8E);
+      |                      [01;35m[K^[m[K
+[01m[K./cpu/isr.c:56:22:[m[K [01;35m[Kwarning: [m[Kcast from pointer to integer of different size [[01;35m[K-Wpointer-to-int-cast[m[K]
+   56 |     idt_set_gate(11, [01;35m[K([m[Kunsigned)_isr11, 0x08, 0x8E);
+      |                      [01;35m[K^[m[K
+[01m[K./cpu/isr.c:57:22:[m[K [01;35m[Kwarning: [m[Kcast from pointer to integer of different size [[01;35m[K-Wpointer-to-int-cast[m[K]
+   57 |     idt_set_gate(12, [01;35m[K([m[Kunsigned)_isr12, 0x08, 0x8E);
+      |                      [01;35m[K^[m[K
+[01m[K./cpu/isr.c:58:22:[m[K [01;35m[Kwarning: [m[Kcast from pointer to integer of different size [[01;35m[K-Wpointer-to-int-cast[m[K]
+   58 |     idt_set_gate(13, [01;35m[K([m[Kunsigned)_isr13, 0x08, 0x8E);
+      |                      [01;35m[K^[m[K
+[01m[K./cpu/isr.c:59:22:[m[K [01;35m[Kwarning: [m[Kcast from pointer to integer of different size [[01;35m[K-Wpointer-to-int-cast[m[K]
+   59 |     idt_set_gate(14, [01;35m[K([m[Kunsigned)_isr14, 0x08, 0x8E);
+      |                      [01;35m[K^[m[K
+[01m[K./cpu/isr.c:60:22:[m[K [01;35m[Kwarning: [m[Kcast from pointer to integer of different size [[01;35m[K-Wpointer-to-int-cast[m[K]
+   60 |     idt_set_gate(15, [01;35m[K([m[Kunsigned)_isr15, 0x08, 0x8E);
+      |                      [01;35m[K^[m[K
+[01m[K./cpu/isr.c:62:22:[m[K [01;35m[Kwarning: [m[Kcast from pointer to integer of different size [[01;35m[K-Wpointer-to-int-cast[m[K]
+   62 |     idt_set_gate(16, [01;35m[K([m[Kunsigned)_isr16, 0x08, 0x8E);
+      |                      [01;35m[K^[m[K
+[01m[K./cpu/isr.c:63:22:[m[K [01;35m[Kwarning: [m[Kcast from pointer to integer of different size [[01;35m[K-Wpointer-to-int-cast[m[K]
+   63 |     idt_set_gate(17, [01;35m[K([m[Kunsigned)_isr17, 0x08, 0x8E);
+      |                      [01;35m[K^[m[K
+[01m[K./cpu/isr.c:64:22:[m[K [01;35m[Kwarning: [m[Kcast from pointer to integer of different size [[01;35m[K-Wpointer-to-int-cast[m[K]
+   64 |     idt_set_gate(18, [01;35m[K([m[Kunsigned)_isr18, 0x08, 0x8E);
+      |                      [01;35m[K^[m[K
+[01m[K./cpu/isr.c:65:22:[m[K [01;35m[Kwarning: [m[Kcast from pointer to integer of different size [[01;35m[K-Wpointer-to-int-cast[m[K]
+   65 |     idt_set_gate(19, [01;35m[K([m[Kunsigned)_isr19, 0x08, 0x8E);
+      |                      [01;35m[K^[m[K
+[01m[K./cpu/isr.c:66:22:[m[K [01;35m[Kwarning: [m[Kcast from pointer to integer of different size [[01;35m[K-Wpointer-to-int-cast[m[K]
+   66 |     idt_set_gate(20, [01;35m[K([m[Kunsigned)_isr20, 0x08, 0x8E);
+      |                      [01;35m[K^[m[K
+[01m[K./cpu/isr.c:67:22:[m[K [01;35m[Kwarning: [m[Kcast from pointer to integer of different size [[01;35m[K-Wpointer-to-int-cast[m[K]
+   67 |     idt_set_gate(21, [01;35m[K([m[Kunsigned)_isr21, 0x08, 0x8E);
+      |                      [01;35m[K^[m[K
+[01m[K./cpu/isr.c:68:22:[m[K [01;35m[Kwarning: [m[Kcast from pointer to integer of different size [[01;35m[K-Wpointer-to-int-cast[m[K]
+   68 |     idt_set_gate(22, [01;35m[K([m[Kunsigned)_isr22, 0x08, 0x8E);
+      |                      [01;35m[K^[m[K
+[01m[K./cpu/isr.c:69:22:[m[K [01;35m[Kwarning: [m[Kcast from pointer to integer of different size [[01;35m[K-Wpointer-to-int-cast[m[K]
+   69 |     idt_set_gate(23, [01;35m[K([m[Kunsigned)_isr23, 0x08, 0x8E);
+      |                      [01;35m[K^[m[K
+[01m[K./cpu/isr.c:71:22:[m[K [01;35m[Kwarning: [m[Kcast from pointer to integer of different size [[01;35m[K-Wpointer-to-int-cast[m[K]
+   71 |     idt_set_gate(24, [01;35m[K([m[Kunsigned)_isr24, 0x08, 0x8E);
+      |                      [01;35m[K^[m[K
+[01m[K./cpu/isr.c:72:22:[m[K [01;35m[Kwarning: [m[Kcast from pointer to integer of different size [[01;35m[K-Wpointer-to-int-cast[m[K]
+   72 |     idt_set_gate(25, [01;35m[K([m[Kunsigned)_isr25, 0x08, 0x8E);
+      |                      [01;35m[K^[m[K
+[01m[K./cpu/isr.c:73:22:[m[K [01;35m[Kwarning: [m[Kcast from pointer to integer of different size [[01;35m[K-Wpointer-to-int-cast[m[K]
+   73 |     idt_set_gate(26, [01;35m[K([m[Kunsigned)_isr26, 0x08, 0x8E);
+      |                      [01;35m[K^[m[K
+[01m[K./cpu/isr.c:74:22:[m[K [01;35m[Kwarning: [m[Kcast from pointer to integer of different size [[01;35m[K-Wpointer-to-int-cast[m[K]
+   74 |     idt_set_gate(27, [01;35m[K([m[Kunsigned)_isr27, 0x08, 0x8E);
+      |                      [01;35m[K^[m[K
+[01m[K./cpu/isr.c:75:22:[m[K [01;35m[Kwarning: [m[Kcast from pointer to integer of different size [[01;35m[K-Wpointer-to-int-cast[m[K]
+   75 |     idt_set_gate(28, [01;35m[K([m[Kunsigned)_isr28, 0x08, 0x8E);
+      |                      [01;35m[K^[m[K
+[01m[K./cpu/isr.c:76:22:[m[K [01;35m[Kwarning: [m[Kcast from pointer to integer of different size [[01;35m[K-Wpointer-to-int-cast[m[K]
+   76 |     idt_set_gate(29, [01;35m[K([m[Kunsigned)_isr29, 0x08, 0x8E);
+      |                      [01;35m[K^[m[K
+[01m[K./cpu/isr.c:77:22:[m[K [01;35m[Kwarning: [m[Kcast from pointer to integer of different size [[01;35m[K-Wpointer-to-int-cast[m[K]
+   77 |     idt_set_gate(30, [01;35m[K([m[Kunsigned)_isr30, 0x08, 0x8E);
+      |                      [01;35m[K^[m[K
+[01m[K./cpu/isr.c:78:22:[m[K [01;35m[Kwarning: [m[Kcast from pointer to integer of different size [[01;35m[K-Wpointer-to-int-cast[m[K]
+   78 |     idt_set_gate(31, [01;35m[K([m[Kunsigned)_isr31, 0x08, 0x8E);
+      |                      [01;35m[K^[m[K
+[01m[K./cpu/isr.c:[m[K In function ‘[01m[Kfault_handler[m[K’:
+[01m[K./cpu/isr.c:166:29:[m[K [01;35m[Kwarning: [m[Kpassing argument 1 of ‘[01m[KPRINT_STR[m[K’ makes pointer from integer without a cast [[01;35m[K-Wint-conversion[m[K]
+  166 |         PRINT_STR([01;35m[Kr->int_no + 10[m[K);
+      |                   [01;35m[K~~~~~~~~~~^~~~[m[K
+      |                             [01;35m[K|[m[K
+      |                             [01;35m[Kunsigned int[m[K
+In file included from [01m[K./cpu/isr.c:1[m[K:
+[01m[K./cpu/../lib/VGA/cVGA.h:14:36:[m[K [01;36m[Knote: [m[Kexpected ‘[01m[Kconst char *[m[K’ but argument is of type ‘[01m[Kunsigned int[m[K’
+   14 | EXTNC_ void PRINT_STR([01;36m[Kconst char * s[m[K);
+      |                       [01;36m[K~~~~~~~~~~~~~^[m[K
