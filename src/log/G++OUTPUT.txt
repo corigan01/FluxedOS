@@ -1,12 +1,7 @@
-In file included from [01m[K./lib/IO/ide.h:7[m[K,
-                 from [01m[K./lib/IO/ide.cpp:1[m[K:
-[01m[K./lib/IO/../VGA/VGA.h:78:27:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
+In file included from [01m[K./lib/VGA/VGA.cpp:1[m[K:
+[01m[K./lib/VGA/VGA.h:78:27:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
    78 |     VGA::PRINT_STR(": "); \
       |                            
-[01m[K./lib/IO/../VGA/VGA.h:79:31:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
+[01m[K./lib/VGA/VGA.h:79:31:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
    79 |     VGA::PRINT_INT(__LINE__); \
       |                                
-[01m[K./lib/IO/ide.cpp:[m[K In function ‘[01m[Kuint8 ATA::ide_ata_access(uint8, uint8, uint32, uint8, uint16, uint32)[m[K’:
-[01m[K./lib/IO/ide.cpp:222:1:[m[K [01;35m[Kwarning: [m[Kno return statement in function returning non-void [[01;35m[K-Wreturn-type[m[K]
-  222 | [01;35m[K}[m[K
-      | [01;35m[K^[m[K
