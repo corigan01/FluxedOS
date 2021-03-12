@@ -6,7 +6,6 @@
 
 EXTNC_ int KernStart();
 
-EXTNC_ int tellout(char * str);
 
 
 #endif // !KERN_SRT_H

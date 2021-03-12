@@ -7,7 +7,7 @@
 #include "../core/core.h"
 
 
-
+EXTNC_ void INIT_DISPLAY();
 EXTNC_ void CLEAR_DISPLAY();
 
 EXTNC_ void PRINT_CHAR(char c);

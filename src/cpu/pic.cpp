@@ -1,7 +1,7 @@
 #include "pic.h"
 
 void pic_init() {
-    VGA::PRINT_STR("pic INIT\n");
+    VGA::PRINT_STR("PIC INIT ");
 
     port_byte_out(PIC_MASTER_CMD, 0x10 + 0x01);
 	port_byte_out(PIC_SLAVE_CMD,  0x10 + 0x01);
@@ -16,10 +16,13 @@ void pic_init() {
 	port_byte_out(PIC_MASTER_DATA, 0x01);
 	port_byte_out(PIC_SLAVE_DATA, 0x01);
 
-	VGA::PRINT_STR("Resetting masks\n");
+	
 	port_byte_out(PIC_MASTER_DATA, 0);
 	port_byte_out(PIC_SLAVE_DATA, 0);
-	VGA::PRINT_STR("Init done.\n");
+
+	VGA::SET_COLOR(VGA::COLORS::GREEN, VGA::COLORS::BLACK);
+	VGA::PRINT_STR("OK\n");
+	VGA::SET_COLOR(VGA::COLORS::BLACK, VGA::COLORS::BLACK);
 
 
 }

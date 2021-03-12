@@ -60,7 +60,7 @@ void irq_remap(void){
 
 
 void irq_install(){
-    PRINT_STR("IRQs INIT ");
+    PRINT_STR("IRQ INIT ");
     irq_remap();
 
     //mapping the IRQs to 32-47 IDT entries

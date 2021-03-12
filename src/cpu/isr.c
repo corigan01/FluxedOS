@@ -40,7 +40,7 @@ extern void _isr31();
 
 void isr_install()
 {
-    PRINT_STR("ISRs INIT ");
+    PRINT_STR("ISR INIT ");
     idt_set_gate(0, (unsigned)_isr0, 0x08, 0x8E);
     idt_set_gate(1, (unsigned)_isr1, 0x08, 0x8E);
     idt_set_gate(2, (unsigned)_isr2, 0x08, 0x8E);

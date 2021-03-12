@@ -185,32 +185,34 @@ void VGA::PRINT_INT(int in) {
 
 void VGA::kprintf(const char* format, ...) {
     char **ARGS = (char **) &format;
-    int InputVarSize = 0;
+    register int *varg = (int *)&format;
+    int ArgLen = 0;
 
+    while (auto c = *varg++) {
+        VGA::PRINT_INT(c);
+        VGA::PRINT_CHAR('\n');
+    }
+    
+    /*int InputVarSize = 0;
+
+    VGA::PRINT_STR("PrintF ");
 
     char** inputText;
     char *c;
-    while (c = *ARGS++) {
-        int i = 0; while(c[i++] != 0);
-        
-        // FIXME
-        // InputVarSize is always = 6
-        // This was added to fix the problem, and inded it did to an extent
-        // This broke all numbers as it set them to ~104399 or something
-        // Also new lines are broken as it takes some text and moves it to the other line 
-        // 
-        // Test Output:
-        // This is some te
-        // at is working! xt th
-        //
-        // What it should look like:
-        // This is some te
-        // xt that is working!
-        //
-        //if (i > 1) {
-            inputText[InputVarSize++] = c;
-        //}
+    {
+        int i = 0;
+        while (c = *ARGS++) {
+            do { i++; } while(c[i] != '\0'); 
+
+            if (i > 1) {
+                inputText[InputVarSize++] = c;
+            }
+        }
     }
+    
+
+    VGA::PRINT_STR("IVS --> ");
+    VGA::PRINT_INT(InputVarSize);
 
     char * FirstText = inputText[0];
     int usedVarIndex = 1;
@@ -258,7 +260,7 @@ void VGA::kprintf(const char* format, ...) {
                 PRINT_CHAR(FirstText[i]);
             }
         }
-    }
+    }*/
 
     PRINT_STR("\n");
 
@@ -285,4 +287,8 @@ EXTNC_ void SET_COLOR(uint8 a, uint8 b) {
 
 EXTNC_ void PRINT_INT(int i) {
     VGA::PRINT_INT(i);
+}
+
+EXTNC_ void INIT_DISPLAY() {
+    VGA::INIT_DISPLAY();
 }

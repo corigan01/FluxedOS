@@ -15,24 +15,26 @@ class KernelEntry {
 public:
     
     KernelEntry() {
-        asm volatile("sti");
         VGA::INIT_DISPLAY();
 
         VGA::SET_COLOR(VGA::COLORS::WHITE, VGA::COLORS::BLACK);
 
-        gdt_install();
-        idt_install();
+
         isr_install();
         irq_install();
-        pic_init();
+        idt_install();
+        gdt_install();
+        //pic_init();
+        
 
         VGA::SET_COLOR(VGA::COLORS::GREEN, VGA::COLORS::BLACK);
 
 
-        VGA::kprintf("Fluxed OS ====== BUILD %d", BUILD);
-        VGA::PRINT_STR("Memory : ");
+        VGA::PRINT_STR("Fluxed OS ====== BUILD ");
+        VGA::PRINT_INT(BUILD);
+        VGA::PRINT_STR(" ====== Memory : ");
         VGA::PRINT_INT(Getmemory());
-        VGA::PRINT_STR("\n");
+        VGA::PRINT_STR("KB \n");
         
         //enable the interrupts
         Vasm("sti");
@@ -48,11 +50,15 @@ public:
 
     void Test() {
         VGA::SET_COLOR(VGA::COLORS::MAGENTA, VGA::COLORS::BLACK);
-        VGA::kprintf("Testing VGA commands\nAll statments should be true!\n%s = %d\nYou should not see \'-\' in \'T-\eE-\eS-\eT\'\nShould be broken %t %s %d\nDONE!", "ten", 10);
+        VGA::PRINT_STR("TEST --- ");
+        VGA::PRINT_INT(10);
 
-        // test tripping the isr
-        //asm volatile ("int $0x01");
-        
+        VGA::PRINT_STR("\nThis should be a new line! PF\eAA\eSI\eSL\eEE\eDD\e!");
+        VGA::PRINT_STR(R"(
+FluxedOS String Test
+
+New line!
+        )");
     }
 
     void kern() {
