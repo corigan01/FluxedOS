@@ -14,3 +14,14 @@ void SYS::shutdown() {
     port_word_out(0x604, 0x2000);
     port_word_out(0x4004, 0x3400);
 }
+
+void CPU::IRQ::END() {
+    Vasm("popa"); 
+    Vasm("iret");
+}
+
+void CPU::IRQ::START() {
+    Vasm("add $0x1c, %esp"); 
+    Vasm("pusha");
+}
+

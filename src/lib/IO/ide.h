@@ -121,21 +121,10 @@ namespace ATA
         uint8   Model[41];      // Model in string.
     };
 
-    // R/W
-    uint8 ide_read  (uint8 channel, uint8 reg);
-    void  ide_write (uint8 channel, uint8 reg, uint8 data);
-
-    // buffer / polling
-    void ide_read_buffer(uint8 channel, uint8 reg, uint32 *buffer, uint32 quads);
-    uint8 ide_polling(uint8 channel, uint16 advanced_check);
-
-    // Err 
-    uint8 ide_ERR(uint32 drive, uint8 err);
-
-    // ide init
-    void ide_init(uint32 BAR0, uint32 BAR1, uint32 BAR2, uint32 BAR3, uint32 BAR4);
-    uint8 ide_ata_access(uint8 direction, uint8 drive, uint32 lba, uint8 numsects, uint16 selector, uint32 edi);
-    
+    void read_sectors_ATA_PIO(uint32_t* target_address, uint32_t LBA, uint8_t sector_count);
+    void write_sectors_ATA_PIO(uint32_t LBA, uint8_t sector_count, uint32_t* bytes);
+    static void ATA_wait_BSY();
+    static void ATA_wait_DRQ();
 
 } // namespace ATA
 

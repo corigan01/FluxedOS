@@ -10,6 +10,7 @@
 #include "../cpu/pic.h"
 #include "../lib/hal/hal.h"
 #include "../lib/VGA/VGA.h"
+#include "../lib/IO/ide.h"
 
 extern uint32_t end;
 
@@ -29,6 +30,7 @@ public:
         gdt_install();
         pic_init();
         memoryInit(end);
+        
         
 
         VGA::SET_COLOR(VGA::COLORS::GREEN, VGA::COLORS::BLACK);
@@ -69,7 +71,18 @@ New line!
 
         VGA::PRINT_STR("\n");
         
+        uint32_t* target;
+        ATA::read_sectors_ATA_PIO(target, 0x0, 1);
 
+        for (int i = 0; i < 128; i++) {
+            VGA::PRINT_INT(target[i] && 0xFF);
+            VGA::PRINT_STR(" : ");
+            VGA::PRINT_INT((target[i] >> 8) & 0xFF);
+
+            if (i % 10 == 0) {
+                VGA::PRINT_STR("\n");
+            }
+        }
 
         //ThrowISR(19);
     }

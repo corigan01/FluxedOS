@@ -29,18 +29,12 @@ namespace CPU
     
     namespace IRQ
     {
-        /*void START() {
-            Vasm("add $0x1c, %esp"); 
-            Vasm("pusha");
-        }
+        void START();
 
-        void END() {
-            asm volatile("popa"); 
-	        asm volatile("iret");
-        }
+        void END();
 
         void send_irq(uint8 irq);
-        */
+        
 
     } // namespace IRQ
     
