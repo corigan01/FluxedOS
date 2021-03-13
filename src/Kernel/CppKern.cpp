@@ -11,11 +11,14 @@
 #include "../lib/hal/hal.h"
 #include "../lib/VGA/VGA.h"
 
+extern uint32_t end;
+
 class KernelEntry {
 public:
     
     KernelEntry() {
         VGA::INIT_DISPLAY();
+        VGA::CURSOR::ENABLE(1 , 10);
 
         VGA::SET_COLOR(VGA::COLORS::WHITE, VGA::COLORS::BLACK);
 
@@ -24,16 +27,20 @@ public:
         irq_install();
         idt_install();
         gdt_install();
-        //pic_init();
+        pic_init();
+        memoryInit(end);
         
 
         VGA::SET_COLOR(VGA::COLORS::GREEN, VGA::COLORS::BLACK);
 
 
-        VGA::PRINT_STR("Fluxed OS ====== BUILD ");
+        VGA::PRINT_STR("\nFluxed OS ====== BUILD ");
         VGA::PRINT_INT(BUILD);
         VGA::PRINT_STR(" ====== Memory : ");
         VGA::PRINT_INT(Getmemory());
+        VGA::PRINT_STR("KB ");
+        VGA::PRINT_STR(" -- KRN END: ");
+        VGA::PRINT_INT(end / 1024);
         VGA::PRINT_STR("KB \n");
         
         //enable the interrupts
@@ -59,6 +66,12 @@ FluxedOS String Test
 
 New line!
         )");
+
+        VGA::PRINT_STR("\n");
+        
+
+
+        //ThrowISR(19);
     }
 
     void kern() {

@@ -65,6 +65,15 @@ namespace VGA
     void SET_COLOR(uint8 fore_color, uint8 back_color);
     void kprintf(const char* format, ...);
     void PRINT_INT(int in);
+
+    namespace CURSOR {
+        void ENABLE(uint8_t cursor_start, uint8_t cursor_end);
+        void DISABLE();
+
+        void UPDATE(int x, int y);
+        uint16 GET();
+
+    }
 } // namespace VGA
 
 

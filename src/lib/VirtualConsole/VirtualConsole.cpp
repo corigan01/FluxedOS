@@ -77,8 +77,13 @@ int VirtualConsole::tee(VirtualConsoleParsed arg) {
         "panic",
         "reset",
         "shutdown",
-        "throw"
-
+        "throw",
+        "malloc",
+        "free",
+        "memorymap",
+        "",
+        "",
+        ""
     };
 
     arg.Command[arg.CommandLen] = '\0';
@@ -149,6 +154,20 @@ A hobby OS Project! Made by Main Menu aka corigan01 )");
         break;
     
     case 5:
+        VGA::PRINT_STR("HELP -----------");
+        VGA::PRINT_STR(R"(
+exit     - Exits VC
+fluxed   - Displays Logo
+test     - Displays Test
+memread  - Reads Memory
+memset   - Sets Memory
+help     - Displays this
+panic    - Panic OS
+reset    - restart
+shutdown - shutdown
+throw    - ThrowISR
+)");
+        VGA::PRINT_STR("HELP -----------");
         break;
 
     case 6:
@@ -166,6 +185,17 @@ A hobby OS Project! Made by Main Menu aka corigan01 )");
     case 9:
         ThrowISR(stoi(arg.Args[0]));
         break;
+    case 10:
+        malloc(stoi(arg.Args[0]));
+        break;
+
+    case 11:
+        free((char*)stoi(arg.Args[0]));
+        break;
+
+    case 12:
+        break;
+
 
     default:
         VGA::SET_COLOR(VGA::COLORS::RED, VGA::COLORS::BLACK);

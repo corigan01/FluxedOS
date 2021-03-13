@@ -151,11 +151,14 @@ void VGA::PRINT_CHAR(char ch){
             //}
         }
        
+        
         BUFFERS::DEFAULT_BUFFER.Buff[BUFFERS::DEFAULT_BUFFER.size] = VGA::VGA_ENTRY(ch, STORE::__MODS[3], STORE::__MODS[2]);
         BUFFERS::DEFAULT_BUFFER.size++;
 
         break;
     }
+
+    VGA::CURSOR::UPDATE(BUFFERS::DEFAULT_BUFFER.size - (BUFFERS::DEFAULT_BUFFER.line_number * 80), BUFFERS::DEFAULT_BUFFER.line_number + 0);
 
 }
 
@@ -292,3 +295,36 @@ EXTNC_ void PRINT_INT(int i) {
 EXTNC_ void INIT_DISPLAY() {
     VGA::INIT_DISPLAY();
 }
+
+
+
+void VGA::CURSOR::ENABLE(uint8_t cursor_start, uint8_t cursor_end) {
+    port_byte_out(0x3D4, 0x0A);
+	port_byte_out(0x3D5, (port_byte_in(0x3D5) & 0xC0) | cursor_start);
+ 
+	port_byte_out(0x3D4, 0x0B);
+	port_byte_out(0x3D5, (port_byte_in(0x3D5) & 0xE0) | cursor_end);  
+}
+
+void VGA::CURSOR::DISABLE() {
+    port_byte_out(0x3D4, 0x0A);
+	port_byte_out(0x3D5, 0x20);
+}
+
+void VGA::CURSOR::UPDATE(int x, int y) {
+    uint16_t pos = y * 80 + x;
+ 
+	port_byte_out(0x3D4, 0x0F);
+	port_byte_out(0x3D5, (uint8_t) (pos & 0xFF));
+	port_byte_out(0x3D4, 0x0E);
+	port_byte_out(0x3D5, (uint8_t) ((pos >> 8) & 0xFF));
+}
+
+uint16 VGA::CURSOR::GET(){   
+    uint16_t pos = 0;
+    port_byte_out(0x3D4, 0x0F);
+    pos |= port_byte_in(0x3D5);
+    port_byte_out(0x3D4, 0x0E);
+    pos |= ((uint16_t)port_byte_in(0x3D5)) << 8;
+    return pos;
+}   

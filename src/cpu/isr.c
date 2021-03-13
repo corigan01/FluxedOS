@@ -106,7 +106,7 @@ char *exception_messages[] =
     "Coprocessor Fault",
     "Alignment Check",
     "Machine Check",
-    "Reserved",
+    "Out of Memory", // 19
     "Reserved",
     "Reserved",
     "Reserved",
