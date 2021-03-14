@@ -121,6 +121,7 @@ char *exception_messages[] =
     "Reserved"
 };
 
+isr_t interrupt_handlers[256];
 
 void fault_handler(struct regs *r)
 {
@@ -159,12 +160,16 @@ void fault_handler(struct regs *r)
 
         // FIXME this needs to not be this sad
         while(1);
-    }
-    else {
-        PRINT_STR(exception_messages[r->int_no]);
-        PRINT_STR("^^");
-        PRINT_STR(r->int_no + 10);
-        PRINT_STR("^^");
+    } 
+    if(interrupt_handlers[r->int_no] != NULL) {
+         isr_t handler = interrupt_handlers[r->int_no];
+         handler(&r);
     }
 }
 
+
+void register_interrupt_handler(int num, isr_t handler) {
+    PRINT_STR("IRQ Registered\n");
+    if(num < 256)
+        interrupt_handlers[num] = handler;
+}

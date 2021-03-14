@@ -94,6 +94,16 @@ namespace VGA
     } \
     HALT; 
 
+#define G_OK \
+    VGA::SET_COLOR(VGA::COLORS::GREEN, VGA::COLORS::BLACK); \
+    VGA::PRINT_STR("OK\n"); \
+    VGA::SET_COLOR(VGA::COLORS::WHITE, VGA::COLORS::BLACK);
+
+#define KDEBUG \
+    VGA::PRINT_STR("DB "); \
+    VGA::PRINT_STR(__FILE__); \
+    VGA::PRINT_STR(":"); \
+    VGA::PRINT_INT(__LINE__);
 
 
 #endif // !TEXT_MODE_H_

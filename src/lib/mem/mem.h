@@ -6,15 +6,16 @@
 #include "../IO/port.h"
 
 void memcpy(void *dest, void *src, size_t n);
+void *memset(void *dst,char val, int n);
 
 int Getmemory();
 
 void memoryInit(uint32 end); 
 
 
-char* malloc(size_t size);
+void* malloc(uint32 size);
 
-bool free(char* pointer);
+bool free(void* pointer);
 
 
 #endif // !MEMORY_HH____

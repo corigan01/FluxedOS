@@ -1,8 +1,11 @@
+#ifndef ISR_CPU__H
+#define ISR_CPU__H
 
 
 #ifdef __cplusplus  
 extern "C" { 
 #endif 
+    typedef void (*isr_t)(register_t * );
     void isr_install();
 
     struct regs
@@ -13,7 +16,12 @@ extern "C" {
         unsigned int eip, cs, eflags, useresp, ss;   /* pushed by the processor automatically */ 
     };
 
+    void register_interrupt_handler(int num, isr_t handler);
+
     void fault_handler(struct regs *r);
 #ifdef __cplusplus 
 } 
 #endif 
+
+
+#endif // !ISR_CPU__H
