@@ -2,9 +2,10 @@
 #define KERN_SRT_H
 
 #include "../lib/core/core.h"
+#include "multboot.h"
 
 
-EXTNC_ int KernStart();
+EXTNC_ int KernStart(multiboot_info_t* mbt, uint32 magic);
 
 
 

@@ -1,22 +1,25 @@
-In file included from [01m[K./lib/VirtualConsole/VirtualConsole.cpp:2[m[K:
-[01m[K./lib/VirtualConsole/../VGA/VGA.h:87:27:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
+In file included from [01m[K./lib/list/list.h:5[m[K,
+                 from [01m[K./lib/list/list.cpp:1[m[K:
+[01m[K./lib/list/../VGA/VGA.h:87:27:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
    87 |     VGA::PRINT_STR(": "); \
       |                            
-[01m[K./lib/VirtualConsole/../VGA/VGA.h:88:31:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
+[01m[K./lib/list/../VGA/VGA.h:88:31:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
    88 |     VGA::PRINT_INT(__LINE__); \
       |                                
-[01m[K./lib/VirtualConsole/VirtualConsole.cpp:109:44:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
-  109 |  / __/ / / /_/ />  </  __/ /_/ / /_/ /___/ /
-      |                                             
-In file included from [01m[K./lib/VirtualConsole/VirtualConsole.cpp:1[m[K:
-[01m[K./lib/VirtualConsole/VirtualConsole.h:10:27:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+                       
+In file included from [01m[K./Kernel/CppKern.cpp:5[m[K:
+[01m[K./Kernel/../lib/VirtualConsole/VirtualConsole.h:10:27:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
    10 |     char *  Command     = [01;35m[K""[m[K;
       |                           [01;35m[K^~[m[K
-[01m[K./lib/VirtualConsole/VirtualConsole.cpp:[m[K In member function ‘[01m[KVirtualConsoleParsed VirtualConsole::parse(char*)[m[K’:
-[01m[K./lib/VirtualConsole/VirtualConsole.cpp:242:21:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-  242 |     char *command = [01;35m[K""[m[K;
-      |                     [01;35m[K^~[m[K
-[01m[K./lib/VirtualConsole/VirtualConsole.cpp:286:22:[m[K [01;35m[Kwarning: [m[Knarrowing conversion of ‘[01m[KcommandLen[m[K’ from ‘[01m[Kunsigned int[m[K’ to ‘[01m[Kint[m[K’ [[01;35m[K-Wnarrowing[m[K]
+ib/vfs/vfs.cpp:[m[K In function ‘[01m[Kint vfs_create_file(char*, short unsigned int)[m[K’:
+[01m[K./lib/vfs/vfs.cpp:206:26:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+  206 |     char * parent_path = [01;35m[K"/"[m[K;
+      |                          [01;35m[K^~~[m[K
+[01m[K./lib/vfs/vfs.cpp:[m[K In function ‘[01m[Kvoid vfs_unlink(char*)[m[K’:
+[01m[K./lib/vfs/vfs.cpp:243:26:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+  243 |     char * parent_path = [01;35m[K"/"[m[K;
+      |                          [01;35m[K^~~[m[K
+01m[KcommandLen[m[K’ from ‘[01m[Kunsigned int[m[K’ to ‘[01m[Kint[m[K’ [[01;35m[K-Wnarrowing[m[K]
   286 |     return {command, [01;35m[KcommandLen[m[K, args, argNum};
       |                      [01;35m[K^~~~~~~~~~[m[K
 [01m[K./lib/VirtualConsole/VirtualConsole.cpp:286:40:[m[K [01;35m[Kwarning: [m[Knarrowing conversion of ‘[01m[KargNum[m[K’ from ‘[01m[Kunsigned int[m[K’ to ‘[01m[Kint[m[K’ [[01;35m[K-Wnarrowing[m[K]

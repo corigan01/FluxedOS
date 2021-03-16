@@ -41,21 +41,9 @@ uint32 digit_count(int num);
 void itoa(int num, char *number);
 char * strstr(const char *in, const char *str);
 int strcpy_(char *dst,const char *src);
-
-
 void strcat(void *dest,const void *src);
 int strncmp_( const char* s1, const char* s2, int c );
 char * strdup(const char * src);
-
-int strcpy_(char *dst,const char *src);
-
-
-void strcat(void *dest,const void *src);
-
-int strncmp_( const char* s1, const char* s2, int c );
-
-char * strdup(const char * src);
-
 char *strsep(char **stringp, const char *delim);
 list_t * str_split(const char * str, const char * delim, unsigned int * numtokens);
 char * list2str(list_t * list, const char * delim);

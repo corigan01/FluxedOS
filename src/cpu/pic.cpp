@@ -20,9 +20,7 @@ void pic_init() {
 	port_byte_out(PIC_MASTER_DATA, 0);
 	port_byte_out(PIC_SLAVE_DATA, 0);
 
-	VGA::SET_COLOR(VGA::COLORS::GREEN, VGA::COLORS::BLACK);
-	VGA::PRINT_STR("OK\n");
-	VGA::SET_COLOR(VGA::COLORS::BLACK, VGA::COLORS::BLACK);
+	G_OK;
 
 
 }

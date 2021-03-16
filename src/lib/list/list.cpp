@@ -1,14 +1,14 @@
 #include "list.h"
 
-list_t * list_create() {
-	list_t * list = (list_t *)malloc(sizeof(list_t) * 1);
+list_t * LIST::create() {
+	list_t * list = (list_t *)malloc(sizeof(list_t) * 4096);
 	return list;
 }
 
 /*
  * Get list size
  * */
-uint32_t list_size(list_t * list) {
+uint32_t LIST::size(list_t * list) {
     if(!list) return 0;
 	return list->size;
 }
@@ -16,12 +16,12 @@ uint32_t list_size(list_t * list) {
 /*
  * Given a listnode, remove it from lis
  * */
-void * list_remove_node(list_t * list, listnode_t * node) {
+void * LIST::RemoveNode(list_t * list, listnode_t * node) {
     void * val = node->val;
     if(list->head == node)
-        return list_remove_front(list);
+        return LIST::RemoveFront(list);
     else if(list->tail == node)
-        return list_remove_back(list);
+        return LIST::RemoveBack(list);
     else {
         node->next->prev = node->prev;
         node->prev->next = node->next;
@@ -33,7 +33,7 @@ void * list_remove_node(list_t * list, listnode_t * node) {
 /*
  * Insert a value at the front of list
  * */
-listnode_t * list_insert_front(list_t * list, void * val) {
+listnode_t * LIST::InsertFront(list_t * list, void * val) {
 	listnode_t * t = (listnode_t *)malloc(sizeof(listnode_t) * 1);
 	list->head->prev = t;
     t->next = list->head;
@@ -51,7 +51,7 @@ listnode_t * list_insert_front(list_t * list, void * val) {
 /*
  * Insert a value at the back of list
  * */
-void list_insert_back(list_t * list, void * val) {
+void LIST::InsertBack(list_t * list, void * val) {
 	listnode_t * t = (listnode_t *)malloc(sizeof(listnode_t) * 1);
 	t->prev = list->tail;
     if(list->tail)
@@ -68,7 +68,7 @@ void list_insert_back(list_t * list, void * val) {
 /*
  * Remove a value at the front of list
  * */
-void * list_remove_front(list_t * list) {
+void * LIST::RemoveFront(list_t * list) {
 	if(!list->head) return (void*)0;
 	listnode_t * t = list->head;
     void * val = t->val;
@@ -83,7 +83,7 @@ void * list_remove_front(list_t * list) {
 /*
  * Remove a value at the back of list
  * */
-void * list_remove_back(list_t * list) {
+void * LIST::RemoveBack(list_t * list) {
 	if(!list->head) return(void*)0;
 	listnode_t * t = list->tail;
     void * val = t ->val;
@@ -98,14 +98,14 @@ void * list_remove_back(list_t * list) {
 /*
  * Insert after tail of list(same as insert back)
  * */
-void list_push(list_t * list, void * val) {
-	list_insert_back(list, val);
+void LIST::push(list_t * list, void * val) {
+	LIST::InsertBack(list, val);
 }
 
 /*
  * Remove and return tail of list(user is responsible for freeing the returned node and the value)
  * */
-listnode_t * list_pop(list_t * list) {
+listnode_t * LIST::pop(list_t * list) {
 	if(!list->head) return NULL;
 	listnode_t * t = list->tail;
 	list->tail = t->prev;
@@ -118,21 +118,21 @@ listnode_t * list_pop(list_t * list) {
 /*
  * Insert before head of list(same as insert front)
  * */
-void list_enqueue(list_t * list, void * val) {
-	list_insert_front(list, val);
+void LIST::enqueue(list_t * list, void * val) {
+	LIST::InsertFront(list, val);
 }
 
 /*
- * Remove and return tail of list(same as list_pop
+ * Remove and return tail of list(same as LIST::pop
  * */
-listnode_t * list_dequeue(list_t * list) {
-	return list_pop(list);
+listnode_t * LIST::dequeue(list_t * list) {
+	return LIST::pop(list);
 }
 
 /*
  * Get the value of the first element but not remove it
  * */
-void * list_peek_front(list_t * list) {
+void * LIST::PeekFront(list_t * list) {
 	if(!list->head) return NULL;
 	return list->head->val;
 }
@@ -140,7 +140,7 @@ void * list_peek_front(list_t * list) {
 /*
  * Get the value of the last element but not remove it
  * */
-void * list_peek_back(list_t * list) {
+void * LIST::PeekBack(list_t * list) {
 	if(!list->tail) return NULL;
 	return list->tail->val;
 }
@@ -151,7 +151,7 @@ void * list_peek_back(list_t * list) {
  * Return -1 if list element is not found
  * */
 
-int list_contain(list_t * list, void * val) {
+int LIST::contain(list_t * list, void * val) {
     int idx = 0;
     foreach(listnode, list) {
         if(listnode->val == val)
@@ -161,8 +161,8 @@ int list_contain(list_t * list, void * val) {
     return -1;
 }
 
-listnode_t * list_get_node_by_index(list_t * list, int index) {
-    if(index < 0 || index >= list_size(list))
+listnode_t * LIST::GetByIndex(list_t * list, int index) {
+    if(index < 0 || index >= LIST::size(list))
         return NULL;
     int curr = 0;
     foreach(listnode, list) {
@@ -172,12 +172,12 @@ listnode_t * list_get_node_by_index(list_t * list, int index) {
     return NULL;
 }
 
-void * list_remove_by_index(list_t * list, int index) {
-    listnode_t * node = list_get_node_by_index(list, index);
-    return list_remove_node(list, node);
+void * LIST::RemoveByIndex(list_t * list, int index) {
+    listnode_t * node = LIST::GetByIndex(list, index);
+    return LIST::RemoveNode(list, node);
 }
 
-void list_destroy(list_t * list) {
+void LIST::destroy(list_t * list) {
 	// Free each node's value and the node itself
 	listnode_t * node = list->head;
 	while(node != NULL) {
@@ -189,6 +189,6 @@ void list_destroy(list_t * list) {
 	free(list);
 }
 
-void listnode_destroy(listnode_t * node) {
+void LIST::NodeDestroy(listnode_t * node) {
 	free(node);
 }

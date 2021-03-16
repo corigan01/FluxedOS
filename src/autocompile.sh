@@ -159,7 +159,7 @@ qemu-img create Diskimg.img 50m &> "log/imgcreate.txt"
 DisDone "Creating Diskimg.img"
 
 
-qemu-system-x86_64  -cdrom FluxedOS.iso -vga std -display gtk -drive file=Diskimg.img,if=ide,format=raw -m 256m -k en-us -serial stdio
+qemu-system-x86_64 -cdrom FluxedOS.iso -vga std -display gtk -drive file=Diskimg.img,if=ide,format=raw -m 256m -k en-us -serial stdio
 DisDone "Running qemu"
 rm -r Diskimg.img
 

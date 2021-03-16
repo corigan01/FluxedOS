@@ -188,19 +188,29 @@ typedef struct ata_dev {
 	char mountpoint[32];
 }__attribute__((packed)) ata_dev_t;
 
-void io_wait(ata_dev_t * dev);
-void software_reset(ata_dev_t * dev);
-void ata_handler(register_t * reg);
-void ata_open(vfs_node_t * node, uint32_t flags);
-void ata_close(vfs_node_t * node);
-uint32_t ata_read(vfs_node_t * node, uint32_t offset, uint32_t size, char * buf);
-uint32_t ata_write(vfs_node_t * node, uint32_t offset, uint32_t size, char * buf);
-void ata_write_sector(ata_dev_t * dev, uint32_t lba, char * buf);
-char * ata_read_sector(ata_dev_t * dev, uint32_t lba);
-vfs_node_t * create_ata_device(ata_dev_t * dev);
-void ata_device_init(ata_dev_t * dev, int primary);
-void ata_device_detect(ata_dev_t * dev, int primary);
-void ata_init();
+namespace ATA
+{
+	void WaitIO(ata_dev_t * dev);
+	void SoftReset(ata_dev_t * dev);
+	void ata_handler(register_t * reg);
+	
+	void ata_open(vfs_node_t * node, uint32_t flags);
+	void ata_close(vfs_node_t * node);
+
+	uint32_t ata_read(vfs_node_t * node, uint32_t offset, uint32_t size, char * buf);
+	uint32_t ata_write(vfs_node_t * node, uint32_t offset, uint32_t size, char * buf);
+	void ata_write_sector(ata_dev_t * dev, uint32_t lba, char * buf);
+	char * ata_read_sector(ata_dev_t * dev, uint32_t lba);
+
+	vfs_node_t * create_ata_device(ata_dev_t * dev);
+	void ata_device_init(ata_dev_t * dev, int primary);
+	void ata_device_detect(ata_dev_t * dev, int primary);
+
+	void ata_init();
+
+} // namespace ATA
+
+
 
 
 

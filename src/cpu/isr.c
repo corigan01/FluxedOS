@@ -169,7 +169,11 @@ void fault_handler(struct regs *r)
 
 
 void register_interrupt_handler(int num, isr_t handler) {
-    PRINT_STR("IRQ Registered\n");
+    PRINT_STR("NEW  IRQ ");
     if(num < 256)
         interrupt_handlers[num] = handler;
+
+    SET_COLOR(__GREEN, __BLACK);
+    PRINT_STR("OK\n");
+    SET_COLOR(__WHITE, __BLACK);
 }

@@ -4,6 +4,8 @@ global start
 extern cpu.s
 extern load
 start:
+    push eax
+    push ebx
     mov esp, _sys_stack     ; This points the stack to our new stack area
     jmp stublet
 

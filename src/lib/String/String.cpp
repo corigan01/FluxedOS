@@ -220,16 +220,16 @@ char *strsep(char **stringp, const char *delim) {
 }
 
 list_t * str_split(const char * str, const char * delim, unsigned int * numtokens) {
-    list_t * ret_list = list_create();
+    list_t * ret_list = LIST::create();
     char *s = strdup(str);
     char *token, *rest = s;
     while ((token = strsep(&rest, delim)) != NULL) {
         if(!strcmp(token, ".")) continue;
         if(!strcmp(token, "..")) {
-            if(list_size(ret_list) > 0) list_pop(ret_list);
+            if(LIST::size(ret_list) > 0) LIST::pop(ret_list);
             continue;
         }
-        list_push(ret_list, strdup(token));
+        LIST::push(ret_list, strdup(token));
         if(numtokens) (*numtokens)++;
     }
     free(s);
@@ -240,8 +240,8 @@ char * list2str(list_t * list, const char * delim) {
     char * ret = (char*)malloc(256);
     memset(ret, 0, 256);
     int len = 0, ret_len = 256;
-    while(list_size(list)> 0) {
-        char * temp = (char*)list_pop(list)->val;
+    while(LIST::size(list)> 0) {
+        char * temp = (char*)LIST::pop(list)->val;
         int len_temp = strlen(temp);
         if(len + len_temp + 1 + 1 > ret_len) {
             ret_len = ret_len * 2;

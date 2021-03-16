@@ -14,7 +14,7 @@ gtree_t * tree_create() {
 gtreenode_t * treenode_create(void * value) {
     gtreenode_t * n = (gtreenode_t*)malloc(sizeof(gtreenode_t) * 1);
     n->value = value;
-    n->children = list_create();
+    n->children = LIST::create();
     return n;
 }
 
@@ -24,7 +24,7 @@ gtreenode_t * treenode_create(void * value) {
 gtreenode_t * tree_insert(gtree_t * tree, gtreenode_t * subroot, void * value) {
     // Create a treenode
     gtreenode_t * treenode = (gtreenode_t*)malloc(sizeof(gtreenode_t) * 1);
-    treenode->children = list_create();
+    treenode->children = LIST::create();
     treenode->value = value;
 
     // Insert it
@@ -32,7 +32,7 @@ gtreenode_t * tree_insert(gtree_t * tree, gtreenode_t * subroot, void * value) {
         tree->root = treenode;
         return treenode;
     }
-    list_insert_front(subroot->children, treenode);
+    LIST::InsertFront(subroot->children, treenode);
     return treenode;
 }
 
@@ -44,7 +44,7 @@ gtreenode_t * tree_find_parent(gtree_t * tree, gtreenode_t * remove_node, int * 
 
 gtreenode_t * tree_find_parent_recur(gtree_t * tree, gtreenode_t * remove_node, gtreenode_t * subroot, int * child_index) {
     int idx;
-    if((idx = list_contain(subroot->children, remove_node)) != -1) {
+    if((idx = LIST::contain(subroot->children, remove_node)) != -1) {
         *child_index = idx;
         return subroot;
     }
@@ -65,7 +65,7 @@ void tree_remove(gtree_t * tree, gtreenode_t * remove_node) {
     gtreenode_t * parent = tree_find_parent(tree, remove_node, &child_index);
     // Do treenode remove in here:
     if(parent != NULL) {
-        gtreenode_t * freethis = (gtreenode_t*)list_remove_by_index(parent->children, child_index);
+        gtreenode_t * freethis = (gtreenode_t*)LIST::RemoveByIndex(parent->children, child_index);
         // Free tree node here
         free(freethis);
     }
@@ -77,7 +77,7 @@ void tree2list_recur(gtreenode_t * subroot, list_t * list) {
     foreach(child, subroot->children) {
         gtreenode_t * curr_treenode = (gtreenode_t*)child->val;
         void * curr_val = curr_treenode->value;
-        list_insert_back(list, curr_val);
+        LIST::InsertBack(list, curr_val);
         tree2list_recur((gtreenode_t*)child->val, list);
     }
 }

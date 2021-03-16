@@ -15,11 +15,20 @@
 
 extern uint32_t end;
 
+multiboot_info_t* mulboot;
+uint32 magicinfo = 0;
+
+
 class KernelEntry {
 public:
     
     KernelEntry() {
         VGA::INIT_DISPLAY();
+
+        VGA::PRINT_STR("MB INFO: ");
+        VGA::PRINT_INT((mulboot->mem_lower / 1024) / 1024);
+        VGA::PRINT_STR("  \n");
+
         VGA::CURSOR::ENABLE(1 , 10);
 
         VGA::SET_COLOR(VGA::COLORS::WHITE, VGA::COLORS::BLACK);
@@ -33,9 +42,15 @@ public:
         memoryInit(end);
         PCI::pci_init();
         vfs_init();
-        ata_init();
+        ATA::ata_init();
 
-        //ata_read_sector();
+        
+        
+
+
+        //vfs_db_listdir("/");
+
+        //ATA::ata_read_sector();
         //ATA::ide_init(0x1F0, 0x3F6, 0x170, 0x376, 0x000);
 
 
@@ -65,15 +80,8 @@ public:
 
     void Test() {
         VGA::SET_COLOR(VGA::COLORS::MAGENTA, VGA::COLORS::BLACK);
-        VGA::PRINT_STR("TEST --- ");
-        VGA::PRINT_INT(10);
-
-        VGA::PRINT_STR("\nThis should be a new line! PF\eAA\eSI\eSL\eEE\eDD\e!");
-        VGA::PRINT_STR(R"(
-FluxedOS String Test
-
-New line!
-        )");
+        VGA::PRINT_STR("TESTING VGA :: PF\eAA\eSI\eSL\eEE\eDD\e!");
+        //VGA::PRINT_STR(R"()");
 
         VGA::PRINT_STR("\n");
         
@@ -88,15 +96,13 @@ New line!
 
         console.Handle();
         
-        
-        //VGA::PRINT_STR(">\n\n\n\n\n\n>\n>\nline\n>test\n>wut\nthis is a lot of printing on this line oh yea");
-
-        
 
     }
 };
 
-int KernStart() {
+int KernStart(multiboot_info_t* mbt, uint32 magic) {
+    mulboot = mbt;
+    magicinfo = magic;
     {
         KernelEntry krnl;
 
