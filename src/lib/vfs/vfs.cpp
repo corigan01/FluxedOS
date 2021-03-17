@@ -65,7 +65,7 @@ void print_vfstree_recur(gtreenode_t * node, int parent_offset) {
     } else {
         VGA::PRINT_STR(curr);
     }
-    VGA::PRINT_STR("%s\n");
+    VGA::PRINT_STR(curr);
     len = strlen(fnode->name);
     free(tmp);
     foreach(child, node->children) {
@@ -403,7 +403,7 @@ void vfs_mount_recur(char * path, gtreenode_t * subroot, vfs_node_t * fs_obj) {
         // return the subroot, it's where u should mount!
         struct vfs_entry * ent = (struct vfs_entry*)subroot->value;
         if(ent->file) {
-            VGA::PRINT_STR("The path is already mounted, plz unmount before mounting again\n");
+            VGA::PRINT_STR("The path is already mounted, unmount before mounting again\n");
             return;
         }
         if(!strcmp(ent->name, "/")) vfs_root = fs_obj; // Keep a shortcut for root node

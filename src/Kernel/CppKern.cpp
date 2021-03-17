@@ -6,12 +6,12 @@
 #include "../cpu/cpu.h"
 #include "../lib/mem/mem.h"
 #include "../lib/core/core.h"
-#include "../lib/IO/ide.h"
 #include "../cpu/pic.h"
 #include "../lib/hal/hal.h"
 #include "../lib/VGA/VGA.h"
-#include "../lib/IO/ide.h"
+#include "../lib/IO/ATA/ata.h"
 #include "../lib/PCI/PCI.h"
+#include "../drive/drive.h"
 
 extern uint32_t end;
 
@@ -25,8 +25,8 @@ public:
     KernelEntry() {
         VGA::INIT_DISPLAY();
 
-        VGA::PRINT_STR("MB INFO: ");
-        VGA::PRINT_INT((mulboot->mem_lower / 1024) / 1024);
+        VGA::PRINT_STR("MultiBoot INFO: ");
+        VGA::PRINT_INT((mulboot->mem_lower ) );
         VGA::PRINT_STR("  \n");
 
         VGA::CURSOR::ENABLE(1 , 10);
@@ -44,6 +44,14 @@ public:
         vfs_init();
         ATA::ata_init();
 
+        //print_vfstree();
+        char* mountPoint = "/";
+        ext2_init("/dev/hdd", mountPoint);
+
+
+        vfs_node *test = {};
+        vfs_mount_dev("/dev/hdd", test);
+        vfs_create_file("wow_it_worked.yay", 777);
         
         
 

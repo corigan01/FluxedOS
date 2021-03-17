@@ -4,8 +4,6 @@ global start
 extern cpu.s
 extern load
 start:
-    push eax
-    push ebx
     mov esp, _sys_stack     ; This points the stack to our new stack area
     jmp stublet
 
@@ -32,10 +30,15 @@ mboot:
     dd end
     dd start
 
+    jmp stublet
+
 global stublet
+extern kernal_entry
 
 stublet:
-    extern kernal_entry
+    push eax
+    push ebx
+    push MULTIBOOT_MEMORY_INFO
     call kernal_entry
     
     

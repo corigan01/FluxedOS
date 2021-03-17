@@ -103,7 +103,13 @@ namespace VGA
     VGA::PRINT_STR("DB "); \
     VGA::PRINT_STR(__FILE__); \
     VGA::PRINT_STR(":"); \
-    VGA::PRINT_INT(__LINE__);
+    VGA::PRINT_INT(__LINE__); \
+    VGA::PRINT_STR("\n");
+
+#define G_ERR(s) \
+    VGA::SET_COLOR(VGA::COLORS::RED, VGA::COLORS::BLACK); \
+    s; \
+    VGA::SET_COLOR(VGA::COLORS::WHITE, VGA::COLORS::BLACK);
 
 
 #endif // !TEXT_MODE_H_

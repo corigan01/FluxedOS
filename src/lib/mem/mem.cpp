@@ -85,11 +85,7 @@ void* malloc(uint32 size) {
         return (char*)-1;
     }
 
-    else if ( (KenHeap.TotalMemory - KenHeap.UsedMemory) < size) {
-        ThrowISR(19); // Throw "Out of Memory"
-        //panic("Kernel is out of memory!");
-
-    }
+   
 
     bool allo = 0;
 
@@ -106,7 +102,7 @@ void* malloc(uint32 size) {
                 pice->inuse = 1;
                 ReturnAddr = pice->start_address + 4;
 
-                VGA::PRINT_STR("[EXISTING] alloc (");
+                /*VGA::PRINT_STR("[EXISTING] alloc (");
                 VGA::PRINT_INT(pice->start_address);
                 VGA::PRINT_STR(", ");
                 VGA::PRINT_INT(pice->end_address);
@@ -114,7 +110,7 @@ void* malloc(uint32 size) {
                 VGA::PRINT_INT(pice->used);
                 VGA::PRINT_STR("][");
                 VGA::PRINT_INT(size);
-                VGA::PRINT_STR("] Bytes!\n");
+                VGA::PRINT_STR("] Bytes!\n");*/
 
                 memset((void*)pice->start_address, NULL, pice->used);
 
@@ -127,7 +123,7 @@ void* malloc(uint32 size) {
 
                 pice->used = pice->end_address - pice->start_address;
 
-                VGA::PRINT_STR("[RESIZE] alloc (");
+                /*VGA::PRINT_STR("[RESIZE] alloc (");
                 VGA::PRINT_INT(pice->start_address);
                 VGA::PRINT_STR(", ");
                 VGA::PRINT_INT(pice->end_address);
@@ -135,7 +131,7 @@ void* malloc(uint32 size) {
                 VGA::PRINT_INT(pice->used);
                 VGA::PRINT_STR("][");
                 VGA::PRINT_INT(size);
-                VGA::PRINT_STR("] Bytes!\n");
+                VGA::PRINT_STR("] Bytes!\n");*/
 
                 memset((void*)pice->start_address, NULL, pice->used);
 
@@ -178,7 +174,14 @@ void* malloc(uint32 size) {
 
     }
     else if (!allo) {
-         ThrowISR(19); // Throw "Out of Memory"
+        G_ERR(VGA::PRINT_STR("MEMORY ERR ["));
+        G_ERR(VGA::PRINT_INT((KenHeap.TotalMemory - KenHeap.UsedMemory) - allocEnd));
+        G_ERR(VGA::PRINT_STR(", "));
+        G_ERR(VGA::PRINT_INT(size));
+        G_ERR(VGA::PRINT_STR("]\n"));
+
+        return (void*)-1;
+        //ThrowISR(19); // Throw "Out of Memory"
     }
 
     
@@ -213,6 +216,6 @@ bool free(void* pointer) {
         }
     }
 
-    VGA::PRINT_STR("Could not find that memory allocated!");
+    G_ERR(VGA::PRINT_STR("Could not find that memory allocated!\n"));
     return 0;
 }
