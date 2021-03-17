@@ -49,9 +49,6 @@ public:
         ext2_init("/dev/hdd", mountPoint);
 
 
-        vfs_node *test = {};
-        vfs_mount_dev("/dev/hdd", test);
-        vfs_create_file("wow_it_worked.yay", 777);
         
         
 
