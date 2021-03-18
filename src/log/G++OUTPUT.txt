@@ -1,0 +1,28 @@
+In file included from [01m[K./lib/mem/mem.cpp:2[m[K:
+[01m[K./lib/mem/../VGA/VGA.h:87:27:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
+   87 |     VGA::PRINT_STR(": "); \
+      |                            
+[01m[K./lib/mem/../VGA/VGA.h:88:31:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
+   88 |     VGA::PRINT_INT(__LINE__); \
+      |                                
+1:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
+   88 |     VGA::PRINT_INT(__LINE__); \
+      |                                
+[K’:
+[01m[K./lib/vfs/vfs.cpp:168:26:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+  168 |     char * parent_path = [01;35m[K"/"[m[K;
+      |                          [01;35m[K^~~[m[K
+[01m[K./lib/vfs/vfs.cpp:[m[K In function ‘[01m[Kint vfs_create_file(char*, short unsigned int)[m[K’:
+[01m[K./lib/vfs/vfs.cpp:206:26:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+  206 |     char * parent_path = [01;35m[K"/"[m[K;
+      |                          [01;35m[K^~~[m[K
+[01m[K./lib/vfs/vfs.cpp:[m[K In function ‘[01m[Kvoid vfs_unlink(char*)[m[K’:
+[01m[K./lib/vfs/vfs.cpp:243:26:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+  243 |     char * parent_path = [01;35m[K"/"[m[K;
+      |                          [01;35m[K^~~[m[K
+01m[KcommandLen[m[K’ from ‘[01m[Kunsigned int[m[K’ to ‘[01m[Kint[m[K’ [[01;35m[K-Wnarrowing[m[K]
+  286 |     return {command, [01;35m[KcommandLen[m[K, args, argNum};
+      |                      [01;35m[K^~~~~~~~~~[m[K
+[01m[K./lib/VirtualConsole/VirtualConsole.cpp:286:40:[m[K [01;35m[Kwarning: [m[Knarrowing conversion of ‘[01m[KargNum[m[K’ from ‘[01m[Kunsigned int[m[K’ to ‘[01m[Kint[m[K’ [[01;35m[K-Wnarrowing[m[K]
+  286 |     return {command, commandLen, args, [01;35m[KargNum[m[K};
+      |                                        [01;35m[K^~~~~~[m[K

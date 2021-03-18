@@ -90,7 +90,30 @@ public:
 
         VGA::PRINT_STR("\n");
         
-        
+        Vector<char> test;
+
+        for (int i = 0; i < 5; i++) {
+            test.push_back((char)i + 'a');
+        }
+
+        for (int i = 0; i < 5; i++) {
+            test[i] = ((char)i + '0');
+        }
+
+        //test.PrintVector();
+
+        test.pop_at(0);
+        test.insert_at(0, 'n');
+
+        test.pop_back();
+        test.push_back('l');
+
+        for (int i = 0; i < test.size(); i++) {
+            VGA::PRINT_CHAR(test[i]);
+            VGA::PRINT_STR("\n");
+        }
+
+        test.PrintVector();
 
         //ThrowISR(19);
     }

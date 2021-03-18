@@ -17,5 +17,8 @@ void* malloc(uint32 size);
 
 bool free(void* pointer);
 
+inline void  operator delete (void * p) { free(p); return; };
+// /inline void* operator new    (size_t n) { return malloc(n); };
+
 
 #endif // !MEMORY_HH____
