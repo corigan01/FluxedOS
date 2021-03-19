@@ -72,10 +72,13 @@ class Vector {
 
         void pop_back() {
             for (int i = 0; i < VectorSize; i++) {
-                if (h[i].PointsTo == EndOfVector - 1) {
+                if (h[i].PointsTo == (EndOfVector - 1)) {
+                    
+
                     h[i].DoesPoint = 0;
                     h[i].Data = NULL;
                     EndOfVector--;
+                    
                     return;
                 }
             }
@@ -86,6 +89,28 @@ class Vector {
         }
 
         void PrintVector() {
+            int addit = 0;
+            for (int i = 0; i < VectorSize; i++ ) {
+                for (int e = 0; e < VectorSize; e++) {
+                    if (h[e].PointsTo == addit && h[e].DoesPoint == true) {
+                        //if (h[e].DoesPoint == false);
+                        /*
+                        VGA::PRINT_INT(e);
+                        VGA::PRINT_STR(" --> \'");
+                        VGA::PRINT_CHAR(h[e].Data);
+                        VGA::PRINT_STR("\' [");
+                        VGA::PRINT_INT(h[e].PointsTo);
+                        VGA::PRINT_STR(", ");
+                        VGA::PRINT_INT(h[e].DoesPoint);
+                        VGA::PRINT_STR("] \n");
+                        */
+                        addit++;
+                        break;
+                    }
+                }
+            }
+
+            ///*
             for (int i = 0; i < VectorSize; i++ ) {
                 if (!h[i].DoesPoint) continue;
                 VGA::PRINT_INT(i);
@@ -97,6 +122,19 @@ class Vector {
                 VGA::PRINT_INT(h[i].DoesPoint);
                 VGA::PRINT_STR("] \n");
             }
+            //*/
+
+            /*
+            if (!h[i].DoesPoint) continue;
+                VGA::PRINT_INT(i);
+                VGA::PRINT_STR(" --> \'");
+                VGA::PRINT_CHAR(h[i].Data);
+                VGA::PRINT_STR("\' [");
+                VGA::PRINT_INT(h[i].PointsTo);
+                VGA::PRINT_STR(", ");
+                VGA::PRINT_INT(h[i].DoesPoint);
+                VGA::PRINT_STR("] \n");
+            */
         }
 
 
@@ -118,35 +156,36 @@ class Vector {
             // This is the easy way before we do the hard way
             // this will check if the value at the index does not point, and insert there
             for (int i = 0; i < VectorSize; i++) {
-                if (h[i].PointsTo == s && h[i].DoesPoint == 0) {
-                    KDEBUG;
+                if (h[i].DoesPoint == false) {
+
+                    IncRemaining(s - 1, 1);
+
+                
+                    
+                    
                     h[i].DoesPoint = 1;
                     h[i].Data = d;
+                    h[i].PointsTo = s;
 
                     EndOfVector++;
-                    IncRemaining(i, 1);
 
                     return;
+               
                 }
             }
 
             // This is the hard way, we now have to insert a new addr for that value
             
             
-            for (int i = 0; i < VectorSize; i++) {
-                if (h[i].PointsTo == s) {
-                    if (s != 0) IncRemaining(i - 1, 1);
-                    
-                    h[VectorSize].DoesPoint = 1;
-                    h[VectorSize].PointsTo = s;
-                    h[VectorSize].Data = d;
-                    EndOfVector++;
-                    VectorSize++;
+            
+            IncRemaining(s - 1 , 1);
+            
+            h[VectorSize].DoesPoint = 1;
+            h[VectorSize].PointsTo = s;
+            h[VectorSize].Data = d;
 
-                    return; // return to save looking time on big vectors
-                }
-            }
-
+            EndOfVector++;
+            VectorSize++;
 
         }
 
@@ -174,10 +213,14 @@ class Vector {
         // This will increment the remaining vector numbers depening on what they point to
         // [ =  =  =  =  =  =] 1, 2, 3, 4, 5, 6 --> 1, 2, [3], 4, 5, 6, 7
         void IncRemaining(int adr, int inc) {
+            if (adr < 0) {
+                for (int i = 0; i < VectorSize; i++) {
+                    h[i].PointsTo += inc;
+                }
+                return;
+            }
             for (int i = 0; i < VectorSize; i++) {
                 if (h[i].PointsTo > adr) {
-                    
-
                     h[i].PointsTo += inc;
                 }
             }

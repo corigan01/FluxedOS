@@ -88,7 +88,7 @@ public:
         VGA::PRINT_STR("TESTING VGA :: PF\eAA\eSI\eSL\eEE\eDD\e!");
         //VGA::PRINT_STR(R"()");
 
-        VGA::PRINT_STR("\n");
+        VGA::PRINT_STR("\nTESTING VECTOR ");
         
         Vector<char> test;
 
@@ -100,20 +100,36 @@ public:
             test[i] = ((char)i + '0');
         }
 
-        //test.PrintVector();
+        // h e l l o
+        // 0 1 2 3 4
+
+        test[3] = 'l';
 
         test.pop_at(0);
-        test.insert_at(0, 'n');
+        test.insert_at(0, 'h');
 
         test.pop_back();
-        test.push_back('l');
+        test.push_back('o');
 
-        for (int i = 0; i < test.size(); i++) {
-            VGA::PRINT_CHAR(test[i]);
-            VGA::PRINT_STR("\n");
+        test.pop_at(1);
+        test.insert_at(1, 'e');
+
+        test[2] = 'l';
+
+        const char * testingFinal = "hello";
+        for (int i = 0; i < test.size(); i ++) {
+            if (test[i] == testingFinal[i]) continue;
+            else panic("Vector Lib Failed!");
         }
 
-        test.PrintVector();
+        G_OK;
+
+
+        //test.pop_back();
+        //test.push_back('l');
+
+        
+
 
         //ThrowISR(19);
     }
