@@ -5,7 +5,7 @@
 #include "../../vfs/vfs.h"
 #include "../../String/String.h"
 #include "../../../cpu/cpu.h"
-
+#include "../../compare/compare.h"
 
 PICdev_T ata_device;
 

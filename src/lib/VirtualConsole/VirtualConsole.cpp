@@ -283,6 +283,6 @@ VirtualConsoleParsed VirtualConsole::parse(char * inp) {
     
     
 
-    return {command, commandLen, args, argNum};
+    return {command, (int)commandLen, args, (int)argNum};
 
 }

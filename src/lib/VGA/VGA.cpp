@@ -3,6 +3,9 @@
 #include "../hal/hal.h"
 #include "../String/String.h"
 #include "cVGA.h"
+#include "../IO/Serial/serial.h"
+#include "../compare/compare.h"
+
 
 namespace STORE {
     int __MODE_SELC = VGA::MODES::TEXT;
@@ -126,6 +129,8 @@ void VGA::PRINT_CHAR(char ch){
                 BUFFERS::DEFAULT_BUFFER.line_number++;
                 //incLine(); 
             }
+
+            RawSerialoutc('\n');
             
         break;
     case '\r':
@@ -154,6 +159,7 @@ void VGA::PRINT_CHAR(char ch){
         
         BUFFERS::DEFAULT_BUFFER.Buff[BUFFERS::DEFAULT_BUFFER.size] = VGA::VGA_ENTRY(ch, STORE::__MODS[3], STORE::__MODS[2]);
         BUFFERS::DEFAULT_BUFFER.size++;
+        RawSerialoutc(ch);
 
         break;
     }

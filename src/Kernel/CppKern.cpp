@@ -12,6 +12,8 @@
 #include "../lib/IO/ATA/ata.h"
 #include "../lib/PCI/PCI.h"
 #include "../drive/drive.h"
+#include "../lib/IO/Serial/serial.h"
+#include "../lib/String/String.h"
 
 extern uint32_t end;
 
@@ -19,20 +21,23 @@ multiboot_info_t* mulboot;
 uint32 magicinfo = 0;
 
 
+
+
 class KernelEntry {
 public:
+    Serial s;
     
     KernelEntry() {
+
+
         VGA::INIT_DISPLAY();
 
         VGA::PRINT_STR("MultiBoot INFO: ");
-        VGA::PRINT_INT((mulboot->mem_lower ) );
+        VGA::PRINT_INT(mulboot->mem_lower);
         VGA::PRINT_STR("  \n");
-
         VGA::CURSOR::ENABLE(1 , 10);
 
         VGA::SET_COLOR(VGA::COLORS::WHITE, VGA::COLORS::BLACK);
-
 
         isr_install();
         irq_install();
@@ -43,20 +48,11 @@ public:
         PCI::pci_init();
         vfs_init();
         ATA::ata_init();
-
+        
         //print_vfstree();
         char* mountPoint = "/";
         ext2_init("/dev/hdd", mountPoint);
 
-
-        
-        
-
-
-        //vfs_db_listdir("/");
-
-        //ATA::ata_read_sector();
-        //ATA::ide_init(0x1F0, 0x3F6, 0x170, 0x376, 0x000);
 
 
         VGA::SET_COLOR(VGA::COLORS::GREEN, VGA::COLORS::BLACK);
@@ -71,9 +67,12 @@ public:
         VGA::PRINT_INT(end / 1024);
         VGA::PRINT_STR("KB \n");
         
+        
         //enable the interrupts
         Vasm("sti");
-       //pic_send(10);
+
+
+       
     }
 
     ~KernelEntry() {
@@ -87,6 +86,8 @@ public:
         VGA::SET_COLOR(VGA::COLORS::MAGENTA, VGA::COLORS::BLACK);
         VGA::PRINT_STR("TESTING VGA :: PF\eAA\eSI\eSL\eEE\eDD\e!");
         //VGA::PRINT_STR(R"()");
+
+        //cout << "test" << "\n";
 
         VGA::PRINT_STR("\nTESTING VECTOR ");
         
@@ -124,13 +125,6 @@ public:
 
         G_OK;
 
-
-        //test.pop_back();
-        //test.push_back('l');
-
-        
-
-
         //ThrowISR(19);
     }
 
@@ -142,6 +136,10 @@ public:
         
 
     }
+
+    
+
+    
 };
 
 int KernStart(multiboot_info_t* mbt, uint32 magic) {

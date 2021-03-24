@@ -15,6 +15,7 @@
 
 template <class T>
 class Vector {
+    protected:
     struct D {
         T Data; // Data Storage
         int PointsTo = 0; // The index this unit will point to 
@@ -32,10 +33,14 @@ class Vector {
             h = (D *)malloc(sizeof(D) * VECTOR_MAX_SIZE);
         }
 
+    ;
+
         ~Vector() {
             // free the vector
             free(h);
         }
+
+    public:
 
         void push_back(T data) {
 
@@ -202,6 +207,15 @@ class Vector {
             this->EndOfVector = s.EndOfVector;
             this->VectorSize  = s.VectorSize;
             this.h            = s.h;
+        }
+
+
+        void empty() {
+            
+            memset(h, NULL, VECTOR_MAX_SIZE);
+
+            VectorSize = 0;
+            EndOfVector = 0;
         }
 
        

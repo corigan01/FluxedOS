@@ -3,84 +3,49 @@
 #include "../list/list.h"
 #include "../compare/compare.h"
 
-String::String()
-{
+
+string::string(){
+	;
+}
+string::~string(){
+	; 
 }
 
-String::String(const char* _str_i) {
-		this->_Size = find_size(_str_i);
-
-		this->Data = _str_i;
-}
-
-const char* String::c_str() {
-		return Data;
-}
-
-char * String::cs_ctr() {
-	return (char*)Data;
-}
-
-
-void String::operator=(const char* _str_i) {
-	if (_str_i != "")
-		this->_Size = find_size(_str_i);
-	else
-		this->_Size = 0;
-	
-
-	this->Data = _str_i;
-}
-
-void String::operator=(String *str) {
-    this->_Size = str->_Size;
-    this->Data  = str->Data;
-}
-
-String String::operator+(String str) {
-    char* s = (char*)this->c_str();
-    int ind = this->size();
-    for (int i = 0; i < str.size(); i ++) {
-         s[ind + i] = str.Data[i];
-    }
-    return String(s);
-}
-
-char String::operator[](int i) {
-	return Data[i];
-}
-
-uint16_t String::size() {
-		return this->_Size;
-}
-
-size_t String::find_size(const char* _str_i) {
-		size_t ret = 0;
-		while (_str_i[ret] != 0)
-			ret++;
-		return ret;
-}
-
-bool String::operator==(const char* _str_i) {
-	if (this->Data == _str_i) {
-		return true;
+void string::operator =(const char * s) {
+	empty();
+	for (;auto e = s++ != 0;) {
+		this->push_back(e);
 	}
-	return false;
-
 }
-
-bool String::operator==(String *str) {
-	if (this->Data == str->Data) {
-		return true;
+void string::operator =(string s) {
+	this->EndOfVector = s.EndOfVector;
+	this->VectorSize  = s.VectorSize;
+	this->h           = s.h;
+}
+void string::operator =(char s) {
+	empty();
+	this->push_back(s);
+}
+void string::operator =(Vector<char> s) {
+	empty();
+	for (int i = 0; i < s.size(); i++) {
+		this->push_back(s[i]);
 	}
-	return false;
+}
+void string::operator =(char * s) {
+	empty();
+	for (;auto e = s++ != 0;) {
+		this->push_back(e);
+	}
+}
 
+Vector<string> string::split(char * c) {
 
 }
 
-String::~String()
-{
-	//delete this->Data;
-	//delete &this->_Size;
-}
+const char * string::c_str() {
 
+}
+char * string::cc_str() {
+
+}

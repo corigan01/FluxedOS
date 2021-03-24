@@ -3,49 +3,29 @@
 
 #include "../core/core.h"
 #include "../list/list.h"
+#include "../Vector/vector.h"
+#include "../compare/compare.h"
 
 
-class String
-{
+class string : public Vector<char> {
 public:
-	String();
-	String(const char* _str_i);
-	~String();
 
-	const char* c_str();
-	char *cs_ctr();
+	string();
+	~string();
 
-	uint16_t size();
-
-	void operator=(const char* _str_i);
-	void operator=(String *str);
-	char operator[](int i);
+	void operator =(const char * s); 
+	void operator =(string s);
+	void operator =(char s);
+	void operator =(Vector<char> s);
+	void operator =(char * s);
 	
-	bool operator==(const char* _str_i);
-	bool operator==(String *str);
-	
-	String operator+(String str);
+	Vector<string> split(char * c);
 
-private:
-
-	size_t find_size(const char* _str_i);
-
-	const char* Data = "";
-	int _Size;
+	const char * c_str();
+	char * cc_str();
 
 };
 
-int stoi(char* str);
-uint32 strlen(const char* str);
-uint32 digit_count(int num);
-void itoa(int num, char *number);
-char * strstr(const char *in, const char *str);
-int strcpy_(char *dst,const char *src);
-void strcat(void *dest,const void *src);
-int strncmp_( const char* s1, const char* s2, int c );
-char * strdup(const char * src);
-char *strsep(char **stringp, const char *delim);
-list_t * str_split(const char * str, const char * delim, unsigned int * numtokens);
-char * list2str(list_t * list, const char * delim);
+
 
 #endif // !String

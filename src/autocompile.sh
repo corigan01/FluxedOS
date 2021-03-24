@@ -65,7 +65,7 @@ done
 
 cd ..
 
-echo "---------------- BUILDING CPP -------------------"
+echo "---------------- BUILDING OS --------------------"
 
 for OUTPUT in $(find ./ -type f -iregex '.*/.*\.\(c\|cpp\|h\)$')
 do
@@ -84,7 +84,7 @@ done
 wait
 
 
-echo "---------------- LINKING BUILDS -----------------"
+echo "---------------- LINKING OS ---------------------"
 
 DisDone "Moving object files"
 
@@ -93,7 +93,7 @@ rm temp.txt &> /dev/null
 
 ts=$(date +%s%N)
 #linking the kernel with kernel.o and boot.o files
-if g++ -m32 -lstdc++ -nostartfiles -T linker.ld  obj/*.o -o FluxedOS.bin  &> "log/LINKOUTPUT.txt"; then
+if g++ -m32 -lstdc++ -nostartfiles -nostdinc -T linker.ld  obj/*.o -o FluxedOS.bin  &> "log/LINKOUTPUT.txt"; then
     DisDone "Linking FluxedOS.bin"
     PFD=$((($(date +%s%N) - $ts)/1000000))
     printf "%-40s%-4s\e[0;32mDONE - $PFD ms\e[0;34m\n"  "${TEx:0:40}" " "
@@ -160,7 +160,18 @@ echo "---------------- RUNNING BUILD ------------------"
 
 
 
-qemu-system-x86_64 -cdrom FluxedOS.iso -vga std -display gtk -drive file=disk.img,if=ide,format=raw -m 256m -k en-us -serial stdio
+qemu-system-x86_64                          \
+    -cdrom FluxedOS.iso                     \
+    -vga std                                \
+    -boot strict=on                         \
+    -cpu max                                \
+    -smp 1,sockets=1,cores=1,threads=1      \
+    -display gtk                            \
+    -drive file=disk.img,if=ide,format=raw  \
+    -m 256m                                 \
+    -k en-us                                
+
+
 DisDone "Running qemu"
 
 

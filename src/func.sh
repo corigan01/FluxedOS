@@ -79,7 +79,7 @@ compilec_() {
     local ts=$(date +%s%N)
 
 
-    if gcc -m32 -elf_i386  -O -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-builtin -c  $OUTPUT -fdiagnostics-color=always  &> "log/GccOUTPUT.txt"; then
+    if gcc -m32 -elf_i386  -O -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-stack-protector -fpic -fshort-wchar -mno-red-zone -fno-builtin -c  $OUTPUT -fdiagnostics-color=always  &> "log/GccOUTPUT.txt"; then
          local PFD=$((($(date +%s%N) - $ts)/1000000))
          printf "%-40s%-4s\e[0;32mDONE - $PFD ms\e[0;34m\n"  "${OUTPUT:0:40}" " "
     else
