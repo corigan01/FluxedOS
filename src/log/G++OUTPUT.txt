@@ -1,24 +1,20 @@
-In file included from [01m[K./lib/vfs/vfs.h:5[m[K,
-                 from [01m[K./lib/vfs/vfs.cpp:1[m[K:
-[01m[K./lib/vfs/../VGA/VGA.h:87:27:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
+In file included from [01m[K./lib/list/list.h:5[m[K,
+                 from [01m[K./lib/list/list.cpp:1[m[K:
+[01m[K./lib/list/../VGA/VGA.h:87:27:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
    87 |     VGA::PRINT_STR(": "); \
       |                            
-[01m[K./lib/vfs/../VGA/VGA.h:88:31:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
+[01m[K./lib/list/../VGA/VGA.h:88:31:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
    88 |     VGA::PRINT_INT(__LINE__); \
       |                                
-[01m[K./lib/vfs/vfs.cpp:[m[K In function ‘[01m[Kvoid vfs_mkdir(char*, short unsigned int)[m[K’:
-[01m[K./lib/vfs/vfs.cpp:168:26:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-  168 |     char * parent_path = [01;35m[K"/"[m[K;
-      |                          [01;35m[K^~~[m[K
-[01m[K./lib/vfs/vfs.cpp:[m[K In function ‘[01m[Kint vfs_create_file(char*, short unsigned int)[m[K’:
-[01m[K./lib/vfs/vfs.cpp:206:26:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-  206 |     char * parent_path = [01;35m[K"/"[m[K;
-      |                          [01;35m[K^~~[m[K
-[01m[K./lib/vfs/vfs.cpp:[m[K In function ‘[01m[Kvoid vfs_unlink(char*)[m[K’:
-[01m[K./lib/vfs/vfs.cpp:243:26:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-  243 |     char * parent_path = [01;35m[K"/"[m[K;
-      |                          [01;35m[K^~~[m[K
-~~~~~~~~~~~~~~~~~[m[K
-[01m[K./drive/fs/ext2.cpp:680:40:[m[K [01;35m[Kwarning: [m[Ktaking address of packed member of ‘[01m[Kinode[m[K’ may result in an unaligned pointer value [[01;35m[K-Waddress-of-packed-member[m[K]
-  680 |         if(!alloc_inode_metadata_block([01;35m[K&(inode->blocks[EXT2_DIRECT_BLOCKS + 2])[m[K, ext2fs, inode, inode_idx, NULL, 0));
-      |                                        [01;35m[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+ne separated by space
+   88 |     VGA::In file included from [01m[K./Kernel/CppKern.cpp:5[m[K:
+[01m[K./Kernel/../lib/VirtualConsole/VirtualConsole.h:10:27:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   10 |     char *  Command     = [01;35m[K""[m[K;
+      |                           [01;35m[K^~[m[K
+[01m[K./Kernel/CppKern.cpp:[m[K In constructor ‘[01m[KKernelEntry::KernelEntry()[m[K’:
+[01m[K./Kernel/CppKern.cpp:53:28:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   53 |         char* mountPoint = [01;35m[K"/"[m[K;
+      |                            [01;35m[K^~~[m[K
+[01m[K./Kernel/CppKern.cpp:54:19:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   54 |         ext2_init([01;35m[K"/dev/hdd"[m[K, mountPoint);
+      |                   [01;35m[K^~~~~~~~~~[m[K

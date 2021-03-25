@@ -43,9 +43,6 @@ cd ..
 
 
 echo "---------------- BUILDING PROC ------------------"
-
-
-
 cd Proc
 for FILES in $(dir)
 do
