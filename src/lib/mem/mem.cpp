@@ -1,7 +1,8 @@
 #include "mem.h"
 #include "../VGA/VGA.h"
+#include "../core/core.h"
 
-
+static uint32 Memory = 0;
 
 void memcpy(void *dest, void *src, size_t n) 
 { 
@@ -23,16 +24,30 @@ void *memset(void *dst,char val, int n)
 
 int Getmemory() {
     unsigned int total;
-    unsigned int lowmem, highmem;
+
+
+    if (Memory == 0) {
+        unsigned int lowmem, highmem;
  
-    port_byte_out(0x70, 0x30);
-    lowmem = port_byte_in(0x71);
-    port_byte_out(0x70, 0x31);
-    highmem = port_byte_in(0x71);
- 
-    total = lowmem | highmem << 8;
+        port_byte_out(0x70, 0x30);
+        lowmem = port_byte_in(0x71);
+        port_byte_out(0x70, 0x31);
+        highmem = port_byte_in(0x71);
+    
+        total = lowmem | highmem << 8;
+    }
+    else {
+        return Memory;
+    }
+    
     return total;
 }
+
+void SetMem(unsigned int memory) {
+    memory = memory;
+}
+
+
 
 struct MemoryReserve {
     uint32 start_address = 0; // begining address
@@ -74,7 +89,7 @@ void memoryInit(uint32 end) {
 void* malloc(uint32 size) {
     //VGA::PRINT_STR("S: ");
     //VGA::PRINT_INT(size);
-    //VGA::PRINT_STR(" ");
+     //VGA::PRINT_STR(" ");
     if (!KenHeap.EnableMemoryloc) {
         panic("Tried to loc memory, when memory is locked!");
     }

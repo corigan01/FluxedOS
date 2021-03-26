@@ -30,10 +30,13 @@ public:
     KernelEntry() {
 
 
+
         VGA::INIT_DISPLAY();
 
-        VGA::PRINT_STR("MultiBoot INFO: ");
-        VGA::PRINT_INT(mulboot->mem_lower);
+        VGA::PRINT_STR("MultiBoot Memory: ");
+        VGA::PRINT_INT(mulboot->mem_upper - mulboot->mem_lower);
+        VGA::PRINT_STR("KB ");
+        VGA::PRINT_STR((char*)mulboot->boot_loader_name);
         VGA::PRINT_STR("  \n");
         VGA::CURSOR::ENABLE(1 , 10);
 
@@ -47,11 +50,11 @@ public:
         memoryInit(end);
         PCI::pci_init();
         vfs_init();
-        ATA::ata_init();
+        //ATA::ata_init();
         
         //print_vfstree();
-        char* mountPoint = "/";
-        ext2_init("/dev/hdd", mountPoint);
+        //char* mountPoint = "/";
+        //ext2_init("/dev/hdd", mountPoint);
 
 
 
@@ -69,7 +72,7 @@ public:
         
         
         //enable the interrupts
-        Vasm("sti");
+        //Vasm("sti");
 
 
        

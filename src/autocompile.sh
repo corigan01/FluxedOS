@@ -15,11 +15,7 @@ echo -e "            A \e[0;35mMain Menu\e[0;34m aka \e[0;35mcorigan01\e[0;34m p
 echo
 
 
-
-
 addToBuild 
-
-
 
 
 
@@ -35,8 +31,6 @@ do
 done
 mv *.o ../obj
 cd ..
-
-
 
 
 
@@ -90,7 +84,7 @@ rm temp.txt &> /dev/null
 
 ts=$(date +%s%N)
 #linking the kernel with kernel.o and boot.o files
-if g++ -m32 -lstdc++ -nostartfiles -nostdinc -T linker.ld  obj/*.o -o FluxedOS.bin  &> "log/LINKOUTPUT.txt"; then
+if g++ -m32 -lstdc++ -nostartfiles -nostdinc -T linker.ld obj/*.o -o FluxedOS.bin  &> "log/LINKOUTPUT.txt"; then
     DisDone "Linking FluxedOS.bin"
     PFD=$((($(date +%s%N) - $ts)/1000000))
     printf "%-40s%-4s\e[0;32mDONE - $PFD ms\e[0;34m\n"  "${TEx:0:40}" " "
@@ -115,10 +109,11 @@ if grub-file --is-x86-multiboot FluxedOS.bin &> "log/GRUB.txt"; then
     DisDone "Generating grub files"
      
 else
-
+            echo "f" &> /dev/null
             #ouput the errors
             echo -e "\e[0;31m ------------------ GRUB FAILED! ------------------ "
             printf "%s" "$(<log/GRUB.txt)"
+            printf "FluxedOS.bin is not multiboot32"
             echo ""
             echo -e "\e[0;31m ------------------- GRUB DONE! ------------------- "
   
@@ -165,7 +160,7 @@ qemu-system-x86_64                          \
     -smp 1,sockets=1,cores=1,threads=1      \
     -display gtk                            \
     -drive file=disk.img,if=ide,format=raw  \
-    -m 256m                                 \
+    -m 1g                                   \
     -k en-us                                
 
 
