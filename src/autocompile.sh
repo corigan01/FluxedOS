@@ -19,8 +19,7 @@ echo
 
 addToBuild 
 
-
-
+declare -i BUILDCOUNT=0
 
 
 #compile .c , .cpp , and .h file
@@ -31,6 +30,7 @@ echo "---------------- BUILDING ASM -------------------"
 cd boot
 for OUTPUT in $(find ./ -type f -iregex '.*/.*\.\(s\)$')
 do
+    BUILDCOUNT=$(( 1 + BUILDCOUNT))
     compilea $OUTPUT
 done
 mv *.o ../obj
@@ -52,6 +52,7 @@ cd $FILES
 
     for SUB_FILE in $(find ./ -type f -iregex '.*/.*\.\(c\|cpp\|h\)$')
     do
+        BUILDCOUNT=$(( 1 + BUILDCOUNT))
         compileProc $SUB_FILE $FILES &
     done
 
@@ -70,8 +71,10 @@ do
     if [[ $OUTPUT == *"Proc"* ]]; then
         printf "%-40s%-4s\e[0;33mSKIP\e[0;34m\n"  "${OUTPUT:0:40}" " "
     elif [[ $OUTPUT == *".cpp"* ]]; then
+        BUILDCOUNT=$(( 1 + BUILDCOUNT))
         compilec $OUTPUT &
     elif [[ $OUTPUT == *".c"* ]]; then
+        BUILDCOUNT=$(( 1 + BUILDCOUNT))
         compilec_ $OUTPUT &
     else
         printf "%-40s%-4s\e[0;32mDONE\e[0;34m\n"  "${OUTPUT:0:40}" " "
@@ -79,6 +82,8 @@ do
 done
 
 wait
+
+printf "Working Files : $BUILDCOUNT \n"
 
 
 echo "---------------- LINKING OS ---------------------"
@@ -172,12 +177,13 @@ qemu-system-x86_64                          \
 DisDone "Running qemu"
 
 
-
-
-
-
-
-
-
 #clean up
 clean
+
+
+exit 0
+
+
+
+
+

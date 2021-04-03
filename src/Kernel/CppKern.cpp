@@ -15,6 +15,7 @@
 #include "../lib/IO/Serial/serial.h"
 #include "../lib/String/String.h"
 
+
 extern uint32_t end;
 
 multiboot_info_t* mulboot;
@@ -70,7 +71,6 @@ public:
         
         //enable the interrupts
         Vasm("sti");
-
 
        
     }
@@ -132,6 +132,7 @@ public:
         VGA::SET_COLOR(VGA::COLORS::WHITE, VGA::COLORS::BLACK);
         VirtualConsole console;
 
+        // The main console handler (this should be in its own program soon)
         console.Handle();
         
 
