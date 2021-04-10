@@ -16,4 +16,4 @@ sudo apt install qemu-system-x86    -y
 sudo apt install xorriso            -y
 sudo apt install nasm               -y
 
-echo "Done! Now run ./autocompile.sh or bash autocompile.sh to build FluxedOS"
+echo "Done! Now run bash autocompile.sh to build FluxedOS"

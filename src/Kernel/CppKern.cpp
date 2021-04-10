@@ -1,6 +1,6 @@
 #include "CppKern.h"
 #include "Kernel.h"
-#include "BUILD.h"
+#include "BUILD.v"
 #include "../lib/Vector/vector.h"
 #include "../lib/VirtualConsole/VirtualConsole.h"
 #include "../cpu/cpu.h"
@@ -22,7 +22,6 @@ uint32 magicinfo = 0;
 
 
 
-
 class KernelEntry {
 public:
     Serial s;
@@ -35,7 +34,7 @@ public:
 
         VGA::PRINT_STR("MultiBoot Memory: ");
         VGA::PRINT_INT(mulboot->mem_upper - mulboot->mem_lower);
-        VGA::PRINT_STR("KB ");
+        VGA::PRINT_STR("KB --> ");
         VGA::PRINT_STR((char*)mulboot->boot_loader_name);
         VGA::PRINT_STR("  \n");
         VGA::CURSOR::ENABLE(1 , 10);

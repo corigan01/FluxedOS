@@ -2,17 +2,15 @@
 
 source func.sh
 
-# Display the welcome
-tis=$(date +%s%N)
-echo "      ________                    __   ______          "
-echo "     / ____/ /_  ___  _____  ____/ /  / ____/___  ____ "
-echo "    / /_  / / / / / |/_/ _ \/ __  /  / /   / __ \\/ __ \\"
-echo "   / __/ / / /_/ />  </  __/ /_/ /  / /___/ /_/ / /_/ /"
-echo "  /_/   /_/\__,_/_/|_|\___/\__,_/   \____/ .___/ .___/ "
-echo "                                        /_/   /_/      "
-echo -e "\e[0;34m-- The easy auto \e[0;31mC++\e[0;34m compiler that runs in your terminal! --"
-echo -e "            A \e[0;35mMain Menu\e[0;34m aka \e[0;35mcorigan01\e[0;34m project!"
-echo
+displayWelcome
+
+if md5sum_check; then
+    run_build
+
+    clean
+
+    exit
+fi
 
 
 addToBuild 
@@ -148,20 +146,7 @@ echo "BUILD IN $((($(date +%s%N) - $tis)/1000000)) ms" &
 #run 
 echo "---------------- RUNNING BUILD ------------------"
 
-#DisDone "Mount of fs"
-
-
-
-qemu-system-x86_64                          \
-    -cdrom FluxedOS.iso                     \
-    -vga std                                \
-    -boot strict=on                         \
-    -cpu max                                \
-    -smp 1,sockets=1,cores=1,threads=1      \
-    -display gtk                            \
-    -drive file=disk.img,if=ide,format=raw  \
-    -m 1g                                   \
-    -k en-us                                
+run_build
 
 
 DisDone "Running qemu"
