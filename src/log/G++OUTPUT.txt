@@ -6,3 +6,24 @@ In file included from [01m[K./lib/IO/ATA/ata.h:7[m[K,
 [01m[K./lib/IO/ATA/../../VGA/VGA.h:88:31:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
    88 |     VGA::PRINT_INT(__LINE__); \
       |                                
+<<<<<<< HEAD
+=======
+     |                                
+In file included from [01m[K./Kernel/CppKern.cpp:5[m[K:
+[01m[K./Kernel/../lib/VirtualConsole/VirtualConsole.h:10:27:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   10 |     char *  Command     = [01;35m[K""[m[K;
+      |                           [01;35m[K^~[m[K
+[01m[K./Kernel/CppKern.cpp:[m[K In constructor ‘[01m[KKernelEntry::KernelEntry()[m[K’:
+[01m[K./Kernel/CppKern.cpp:54:28:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   54 |         char* mountPoint = [01;35m[K"/"[m[K;
+      |                            [01;35m[K^~~[m[K
+[01m[K./Kernel/CppKern.cpp:55:19:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   55 |         ext2_init([01;35m[K"/dev/hdd"[m[K, mountPoint);
+      |                   [01;35m[K^~~~~~~~~~[m[K
+;
+      |                          [01;35m[K^~~[m[K
+~~~~~~~~~~~~~~~~~[m[K
+[01m[K./drive/fs/ext2.cpp:680:40:[m[K [01;35m[Kwarning: [m[Ktaking address of packed member of ‘[01m[Kinode[m[K’ may result in an unaligned pointer value [[01;35m[K-Waddress-of-packed-member[m[K]
+  680 |         if(!alloc_inode_metadata_block([01;35m[K&(inode->blocks[EXT2_DIRECT_BLOCKS + 2])[m[K, ext2fs, inode, inode_idx, NULL, 0));
+      |                                        [01;35m[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+>>>>>>> 3f0a09d9130f124a11d2cbf5b930e1a1ce970403

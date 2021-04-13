@@ -41,7 +41,7 @@ compilea() {
 
             clean
 
-            exit
+            exit -1
         fi
 
 }
@@ -65,7 +65,7 @@ compileProc() {
 
         clean
 
-        exit
+        exit -1
     fi
 
     mv "$FILES.exc" ../../bin/
@@ -93,7 +93,7 @@ compilec_() {
 
         clean
 
-        exit
+        exit -1
 
     fi
     
@@ -120,7 +120,7 @@ compilec() {
 
         clean
 
-        exit
+        exit -1
 
     fi
 }

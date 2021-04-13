@@ -43,9 +43,9 @@ public:
 
         VGA::PRINT_STR("GFX info --> [addr: ");
         VGA::PRINT_INT(mulboot->framebuffer_addr);
-        VGA::PRINT_STR(", wd: ");
+        VGA::PRINT_STR(", w: ");
         VGA::PRINT_INT(mulboot->framebuffer_width);
-        VGA::PRINT_STR(", hd: ");
+        VGA::PRINT_STR(", h: ");
         VGA::PRINT_INT(mulboot->framebuffer_height);
         VGA::PRINT_STR("] \n");
 
