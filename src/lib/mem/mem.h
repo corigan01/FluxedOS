@@ -8,6 +8,7 @@
 void memcpy(void *dest, void *src, size_t n);
 void *memset(void *dst,char val, int n);
 
+void SetMemory(int mem);
 int Getmemory();
 
 void memoryInit(uint32 end); 

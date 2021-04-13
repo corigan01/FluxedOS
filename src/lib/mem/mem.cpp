@@ -21,17 +21,13 @@ void *memset(void *dst,char val, int n)
     return dst;
 }
 
+uint32 GlobalMemory = 0;
+void SetMemory(int mem) {
+    GlobalMemory = mem;
+}
+
 int Getmemory() {
-    unsigned int total;
-    unsigned int lowmem, highmem;
- 
-    port_byte_out(0x70, 0x30);
-    lowmem = port_byte_in(0x71);
-    port_byte_out(0x70, 0x31);
-    highmem = port_byte_in(0x71);
- 
-    total = lowmem | highmem << 8;
-    return total;
+    return GlobalMemory;
 }
 
 struct MemoryReserve {

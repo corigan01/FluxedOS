@@ -15,7 +15,7 @@
 #include "../lib/IO/Serial/serial.h"
 #include "../lib/String/String.h"
 
-extern uint32_t end;
+extern uint32_t KernelEnd;
 
 multiboot_info_t* mulboot;
 uint32 magicinfo = 0;
@@ -32,9 +32,23 @@ public:
 
         VGA::INIT_DISPLAY();
 
-        VGA::PRINT_STR("MultiBoot INFO: ");
-        VGA::PRINT_INT(mulboot->mem_lower);
+        VGA::PRINT_STR("MultiBoot: H: ");
+        VGA::PRINT_INT(mulboot->mem_upper / 1024);
+        VGA::PRINT_STR("MB L: ");
+        VGA::PRINT_INT(mulboot->mem_lower / 1024);
+        VGA::PRINT_STR("MB --> ");
+        VGA::PRINT_STR((char*)mulboot->boot_loader_name);
         VGA::PRINT_STR("  \n");
+        SetMemory(mulboot->mem_upper);
+
+        VGA::PRINT_STR("GFX info --> [addr: ");
+        VGA::PRINT_INT(mulboot->framebuffer_addr);
+        VGA::PRINT_STR(", wd: ");
+        VGA::PRINT_INT(mulboot->framebuffer_width);
+        VGA::PRINT_STR(", hd: ");
+        VGA::PRINT_INT(mulboot->framebuffer_height);
+        VGA::PRINT_STR("] \n");
+
         VGA::CURSOR::ENABLE(1 , 10);
 
         VGA::SET_COLOR(VGA::COLORS::WHITE, VGA::COLORS::BLACK);
@@ -44,10 +58,10 @@ public:
         idt_install();
         gdt_install();
         pic_init();
-        memoryInit(end);
+        memoryInit(KernelEnd);
         PCI::pci_init();
         vfs_init();
-        ATA::ata_init();
+        //ATA::ata_init();
         
         //print_vfstree();
         char* mountPoint = "/";
@@ -64,12 +78,12 @@ public:
         VGA::PRINT_INT(Getmemory());
         VGA::PRINT_STR("KB ");
         VGA::PRINT_STR(" -- KRN END: ");
-        VGA::PRINT_INT(end / 1024);
+        VGA::PRINT_INT(KernelEnd / 1024);
         VGA::PRINT_STR("KB \n");
         
         
         //enable the interrupts
-        Vasm("sti");
+        CPU::enable_intr();
 
 
        
@@ -112,10 +126,13 @@ public:
         test.pop_back();
         test.push_back('o');
 
+
         test.pop_at(1);
         test.insert_at(1, 'e');
 
         test[2] = 'l';
+
+        
 
         const char * testingFinal = "hello";
         for (int i = 0; i < test.size(); i ++) {

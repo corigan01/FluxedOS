@@ -1,20 +1,8 @@
-In file included from [01m[K./lib/list/list.h:5[m[K,
-                 from [01m[K./lib/list/list.cpp:1[m[K:
-[01m[K./lib/list/../VGA/VGA.h:87:27:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
+In file included from [01m[K./lib/IO/ATA/ata.h:7[m[K,
+                 from [01m[K./lib/IO/ATA/ata.cpp:1[m[K:
+[01m[K./lib/IO/ATA/../../VGA/VGA.h:87:27:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
    87 |     VGA::PRINT_STR(": "); \
       |                            
-[01m[K./lib/list/../VGA/VGA.h:88:31:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
+[01m[K./lib/IO/ATA/../../VGA/VGA.h:88:31:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
    88 |     VGA::PRINT_INT(__LINE__); \
       |                                
-ne separated by space
-   88 |     VGA::In file included from [01m[K./Kernel/CppKern.cpp:5[m[K:
-[01m[K./Kernel/../lib/VirtualConsole/VirtualConsole.h:10:27:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   10 |     char *  Command     = [01;35m[K""[m[K;
-      |                           [01;35m[K^~[m[K
-[01m[K./Kernel/CppKern.cpp:[m[K In constructor ‘[01m[KKernelEntry::KernelEntry()[m[K’:
-[01m[K./Kernel/CppKern.cpp:53:28:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   53 |         char* mountPoint = [01;35m[K"/"[m[K;
-      |                            [01;35m[K^~~[m[K
-[01m[K./Kernel/CppKern.cpp:54:19:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   54 |         ext2_init([01;35m[K"/dev/hdd"[m[K, mountPoint);
-      |                   [01;35m[K^~~~~~~~~~[m[K

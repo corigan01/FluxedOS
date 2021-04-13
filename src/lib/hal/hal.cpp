@@ -25,3 +25,10 @@ void CPU::IRQ::START() {
     Vasm("pusha");
 }
 
+void CPU::enable_intr() {
+    Vasm("sti");
+}
+void CPU::disable_intr() {
+    Vasm("cli");
+}
+

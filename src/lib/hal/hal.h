@@ -17,6 +17,8 @@ namespace SYS
 
 namespace CPU
 {
+    void enable_intr();
+    void disable_intr();
     namespace GDT
     {
         
