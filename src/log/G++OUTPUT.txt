@@ -1,29 +1,19 @@
-In file included from [01m[K./lib/IO/ATA/ata.h:7[m[K,
-                 from [01m[K./lib/IO/ATA/ata.cpp:1[m[K:
-[01m[K./lib/IO/ATA/../../VGA/VGA.h:87:27:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
-   87 |     VGA::PRINT_STR(": "); \
-      |                            
-[01m[K./lib/IO/ATA/../../VGA/VGA.h:88:31:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
-   88 |     VGA::PRINT_INT(__LINE__); \
-      |                                
-<<<<<<< HEAD
-=======
-     |                                
-In file included from [01m[K./Kernel/CppKern.cpp:5[m[K:
-[01m[K./Kernel/../lib/VirtualConsole/VirtualConsole.h:10:27:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   10 |     char *  Command     = [01;35m[K""[m[K;
-      |                           [01;35m[K^~[m[K
-[01m[K./Kernel/CppKern.cpp:[m[K In constructor ‘[01m[KKernelEntry::KernelEntry()[m[K’:
-[01m[K./Kernel/CppKern.cpp:54:28:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   54 |         char* mountPoint = [01;35m[K"/"[m[K;
-      |                            [01;35m[K^~~[m[K
-[01m[K./Kernel/CppKern.cpp:55:19:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   55 |         ext2_init([01;35m[K"/dev/hdd"[m[K, mountPoint);
-      |                   [01;35m[K^~~~~~~~~~[m[K
-;
-      |                          [01;35m[K^~~[m[K
-~~~~~~~~~~~~~~~~~[m[K
+In file included from [01m[K./lib/compare/../list/list.h:5[m[K,
+                 from [01m[K./lib/compare/compare.h:2[m[K,
+                 from [01m[K./lib/compare/compare.cpp:1[m[K:
+[01m[K./lib/compare/../list/../VGA/VGA.h:87:27:[m[K [01;35m[Kwarning: [m[Kbackslash[01m[K./cpu/../lib/VGA/VGA.h:88:31:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
+   88 |     VGA::PR[01m[K./lib/VGA/VGA.cpp:[m[K In function ‘[01m[Kvoid VGA::kprintf(const char*, ...)[m[K’:
+[01m[K./lib/VGA/VGA.cpp:197:19:[m[K [01;35m[Kwarning: [m[KISO C++17 does not allow ‘[01m[Kregister[m[K’ storage class specifier [[01;35m[K-Wregister[m[K]
+  197 |     register int *[01;35m[Kvarg[m[K = (int *)&format;
+      |                   [01;35m[K^~~~[m[K
+35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   19 |     this->outs([01;35m[K"Serial Decon\n"[m[K);
+      |                [01;35m[K^~~~~~~~~~~~~~~~[m[K
+_BLOCKS])[m[K, ext2fs, inode, inode_idx, NULL, 0));
+      |                                        [01;35m[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+[01m[K./drive/fs/ext2.cpp:666:40:[m[K [01;35m[Kwarning: [m[Ktaking address of packed member of ‘[01m[Kinode[m[K’ may result in an unaligned pointer value [[01;35m[K-Waddress-of-packed-member[m[K]
+  666 |         if(!alloc_inode_metadata_block([01;35m[K&(inode->blocks[EXT2_DIRECT_BLOCKS + 1])[m[K, ext2fs, inode, inode_idx, NULL, 0));
+      |                                        [01;35m[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
 [01m[K./drive/fs/ext2.cpp:680:40:[m[K [01;35m[Kwarning: [m[Ktaking address of packed member of ‘[01m[Kinode[m[K’ may result in an unaligned pointer value [[01;35m[K-Waddress-of-packed-member[m[K]
   680 |         if(!alloc_inode_metadata_block([01;35m[K&(inode->blocks[EXT2_DIRECT_BLOCKS + 2])[m[K, ext2fs, inode, inode_idx, NULL, 0));
       |                                        [01;35m[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
->>>>>>> 3f0a09d9130f124a11d2cbf5b930e1a1ce970403

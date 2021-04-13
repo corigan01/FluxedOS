@@ -1,7 +1,7 @@
 #ifndef MULTIBOOT_H
 #define MULTIBOOT_H 
 
-#include "../lib/core/core.h"
+#include "../../lib/core/core.h"
 
 #define MB_SEARCH_SIZE                             8192
 #define MB_HEADER_ALIGN                            4
