@@ -7,33 +7,7 @@
 #include "../compare/compare.h"
 
 
-namespace STORE {
-    int __MODE_SELC = VGA::MODES::TEXT;
-    
-    int __MODS[6] = {
-        80, // size X
-        25, // size Y
 
-        VGA::COLORS::BLACK, // Backround Color
-        VGA::COLORS::WHITE, // Forground Color
-
-        0, // cusor starting pos X
-        0  // cusor starting pos Y
-    };
-
-}
-
-namespace BUFFERS {
-    struct VGA_BUF
-    {
-        VGA_VAR     Buff = VGA_PLACEMENT VGA_ADDRESS;
-        uint16      size = 0;
-        uint8       line_number = 0;
-    };
-
-    VGA_BUF DEFAULT_BUFFER = {};
-
-}
     
 
 
@@ -192,90 +166,84 @@ void VGA::PRINT_INT(int in) {
     VGA::PRINT_STR(str_num);
 }
 
-void VGA::kprintf(const char* format, ...) {
-    char **ARGS = (char **) &format;
-    register int *varg = (int *)&format;
-    int ArgLen = 0;
 
-    while (auto c = *varg++) {
-        VGA::PRINT_INT(c);
-        VGA::PRINT_CHAR('\n');
-    }
+
+void VGA::kprintf(const char* fmt, ...) {
+    va_list va;
+    va_start(va, fmt);
+    VGA::fmat(fmt, [](int ch) { VGA::PRINT_CHAR(ch); }, va);
+    va_end(va);
     
-    /*int InputVarSize = 0;
-
-    VGA::PRINT_STR("PrintF ");
-
-    char** inputText;
-    char *c;
-    {
-        int i = 0;
-        while (c = *ARGS++) {
-            do { i++; } while(c[i] != '\0'); 
-
-            if (i > 1) {
-                inputText[InputVarSize++] = c;
-            }
-        }
-    }
-    
-
-    VGA::PRINT_STR("IVS --> ");
-    VGA::PRINT_INT(InputVarSize);
-
-    char * FirstText = inputText[0];
-    int usedVarIndex = 1;
-    
-    if (InputVarSize > 0) {
-        int FirstTextSize = strlen(FirstText);
-        for (int i = 0; i < FirstTextSize; i++) {
-            if (FirstText[i] == '%') {
-                if (FirstTextSize > i) {
-                    
-                    if (usedVarIndex >= InputVarSize) {
-                        PRINT_STR("%[That VAR was not given!]");
-                        
-                    }
-                    else {
-                        switch (FirstText[i + 1])
-                        {
-                        case ' ':
-                        case '\0':
-                            PRINT_CHAR('%');
-                            i--;
-                            break;
-                        case 's':
-                            PRINT_STR(inputText[usedVarIndex++]);
-                            break;
-
-                        case 'd':
-                            char* in;
-                            itoa((int)inputText[usedVarIndex++], in);
-                            PRINT_STR(in);
-                            break;
-                        
-                        default:
-                            PRINT_STR("%[Unknown char \'");
-                            PRINT_CHAR(FirstText[i + 1]);
-                            PRINT_STR("\'!]");
-                            usedVarIndex++;
-                            break;
-                        }
-                    }
-                    i++;
-                }
-            }
-            else {
-                PRINT_CHAR(FirstText[i]);
-            }
-        }
-    }*/
-
-    PRINT_STR("\n");
-
-
 }
 
+template<typename T>
+void VGA::fmat(const char* fmt, T emit, va_list va)
+{
+    int isLong = 0;
+    auto fetchValue = [&]() -> uintmax_t {
+        int wasLong = isLong;
+        isLong = 0;
+        switch (wasLong) {
+            case 0:
+                return va_arg(va, unsigned int);
+            case 1:
+                return va_arg(va, unsigned long);
+            case 2:
+                return va_arg(va, unsigned long long);
+        }
+        return -1;
+    };
+
+    for (; *fmt != '\0'; ++fmt) {
+        if (*fmt != '%') {
+            emit(*fmt);
+            continue;
+        }
+
+        fmt++;
+        while (*fmt == 'l') {
+            ++isLong, ++fmt;
+        }
+
+        switch (*fmt) {
+            case 'c': {
+                char ch = va_arg(va, int);
+                emit(ch);
+                break;
+            }
+            case 'p': {
+                const uint32 v = va_arg(va, unsigned long);
+                VGA::PRINT_INT(v);
+                isLong = 0;
+                break;
+            }
+            case 'x': {
+                const uintmax_t v = fetchValue();
+                VGA::PRINT_INT(v);
+                break;
+            }
+            case 's': {
+                const char* s = va_arg(va, const char*);
+                while (*s != '\0')
+                    emit(*s++);
+                break;
+            }
+            case 'd': {
+                const uintmax_t v = fetchValue();
+                VGA::PRINT_INT(v);
+                break;
+            }
+            default:
+                emit('%');
+                emit(*fmt);
+                break;
+        }
+    }
+}
+
+// ---------------
+// C call layer
+// ---------------
 
 
 EXTNC_ void CLEAR_DISPLAY() {

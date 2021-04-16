@@ -12,7 +12,6 @@
 #define PIC_CMD_EOI 0x20
 
 void pic_init();
-
 void pic_send(uint8 irq);
 
 #endif // !PIC___CPU__

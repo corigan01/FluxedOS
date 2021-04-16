@@ -21,11 +21,6 @@ align 4
 	dd FLAGS
 	dd CHECKSUM
  
-
-
-
-
-
 global stublet
 extern kernal_entry
 
@@ -33,7 +28,7 @@ stublet:
     push eax
     push ebx
     call kernal_entry
-    
+    hlt
     
 
 

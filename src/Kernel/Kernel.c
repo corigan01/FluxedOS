@@ -1,8 +1,8 @@
 #include "CppKern.h"
+
 #include "../lib/VGA/cVGA.h"
-#include "../cpu/cpu.h"
 #include "System/multibootHeader.h"
-#include "../lib/core/core.h"
+
 
 
 int kernal_entry(multiboot_info_t* mbt, uint32 magic) {

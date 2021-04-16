@@ -27,7 +27,7 @@ typedef unsigned char uint8;
 typedef unsigned short uint16;
 typedef unsigned int uint32;
 typedef unsigned long long      uint64; // cant use this yet, as we are not in 64bit mode
-
+#define uintmax_t uint32
 
 // Register structs for interrupt/exception
 typedef struct registers
@@ -60,6 +60,11 @@ typedef struct registers
 // A simple backup Throw
 EXTNC_ void ThrowISR(int n);
 
+// va args
+typedef __builtin_va_list va_list;
+#define va_arg __builtin_va_arg
+#define va_start __builtin_va_start
+#define va_end __builtin_va_end
 
 // asm stuff
 #define Vasm(x) asm volatile(x);

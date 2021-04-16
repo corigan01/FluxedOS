@@ -194,6 +194,15 @@ class Vector {
 
         }
 
+        T getat(uint32 s) {
+            for (int i = 0; i < VectorSize; i++) {
+                if (h[i].DoesPoint == 1 && h[i].PointsTo == s) return h[i].Data;
+
+            }
+
+            return h[-1].Data; // we could not find that value
+        }
+
         T& operator  [](size_t s) {
             for (int i = 0; i < VectorSize; i++) {
                 if (h[i].DoesPoint == 1 && h[i].PointsTo == s) return h[i].Data;

@@ -1,13 +1,39 @@
 #!/bin/bash
 
+displayWelcome() {
+    # Display the welcome
+    tis=$(date +%s%N)
+    echo "      ________                    __   ______          "
+    echo "     / ____/ /_  ___  _____  ____/ /  / ____/___  ____ "
+    echo "    / /_  / / / / / |/_/ _ \/ __  /  / /   / __ \\/ __ \\"
+    echo "   / __/ / / /_/ />  </  __/ /_/ /  / /___/ /_/ / /_/ /"
+    echo "  /_/   /_/\__,_/_/|_|\___/\__,_/   \____/ .___/ .___/ "
+    echo "                                        /_/   /_/      "
+    echo -e "\e[0;34m-- The easy auto \e[0;31mC++\e[0;34m compiler that runs in your terminal! --"
+    echo -e "            A \e[0;35mMain Menu\e[0;34m aka \e[0;35mcorigan01\e[0;34m project!"
+    echo
+}
+
+md5sum_check() {
+    mkdir Checksum &> /dev/null
+    md5sum $(find ./ -type f -iregex '.*/.*\.\(c\|cpp\|h\|s\|S\|hpp\)$' ) &> Checksum/sum_new.check
+
+    if cmp  $"Checksum/sum_new.check" $"Checksum/sum_old.check"; then
+        cp Checksum/sum_new.check Checksum/sum_old.check 
+        return 0
+    else
+        cp Checksum/sum_new.check Checksum/sum_old.check
+        return 1
+    fi
+}
 
 addToBuild() {
     # add one to the build number
     echo "---------------- ADDING TO BUILD ----------------"
-    awk '{if ($1 == $1) print $1, $2, $3 + 1;}' Kernel/BUILD.h > temp.txt
-    cp temp.txt Kernel/BUILD.h 
+    awk '{if ($1 == $1) print $1, $2, $3 + 1;}' Kernel/BUILD.b > temp.txt
+    cp temp.txt Kernel/BUILD.b 
     rm temp.txt
-    printf "%s" "$(<Kernel/BUILD.h)"
+    printf "%s" "$(<Kernel/BUILD.b)"
     echo
 }
 
@@ -106,14 +132,14 @@ compilec() {
     mkdir log &> /dev/null
     local ts=$(date +%s%N)
 
-    if g++ -m32 -elf_i386 -std=c++2a -O -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-builtin -c  $OUTPUT -fdiagnostics-color=always  &> "log/G++OUTPUT.txt"; then
+    if g++ -m32 -elf_i386 -std=c++2a -O -fstrength-reduce -fomit-frame-pointer -O2 -finline-functions -nostdinc -fno-builtin -c  $OUTPUT -fdiagnostics-color=always  &> "log/G++OUTPUT.txt"; then
          local PFD=$((($(date +%s%N) - $ts)/1000000))
          printf "%-40s%-4s\e[0;32mDONE - $PFD ms\e[0;34m\n"  "${OUTPUT:0:40}" " "
     else
         printf "%-40s%-4s\e[0;31mFAILED\e[0;34m\n"  "${OUTPUT:0:40}" " "
         #ouput the errors
 
-        g++ -m32 -elf_i386 -std=c++2a -O -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-builtin -c  $OUTPUT -fdiagnostics-color=always  &> "log/G++OUTPUT.txt"
+        g++ -m32 -elf_i386 -std=c++2a -O -fstrength-reduce -fomit-frame-pointer -O2 -finline-functions -nostdinc -fno-builtin -c  $OUTPUT -fdiagnostics-color=always  &> "log/G++OUTPUT.txt"
         printf "%s" "$(<log/G++OUTPUT.txt)"
         echo ""
         #rm temp.txt
@@ -132,3 +158,16 @@ DisDone() {
     printf "%-40s%-4s\e[0;32mDONE\e[0;34m\n"  "${OUTPUT:0:40}" " "
 }
 
+run_build() {
+    
+    qemu-system-x86_64                          \
+        -cdrom ../ISO/FluxedOS.iso              \
+        -vga std                                \
+        -boot strict=on                         \
+        -cpu max                                \
+        -smp 1,sockets=1,cores=1,threads=1      \
+        -display gtk                            \
+        -drive file=disk.img,if=ide,format=raw  \
+        -m 500m                                 \
+        -k en-us                                
+}

@@ -44,8 +44,22 @@ Vector<string> string::split(char * c) {
 }
 
 const char * string::c_str() {
+	char * ch = "";
+	int all = 0;
 
+	for (int i = 0; i < size(); i++) {
+		ch[all++] = (char)getat(i);
+	}
+
+	return (const char *)ch;
 }
 char * string::cc_str() {
+	char * ch = "";
+	int all = 0;
 
+	for (int i = 0; i < size(); i++) {
+		ch[all++] = (char)getat(i);
+	}
+
+	return ch;
 }

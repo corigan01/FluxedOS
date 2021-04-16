@@ -9,6 +9,8 @@
 #define VGA_VAR uint16*
 #define VGA_PLACEMENT (uint16*)
 
+
+
 namespace VGA
 {
     namespace MODES {
@@ -74,8 +76,40 @@ namespace VGA
         uint16 GET();
 
     }
+
+    template<typename T>
+    void fmat(const char* fmt, T emit, va_list va);
+    
+
 } // namespace VGA
 
+namespace STORE {
+    inline int __MODE_SELC = VGA::MODES::TEXT;
+    
+    inline int __MODS[6] = {
+        80, // size X
+        25, // size Y
+
+        VGA::COLORS::BLACK, // Backround Color
+        VGA::COLORS::WHITE, // Forground Color
+
+        0, // cusor starting pos X
+        0  // cusor starting pos Y
+    };
+
+}
+
+namespace BUFFERS {
+    struct VGA_BUF
+    {
+        VGA_VAR     Buff = VGA_PLACEMENT VGA_ADDRESS;
+        uint16      size = 0;
+        uint8       line_number = 0;
+    };
+
+    inline VGA_BUF DEFAULT_BUFFER = {};
+
+}
 
 
 
@@ -111,5 +145,14 @@ namespace VGA
     s; \
     VGA::SET_COLOR(VGA::COLORS::WHITE, VGA::COLORS::BLACK);
 
+
+#define G_COLOR(s, x, y) \
+    { \
+        uint16 _b16__color_temp = STORE::__MODS[2]; \
+        uint16 _f16__color_temp = STORE::__MODS[3]; \
+        VGA::SET_COLOR(x, y); \
+        s;  \
+        VGA::SET_COLOR(_b16__color_temp, _f16__color_temp); \
+    } 
 
 #endif // !TEXT_MODE_H_

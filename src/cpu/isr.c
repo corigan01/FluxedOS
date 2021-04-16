@@ -127,7 +127,7 @@ void fault_handler(struct regs *r)
 {
     
     //init_vga(WHITE, BLACK);
-    SET_COLOR(__RED, __BLACK);
+    SET_COLOR(__BRIGHT_RED, __BLACK);
     PRINT_STR("FAULT ----");
     if (r->int_no < 32)
     {

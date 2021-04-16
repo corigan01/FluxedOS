@@ -1,6 +1,6 @@
 #include "CppKern.h"
 #include "Kernel.h"
-#include "BUILD.h"
+#include "BUILD.b"
 #include "../lib/Vector/vector.h"
 #include "../lib/VirtualConsole/VirtualConsole.h"
 #include "../cpu/cpu.h"
@@ -21,38 +21,23 @@ multiboot_info_t* mulboot;
 uint32 magicinfo = 0;
 
 
-
-
+ 
 class KernelEntry {
 public:
     Serial s;
     
     KernelEntry() {
+        SetMemory(mulboot->mem_upper);
 
 
         VGA::INIT_DISPLAY();
-
-        VGA::PRINT_STR("MultiBoot: H: ");
-        VGA::PRINT_INT(mulboot->mem_upper / 1024);
-        VGA::PRINT_STR("MB L: ");
-        VGA::PRINT_INT(mulboot->mem_lower / 1024);
-        VGA::PRINT_STR("MB --> ");
-        VGA::PRINT_STR((char*)mulboot->boot_loader_name);
-        VGA::PRINT_STR("  \n");
-        SetMemory(mulboot->mem_upper);
-
-        VGA::PRINT_STR("GFX info --> [addr: ");
-        VGA::PRINT_INT(mulboot->framebuffer_addr);
-        VGA::PRINT_STR(", w: ");
-        VGA::PRINT_INT(mulboot->framebuffer_width);
-        VGA::PRINT_STR(", h: ");
-        VGA::PRINT_INT(mulboot->framebuffer_height);
-        VGA::PRINT_STR("] \n");
-
         VGA::CURSOR::ENABLE(1 , 10);
+        VGA::SET_COLOR(VGA::COLORS::YELLOW, VGA::COLORS::BLACK);
+        
+        // kprintf can not be used in pre-init
+        G_COLOR(VGA::PRINT_STR("PRE-INIT Started\n"), VGA::COLORS::CYAN, VGA::COLORS::BLACK);
 
         VGA::SET_COLOR(VGA::COLORS::WHITE, VGA::COLORS::BLACK);
-
         isr_install();
         irq_install();
         idt_install();
@@ -60,33 +45,32 @@ public:
         pic_init();
         memoryInit(KernelEnd);
         PCI::pci_init();
-        vfs_init();
-        //ATA::ata_init();
-        
-        //print_vfstree();
-        char* mountPoint = "/";
-        ext2_init("/dev/hdd", mountPoint);
 
-
-
-        VGA::SET_COLOR(VGA::COLORS::GREEN, VGA::COLORS::BLACK);
-
-
-        VGA::PRINT_STR("\nFluxed OS ====== BUILD ");
-        VGA::PRINT_INT(BUILD);
-        VGA::PRINT_STR(" ====== Memory : ");
-        VGA::PRINT_INT(Getmemory());
-        VGA::PRINT_STR("KB ");
-        VGA::PRINT_STR(" -- KRN END: ");
-        VGA::PRINT_INT(KernelEnd / 1024);
-        VGA::PRINT_STR("KB \n");
-        
+        // kprintf can now be used 
+        G_COLOR(VGA::PRINT_STR("POST-INIT Started\n"), VGA::COLORS::CYAN, VGA::COLORS::BLACK);
         
         //enable the interrupts
         CPU::enable_intr();
+        
+        // display useful info about hardware
+        VGA::SET_COLOR(VGA::COLORS::YELLOW, VGA::COLORS::BLACK);
+        VGA::PRINT_STR("GFX info --> [addr: ");
+        VGA::PRINT_INT(mulboot->framebuffer_addr);
+        VGA::PRINT_STR(", w: ");
+        VGA::PRINT_INT(mulboot->framebuffer_width);
+        VGA::PRINT_STR(", h: ");
+        VGA::PRINT_INT(mulboot->framebuffer_height);
+        VGA::PRINT_STR(", type: ");
+        VGA::PRINT_INT(mulboot->framebuffer_type);
+        VGA::PRINT_STR("] \n");
 
+        
 
-       
+        VGA::SET_COLOR(VGA::COLORS::GREEN, VGA::COLORS::BLACK);
+
+        // welcome !
+        VGA::kprintf("\nFluxed OS ====== BUILD %d ====== Memory : %d MB -- KRN END: %d KB \n", BUILD, Getmemory() / 1024, KernelEnd);
+    
     }
 
     ~KernelEntry() {
@@ -97,8 +81,16 @@ public:
    
 
     void Test() {
+        G_COLOR(VGA::PRINT_STR("TESTING Started\n"), VGA::COLORS::CYAN, VGA::COLORS::BLACK);
         VGA::SET_COLOR(VGA::COLORS::MAGENTA, VGA::COLORS::BLACK);
-        VGA::PRINT_STR("TESTING VGA :: PF\eAA\eSI\eSL\eEE\eDD\e!");
+
+        string str;
+        str = "PASSED";
+
+        VGA::kprintf("TESTING VGA :: PF\eAA\eSI\eSL\eEE\eDD\e! , %s , %s", str.c_str(), "PASSED!");
+        
+        
+
         //VGA::PRINT_STR(R"()");
 
         //cout << "test" << "\n";
@@ -146,6 +138,7 @@ public:
     }
 
     void kern() {
+        G_COLOR(VGA::PRINT_STR("Kernel Successfully Booted\n"), VGA::COLORS::CYAN, VGA::COLORS::BLACK);
         VGA::SET_COLOR(VGA::COLORS::WHITE, VGA::COLORS::BLACK);
         VirtualConsole console;
 
