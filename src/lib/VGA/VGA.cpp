@@ -8,9 +8,6 @@
 
 
 
-    
-
-
 void VGA::INIT_DISPLAY() {
     BUFFERS::DEFAULT_BUFFER.line_number = 25;
     BUFFERS::DEFAULT_BUFFER.size = 0;

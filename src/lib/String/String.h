@@ -11,6 +11,7 @@ class string : public Vector<char> {
 public:
 
 	string();
+	string& operator= (const string& s);
 	~string();
 
 	void operator =(const char * s); 

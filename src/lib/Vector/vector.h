@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef VECTOR_H_
 #define VECTOR_H_
 
@@ -9,36 +11,36 @@
 #define VECTOR_MAX_SIZE 4096
 
 
-
-
-
-
 template <class T>
 class Vector {
     protected:
-    struct D {
-        T Data; // Data Storage
-        int PointsTo = 0; // The index this unit will point to 
-        int DoesPoint = 0; // This tells if this data has been popped 
-    };
-    D *h;
+        struct D {
+            T Data; // Data Storage
+            int PointsTo = 0; // The index this unit will point to 
+            int DoesPoint = 0; // This tells if this data has been popped 
+        };
+        D *h;
 
-    int VectorSize = 0;
-    int EndOfVector = 0;
+        int VectorSize = 0;
+        int EndOfVector = 0;
 
     public:
 
+        Vector(size_t loc) {
+            h = (D*)loc;
+        }
         Vector() {
             // make a vector of size VECTOR_MAX_SIZE (this will be the max size of a vector untill I finish paging)
-            h = (D *)malloc(sizeof(D) * VECTOR_MAX_SIZE);
+            
+            h = (D *)kmalloc(sizeof(D) * VECTOR_MAX_SIZE);
         }
 
-    ;
+        
 
-        ~Vector() {
+        //~Vector() {
             // free the vector
-            free(h);
-        }
+            //free(h);
+        //}
 
     public:
 
@@ -60,7 +62,7 @@ class Vector {
             }
 
             if (VectorSize >= VECTOR_MAX_SIZE) {
-                G_ERR(VGA::PRINT_STR("Vector at max size\n"));
+                //G_ERR(VGA::PRINT_STR("Vector at max size\n"));
                 return;
             }
 
@@ -93,54 +95,7 @@ class Vector {
             return EndOfVector;
         }
 
-        void PrintVector() {
-            int addit = 0;
-            for (int i = 0; i < VectorSize; i++ ) {
-                for (int e = 0; e < VectorSize; e++) {
-                    if (h[e].PointsTo == addit && h[e].DoesPoint == true) {
-                        //if (h[e].DoesPoint == false);
-                        /*
-                        VGA::PRINT_INT(e);
-                        VGA::PRINT_STR(" --> \'");
-                        VGA::PRINT_CHAR(h[e].Data);
-                        VGA::PRINT_STR("\' [");
-                        VGA::PRINT_INT(h[e].PointsTo);
-                        VGA::PRINT_STR(", ");
-                        VGA::PRINT_INT(h[e].DoesPoint);
-                        VGA::PRINT_STR("] \n");
-                        */
-                        addit++;
-                        break;
-                    }
-                }
-            }
-
-            ///*
-            for (int i = 0; i < VectorSize; i++ ) {
-                if (!h[i].DoesPoint) continue;
-                VGA::PRINT_INT(i);
-                VGA::PRINT_STR(" --> \'");
-                VGA::PRINT_CHAR(h[i].Data);
-                VGA::PRINT_STR("\' [");
-                VGA::PRINT_INT(h[i].PointsTo);
-                VGA::PRINT_STR(", ");
-                VGA::PRINT_INT(h[i].DoesPoint);
-                VGA::PRINT_STR("] \n");
-            }
-            //*/
-
-            /*
-            if (!h[i].DoesPoint) continue;
-                VGA::PRINT_INT(i);
-                VGA::PRINT_STR(" --> \'");
-                VGA::PRINT_CHAR(h[i].Data);
-                VGA::PRINT_STR("\' [");
-                VGA::PRINT_INT(h[i].PointsTo);
-                VGA::PRINT_STR(", ");
-                VGA::PRINT_INT(h[i].DoesPoint);
-                VGA::PRINT_STR("] \n");
-            */
-        }
+        
 
 
         void pop_at(size_t s) {
@@ -221,7 +176,7 @@ class Vector {
 
         void empty() {
             
-            memset(h, NULL, VECTOR_MAX_SIZE);
+            //memset(h, NULL, VECTOR_MAX_SIZE);
 
             VectorSize = 0;
             EndOfVector = 0;

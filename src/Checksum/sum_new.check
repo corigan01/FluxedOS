@@ -21,7 +21,7 @@ ffbe50f2c40a620417e57e5da1c5a064  ./lib/Gtree/Gtree.h
 f27157ff2595ff72385d342f0585ae6e  ./lib/VGA/cVGA.h
 a0d6f5641d16857fb895959f4698649c  ./lib/VGA/VGA.h
 792a5b57d3b906c2a943ca258ceba4fc  ./lib/VGA/VGA.cpp
-c8c77ff4ae61770de995e77f61fd7ec8  ./lib/mem/mem.cpp
+ec3f6e3803f2a239b5e7d85234984269  ./lib/mem/mem.cpp
 0dbb42192aaa602551bd9573b196e394  ./lib/mem/mem.h
 3ac8d42af956d59b140da06d8c6e0207  ./lib/VirtualConsole/VirtualConsole.h
 755a50be3a0681fff5483de4d9707cc8  ./lib/VirtualConsole/VirtualConsole.cpp

@@ -4,14 +4,14 @@ source func.sh
 
 displayWelcome
 
-if md5sum_check; then
-    printf "Recompile not needed as nothing has changed! \nRunning build...\n"
-    run_build
-
-    clean
-
-    exit 0
-fi
+#if md5sum_check; then
+#    printf "Recompile not needed as nothing has changed! \nRunning build...\n"
+#    run_build
+#
+#    clean
+#
+#    exit 0
+#fi
 
 
 

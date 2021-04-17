@@ -1,6 +1,5 @@
 #include "mem.h"
-#include "../VGA/VGA.h"
-
+#include "../Vector/vector.h"
 
 
 void memcpy(void *dest, void *src, size_t n) 
@@ -49,8 +48,10 @@ struct KernelHeap {
 
 } KenHeap;
 
+
+
 void memoryInit(uint32 end) {
-    KenHeap.Start       = end;
+    KenHeap.Start       = end + (VECTOR_MAX_SIZE * sizeof(KenPage));
     KenHeap.locPointer  = (MemoryReserve*)KenHeap.Start + 10;
     KenHeap.TotalMemory = ((Getmemory() * 1024) - ((20 * 1024) + KenHeap.Start)); // Take off 10MB for padding, and add where the kernel is loaded into memory. 
     KenHeap.UsedMemory  = 0;
@@ -72,12 +73,12 @@ void* malloc(uint32 size) {
     //VGA::PRINT_INT(size);
     //VGA::PRINT_STR(" ");
     if (!KenHeap.EnableMemoryloc) {
-        panic("Tried to loc memory, when memory is locked!");
+        //panic("Tried to loc memory, when memory is locked!");
     }
 
     if (size == 0) {
         //panic("Tried to loc 0 bytes of memory!");
-        VGA::PRINT_STR("Tried to loc 0 bytes of memory!\n");
+        //VGA::PRINT_STR("Tried to loc 0 bytes of memory!\n");
         return (char*)-1;
     }
 
@@ -98,15 +99,7 @@ void* malloc(uint32 size) {
                 pice->inuse = 1;
                 ReturnAddr = pice->start_address + 4;
 
-                /*VGA::PRINT_STR("[EXISTING] alloc (");
-                VGA::PRINT_INT(pice->start_address);
-                VGA::PRINT_STR(", ");
-                VGA::PRINT_INT(pice->end_address);
-                VGA::PRINT_STR(") [");
-                VGA::PRINT_INT(pice->used);
-                VGA::PRINT_STR("][");
-                VGA::PRINT_INT(size);
-                VGA::PRINT_STR("] Bytes!\n");*/
+                
 
                 memset((void*)pice->start_address, NULL, pice->used);
 
@@ -119,15 +112,7 @@ void* malloc(uint32 size) {
 
                 pice->used = pice->end_address - pice->start_address;
 
-                /*VGA::PRINT_STR("[RESIZE] alloc (");
-                VGA::PRINT_INT(pice->start_address);
-                VGA::PRINT_STR(", ");
-                VGA::PRINT_INT(pice->end_address);
-                VGA::PRINT_STR(") [");
-                VGA::PRINT_INT(pice->used);
-                VGA::PRINT_STR("][");
-                VGA::PRINT_INT(size);
-                VGA::PRINT_STR("] Bytes!\n");*/
+                
 
                 memset((void*)pice->start_address, NULL, pice->used);
 
@@ -160,21 +145,15 @@ void* malloc(uint32 size) {
 
         KenHeap.UsedBlocks++;
 
-        /*VGA::PRINT_STR("[NEW] alloc (");
-        VGA::PRINT_INT(pice->start_address);
-        VGA::PRINT_STR(", ");
-        VGA::PRINT_INT(pice->end_address);
-        VGA::PRINT_STR(") [");
-        VGA::PRINT_INT(pice->used);
-        VGA::PRINT_STR("] Bytes!\n");*/
+       
 
     }
     else if (!allo) {
-        G_ERR(VGA::PRINT_STR("MEMORY ERR ["));
-        G_ERR(VGA::PRINT_INT((KenHeap.TotalMemory - KenHeap.UsedMemory) - allocEnd));
-        G_ERR(VGA::PRINT_STR(", "));
-        G_ERR(VGA::PRINT_INT(size));
-        G_ERR(VGA::PRINT_STR("]\n"));
+        //G_ERR(VGA::PRINT_STR("MEMORY ERR ["));
+        //G_ERR(VGA::PRINT_INT((KenHeap.TotalMemory - KenHeap.UsedMemory) - allocEnd));
+        //G_ERR(VGA::PRINT_STR(", "));
+        //G_ERR(VGA::PRINT_INT(size));
+        //G_ERR(VGA::PRINT_STR("]\n"));
 
         return (void*)-1;
         //ThrowISR(19); // Throw "Out of Memory"
@@ -187,17 +166,72 @@ void* malloc(uint32 size) {
     return (char*)(ReturnAddr); 
 }
 
+Vector<KenPage> kenH(KenHeap.Start - (VECTOR_MAX_SIZE * sizeof(KenPage)));
+void * kmalloc(size_t size) {
+    void * memory_alloc = 0;
+
+    for (int i = 0; i < kenH.size(); i++) {
+        auto &e = kenH[i];
+
+        if (!e.inuse) {
+            if (e.mem_size == size) {
+                e.inuse = true;
+                memory_alloc = (void*)e.mem_start;
+
+                return memory_alloc;
+            }
+            else if (e.mem_size > size) {                
+                KenPage d = {
+                    e.mem_end + 1,
+                    e.mem_end,
+                    (e.mem_end - (e.mem_end + 1)),
+                    false 
+                };
+                
+                kenH.insert_at(i + 1, d);
+                
+                e.mem_end = size + e.mem_start;
+                e.mem_size = size;
+                e.inuse = true;
+
+                memory_alloc = (void*)e.mem_start;
+
+                return memory_alloc;
+            }
+
+        }
+    }
+
+    char* LastMemoryAddr = 0;
+    if (kenH.size() > 0) {
+        kenH[kenH.size()].mem_end + 1;
+    }
+    KenPage d = {
+        LastMemoryAddr,
+        LastMemoryAddr + size,
+        size,
+        true
+    };
+
+    kenH.push_back(d);
+    return memory_alloc;
+}
+
+bool kfree(void* pointer) {
+    for (int i = 0; i < kenH.size(); i++) {
+        auto e = kenH[i];
+
+        if (e.mem_start == pointer) {
+            kenH[i].inuse =  false;
+        }
+    }
+}
+
 bool free(void* pointer) {
     for (int i = 0; i < KenHeap.UsedBlocks; i++) {
         auto pice = KenHeap.locPointer + i;
         if (((uint32)pointer - 4) == pice->start_address) {
-            /*VGA::PRINT_STR("[REMOVED] alloc (");
-            VGA::PRINT_INT(pice->start_address);
-            VGA::PRINT_STR(", ");
-            VGA::PRINT_INT(pice->end_address);
-            VGA::PRINT_STR(") [");
-            VGA::PRINT_INT(pice->used);
-            VGA::PRINT_STR("] Bytes!\n");*/
+            
 
             pice->inuse = 0;
             
@@ -212,6 +246,6 @@ bool free(void* pointer) {
         }
     }
 
-    G_ERR(VGA::PRINT_STR("Could not find that memory allocated!\n"));
+    //G_ERR(VGA::PRINT_STR("Could not find that memory allocated!\n"));
     return 0;
 }
