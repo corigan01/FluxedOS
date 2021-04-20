@@ -32,7 +32,18 @@ public:
 
         VGA::INIT_DISPLAY();
         VGA::CURSOR::ENABLE(1 , 10);
+        
+
         VGA::SET_COLOR(VGA::COLORS::YELLOW, VGA::COLORS::BLACK);
+        VGA::PRINT_STR("VGA info --> [addr: ");
+        VGA::PRINT_INT(mulboot->framebuffer_addr);
+        VGA::PRINT_STR(", w: ");
+        VGA::PRINT_INT(mulboot->framebuffer_width);
+        VGA::PRINT_STR(", h: ");
+        VGA::PRINT_INT(mulboot->framebuffer_height);
+        VGA::PRINT_STR(", type: ");
+        VGA::PRINT_INT(mulboot->framebuffer_type);
+        VGA::PRINT_STR("] \n");
         
         // kprintf can not be used in pre-init
         G_COLOR(VGA::PRINT_STR("PRE-INIT Started\n"), VGA::COLORS::CYAN, VGA::COLORS::BLACK);
@@ -43,7 +54,7 @@ public:
         idt_install();
         gdt_install();
         pic_init();
-        memoryInit(KernelEnd);
+        memoryInit(20 * 1024 * 10);  
         PCI::pci_init();
 
         // kprintf can now be used 
@@ -53,16 +64,7 @@ public:
         CPU::enable_intr();
         
         // display useful info about hardware
-        VGA::SET_COLOR(VGA::COLORS::YELLOW, VGA::COLORS::BLACK);
-        VGA::PRINT_STR("GFX info --> [addr: ");
-        VGA::PRINT_INT(mulboot->framebuffer_addr);
-        VGA::PRINT_STR(", w: ");
-        VGA::PRINT_INT(mulboot->framebuffer_width);
-        VGA::PRINT_STR(", h: ");
-        VGA::PRINT_INT(mulboot->framebuffer_height);
-        VGA::PRINT_STR(", type: ");
-        VGA::PRINT_INT(mulboot->framebuffer_type);
-        VGA::PRINT_STR("] \n");
+       
 
         
 
@@ -129,10 +131,14 @@ public:
         const char * testingFinal = "hello";
         for (int i = 0; i < test.size(); i ++) {
             if (test[i] == testingFinal[i]) continue;
-            else panic("Vector Lib Failed!");
+            else G_ERR(VGA::PRINT_CHAR(test[i]));
         }
 
         G_OK;
+
+        char * mem_test = (char*)kmalloc(MEMORY::PAGE);
+        //kfree(mem_test);
+
 
         //ThrowISR(19);
     }

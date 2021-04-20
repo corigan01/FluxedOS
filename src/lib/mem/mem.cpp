@@ -62,7 +62,7 @@ void memoryInit(uint32 end) {
     VGA::PRINT_STR("MEM INIT ");
     VGA::SET_COLOR(VGA::COLORS::GREEN, VGA::COLORS::BLACK);
     VGA::PRINT_STR("OK -- ");
-    VGA::PRINT_INT(KenHeap.TotalMemory / 1024);
+    VGA::PRINT_INT(KenHeap.Start);
     VGA::PRINT_STR("KB free\n");
     VGA::SET_COLOR(VGA::COLORS::WHITE, VGA::COLORS::BLACK);
 }
@@ -168,6 +168,7 @@ void* malloc(uint32 size) {
 
 Vector<KenPage> kenH(KenHeap.Start - (VECTOR_MAX_SIZE * sizeof(KenPage)));
 void * kmalloc(size_t size) {
+   
     void * memory_alloc = 0;
 
     for (int i = 0; i < kenH.size(); i++) {
@@ -178,16 +179,20 @@ void * kmalloc(size_t size) {
                 e.inuse = true;
                 memory_alloc = (void*)e.mem_start;
 
+                VGA::kprintf("Found unused memory with exact size \n     addr: %d \n", memory_alloc);
+                
                 return memory_alloc;
             }
             else if (e.mem_size > size) {                
                 KenPage d = {
-                    e.mem_end + 1,
+                    e.mem_start + size + 1,
                     e.mem_end,
-                    (e.mem_end - (e.mem_end + 1)),
+                    (e.mem_end - (e.mem_start + size + 1)),
                     false 
                 };
                 
+                VGA::kprintf("mush shrink size of chunk %d to new %d and %d \n     addr: %d \n", e.mem_size, size, d.mem_size, memory_alloc);
+
                 kenH.insert_at(i + 1, d);
                 
                 e.mem_end = size + e.mem_start;
@@ -202,10 +207,11 @@ void * kmalloc(size_t size) {
         }
     }
 
-    char* LastMemoryAddr = 0;
+    char* LastMemoryAddr = (char*)KenHeap.Start + 1;
     if (kenH.size() > 0) {
-        kenH[kenH.size()].mem_end + 1;
+        LastMemoryAddr = (char*)(kenH[ kenH.size() - 1 ].mem_end) + 1U;
     }
+    
     KenPage d = {
         LastMemoryAddr,
         LastMemoryAddr + size,
@@ -213,8 +219,13 @@ void * kmalloc(size_t size) {
         true
     };
 
+    
+    
+
+    VGA::kprintf("Making new memory chunk with size %d \n     addr: %d \n", size, d.mem_end);
+
     kenH.push_back(d);
-    return memory_alloc;
+    return LastMemoryAddr;
 }
 
 bool kfree(void* pointer) {

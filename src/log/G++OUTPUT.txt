@@ -1,18 +1,8 @@
-In file included from [01m[K./lib/IO/Serial/../../compare/../list/list.h:5[m[K,
-                 from [01m[K./lib/IO/Serial/../../compare/compare.h:2[m[K,
-                 from [01m[K./lib/IO/Serial/serial.cpp:2[m[K:
-[01m[K./lib/IO/Serial/../../compare/../list/../VGA/VGA.h:121:27:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
-  121 |     VGA::PRINT_STR(": "); \
+In file included from [01m[K./lib/PCI/PCI.h:5[m[K,
+                 from [01m[K./lib/PCI/PCI.cpp:1[m[K:
+[01m[K./lib/PCI/../VGA/VGA.h:122:27:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
+  122 |     VGA::PRINT_STR(": "); \
       |                            
-[01m[K./lib/IO/Serial/../../compare/../list/../VGA/VGA.h:122:31:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
-  122 |     VGA::PRINT_INT(__LINE__); \
+[01m[K./lib/PCI/../VGA/VGA.h:123:31:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
+  123 |     VGA::PRINT_INT(__LINE__); \
       |                                
-[01m[K./lib/IO/Serial/serial.cpp:[m[K In destructor ‘[01m[KSerial::~Serial()[m[K’:
-[01m[K./lib/IO/Serial/serial.cpp:19:16:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   19 |     this->outs([01;35m[K"Serial Decon\n"[m[K);
-      |                [01;35m[K^~~~~~~~~~~~~~~~[m[K
-                   [01;35m[K^~[m[K
-[01m[K./lib/VirtualConsole/VirtualConsole.cpp:[m[K In member function ‘[01m[KVirtualConsoleParsed VirtualConsole::parse(char*)[m[K’:
-[01m[K./lib/VirtualConsole/VirtualConsole.cpp:242:21:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-  242 |     char *command = [01;35m[K""[m[K;
-      |                     [01;35m[K^~[m[K

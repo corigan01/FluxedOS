@@ -238,6 +238,14 @@ void VGA::fmat(const char* fmt, T emit, va_list va)
     }
 }
 
+void VGA::vinfo(const char* fmt, ...) {
+    va_list va;
+    va_start(va, fmt);
+    VGA::PRINT_STR("[ 0.000 ]: ");
+    VGA::fmat(fmt, [](int ch) { VGA::PRINT_CHAR(ch); }, va);
+    va_end(va);
+}
+
 // ---------------
 // C call layer
 // ---------------
