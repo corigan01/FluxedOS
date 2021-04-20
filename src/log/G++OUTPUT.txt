@@ -1,8 +1,24 @@
-In file included from [01m[K./lib/PCI/PCI.h:5[m[K,
-                 from [01m[K./lib/PCI/PCI.cpp:1[m[K:
-[01m[K./lib/PCI/../VGA/VGA.h:122:27:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
+In file included from [01m[K./lib/list/list.h:5[m[K,
+                 from [01m[K./lib/list/list.cpp:1[m[K:
+[01m[K./lib/list/../VGA/VGA.h:122:27:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
   122 |     VGA::PRINT_STR(": "); \
       |                            
-[01m[K./lib/PCI/../VGA/VGA.h:123:31:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
+[01m[K./lib/list/../VGA/VGA.h:123:31:[m[K [01;35m[Kwarning: [m[Kbackslash and newline separated by space
   123 |     VGA::PRINT_INT(__LINE__); \
       |                                
+ne separated by space
+  123 |     VGA::PRINT_INT(__LINE__); \
+      |                                
+m.cpp:190:32:[m[K [01;35m[Kwarning: [m[Knarrowing conversion of ‘[01m[K((e.KenPage::mem_end - (e.KenPage::mem_start + (((sizetype)size) + 1))) <unknown operator> 1)[m[K’ from ‘[01m[Kint[m[K’ to ‘[01m[Kuint32[m[K’ {aka ‘[01m[Kunsigned int[m[K’} [[01;35m[K-Wnarrowing[m[K]
+  190 |                     [01;35m[K(e.mem_end - (e.mem_start + size + 1))[m[K,
+      |                     [01;35m[K~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+[01m[K./lib/mem/mem.cpp:[m[K In function ‘[01m[Kbool kfree(void*)[m[K’:
+[01m[K./lib/mem/mem.cpp:239:1:[m[K [01;35m[Kwarning: [m[Kno return statement in function returning non-void [[01;35m[K-Wreturn-type[m[K]
+  239 | [01;35m[K}[m[K
+      | [01;35m[K^[m[K
+In file included from [01m[K./lib/mem/mem.cpp:2[m[K:
+./lib/mem/../Vector/vector.h: In instantiation of ‘[01m[KVector<T>::Vector(size_t) [with T = KenPage; size_t = short unsigned int][m[K’:
+[01m[K./lib/mem/mem.cpp:169:73:[m[K   required from here
+[01m[K./lib/mem/../Vector/vector.h:30:17:[m[K [01;35m[Kwarning: [m[Kcast to pointer from integer of different size [[01;35m[K-Wint-to-pointer-cast[m[K]
+   30 |             h = [01;35m[K(D*)loc[m[K;
+      |                 [01;35m[K^~~~~~~[m[K
