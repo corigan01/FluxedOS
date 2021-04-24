@@ -1,5 +1,0 @@
-./bios.s:50: error: symbol `asm_gdt_ptr' undefined
-./bios.s:53: error: symbol `asm_idt_ptr' undefined
-./bios.s:56: error: label `protected_mode_16' changed during code generation [-w+error=label-redef-late]
-./bios.s:72: error: label `real_mode_16' changed during code generation [-w+error=label-redef-late]
-./bios.s:99: error: symbol `temp_esp' undefined

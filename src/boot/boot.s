@@ -11,7 +11,6 @@ start:
 ; Declare constants for the multiboot header.
 MBALIGN  equ  1 << 0            ; align loaded modules on page boundaries
 MEMINFO  equ  1 << 1            ; provide memory map
-
 FLAGS    equ  MBALIGN | MEMINFO ; this is the Multiboot 'flag' field
 MAGIC    equ  0x1BADB002        ; 'magic number' lets bootloader find the header
 CHECKSUM equ -(MAGIC + FLAGS)   ; checksum of above, to prove we are multiboot
@@ -35,5 +34,5 @@ stublet:
 
 
 SECTION .bss
-    resb 1024*1024               ; This reserves 8KBytes of memory here
+    resb 1024*1024               ; This reserves memory here
 _sys_stack:

@@ -11,7 +11,6 @@
 #include "../lib/VGA/VGA.h"
 #include "../lib/IO/ATA/ata.h"
 #include "../lib/PCI/PCI.h"
-#include "../drive/drive.h"
 #include "../lib/IO/Serial/serial.h"
 #include "../lib/String/String.h"
 
@@ -45,8 +44,7 @@ public:
         VGA::PRINT_INT(mulboot->framebuffer_type);
         VGA::PRINT_STR("] \n");
         
-        // kprintf can not be used in pre-init
-        G_COLOR(VGA::PRINT_STR("PRE-INIT Started\n"), VGA::COLORS::CYAN, VGA::COLORS::BLACK);
+        
 
         VGA::SET_COLOR(VGA::COLORS::WHITE, VGA::COLORS::BLACK);
         isr_install();
@@ -57,16 +55,13 @@ public:
         memoryInit(20 * 1024 * 10);  
         PCI::pci_init();
 
-        // kprintf can now be used 
-        G_COLOR(VGA::PRINT_STR("POST-INIT Started\n"), VGA::COLORS::CYAN, VGA::COLORS::BLACK);
+        
         
         //enable the interrupts
         CPU::enable_intr();
         
         // display useful info about hardware
-       
-
-        
+        VGA::kprintf("Hardware: %d MB, %dx%d VGA, %d Flags \n", Getmemory() / 1024, mulboot->framebuffer_width, mulboot->framebuffer_height,   mulboot->flags);
 
         VGA::SET_COLOR(VGA::COLORS::GREEN, VGA::COLORS::BLACK);
 
@@ -89,7 +84,7 @@ public:
         string str;
         str = "PASSED";
 
-        VGA::kprintf("TESTING VGA :: PF\eAA\eSI\eSL\eEE\eDD\e! , %s , %s", str.c_str(), "PASSED!");
+        VGA::kprintf("TESTING VGA :: PF\eAA\eSI\eSL\eEE\eDD\e! , %s , %s", "PASSED", "PASSED!");
         
         
 
@@ -137,10 +132,16 @@ public:
         G_OK;
 
         char * mem_test = (char*)kmalloc(MEMORY::PAGE);
+        char * mem_test1 = (char*)kmalloc(MEMORY::PAGE);
+        char * mem_test2 = (char*)kmalloc(MEMORY::PAGE);
+        char * mem_test3 = (char*)kmalloc(MEMORY::PAGE);
+
+        //kfree(mem_test);
         //kfree(mem_test);
 
 
         //ThrowISR(19);
+        KDEBUG;
     }
 
     void kern() {

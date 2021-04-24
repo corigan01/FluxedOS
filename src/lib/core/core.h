@@ -27,7 +27,15 @@ typedef unsigned char uint8;
 typedef unsigned short uint16;
 typedef unsigned int uint32;
 typedef unsigned long long      uint64; // cant use this yet, as we are not in 64bit mode
-#define uintmax_t uint32
+typedef uint32 uintmax_t;
+
+typedef uint8 ui8;
+typedef uint16 ui16;
+typedef uint32 ui32;
+
+typedef char i8;
+typedef short i16;
+typedef int i32;
 
 // Register structs for interrupt/exception
 typedef struct registers

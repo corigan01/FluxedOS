@@ -27,12 +27,12 @@ class Vector {
     public:
 
         Vector(size_t loc) {
-            h = (D*)loc;
+            
         }
         Vector() {
             // make a vector of size VECTOR_MAX_SIZE (this will be the max size of a vector untill I finish paging)
             
-            h = (D *)kmalloc(sizeof(D) * VECTOR_MAX_SIZE);
+            h = (D *)malloc(sizeof(D) * VECTOR_MAX_SIZE);
         }
 
         
@@ -45,7 +45,7 @@ class Vector {
     public:
 
         void push_back(T data) {
-
+            
             for (int i = 0; i < VectorSize ; i++) {
                 if (h[i].DoesPoint == 0) {
 

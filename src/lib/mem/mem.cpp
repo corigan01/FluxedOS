@@ -166,7 +166,7 @@ void* malloc(uint32 size) {
     return (char*)(ReturnAddr); 
 }
 
-Vector<KenPage> kenH(KenHeap.Start - (VECTOR_MAX_SIZE * sizeof(KenPage)));
+Vector<KenPage> kenH;
 void * kmalloc(size_t size) {
    
     void * memory_alloc = 0;
@@ -219,16 +219,17 @@ void * kmalloc(size_t size) {
         true
     };
 
-    
-    
-
+    KDEBUG;
     VGA::kprintf("Making new memory chunk with size %d \n     addr: %d \n", size, d.mem_end);
 
     kenH.push_back(d);
+
+    KDEBUG;
     return LastMemoryAddr;
 }
 
 bool kfree(void* pointer) {
+    VGA::kprintf("Vector size %d \n", kenH.size());
     for (int i = 0; i < kenH.size(); i++) {
         auto e = kenH[i];
 
