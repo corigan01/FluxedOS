@@ -1,5 +1,26 @@
-#ifndef KERNAL_CORE
-#define KERNAL_CORE
+/*
+ *       ______            __ __                 __
+ *      / __/ /_ ____ __  / //_/__ _______  ___ / /
+ *     / _// / // /\ \ / / ,< / -_) __/ _ \/ -_) / 
+ *    /_/ /_/\_,_//_\_\ /_/|_|\__/_/ /_//_/\__/_/  
+ *    
+ *   copyright (c) 2021 Gavin Kellam (aka corigan01)
+ *   
+ *   Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
+ *   to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *   and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ *   The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ *   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
+ *   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                                              
+ *  
+ *   
+ */
+
+#ifndef KERNEL__H___CORE
+#define KERNEL__H___CORE
 
 // info magic
 #define MB_INFO_MEM                             0x00000001
@@ -17,25 +38,22 @@
 #define MB_INFO_FRAMEBUFFER                     0x00001000
 
 // types
-typedef unsigned char uint8_t;
-typedef unsigned short uint16_t;
-typedef unsigned int uint32_t;
-typedef uint16_t size_t;
+typedef unsigned char       uint8_t;
+typedef unsigned short      uint16_t;
+typedef unsigned int        uint32_t;
+typedef uint16_t            size_t;
 
 
-typedef unsigned char uint8;
-typedef unsigned short uint16;
-typedef unsigned int uint32;
-typedef unsigned long long      uint64; // cant use this yet, as we are not in 64bit mode
-typedef uint32 uintmax_t;
+typedef unsigned char       uint8;
+typedef unsigned short      uint16;
+typedef unsigned int        uint32;
+typedef unsigned long long  uint64;
+typedef uint32              uintmax_t;
 
-typedef uint8 ui8;
-typedef uint16 ui16;
-typedef uint32 ui32;
+typedef uint8               i8;
+typedef uint16              i16;
+typedef uint32              i32;
 
-typedef char i8;
-typedef short i16;
-typedef int i32;
 
 // Register structs for interrupt/exception
 typedef struct registers
@@ -65,9 +83,6 @@ typedef struct registers
 #define MacroStrCon(x) #x
 
 
-// A simple backup Throw
-EXTNC_ void ThrowISR(int n);
-
 // va args
 typedef __builtin_va_list va_list;
 #define va_arg __builtin_va_arg
@@ -80,4 +95,4 @@ typedef __builtin_va_list va_list;
 #define HALT while(1) { NO_INSTRUCTION; } 
 
 
-#endif // !KERNAL_CORE
+#endif // !KERNEL__H___CORE
