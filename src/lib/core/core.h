@@ -92,7 +92,8 @@ typedef __builtin_va_list va_list;
 // asm stuff
 #define Vasm(x) asm volatile(x);
 #define NO_INSTRUCTION Vasm("nop");
-#define HALT while(1) { NO_INSTRUCTION; } 
+#define HALT Vasm("hlt");
+
 
 
 #endif // !KERNEL__H___CORE

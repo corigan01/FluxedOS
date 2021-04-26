@@ -20,10 +20,19 @@
  */
 
 
-#include "../boot/kernel.h"
+#include "../boot/boot.h"
+#include "../System/TextOutput/TextOutput.hpp"
+#include "../System/Power/Power.hpp"
+
+using namespace System; 
+using namespace System::Display;
 
 int kmain(multiboot_info_t* mbt, uint32 magic) {
 
-    for(;;);
-    return 0;
+    Display::init(Display::TextMode::VGA((void*)mbt->framebuffer_addr));
+
+    
+
+    while(1);
+    Power::shutdown();
 }

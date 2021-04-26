@@ -29,22 +29,24 @@ namespace System
     {
         namespace Serial
         {
-            enum SerialMode {
+            enum SerialDevice {
                 COM_1 = 0,
                 COM_2,
                 COM_3,
-                COM_4
+                COM_4,
+                COM_NULL
             };
 
 
-            void init(SerialMode mode);
+            SerialDevice init(SerialDevice mode);
 
-            void outChar(char c);
-            void outString(char * s);
+            void outChar(SerialDevice st, char c);
+            void outString(SerialDevice st, char * s);
 
-            int inByte();
-            int received();
-            int transmitEmpty();
+            int inByte(SerialDevice st);
+            int received(SerialDevice st);
+            int transmitEmpty(SerialDevice st);
+            
             
 
         }

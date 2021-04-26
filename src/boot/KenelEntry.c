@@ -21,10 +21,11 @@
 
 
 
-#include "kernel.h"
+#include "boot.h"
 
 int kernal_entry(multiboot_info_t* mbt, uint32 magic) {
 
     kmain(mbt, magic);
+
 
 }

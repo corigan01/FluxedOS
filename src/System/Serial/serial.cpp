@@ -26,11 +26,8 @@
 using namespace System::IO;
 using namespace System::IO;
 
-typedef i8 SerialType; SerialType st = 0;
 
-void Serial::init(Serial::SerialMode mode) {
-    st = mode;
-
+Serial::SerialDevice Serial::init(Serial::SerialDevice mode) {
     Port::byte_out(mode + 1, 0x00);
     Port::byte_out(mode + 3, 0x80);
     Port::byte_out(mode + 0, 0x03);
@@ -38,27 +35,29 @@ void Serial::init(Serial::SerialMode mode) {
     Port::byte_out(mode + 3, 0x03);
     Port::byte_out(mode + 2, 0xC7);
     Port::byte_out(mode + 4, 0x0B);
+
+    return mode;
 }
 
-void Serial::outChar(char c) {
-    while (Serial::transmitEmpty() == 0);
+void Serial::outChar(Serial::SerialDevice st, char c) {
+    while (Serial::transmitEmpty(st) == 0);
     Port::byte_out(st , c);
 }
-void Serial::outString(char * s) {
+void Serial::outString(Serial::SerialDevice st, char * s) {
     for (int i = 0; i < strlen(s); i++) {
-        while (Serial::transmitEmpty() == 0);
+        while (Serial::transmitEmpty(st) == 0);
         Port::byte_out(st , s[i]);
     }
 }
 
-int Serial::inByte() {
-    while (received() == 0);
+int Serial::inByte(Serial::SerialDevice st) {
+    while (received(st) == 0);
     return Port::byte_in(st);
 }
-int Serial::received() {
+int Serial::received(Serial::SerialDevice st) {
     return Port::byte_in(st + 5) & 1;
 }
-int Serial::transmitEmpty() {
+int Serial::transmitEmpty(Serial::SerialDevice st) {
     return Port::byte_in(st + 5) & 0x20;
 }
             
