@@ -23,16 +23,16 @@
 #include "Power.hpp"
 #include "../Port/port.hpp"
 
-using namespace System::Power;
+using namespace System;
 using namespace System::IO;
 
-void shutdown() {
+void Power::shutdown() {
     Port::byte_out(0xB004, 0x2000);
-    Port::byte_out(0x604, 0x2000);
+    Port::byte_out(0x604,  0x2000);
     Port::byte_out(0x4004, 0x3400);
 }
 
-void restart() {
+void Power::restart() {
     i8 good = 0x02;
     while (good & 0x02)
         good = Port::byte_in(0x64);
@@ -40,7 +40,7 @@ void restart() {
     HALT;
 }
 
-void hold() {
+void Power::hold() {
 
     for(;;) { NO_INSTRUCTION };
 

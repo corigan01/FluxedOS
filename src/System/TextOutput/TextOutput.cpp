@@ -21,46 +21,142 @@
 
 #include "TextOutput.hpp" 
  
-using namespace System::Display;
 using namespace System::Display::TextMode;
+using namespace System;
 
-struct TextModeOut {
-    i16 lineNumber;
-    i32 size;
-    void* buffer;
-} t_mode;
+Display::TextMode::VGA v; 
 
-template <class T>
-void init(T mode, System::IO::Serial::SerialDevice device = System::IO::Serial::COM_1) {
-
+void Display::init(void* displayPointer, Display::DisplayType::DisplayMode disp) {
+    v.init(displayPointer);
+    v.print_char('\n');
+}
+        
+void Display::clear_screen() {
+    v.clear_screen();
+}
+void Display::clear_line(i32 lineNumber) {
+    v.clear_line(lineNumber);
+}
+void Display::new_line() {
+    v.print_char('\n');
 }
 
-void clear_screen() {
-
+void Display::kprintf(const char* str, ...) {
+    //
 }
-void clear_line(i32 lineNumber) {
-
-}
-void new_line() {
-
-}
-
-void kprintf(const char* str, ...) {
-
-}
-void kprint(char* str) {
-
+void Display::kprint(const char* str) {
+    
+   for (int i = 0; i < strlen(str); i++) {
+       v.print_char(str[i]);
+   }
 }
 
 
-void VGA::print_char(char c, void* buffer) {
 
+void VGA::setcolor(COLOR::__VGA__COLORS f, COLOR::__VGA__COLORS b) {
+    FColor = f;
+    BColor = b;
+}
+
+uint16_t VGA::entry(char ch, i8 f, i8 b) {
+    i16 ax = 0;
+    i8 ah = 0, al = 0;
+
+    ah = b;
+    ah <<= 4;
+    ah |= f;
+    ax = ah;
+    ax <<= 8;
+    al = ch;
+    ax |= al;
+
+    return ax;
+}
+
+void VGA::print_char(char c) {
+    switch (c)
+    {
+    case '\n':
+            if (lineNumber > 24 || true) {
+                
+                uint16 * VBUF;
+                int bufS = 80*80;
+                memcpy(VBUF, internalBuffer, bufS);
+
+                int VGA_INT = 0;
+                for (int i = 80 ; i < bufS - 80*2 ; i++) {
+                    internalBuffer[VGA_INT++] = VBUF[i];
+                }
+
+                lineNumber = 24;
+                BufferSize = 80*24;
+
+                for (int i = 0; i < 80; i++) {
+                    internalBuffer[BufferSize + i] = entry(' ', FColor, BColor);
+                }
+            }
+            else {
+                BufferSize = 80 * lineNumber;
+                lineNumber++;
+                //incLine(); 
+            }
+
+            
+        break;
+
+    case '\r':
+            lineNumber--;
+            print_char('\n');
+        break;
+
+    case '\t':
+            for (int i = 0; i < 5; i ++) {
+                print_char(' ');
+            }
+        break;
+
+    case '\e':
+        BufferSize--;
+        internalBuffer[BufferSize] = entry(' ', FColor, BColor);
+        break;
+
+    default:
+        internalBuffer[BufferSize] = this->entry(c, FColor, BColor);
+        BufferSize++;
+        
+
+        //break;
+    }
+
+    //VGA::CURSOR::UPDATE(BufferSize - (lineNumber * 80), lineNumber + 0);
 }
 void VGA::clear_screen() {
+    auto reset = [this]() {
+        uint16 MaxSize = 80 * 25; // TODO: CHANGE THIS!!
+        for(int i = 0; i < MaxSize; i++){
+            internalBuffer[i] = entry(NULL, FColor, BColor);
+        }
+        lineNumber = 0;
+        BufferSize = 0;
+    };
+
+    reset();
+
+    for (int i = 0; i < BufferSize; i++) {
+        for (int e = 0; e < 80; e++) {
+            print_char(' ');
+        }
+    }
+
+    reset();
+    print_char('\n');
+
 
 }
 void VGA::clear_line(i32 linenumber) {
-    
+    for (int i = linenumber * 80; i < 80; i ++) {
+        internalBuffer[i] = entry(' ', NULL, NULL);
+    }
 }
 
 

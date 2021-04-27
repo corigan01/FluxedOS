@@ -35,7 +35,12 @@ uint32  digit_count (int num);
 
 void    itoa        (int num, char *number);
 void    strcat      (void *dest,const void *src);
+void    memcpy      (void *dest, void *src, size_t n);
+
+void*   memset      (void *dst,char val, int n);
+
 
 char *  strstr      (const char *in, const char *str);
 char *  strdup      (const char * src);
 char *  strsep      (char **stringp, const char *delim);
+

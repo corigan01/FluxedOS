@@ -25,7 +25,7 @@
 #include "../lib/core/core.h"
 #include "../lib/multiboot/multiboot.h"
 
-EXTNC_ int kmain(multiboot_info_t* mbt, uint32 magic);
+EXTNC_ int kmain(multiboot_info_t* mbt, i32 magic);
 
 
 #endif

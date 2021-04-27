@@ -1,10 +1,12 @@
-[01m[K./System/Power/Power.cpp:[m[K In function ‘[01m[Kvoid shutdown()[m[K’:
-[01m[K./System/Power/Power.cpp:30:28:[m[K [01;35m[Kwarning: [m[Kunsigned conversion from ‘[01m[Kint[m[K’ to ‘[01m[Kunsigned char[m[K’ changes value from ‘[01m[K8192[m[K’ to ‘[01m[K0[m[K’ [[01;35m[K-Woverflow[m[K]
-   30 |     Port::byte_out(0xB004, [01;35m[K0x2000[m[K);
-      |                            [01;35m[K^~~~~~[m[K
-[01m[K./System/Power/Power.cpp:31:27:[m[K [01;35m[Kwarning: [m[Kunsigned conversion from ‘[01m[Kint[m[K’ to ‘[01m[Kunsigned char[m[K’ changes value from ‘[01m[K8192[m[K’ to ‘[01m[K0[m[K’ [[01;35m[K-Woverflow[m[K]
-   31 |     Port::byte_out(0x604, [01;35m[K0x2000[m[K);
-      |                           [01;35m[K^~~~~~[m[K
-[01m[K./System/Power/Power.cpp:32:28:[m[K [01;35m[Kwarning: [m[Kunsigned conversion from ‘[01m[Kint[m[K’ to ‘[01m[Kunsigned char[m[K’ changes value from ‘[01m[K13312[m[K’ to ‘[01m[K0[m[K’ [[01;35m[K-Woverflow[m[K]
-   32 |     Port::byte_out(0x4004, [01;35m[K0x3400[m[K);
-      |                            [01;35m[K^~~~~~[m[K
+In file included from [01m[K./Kernel/kernel.cpp:24[m[K:
+[01m[K./Kernel/../System/TextOutput/TextOutput.hpp:[m[K In member function ‘[01m[KSystem::Display::kout& System::Display::kout::operator<<(const char&)[m[K’:
+[01m[K./Kernel/../System/TextOutput/TextOutput.hpp:56:35:[m[K [01;35m[Kwarning: [m[Kcast to pointer from integer of different size [[01;35m[K-Wint-to-pointer-cast[m[K]
+   56 |                     kprint((char*)[01;35m[Kmsg[m[K);
+      |                                   [01;35m[K^~~[m[K
+[01m[K./Kernel/kernel.cpp:[m[K In function ‘[01m[Kint kmain(multiboot_info_t*, i32)[m[K’:
+[01m[K./Kernel/kernel.cpp:35:12:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   35 |     kprint([01;35m[K"Flux Kernel started! \n"[m[K);
+      |            [01;35m[K^~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+[01m[K./Kernel/kernel.cpp:43:1:[m[K [01;35m[Kwarning: [m[Kno return statement in function returning non-void [[01;35m[K-Wreturn-type[m[K]
+   43 | [01;35m[K}[m[K
+      | [01;35m[K^[m[K

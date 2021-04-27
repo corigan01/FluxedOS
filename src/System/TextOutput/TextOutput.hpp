@@ -23,33 +23,51 @@
 
 #include "../../lib/core/core.h"
 #include "../Serial/serial.hpp"
+#include "../../lib/StanderdOperations/Operations.hpp"
 namespace System
 {
     namespace Display
     {
         // General output, this is so you can use any output mode and keep the basic output functions
         
-        
-        // inits the defalut display output, can be changed multiple times!
-        template <class T>
-        void init(T mode, System::IO::Serial::SerialDevice device = System::IO::Serial::COM_1) {
-
+        // TODO: Fix this with better solution
+        namespace DisplayType
+        {
+            enum DisplayMode
+            {
+                TEXT = 0,
+                GRAPHICS,
+            };
         }
+        
+        void init(void* displayPointer, DisplayType::DisplayMode disp);
         
         void clear_screen();
         void clear_line(i32 lineNumber);
         void new_line();
         
         void kprintf(const char* str, ...);
-        void kprint(char* str);
+        void kprint(const char* str);
 
+        struct kout {
+            public:
+                kout& operator<<(const char*& msg)
+                {
+                    kprint(msg);
+                    return *this;
+                }
 
+                friend kout& log(kout& kout)
+                {
+                    return kout;
+                }
+        };
         
 
         // text mode output
         namespace TextMode {
             
-            namespace colors {
+            namespace COLOR {
                 enum __VGA__COLORS {
                     BLACK = 0,
                     BLUE,
@@ -75,23 +93,45 @@ namespace System
                 public:
 
                     VGA (void* buffer) {
-                        internalBuffer = buffer;
+                        internalBuffer = (i16*)buffer;
                         BufferSize = 0;
                         lineNumber = 0;
 
-                        clear_screen();
+                        //clear_screen();
+
+                        print_char('*');
+                        print_char('\n');
                     }
 
+                    VGA() {};
+
                     // sets the forground and backround colors
-                    void setcolor(colors::__VGA__COLORS f, colors::__VGA__COLORS b);
-                    void print_char(char c, void* buffer);
+                    void init(void* buffer) {
+                        internalBuffer = (i16*)buffer;
+                        BufferSize = 0;
+                        lineNumber = 0;
+
+                        //clear_screen();
+
+                        print_char('*');
+                        print_char('\n');
+                    }
+
+                    void setcolor(COLOR::__VGA__COLORS f, COLOR::__VGA__COLORS b);
+                    void print_char(char c);
                     void clear_screen();
                     void clear_line(i32 linenumber);
 
                 private:
-                    void* internalBuffer;
+                    i16* internalBuffer;
                     int BufferSize = 0;
                     int lineNumber = 0;
+
+                    i8 FColor = COLOR::WHITE;
+                    i8 BColor = COLOR::BLACK; 
+
+                    i16 entry(char ch, i8 f, i8 b);
+
 
             };
             

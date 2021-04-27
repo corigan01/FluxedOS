@@ -27,12 +27,17 @@
 using namespace System; 
 using namespace System::Display;
 
-int kmain(multiboot_info_t* mbt, uint32 magic) {
+int kmain(multiboot_info_t* mbt, i32 magic) {
 
-    Display::init(Display::TextMode::VGA((void*)mbt->framebuffer_addr));
+    // Display init
+    Display::init((void*)mbt->framebuffer_addr, DisplayType::TEXT);
 
-    
+    kprint("Flux Kernel started! \n");
 
-    while(1);
-    Power::shutdown();
+    //kout k;
+
+    //kout(k) << ' ';
+
+
+    Power::hold();
 }

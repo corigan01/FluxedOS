@@ -185,3 +185,19 @@ char *strsep(char **stringp, const char *delim) {
         } while (sc != 0);
     }
 }
+
+void memcpy(void *dest, void *src, size_t n) 
+{ 
+   char *csrc = (char *)src; 
+   char *cdest = (char *)dest; 
+  
+   for (int i=0; i<n; i++) 
+       cdest[i] = csrc[i]; 
+} 
+
+void *memset(void *dst,char val, int n)
+{
+    char *temp = (char*)dst;
+    for(;n != 0; n--) *temp++ = val;
+    return dst;
+}
