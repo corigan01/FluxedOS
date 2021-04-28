@@ -43,4 +43,5 @@ void*   memset      (void *dst,char val, int n);
 char *  strstr      (const char *in, const char *str);
 char *  strdup      (const char * src);
 char *  strsep      (char **stringp, const char *delim);
+char *  itos        (int i);
 

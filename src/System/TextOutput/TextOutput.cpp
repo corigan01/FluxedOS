@@ -24,32 +24,6 @@
 using namespace System::Display::TextMode;
 using namespace System;
 
-Display::TextMode::VGA v; 
-
-void Display::init(void* displayPointer, Display::DisplayType::DisplayMode disp) {
-    v.init(displayPointer);
-    v.print_char('\n');
-}
-        
-void Display::clear_screen() {
-    v.clear_screen();
-}
-void Display::clear_line(i32 lineNumber) {
-    v.clear_line(lineNumber);
-}
-void Display::new_line() {
-    v.print_char('\n');
-}
-
-void Display::kprintf(const char* str, ...) {
-    //
-}
-void Display::kprint(const char* str) {
-    
-   for (int i = 0; i < strlen(str); i++) {
-       v.print_char(str[i]);
-   }
-}
 
 
 

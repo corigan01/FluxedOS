@@ -29,38 +29,39 @@ namespace System
     namespace Display
     {
         // General output, this is so you can use any output mode and keep the basic output functions
-        
-        // TODO: Fix this with better solution
-        namespace DisplayType
-        {
-            enum DisplayMode
-            {
-                TEXT = 0,
-                GRAPHICS,
-            };
-        }
-        
-        void init(void* displayPointer, DisplayType::DisplayMode disp);
-        
-        void clear_screen();
-        void clear_line(i32 lineNumber);
-        void new_line();
-        
-        void kprintf(const char* str, ...);
-        void kprint(const char* str);
-
-        struct kout {
+        #define kout System::Display::SerialLog(__FUNCTION__, __FILE__, __LINE__)
+        #define endl "\n"
+        class SerialLog {
             public:
-                kout& operator<<(const char*& msg)
-                {
-                    kprint(msg);
-                    return *this;
-                }
+            
+            SerialLog(const char * function, const char * file, int line) {
+                System::IO::Serial::init(System::IO::Serial::COM_1);
 
-                friend kout& log(kout& kout)
-                {
-                    return kout;
-                }
+                System::IO::Serial::outString(System::IO::Serial::COM_1, "[");
+                System::IO::Serial::outString(System::IO::Serial::COM_1, (char*)file);
+                System::IO::Serial::outString(System::IO::Serial::COM_1, " in ");
+                System::IO::Serial::outString(System::IO::Serial::COM_1, (char*)function);
+                System::IO::Serial::outString(System::IO::Serial::COM_1, "] --> ");
+            }
+
+            template <class T> 
+            SerialLog &operator<<(const T &v) {
+                
+                System::IO::Serial::outString(System::IO::Serial::COM_1, (char*)v);
+                return *this;
+            }
+        };
+        class tty {
+           public:
+
+            tty() { init( (void*) 0xB8000 ); };
+            tty(void* buffer) { init(buffer); };
+            ~tty();
+
+            virtual void init(void* buffer) {}; 
+            virtual void print_char() {};
+            virtual void print_str(const char * str) {};
+            virtual void printf(const char *str, ...) {};
         };
         
 
@@ -89,7 +90,7 @@ namespace System
             }
             
 
-            class VGA {
+            class VGA : public tty{
                 public:
 
                     VGA (void* buffer) {
@@ -119,6 +120,8 @@ namespace System
 
                     void setcolor(COLOR::__VGA__COLORS f, COLOR::__VGA__COLORS b);
                     void print_char(char c);
+                    void print_str(const char* str);
+                    void printf(const char* str);
                     void clear_screen();
                     void clear_line(i32 linenumber);
 

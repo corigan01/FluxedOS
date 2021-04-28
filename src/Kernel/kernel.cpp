@@ -23,21 +23,17 @@
 #include "../boot/boot.h"
 #include "../System/TextOutput/TextOutput.hpp"
 #include "../System/Power/Power.hpp"
+#include "../lib/StanderdOperations/Operations.hpp"
 
 using namespace System; 
+using namespace System::IO;
 using namespace System::Display;
 
 int kmain(multiboot_info_t* mbt, i32 magic) {
 
-    // Display init
-    Display::init((void*)mbt->framebuffer_addr, DisplayType::TEXT);
-
-    kprint("Flux Kernel started! \n");
-
-    //kout k;
-
-    //kout(k) << ' ';
-
+    kout << "test" << " : " << "test2" << endl;
+    
+    
 
     Power::hold();
 }

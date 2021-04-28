@@ -30,7 +30,7 @@ namespace System
         namespace Serial
         {
             enum SerialDevice {
-                COM_1 = 0,
+                COM_1 = 0x3f8,
                 COM_2,
                 COM_3,
                 COM_4,

@@ -169,5 +169,6 @@ run_build() {
         -display gtk                            \
         -drive file=disk.img,if=ide,format=raw  \
         -m 500m                                 \
-        -k en-us                                
+        -k en-us                                \
+        -serial stdio
 }
