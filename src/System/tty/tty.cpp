@@ -19,26 +19,37 @@
  *   
  */
 
+#include "tty.hpp"
+#include "../kout/kout.hpp"
+#include "../Serial/serial.hpp"
+#include "../TextOutput/TextOutput.hpp"
 
-#include "../boot/boot.h"
-#include "../System/TextOutput/TextOutput.hpp"
-#include "../System/Power/Power.hpp"
-#include "../lib/StanderdOperations/Operations.hpp"
-#include "../System/kout/kout.hpp"
-#include "../System/tty/tty.hpp"
-
-using namespace System; 
 using namespace System::IO;
 using namespace System::Display;
 
-int kmain(multiboot_info_t* mbt, i32 magic) {
-    kout << "Flux Kernel Started..." << endl;                           // tell the console we started the kernel
+static i8 ttyNumber = 0;
 
-    auto VGA_DRIVER = TextMode::VGA((void*)mbt->framebuffer_addr);      // tell VGA what addr the framebuffer is at
-    tty* KernelTTY = &VGA_DRIVER;                                       // bind the tty to the display driver
-    
-    KernelTTY->print_str("Kernel Started!\n");                          // Tell the user we started the kernel
-    KernelTTY->print_str("");
+tty::tty() { 
+    ttyNumber++;
 
-    Power::hold();
+    Serial::init(Serial::COM_1); // inits the class so we know we setup COM_1   
+    kout << "new tty" << itos(ttyNumber) << " Started!" << endl; 
+    //this->print_str("+++++ TTY STARTED +++++\n");
+}
+
+tty::~tty() {
+
+}
+
+void tty::init(void* buffer) {
+    // inits the virtual class def
+} 
+void tty::print_char(char c) {
+    Serial::outChar(Serial::COM_1, c);
+}
+void tty::print_str(const char * str) {
+    Serial::outString(Serial::COM_1, (char*)str);
+}
+void tty::printf(const char *str, ...) {
+    ; // do this later when we have ints
 }

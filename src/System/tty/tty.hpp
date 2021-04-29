@@ -19,26 +19,26 @@
  *   
  */
 
+#pragma once
 
-#include "../boot/boot.h"
-#include "../System/TextOutput/TextOutput.hpp"
-#include "../System/Power/Power.hpp"
-#include "../lib/StanderdOperations/Operations.hpp"
-#include "../System/kout/kout.hpp"
-#include "../System/tty/tty.hpp"
+#include "../../lib/core/core.h"
 
-using namespace System; 
-using namespace System::IO;
-using namespace System::Display;
+namespace System
+{
+    namespace Display 
+    {
+        class tty {
+            public:
 
-int kmain(multiboot_info_t* mbt, i32 magic) {
-    kout << "Flux Kernel Started..." << endl;                           // tell the console we started the kernel
+            tty();
+            ~tty();
 
-    auto VGA_DRIVER = TextMode::VGA((void*)mbt->framebuffer_addr);      // tell VGA what addr the framebuffer is at
-    tty* KernelTTY = &VGA_DRIVER;                                       // bind the tty to the display driver
-    
-    KernelTTY->print_str("Kernel Started!\n");                          // Tell the user we started the kernel
-    KernelTTY->print_str("");
+            virtual void init(void* buffer); 
+            virtual void print_char(char c);
+            virtual void print_str(const char * str);
+            virtual void printf(const char *str, ...);
 
-    Power::hold();
+
+        };
+    }
 }

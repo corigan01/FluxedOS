@@ -151,17 +151,25 @@ DisDone "Moving ISO to ISO/"
 mkdir ../ISO/ &> /dev/null &
 cp FluxedOS.iso ../ISO/ &
 
-echo "BUILD IN $((($(date +%s%N) - $tis)/1000000)) ms" &
+echo "BUILD IN $((($(date +%s%N) - $tis)/1000000)) ms" 
 #run 
 echo "---------------- RUNNING BUILD ------------------"
 
 #DisDone "Mount of fs"
 
+echo ""
+echo ""
+echo "Serial COM1"
+echo "-------------------"
 
 run_build
 
+## buffer for output
+echo ""
+echo "-------------------"
 
 DisDone "Running qemu"
+
 
 
 #clean up

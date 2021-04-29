@@ -19,26 +19,28 @@
  *   
  */
 
+#include "kout.hpp"
+#include "../Serial/serial.hpp"
 
-#include "../boot/boot.h"
-#include "../System/TextOutput/TextOutput.hpp"
-#include "../System/Power/Power.hpp"
-#include "../lib/StanderdOperations/Operations.hpp"
-#include "../System/kout/kout.hpp"
-#include "../System/tty/tty.hpp"
-
-using namespace System; 
-using namespace System::IO;
+using namespace System;
 using namespace System::Display;
 
-int kmain(multiboot_info_t* mbt, i32 magic) {
-    kout << "Flux Kernel Started..." << endl;                           // tell the console we started the kernel
 
-    auto VGA_DRIVER = TextMode::VGA((void*)mbt->framebuffer_addr);      // tell VGA what addr the framebuffer is at
-    tty* KernelTTY = &VGA_DRIVER;                                       // bind the tty to the display driver
     
-    KernelTTY->print_str("Kernel Started!\n");                          // Tell the user we started the kernel
-    KernelTTY->print_str("");
+SerialLog::SerialLog(const char * function, const char * file, int line) {
+    System::IO::Serial::init(System::IO::Serial::COM_1);
 
-    Power::hold();
+    System::IO::Serial::outString(System::IO::Serial::COM_1, "[");
+    System::IO::Serial::outString(System::IO::Serial::COM_1, (char*)file);
+    System::IO::Serial::outString(System::IO::Serial::COM_1, " in ");
+    System::IO::Serial::outString(System::IO::Serial::COM_1, (char*)function);
+    System::IO::Serial::outString(System::IO::Serial::COM_1, "] --> ");
 }
+
+/*template <class T> 
+SerialLog &SerialLog::operator<<(const T &v) {
+    
+    System::IO::Serial::outString(System::IO::Serial::COM_1, (char*)v);
+    return *this;
+}*/
+        

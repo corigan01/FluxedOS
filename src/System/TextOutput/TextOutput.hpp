@@ -24,45 +24,12 @@
 #include "../../lib/core/core.h"
 #include "../Serial/serial.hpp"
 #include "../../lib/StanderdOperations/Operations.hpp"
+#include "../tty/tty.hpp"
+
 namespace System
 {
     namespace Display
     {
-        // General output, this is so you can use any output mode and keep the basic output functions
-        #define kout System::Display::SerialLog(__FUNCTION__, __FILE__, __LINE__)
-        #define endl "\n"
-        class SerialLog {
-            public:
-            
-            SerialLog(const char * function, const char * file, int line) {
-                System::IO::Serial::init(System::IO::Serial::COM_1);
-
-                System::IO::Serial::outString(System::IO::Serial::COM_1, "[");
-                System::IO::Serial::outString(System::IO::Serial::COM_1, (char*)file);
-                System::IO::Serial::outString(System::IO::Serial::COM_1, " in ");
-                System::IO::Serial::outString(System::IO::Serial::COM_1, (char*)function);
-                System::IO::Serial::outString(System::IO::Serial::COM_1, "] --> ");
-            }
-
-            template <class T> 
-            SerialLog &operator<<(const T &v) {
-                
-                System::IO::Serial::outString(System::IO::Serial::COM_1, (char*)v);
-                return *this;
-            }
-        };
-        class tty {
-           public:
-
-            tty() { init( (void*) 0xB8000 ); };
-            tty(void* buffer) { init(buffer); };
-            ~tty();
-
-            virtual void init(void* buffer) {}; 
-            virtual void print_char() {};
-            virtual void print_str(const char * str) {};
-            virtual void printf(const char *str, ...) {};
-        };
         
 
         // text mode output

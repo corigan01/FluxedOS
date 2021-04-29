@@ -133,4 +133,8 @@ void VGA::clear_line(i32 linenumber) {
     }
 }
 
-
+void VGA::print_str(const char* str) {
+    for (int i = 0 ; i < strlen(str); i++) {
+        this->print_char(str[i]);
+    }
+}

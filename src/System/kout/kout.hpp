@@ -19,26 +19,31 @@
  *   
  */
 
+#pragma once
 
-#include "../boot/boot.h"
-#include "../System/TextOutput/TextOutput.hpp"
-#include "../System/Power/Power.hpp"
-#include "../lib/StanderdOperations/Operations.hpp"
-#include "../System/kout/kout.hpp"
-#include "../System/tty/tty.hpp"
+#include "../../lib/core/core.h"
+#include "../Serial/serial.hpp"
 
-using namespace System; 
-using namespace System::IO;
-using namespace System::Display;
+namespace System
+{
+    namespace Display 
+    {
+        // General output, this is so you can use any output mode and keep the basic output functions
 
-int kmain(multiboot_info_t* mbt, i32 magic) {
-    kout << "Flux Kernel Started..." << endl;                           // tell the console we started the kernel
+        #define kout System::Display::SerialLog(__FUNCTION__, __FILE__, __LINE__)
+        #define endl "\n"
+        
+        class SerialLog {
+            public:        
+            SerialLog(const char * function, const char * file, int line);
 
-    auto VGA_DRIVER = TextMode::VGA((void*)mbt->framebuffer_addr);      // tell VGA what addr the framebuffer is at
-    tty* KernelTTY = &VGA_DRIVER;                                       // bind the tty to the display driver
+            template <class T> 
+            SerialLog &operator<<(const T &v){
     
-    KernelTTY->print_str("Kernel Started!\n");                          // Tell the user we started the kernel
-    KernelTTY->print_str("");
-
-    Power::hold();
+                System::IO::Serial::outString(System::IO::Serial::COM_1, (char*)v);
+                return *this;
+            }
+        };
+    }
 }
+
