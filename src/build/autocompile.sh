@@ -27,13 +27,13 @@ mkdir obj &> /dev/null
 
 echo "---------------- BUILDING ASM -------------------"
 # Compile the asm files
-cd boot
+
 for OUTPUT in $(find ./ -type f -iregex '.*/.*\.\(s\)$')
 do
     BUILDCOUNT=$(( 1 + BUILDCOUNT))
     compilea $OUTPUT
 done
-mv *.o ../obj
+
 cd ..
 
 
@@ -87,8 +87,13 @@ echo "---------------- LINKING OS ---------------------"
 
 DisDone "Moving object files"
 
-mv *.o obj/ > /dev/null
+
+
+mkdir src/obj &> /dev/null
+mv $(find ./ -type f -iregex '.*/.*\.\(o\)$') src/obj
 rm temp.txt &> /dev/null
+
+cd src
 
 ts=$(date +%s%N)
 #linking the kernel with kernel.o and boot.o files

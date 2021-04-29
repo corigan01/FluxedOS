@@ -44,6 +44,7 @@ clean() {
     rm FluxedOS.* &> /dev/null
     rm G++OUTPUT.txt &> /dev/null
     rm $(find ./ -type f -iregex '.*/.*\.\(gch\)$') &> /dev/null
+    rm $(find ./ -type f -iregex '.*/.*\.\(o\)$') &> /dev/null
     rm *.o &> /dev/null
     rm boot/boot.o &> /dev/null
     rm -r obj &> /dev/null
@@ -53,14 +54,15 @@ clean() {
 #assemble boot.s file
 compilea() {
     OUTPUT="$1"
+    touch "log/A++OUTPUT.txt" &> /dev/null
 
-    if nasm -f elf $OUTPUT -o $OUTPUT.o  &> "../log/A++OUTPUT.txt"; then
+    if nasm -f elf $OUTPUT -o $OUTPUT.o  &> "log/A++OUTPUT.txt"; then
             printf "%-40s%-4s\e[0;32mDONE\e[0;34m\n"  "${OUTPUT:0:40}" " "
         else
 
             #ouput the errors
             echo -e "\e[0;31m ------------------ ASM FAILED! ------------------ "
-            printf "%s" "$(<../log/A++OUTPUT.txt)"
+            printf "%s" "$(<log/A++OUTPUT.txt)"
             echo ""
             echo -e "\e[0;31m ------------------- ASM DONE! ------------------- "
             #rm temp.txt

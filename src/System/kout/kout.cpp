@@ -34,7 +34,7 @@ SerialLog::SerialLog(const char * function, const char * file, int line) {
     System::IO::Serial::outString(System::IO::Serial::COM_1, (char*)file);
     System::IO::Serial::outString(System::IO::Serial::COM_1, " in ");
     System::IO::Serial::outString(System::IO::Serial::COM_1, (char*)function);
-    System::IO::Serial::outString(System::IO::Serial::COM_1, "] --> ");
+    System::IO::Serial::outString(System::IO::Serial::COM_1, "]\t --> ");
 }
 
 /*template <class T> 

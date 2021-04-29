@@ -22,7 +22,7 @@
 #include "tty.hpp"
 #include "../kout/kout.hpp"
 #include "../Serial/serial.hpp"
-#include "../TextOutput/TextOutput.hpp"
+#include "../Display/Display.hpp"
 
 using namespace System::IO;
 using namespace System::Display;
@@ -33,7 +33,7 @@ tty::tty() {
     ttyNumber++;
 
     Serial::init(Serial::COM_1); // inits the class so we know we setup COM_1   
-    kout << "new tty" << itos(ttyNumber) << " Started!" << endl; 
+    kout << "New tty" << itos(ttyNumber) << " Started!" << endl; 
     //this->print_str("+++++ TTY STARTED +++++\n");
 }
 

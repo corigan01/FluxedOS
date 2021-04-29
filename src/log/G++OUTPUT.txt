@@ -1,0 +1,13 @@
+[01m[K./lib/StanderdOperations/Operations.cpp:[m[K In function ‘[01m[Kchar* strdup(const char*)[m[K’:
+[01m[K./lib/StanderdOperations/Operations.cpp:164:1:[m[K [01;35m[Kwarning: [m[Kno return statement in function returning non-void [[01;35m[K-Wreturn-type[m[K]
+  164 | [01;35m[K}[m[K
+      | [01;35m[K^[m[K
+[01m[K./lib/StanderdOperations/Operations.cpp:[m[K In function ‘[01m[Kchar* itos(int)[m[K’:
+[01m[K./lib/StanderdOperations/Operations.cpp:206:17:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+  206 |     char* num = [01;35m[K""[m[K;
+      |                 [01;35m[K^~[m[K
+em::IO::Serial::COM_1, [01;35m[K" in "[m[K);
+      |                                                              [01;35m[K^~~~~~[m[K
+[01m[K./System/kout/kout.cpp:37:62:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   37 |     System::IO::Serial::outString(System::IO::Serial::COM_1, [01;35m[K"]\t --> "[m[K);
+      |                                                              [01;35m[K^~~~~~~~~~[m[K

@@ -1,0 +1,10 @@
+[01m[K./CPU/isr.c:[m[K In function ‘[01m[Kfault_handler[m[K’:
+[01m[K./CPU/isr.c:147:5:[m[K [01;35m[Kwarning: [m[Kimplicit declaration of function ‘[01m[KPRINT_STR[m[K’ [[01;35m[K-Wimplicit-function-declaration[m[K]
+  147 |     [01;35m[KPRINT_STR[m[K("FAULT ----");
+      |     [01;35m[K^~~~~~~~~[m[K
+[01m[K./CPU/isr.c:182:18:[m[K [01;35m[Kwarning: [m[Kpassing argument 1 of ‘[01m[Khandler[m[K’ from incompatible pointer type [[01;35m[K-Wincompatible-pointer-types[m[K]
+  182 |          handler([01;35m[K&r[m[K);
+      |                  [01;35m[K^~[m[K
+      |                  [01;35m[K|[m[K
+      |                  [01;35m[Kstruct regs **[m[K
+[01m[K./CPU/isr.c:182:18:[m[K [01;36m[Knote: [m[Kexpected ‘[01m[Kregister_t *[m[K’ {aka ‘[01m[Kstruct registers *[m[K’} but argument is of type ‘[01m[Kstruct regs **[m[K’
