@@ -20,3 +20,35 @@
  */
 
 #include "cpu.hpp"
+#include "../../CPU/cpu.h"
+#include "../kout/kout.hpp"
+
+using namespace System;
+using namespace System::CPU;
+
+// This file may look simple and thats because its only job is to link the C++ with the C functions so asm can talk with us. 
+// I don't want to have irq_install() without its protected namespace!
+
+void IDT::init() {
+    idt_install();
+}
+
+void GDT::init() {
+    gdt_install();
+}
+
+void IRQ::init() {
+    irq_install();
+}
+
+void IRQ::installIRQ(int irq, void(*handler)(register_t *r)) {
+    irq_install_handler(irq, handler);
+}
+
+void IRQ::uninstallIRQ(int irq) {
+    irq_uninstall_handler(irq);
+}
+
+void ISR::init() {
+    isr_install();
+}

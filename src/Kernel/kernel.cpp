@@ -18,16 +18,16 @@
  *  
  *   
  */
-
-#include "../CPU/cpu.h"
 #include "../boot/boot.h"
 #include "../System/tty/tty.hpp"
+#include "../System/cpu/cpu.hpp"
 #include "../System/kout/kout.hpp"
 #include "../System/Power/Power.hpp"
 #include "../System/Display/Display.hpp"
 
 using namespace System; 
 using namespace System::IO;
+using namespace System::CPU;
 using namespace System::Display;
 
 int kmain(multiboot_info_t* mbt, i32 magic) {
@@ -50,19 +50,19 @@ int kmain(multiboot_info_t* mbt, i32 magic) {
 )");
 
     KernelTTY->print_str("Starting CPU INIT();\n");
+    kout << "Starting CPU Init()" << endl;
 
-    idt_install();
+    IDT::init();
     KernelTTY->print_str("IDT INIT: OK\n");
-    isr_install();
+    ISR::init();
     KernelTTY->print_str("ISR INIT: OK\n");
-    gdt_install();
+    GDT::init();
     KernelTTY->print_str("GDT INIT: OK\n");
-    irq_install();
+    IRQ::init();
     KernelTTY->print_str("IRQ INIT: OK\n");
-
-    KernelTTY->print_str("CPU INIT DONE!");
+    kout << "CPU Init: OK!" << endl;
     
 
-
+    kout << "CPU HOLD!" << endl;
     Power::hold();
 }

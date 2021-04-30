@@ -34,6 +34,7 @@ echo "---------------- BUILDING OS --------------------"
 for OUTPUT in $(find ./ -type f -iregex '.*/.*\.\(c\|cpp\|h\|hpp\)$')
 do
     compilestuff $OUTPUT &
+    BUILDCOUNT=$(( 1 + BUILDCOUNT))
 done
 
 wait
