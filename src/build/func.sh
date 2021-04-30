@@ -2,7 +2,7 @@
 
 displayWelcome() {
     # Display the welcome
-    tis=$(date +%s%N)
+    
     echo "      ________                    __   ______          "
     echo "     / ____/ /_  ___  _____  ____/ /  / ____/___  ____ "
     echo "    / /_  / / / / / |/_/ _ \/ __  /  / /   / __ \\/ __ \\"
@@ -55,22 +55,24 @@ clean() {
 compilea() {
     OUTPUT="$1"
     touch "log/A++OUTPUT.txt" &> /dev/null
+    local ts=$(date +%s%N)
 
     if nasm -f elf $OUTPUT -o $OUTPUT.o  &> "log/A++OUTPUT.txt"; then
-            printf "%-40s%-4s\e[0;32mDONE\e[0;34m\n"  "${OUTPUT:0:40}" " "
-        else
+        local PFD=$((($(date +%s%N) - $ts)/1000000))
+        printf "%-40s%-4s\e[0;32mDONE - $PFD ms\e[0;34m\n"  "${OUTPUT:0:40}" " "
+    else
 
-            #ouput the errors
-            echo -e "\e[0;31m ------------------ ASM FAILED! ------------------ "
-            printf "%s" "$(<log/A++OUTPUT.txt)"
-            echo ""
-            echo -e "\e[0;31m ------------------- ASM DONE! ------------------- "
-            #rm temp.txt
+        #ouput the errors
+        echo -e "\e[0;31m ------------------ ASM FAILED! ------------------ "
+        printf "%s" "$(<log/A++OUTPUT.txt)"
+        echo ""
+        echo -e "\e[0;31m ------------------- ASM DONE! ------------------- "
+        #rm temp.txt
 
-            clean
+        clean
 
-            exit -1
-        fi
+        exit -1
+    fi
 
 }
 
@@ -107,7 +109,7 @@ compilec_() {
     local ts=$(date +%s%N)
 
 
-    if gcc -m32 -elf_i386  -O -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-stack-protector -fpic -fshort-wchar -mno-red-zone -fno-builtin -c  $OUTPUT -fdiagnostics-color=always  &> "log/GccOUTPUT.txt"; then
+    if gcc -m32 -elf_i386  -O -O2 -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-stack-protector -fpic -fshort-wchar -mno-red-zone -fno-builtin -c  $OUTPUT -fdiagnostics-color=always  &> "log/GccOUTPUT.txt"; then
          local PFD=$((($(date +%s%N) - $ts)/1000000))
          printf "%-40s%-4s\e[0;32mDONE - $PFD ms\e[0;34m\n"  "${OUTPUT:0:40}" " "
     else
@@ -153,6 +155,63 @@ compilec() {
     fi
 }
 
+compilestuff() {
+    OUTPUT="$1"
+    if [[ $OUTPUT == *"Proc"* ]]; then
+        printf "%-40s%-4s\e[0;33mSKIP\e[0;34m\n"  "${OUTPUT:0:40}" " "
+    elif [[ $OUTPUT == *".cpp"* ]]; then
+        BUILDCOUNT=$(( 1 + BUILDCOUNT))
+        compilec $OUTPUT 
+    elif [[ $OUTPUT == *".c"* ]]; then
+        BUILDCOUNT=$(( 1 + BUILDCOUNT))
+        compilec_ $OUTPUT 
+    else
+        printf "%-40s%-4s\e[0;32mDONE\e[0;34m\n"  "${OUTPUT:0:40}" " "
+    fi
+}
+
+
+Link_and_check() {
+    ts=$(date +%s%N)
+    #linking the kernel with kernel.o and boot.o files
+    if g++ -m32 -O2 -lstdc++ -nostartfiles -Wno-undef -nostdinc -T linker.ld  obj/*.o -o FluxedOS.bin  &> "log/LINKOUTPUT.txt"; then
+        DisDone "Linking FluxedOS.bin"
+        PFD=$((($(date +%s%N) - $ts)/1000000))
+        printf "%-40s%-4s\e[0;32mDONE - $PFD ms\e[0;34m\n"  "${TEx:0:40}" " "
+    else
+
+                #ouput the errors
+                echo -e "\e[0;31m ------------------ LINK FAILED! ------------------ "
+                printf "%s" "$(<log/LINKOUTPUT.txt)"
+                echo ""
+                echo -e "\e[0;31m ------------------- LINK DONE! ------------------- "
+                #rm temp.txt
+
+                clean    
+
+
+                exit
+    fi
+    echo "$((($(date +%s%N) - $tis)/1000000)) ms" 
+    echo "---------------- BUILDING ISO -------------------"
+    #check FluxedOS.bin file is x86 multiboot file or not
+    if grub-file --is-x86-multiboot FluxedOS.bin &> "log/GRUB.txt"; then
+        DisDone "Generating grub files"
+        
+    else
+
+                #ouput the errors
+                echo -e "\e[0;31m ------------------ GRUB FAILED! ------------------ "
+                printf "%s" "$(<log/GRUB.txt)"
+                echo ""
+                echo -e "\e[0;31m ------------------- GRUB DONE! ------------------- "
+    
+    
+                clean
+
+                exit
+    fi
+}
 
 DisDone() {
     OUTPUT="$1"
