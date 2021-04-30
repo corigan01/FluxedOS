@@ -31,10 +31,7 @@ using namespace System::IO;
 using namespace System::Display;
 
 int kmain(multiboot_info_t* mbt, i32 magic) {
-    idt_install();
-    isr_install();
-    gdt_install();
-    irq_install();
+    
 
     kout << "Flux Kernel Started..." << endl;                           // tell the console we started the kernel
 
@@ -42,7 +39,30 @@ int kmain(multiboot_info_t* mbt, i32 magic) {
     tty* KernelTTY = &VGA_DRIVER;                                       // bind the tty to the display driver
     
     KernelTTY->print_str("Kernel Started!\n");                          // Tell the user we started the kernel
-    KernelTTY->print_str("");
+    KernelTTY->print_str(R"(
+                   ______            __ __                 __
+                  / __/ /_ ____ __  / //_/__ _______  ___ / /
+                 / _// / // /\ \ / / ,< / -_) __/ _ \/ -_) / 
+                /_/ /_/\_,_//_\_\ /_/|_|\__/_/ /_//_/\__/_/  
+                
+              copyright (c) 2021 Gavin Kellam (aka corigan01)
+--------------------------------------------------------------------------------------
+)");
+
+    KernelTTY->print_str("Starting CPU INIT();\n");
+
+    idt_install();
+    KernelTTY->print_str("IDT INIT: OK\n");
+    isr_install();
+    KernelTTY->print_str("ISR INIT: OK\n");
+    gdt_install();
+    KernelTTY->print_str("GDT INIT: OK\n");
+    irq_install();
+    KernelTTY->print_str("IRQ INIT: OK\n");
+
+    KernelTTY->print_str("CPU INIT DONE!");
+    
+
 
     Power::hold();
 }
