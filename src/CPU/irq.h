@@ -24,5 +24,5 @@
 #include "../lib/core/core.h"
 
 EXTNC_ void irq_install();
-EXTNC_ void irq_install_handler(int irq, void(*handler)(struct regs *r));
+EXTNC_ void irq_install_handler(int irq, void(*handler)(register_t *r));
 EXTNC_ void irq_uninstall_handler(int irq);

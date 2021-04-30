@@ -5,4 +5,4 @@ mkfs ext2 -F disk.img
 DisDone "MkFS of disk.img"
 sudo mount -t ext2 -o loop disk.img fs
 
-sudo chmod 777 -R *
+sudo chmod 777 -R * # lol, its a FIX alright!

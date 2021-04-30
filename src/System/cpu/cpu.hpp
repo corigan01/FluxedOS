@@ -24,7 +24,27 @@
 #include "../kout/kout.hpp"
 #include "../../lib/core/core.h"
 
-class CPU {
+namespace System 
+{
+    namespace CPU {
 
-};
+        namespace IDT {
+            void init();
+        }
 
+        namespace GDT {
+            void init();
+        }
+
+        namespace IRQ {
+            void init();
+
+            void installIRQ(int irq, void(*handler)(register_t *r));
+            void uninstallIRQ(int irq);
+        }
+
+        namespace ISR  {
+            void init();
+        }
+    }
+}

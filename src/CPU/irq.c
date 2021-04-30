@@ -53,7 +53,7 @@ void *irq_routines[16] = {
 };
 
 //following function installs a custom IRQ handler for the given IRQ
-void irq_install_handler(int irq, void(*handler)(struct regs *r)){
+void irq_install_handler(int irq, void(*handler)(register_t *r)){
     irq_routines[irq] =  (void*)handler;
 }
 
