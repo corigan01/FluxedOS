@@ -1,7 +1,6 @@
 #!/bin/bash
-#!/usr/bin/env bash
 
-#!/bin/bash
+
 
 displayWelcome() {
     # Display the welcome
@@ -31,7 +30,7 @@ md5sum_check() {
 }
 
 addToBuild() {
-    
+    echo "BUILD NOT ADDED"
 }
 
 #clean up files
@@ -231,8 +230,10 @@ run_build() {
         -serial stdio
 }
 
+
+
 tis=$(date +%s%N)
-cd ..
+cd src
 
 displayWelcome 
 
