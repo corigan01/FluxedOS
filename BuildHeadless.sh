@@ -186,7 +186,7 @@ Link_and_check() {
                 clean    
 
 
-                exit
+                exit -1
     fi
     echo "$((($(date +%s%N) - $tis)/1000000)) ms" 
     echo "---------------- BUILDING ISO -------------------"
@@ -205,7 +205,7 @@ Link_and_check() {
     
                 clean
 
-                exit
+                exit -1
     fi
 }
 
