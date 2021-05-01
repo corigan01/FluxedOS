@@ -285,6 +285,8 @@ rm temp.txt &> /dev/null
 
 cd src
 
-Link_and_check & # Link the bin and check everything
+Link_and_check  # Link the bin and check everything
+
+
 
 exit 0 # Build good!

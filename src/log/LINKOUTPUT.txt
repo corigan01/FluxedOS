@@ -1,0 +1,1 @@
+g++: error: obj/*.o: No such file or directory
