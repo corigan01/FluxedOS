@@ -19,7 +19,6 @@
  *   
  */
 
-i
 
 #ifndef KERNEL__H___CORE
 #define KERNEL__H___CORE
