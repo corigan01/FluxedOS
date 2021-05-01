@@ -1,0 +1,36 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+      # Install needed packages
+    - name: Install g++ / gcc
+      run: sudo apt-get install g++ gcc             -y
+    - name: Install gcc-multilib
+      run: sudo apt-get install gcc-multilib        -y
+    - name: Install g++-multilib
+      run: sudo apt-get install g++-multilib        -y
+    - name: Install xorriso
+      run: sudo apt-get install xorriso             -y
+    - name: Install nasm
+      run: sudo apt-get install nasm                -y
+      
+      # Build using BuildHeadless
+    - name: Build
+      run: |
+        # make file runnable, might not be necessary
+        chmod +x "${GITHUB_WORKSPACE}/BuildHeadless.sh"
+        
+        # run script
+        "${GITHUB_WORKSPACE}/BuildHeadless.sh"
