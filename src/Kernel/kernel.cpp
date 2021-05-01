@@ -45,7 +45,6 @@ int kmain(multiboot_info_t* mbt, i32 magic) {
                  / _// / // /\ \ / / ,< / -_) __/ _ \/ -_) / 
                 /_/ /_/\_,_//_\_\ /_/|_|\__/_/ /_//_/\__/_/  
                 
-              copyright (c) 2021 Gavin Kellam (aka corigan01)
 --------------------------------------------------------------------------------------
 )");
 
@@ -63,6 +62,5 @@ int kmain(multiboot_info_t* mbt, i32 magic) {
     kout << "CPU Init: OK!" << endl;
     
 
-    kout << "CPU HOLD!" << endl;
     Power::hold();
 }
