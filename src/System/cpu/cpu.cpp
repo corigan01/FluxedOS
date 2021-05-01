@@ -29,26 +29,34 @@ using namespace System::CPU;
 // This file may look simple and thats because its only job is to link the C++ with the C functions so asm can talk with us. 
 // I don't want to have irq_install() without its protected namespace!
 
-void IDT::init() {
+void System::CPU::IDT::init() {
+    kout << "IDT INIT  ";
     idt_install();
+    kout << " OK" << endl;
 }
 
-void GDT::init() {
+void System::CPU::GDT::init() {
+    kout << "GDT INIT  ";
     gdt_install();
+    kout << " OK" << endl;
 }
 
-void IRQ::init() {
+void System::CPU::IRQ::init() {
+    kout << "IRQ INIT  ";
     irq_install();
+    kout << " OK" << endl;
 }
 
-void IRQ::installIRQ(int irq, void(*handler)(register_t *r)) {
+void System::CPU::IRQ::installIRQ(int irq, void(*handler)(register_t *r)) {
     irq_install_handler(irq, handler);
 }
 
-void IRQ::uninstallIRQ(int irq) {
+void System::CPU::IRQ::uninstallIRQ(int irq) {
     irq_uninstall_handler(irq);
 }
 
-void ISR::init() {
+void System::CPU::ISR::init() {
+    kout << "ISR INIT  ";
     isr_install();
+    kout << " OK" << endl;
 }

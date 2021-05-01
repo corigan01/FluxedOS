@@ -22,17 +22,22 @@
 
 #include "Power.hpp"
 #include "../Port/port.hpp"
+#include "../kout/kout.hpp"
 
 using namespace System;
 using namespace System::IO;
 
 void Power::shutdown() {
+    kout << "Shutting down!" << endl;
+
     Port::byte_out(0xB004, 0x2000);
     Port::byte_out(0x604,  0x2000);
     Port::byte_out(0x4004, 0x3400);
 }
 
 void Power::restart() {
+    kout << "Restarting!" << endl;
+
     i8 good = 0x02;
     while (good & 0x02)
         good = Port::byte_in(0x64);
@@ -41,7 +46,8 @@ void Power::restart() {
 }
 
 void Power::hold() {
-
+    kout << "Holding OS" << endl;
+    
     for(;;) { NO_INSTRUCTION };
 
 }
