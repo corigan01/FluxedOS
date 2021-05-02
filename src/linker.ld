@@ -5,6 +5,8 @@ SECTIONS
 
     . = 1M;
 
+    start = .;
+
     .text BLOCK(4K) : ALIGN(4K)
     {
       *(.multiboot)
@@ -30,6 +32,6 @@ SECTIONS
       *(.bss)
     }
 
-    KernelEnd = .;
+    end = .;
 
 }

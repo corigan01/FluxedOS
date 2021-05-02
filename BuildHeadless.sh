@@ -251,7 +251,7 @@ echo "---------------- BUILDING ASM -------------------"
 for OUTPUT in $(find ./ -type f -iregex '.*/.*\.\(s\)$')
 do
     BUILDCOUNT=$(( 1 + BUILDCOUNT))
-    compilea $OUTPUT &
+    compilea $OUTPUT 
 done
 
 wait

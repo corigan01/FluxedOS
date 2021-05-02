@@ -60,6 +60,8 @@ int kmain(multiboot_info_t* mbt, i32 magic) {
     IRQ::init();
     KernelTTY->print_str("IRQ INIT: OK\n");
     kout << "CPU Init: OK!" << endl;
+
+    
     
 
     Power::hold();

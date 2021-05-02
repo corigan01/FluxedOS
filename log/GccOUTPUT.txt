@@ -1,34 +1,7 @@
-In file included from [01m[K./src/CPU/idt.h:24[m[K,
-                 from [01m[K./src/CPU/idt.c:22[m[K:
-[01m[K./src/CPU/../lib/core/core.h:22:2:[m[K [01;31m[Kerror: [m[Kexpected ‘[01m[K;[m[K’ before ‘[01m[Ktypedef[m[K’
-   22 | i
-      |  [01;31m[K^[m[K
-      |  [32m[K;[m[K
-......
-   43 | [32m[Ktypedef[m[K unsigned char       uint8_t;
-      | [32m[K~~~~~~~[m[K
-~~~~[m[K
-In file included from [01m[K./src/boot/../lib/multiboot/multiboot.h:25[m[K,
-                 from [01m[K./src/boot/boot.h:26[m[K,
-                 from [01m[K./src/boot/KenelEntry.c:24[m[K:
-[01m[K./src/boot/../lib/multiboot/../core/core.h:22:2:[m[K [01;31m[Kerror: [m[Kexpected ‘[01m[K;[m[K’ before ‘[01m[Kstruct[m[K’
-   22 | i
-      |  [01;31m[K^[m[K
-      |  [32m[K;[m[K
-[01;35m[Kwarning: [m[Kpassing argument 1 of ‘[01m[Khandler[m[K’ from incompatible pointer type [[01;35m[K-Wincompatible-pointer-types[m[K]
+[01m[K./src/CPU/isr.c:[m[K In function ‘[01m[Kfault_handler[m[K’:
+[01m[K./src/CPU/isr.c:180:18:[m[K [01;35m[Kwarning: [m[Kpassing argument 1 of ‘[01m[Khandler[m[K’ from incompatible pointer type [[01;35m[K-Wincompatible-pointer-types[m[K]
   180 |          handler([01;35m[K&r[m[K);
       |                  [01;35m[K^~[m[K
       |                  [01;35m[K|[m[K
       |                  [01;35m[Kstruct regs **[m[K
 [01m[K./src/CPU/isr.c:180:18:[m[K [01;36m[Knote: [m[Kexpected ‘[01m[Kregister_t *[m[K’ {aka ‘[01m[Kstruct registers *[m[K’} but argument is of type ‘[01m[Kstruct regs **[m[K’
-d ‘[01m[K;[m[K’ before ‘[01m[Ktypedef[m[K’
-   22 | i
-      |  [01;31m[K^[m[K
-      |  [32m[K;[m[K
-In file included from [01m[K./src/CPU/irq.h:24[m[K,
-                 from [01m[K./src/CPU/cpu.h:29[m[K,
-                 from [01m[K./src/CPU/cpu.c:22[m[K:
-[01m[K./src/CPU/../lib/core/core.h:22:2:[m[K [01;31m[Kerror: [m[Kexpected ‘[01m[K;[m[K’ before ‘[01m[Kvoid[m[K’
-   22 | i
-      |  [01;31m[K^[m[K
-      |  [32m[K;[m[K
