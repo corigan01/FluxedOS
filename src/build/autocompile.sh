@@ -88,15 +88,16 @@ echo "---------------- RUNNING BUILD ------------------"
 
 
 echo ""
-echo ""
-echo "Serial COM1"
-echo "-------------------"
+echo "                  Serial COM1                       "
+echo -e "-------------------------------------------------\e[0;36m "
 
 run_build
 
 ## buffer for output
 #echo ""
-echo "-------------------"
+echo -e "\e[0;34m-------------------------------------------------"
+echo ""
+
 
 DisDone "Running qemu"
 

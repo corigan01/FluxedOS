@@ -23,6 +23,7 @@
 
 #include "../../../lib/core/core.h"
 #include "../../Serial/serial.hpp"
+#include "../../../lib/multiboot/multiboot.h"
 
 namespace System
 {
@@ -30,9 +31,9 @@ namespace System
     {
         namespace pmm
         {
-            
-            
-
+            void init(multiboot_info_t *mboot_ptr);
+            i32 alloc_frame();
+            void free_frame(i32 addr);
 
         } // namespace pmm
         

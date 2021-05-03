@@ -202,8 +202,3 @@ void *memset(void *dst,char val, int n)
     return dst;
 }
 
-char* itos(int i) {
-    char* num = ""; 
-    itoa(i, num);
-    return num;
-}

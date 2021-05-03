@@ -23,20 +23,20 @@
 #include "../../kout/kout.hpp"
 #include "../../Power/Power.hpp"
 #include "../../../lib/bitmap/bitmap.hpp"
-#include "../../../lib/multiboot/multiboot.h"
 
 using namespace System;
+using namespace System::Memory;
 
 extern i32 start;
 extern i32 end;
 
-i32 boot_page_dir_addr = (i32) &end;
+i32 boot_page_dir_addr =  0 ;
 i32 kernel_start = (i32) &start;
 i32 kernel_end = (i32) &end;
 
 bitmap_type *pmm_frames = 0x0;
 
-void pmm_initialize(multiboot_info_t *mboot_ptr) {
+void pmm::init(multiboot_info_t *mboot_ptr) {
 	
     if ((i32) pmm_frames != 0x0) {
 		return;
@@ -95,7 +95,7 @@ void pmm_initialize(multiboot_info_t *mboot_ptr) {
 	}
 }
 
-i32 alloc_frame() {
+i32 pmm::alloc_frame() {
 	if ((i32) pmm_frames == 0x0) {
 		kout << "Physical memory manager has not been initialized!" << endl;
 		kout << "Halting" << endl;
@@ -117,7 +117,7 @@ i32 alloc_frame() {
 	return result;
 }
 
-void free_frame(i32 addr) {
+void pmm::free_frame(i32 addr) {
 	if ((i32) pmm_frames == 0x0)
 	{
 		kout << "Physical memory manager has not been initialized!" << endl;

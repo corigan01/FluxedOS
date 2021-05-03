@@ -30,12 +30,26 @@ using namespace System::Display;
 SerialLog::SerialLog(const char * function, const char * file, int line) {
     System::IO::Serial::init(System::IO::Serial::COM_1);
 
-    System::IO::Serial::outString(System::IO::Serial::COM_1, "[");
-    System::IO::Serial::outString(System::IO::Serial::COM_1, (char*)file);
-    System::IO::Serial::outString(System::IO::Serial::COM_1, " in ");
-    System::IO::Serial::outString(System::IO::Serial::COM_1, (char*)function);
-    System::IO::Serial::outString(System::IO::Serial::COM_1, "]\t --> ");
+
+    this->CalledFile = (char*)file;
+    this->CalledFunc = (char*)function;
+
 }
+
+bool endline = false;
+
+bool Check::DidEndLine() {
+    return endline;
+}
+
+void Check::EndLine() {
+    endline = true;
+}
+
+void Check::StartLine() {
+    endline = false;
+}
+
 
 /*template <class T> 
 SerialLog &SerialLog::operator<<(const T &v) {

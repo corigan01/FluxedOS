@@ -21,6 +21,7 @@
 
 #include "heap.hpp"
 
+/*
 void* heapStart;
 void* heapEnd;
 HeapSegment* LastHdr;
@@ -142,4 +143,4 @@ void HeapSegment::CombineForward(){
 void HeapSegment::CombineBackward(){
     if (last != NULL && last->free) last->CombineForward();
 }
-
+*/

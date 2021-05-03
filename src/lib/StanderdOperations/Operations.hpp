@@ -43,5 +43,8 @@ void*   memset      (void *dst,char val, int n);
 char *  strstr      (const char *in, const char *str);
 char *  strdup      (const char * src);
 char *  strsep      (char **stringp, const char *delim);
-char *  itos        (int i);
+
+#define INT_TO_STRING(name, in)    \
+    char name[20];                 \
+    itoa(in, name);
 

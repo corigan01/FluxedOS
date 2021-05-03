@@ -223,7 +223,6 @@ run_build() {
     
     qemu-system-x86_64                          \
         -cdrom ../ISO/FluxedOS.iso              \
-        -vga std                                \
         -boot strict=on                         \
         -cpu max                                \
         -smp 1,sockets=1,cores=1,threads=1      \
@@ -231,5 +230,8 @@ run_build() {
         -drive file=disk.img,if=ide,format=raw  \
         -m 500m                                 \
         -k en-us                                \
-        -serial stdio
+        -serial stdio                           \
+        -vga std
+        #-vga [std|cirrus|vmware|qxl|xenfb|tcx|cg3|virtio|none]
+
 }

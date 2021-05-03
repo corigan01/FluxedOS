@@ -23,7 +23,7 @@
 
 #include "../core/core.h"
 
-typedef struct bitmap_struct
+typedef struct 
 {
 	i8 *addr;
 	i32 bytes;

@@ -23,6 +23,9 @@
 
 #include "../../lib/core/core.h"
 #include "../Serial/serial.hpp"
+#include "../../lib/StanderdOperations/Operations.hpp"
+
+constexpr const char* endl = "\n";
 
 namespace System
 {
@@ -31,7 +34,16 @@ namespace System
         // General output, this is so you can use any output mode and keep the basic output functions
 
         #define kout System::Display::SerialLog(__FUNCTION__, __FILE__, __LINE__)
-        #define endl "\n"
+    
+        
+        
+        namespace Check 
+        {
+            bool DidEndLine();
+            void EndLine();
+            void StartLine();
+        }
+        
         
         class SerialLog {
             public:        
@@ -39,10 +51,36 @@ namespace System
 
             template <class T> 
             SerialLog &operator<<(const T &v){
-    
-                System::IO::Serial::outString(System::IO::Serial::COM_1, (char*)v);
+                
+                if (Check::DidEndLine() ) {
+                    System::IO::Serial::outString(System::IO::Serial::COM_1, "[");
+                    System::IO::Serial::outString(System::IO::Serial::COM_1, this->CalledFile);
+                    System::IO::Serial::outString(System::IO::Serial::COM_1, " in ");
+                    System::IO::Serial::outString(System::IO::Serial::COM_1, this->CalledFunc);
+                    System::IO::Serial::outString(System::IO::Serial::COM_1, "]\t --> ");
+                    already_displayed = true;
+                    Check::StartLine();
+                }
+                
+                if (strcmp((const char*)v, endl) == 0) {
+                    Check::EndLine();
+                }
+
+                System::IO::Serial::outString(System::IO::Serial::COM_1, (char*)v );
+            
+                
+
+                
                 return *this;
             }
+
+            private:
+
+            char* CalledFunc = "";
+            char* CalledFile = "";
+
+            
+            bool already_displayed = false;
         };
     }
 }

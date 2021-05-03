@@ -32,8 +32,10 @@ static i8 ttyNumber = 0;
 tty::tty() { 
     ttyNumber++;
 
+    INT_TO_STRING(ttyNumberStr, ttyNumber);
+
     Serial::init(Serial::COM_1); // inits the class so we know we setup COM_1   
-    kout << "New tty" << itos(ttyNumber) << " Started!" << endl; 
+    kout << "New tty" << ttyNumberStr << " Started!" << endl; 
     //this->print_str("+++++ TTY STARTED +++++\n");
 }
 

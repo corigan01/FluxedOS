@@ -18,51 +18,77 @@
  *  
  *   
  */
+#include "BUILD.b"
 #include "../boot/boot.h"
 #include "../System/tty/tty.hpp"
 #include "../System/cpu/cpu.hpp"
 #include "../System/kout/kout.hpp"
 #include "../System/Power/Power.hpp"
+#include "../System/memory/pmm/pmm.hpp"
 #include "../System/Display/Display.hpp"
 
 using namespace System; 
 using namespace System::IO;
 using namespace System::CPU;
+using namespace System::Memory;
 using namespace System::Display;
+
+extern i32 start;
+extern i32 end;
+
+#define IO_WAIT for (int i = 0; i < 100000; i++) {};
 
 int kmain(multiboot_info_t* mbt, i32 magic) {
     
+
 
     kout << "Flux Kernel Started..." << endl;                           // tell the console we started the kernel
 
     auto VGA_DRIVER = Driver::VGA((void*)mbt->framebuffer_addr);      // tell VGA what addr the framebuffer is at
     tty* KernelTTY = &VGA_DRIVER;                                       // bind the tty to the display driver
     
-    KernelTTY->print_str("Kernel Started!\n");                          // Tell the user we started the kernel
-    KernelTTY->print_str(R"(
+    { // Tell the user we started the kernel
+        KernelTTY->print_str(R"(
                    ______            __ __                 __
                   / __/ /_ ____ __  / //_/__ _______  ___ / /
                  / _// / // /\ \ / / ,< / -_) __/ _ \/ -_) / 
                 /_/ /_/\_,_//_\_\ /_/|_|\__/_/ /_//_/\__/_/  
-                
---------------------------------------------------------------------------------------
-)");
+                BUILD: )");
+        INT_TO_STRING(BuildNumberStr, BUILD);
+        INT_TO_STRING(MemoryNumberStr, (mbt->mem_lower + mbt->mem_upper) / 1024);
+        KernelTTY->print_str(BuildNumberStr);
+        KernelTTY->print_str("               ");
+        KernelTTY->print_str(MemoryNumberStr);
+        KernelTTY->print_str(" MB Installed!\n                Disp Addr: ");
+        INT_TO_STRING(FrameBufferStr, mbt->framebuffer_addr);
+        INT_TO_STRING(MultiBootInfoStr, mbt->vbe_mode_info);
+        KernelTTY->print_str(FrameBufferStr);
+        KernelTTY->print_str("         ");
+        KernelTTY->print_str((char*)mbt->boot_loader_name);
+        KernelTTY->print_str(R"(
+--------------------------------------------------------------------------------------\n)");
+    }
+
 
     KernelTTY->print_str("Starting CPU INIT();\n");
     kout << "Starting CPU Init()" << endl;
 
+    IO_WAIT;
     IDT::init();
     KernelTTY->print_str("IDT INIT: OK\n");
+    IO_WAIT;
     ISR::init();
     KernelTTY->print_str("ISR INIT: OK\n");
+    IO_WAIT;
     GDT::init();
     KernelTTY->print_str("GDT INIT: OK\n");
+    IO_WAIT;
     IRQ::init();
     KernelTTY->print_str("IRQ INIT: OK\n");
-    kout << "CPU Init: OK!" << endl;
+    IO_WAIT;
+    kout << "CPU INIT  OK" << endl;
 
-    
-    
+   
 
     Power::hold();
 }

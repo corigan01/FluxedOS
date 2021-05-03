@@ -30,19 +30,19 @@ using namespace System::CPU;
 // I don't want to have irq_install() without its protected namespace!
 
 void System::CPU::IDT::init() {
-    kout << "IDT INIT  ";
+    kout << "IDT INIT ";
     idt_install();
     kout << " OK" << endl;
 }
 
 void System::CPU::GDT::init() {
-    kout << "GDT INIT  ";
+    kout << "GDT INIT ";
     gdt_install();
     kout << " OK" << endl;
 }
 
 void System::CPU::IRQ::init() {
-    kout << "IRQ INIT  ";
+    kout << "IRQ INIT ";
     irq_install();
     kout << " OK" << endl;
 }
@@ -56,7 +56,7 @@ void System::CPU::IRQ::uninstallIRQ(int irq) {
 }
 
 void System::CPU::ISR::init() {
-    kout << "ISR INIT  ";
+    kout << "ISR INIT ";
     isr_install();
     kout << " OK" << endl;
 }

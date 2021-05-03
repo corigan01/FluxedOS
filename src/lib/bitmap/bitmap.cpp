@@ -22,6 +22,7 @@
 #include "bitmap.hpp"
 #include "../StanderdOperations/Operations.hpp"
 
+
 bool test_bit(bitmap_type *bitmap, i32 bit)
 {
 	return (bool)((bitmap->addr[bit / 8] & (0x1 << (bit % 8))) != 0);

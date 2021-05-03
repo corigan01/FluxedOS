@@ -24,7 +24,7 @@
 #include "../../lib/core/core.h"
 #include "../Serial/serial.hpp"
 
-
+/*
 struct HeapSegment{
     size_t length;
     HeapSegment* next;
@@ -46,3 +46,4 @@ void ExpandHeap(size_t length);
 //inline void* operator new[](size_t size) {return malloc(size);}
 
 inline void operator delete(void* p) {free(p);}
+*/
