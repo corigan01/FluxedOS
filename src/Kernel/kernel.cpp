@@ -45,7 +45,9 @@ int kmain(multiboot_info_t* mbt, i32 magic) {
     kout << "Flux Kernel Started..." << endl;                           // tell the console we started the kernel
 
     auto VGA_DRIVER = Driver::VGA((void*)mbt->framebuffer_addr);      // tell VGA what addr the framebuffer is at
-    tty* KernelTTY = &VGA_DRIVER;                                       // bind the tty to the display driver
+    tty* KernelTTY = &VGA_DRIVER;    // bind the tty to the display driver
+    
+
     
     { // Tell the user we started the kernel
         KernelTTY->print_str(R"(
