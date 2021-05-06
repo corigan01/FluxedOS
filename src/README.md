@@ -45,10 +45,10 @@ SOFTWARE.
 # g++-multilib -
 # qemu-system-x86 
 # xorriso 
-&> sudo bash install.sh 
+&> sudo bash build/install.sh 
 
-# This line will build and run the OS. 
-&> bash autocompile.sh
+# This line will build and run the OS. The file is contained outside the src directory. 
+&> bash Build.sh
 ```
 
 
