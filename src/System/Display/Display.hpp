@@ -85,7 +85,7 @@ namespace System
                         print_char('\n');
                     }
 
-                    void setcolor(COLOR::__VGA__COLORS f, COLOR::__VGA__COLORS b);
+                    void setcolor(i8 f, i8 b);
                     void print_char(char c);
                     void print_str(const char* str);
                     void printf(const char* str);

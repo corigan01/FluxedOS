@@ -32,6 +32,8 @@ using namespace System::IO;
 using namespace System::CPU;
 using namespace System::Memory;
 using namespace System::Display;
+using namespace System::Display::Driver;
+
 
 extern i32 start;
 extern i32 end;
@@ -41,7 +43,6 @@ extern i32 end;
 int kmain(multiboot_info_t* mbt, i32 magic) {
     
 
-
     kout << "Flux Kernel Started..." << endl;                           // tell the console we started the kernel
 
     auto VGA_DRIVER = Driver::VGA((void*)mbt->framebuffer_addr);      // tell VGA what addr the framebuffer is at
@@ -49,29 +50,40 @@ int kmain(multiboot_info_t* mbt, i32 magic) {
     
 
     
+    
     { // Tell the user we started the kernel
+        KernelTTY->setcolor(COLOR::WHITE, COLOR::WHITE);
+        KernelTTY->print_str(R"(
+--------------------------------------------------------------------------------------\n)");
+        KernelTTY->setcolor(COLOR::BRIGHT_BLUE, COLOR::BLACK);
         KernelTTY->print_str(R"(
                    ______            __ __                 __
                   / __/ /_ ____ __  / //_/__ _______  ___ / /
                  / _// / // /\ \ / / ,< / -_) __/ _ \/ -_) / 
-                /_/ /_/\_,_//_\_\ /_/|_|\__/_/ /_//_/\__/_/  
-                BUILD: )");
+                /_/ /_/\___//_\_\ /_/|_|\__/_/ /_//_/\__/_/ )");
+        KernelTTY->setcolor(COLOR::WHITE, COLOR::BLACK);
+        KernelTTY->print_str("\n                BUILD: ");
         INT_TO_STRING(BuildNumberStr, BUILD);
         INT_TO_STRING(MemoryNumberStr, (mbt->mem_lower + mbt->mem_upper) / 1024);
+        KernelTTY->setcolor(COLOR::GREEN, COLOR::BLACK);
         KernelTTY->print_str(BuildNumberStr);
         KernelTTY->print_str("               ");
         KernelTTY->print_str(MemoryNumberStr);
+        KernelTTY->setcolor(COLOR::WHITE, COLOR::BLACK);
         KernelTTY->print_str(" MB Installed!\n                Disp Addr: ");
         INT_TO_STRING(FrameBufferStr, mbt->framebuffer_addr);
         INT_TO_STRING(MultiBootInfoStr, mbt->vbe_mode_info);
         KernelTTY->print_str(FrameBufferStr);
         KernelTTY->print_str("         ");
         KernelTTY->print_str((char*)mbt->boot_loader_name);
+        KernelTTY->setcolor(COLOR::WHITE, COLOR::WHITE);
         KernelTTY->print_str(R"(
 --------------------------------------------------------------------------------------\n)");
+        KernelTTY->setcolor(COLOR::WHITE, COLOR::BLACK);
+        KernelTTY->print_str("\n\n");
     }
 
-
+    KernelTTY->setcolor(COLOR::MAGENTA, COLOR::BLACK);
     KernelTTY->print_str("Starting CPU INIT();\n");
     kout << "Starting CPU Init()" << endl;
 
@@ -88,9 +100,24 @@ int kmain(multiboot_info_t* mbt, i32 magic) {
     IRQ::init();
     KernelTTY->print_str("IRQ INIT: OK\n");
     IO_WAIT;
+    EnableINT();
+    PIT::TimerPhase(1000);
+    for (int i = 0; i < 16; i++) {
+        PIC::SendEOI(i);
+    }
+    KernelTTY->print_str("PIC INIT: OK\n");
+    IO_WAIT;
+    PIT::init();
+    //PIT::TimerPhase(10);
+    KernelTTY->print_str("PIT INIT: OK\n");
+
+
     kout << "CPU INIT  OK" << endl;
 
-   
-
+    PIT::Sleep(1000);
+    KernelTTY->print_str("Kernel Finished!\n");
+    PIT::Sleep(5000);
+    KernelTTY->print_str("PowerHold!\n");
+    
     Power::hold();
 }

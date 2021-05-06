@@ -43,7 +43,7 @@ void Serial::outChar(Serial::SerialDevice st, char c) {
     while (Serial::transmitEmpty(st) == 0);
     Port::byte_out(st , c);
 }
-void Serial::outString(Serial::SerialDevice st, char * s) {
+void Serial::outString(Serial::SerialDevice st, const char * s) {
     for (int i = 0; i < strlen(s); i++) {
         while (Serial::transmitEmpty(st) == 0);
         Port::byte_out(st , s[i]);

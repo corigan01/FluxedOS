@@ -37,6 +37,7 @@ namespace System
             virtual void print_char(char c);
             virtual void print_str(const char * str);
             virtual void printf(const char *str, ...);
+            virtual void setcolor(i8 f, i8 b);
 
 
         };

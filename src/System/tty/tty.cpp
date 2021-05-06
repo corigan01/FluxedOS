@@ -55,3 +55,7 @@ void tty::print_str(const char * str) {
 void tty::printf(const char *str, ...) {
     ; // do this later when we have ints
 }
+
+void tty::setcolor(i8 f, i8 b) {
+    ;
+}

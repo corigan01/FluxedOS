@@ -27,7 +27,7 @@ using namespace System;
 
 
 
-void VGA::setcolor(COLOR::__VGA__COLORS f, COLOR::__VGA__COLORS b) {
+void VGA::setcolor(i8 f, i8 b) {
     FColor = f;
     BColor = b;
 }

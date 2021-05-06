@@ -41,7 +41,7 @@ namespace System
             SerialDevice init(SerialDevice mode);
 
             void outChar(SerialDevice st, char c);
-            void outString(SerialDevice st, char * s);
+            void outString(SerialDevice st, const char * s);
 
             int inByte(SerialDevice st);
             int received(SerialDevice st);

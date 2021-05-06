@@ -1,0 +1,63 @@
+[01m[K./src/lib/StanderdOperations/Operations.cpp:[m[K In function ‘[01m[Kchar* strdup(const char*)[m[K’:
+[01m[K./src/lib/StanderdOperations/Operations.cpp:164:1:[m[K [01;35m[Kwarning: [m[Kno return statement in function returning non-void [[01;35m[K-Wreturn-type[m[K]
+  164 | [01;35m[K}[m[K
+      | [01;35m[K^[m[K
+             [01;35m[K^~[m[K
+[01m[K./src/System/Power/../kout/kout.hpp:80:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   80 |             char* CalledFile = [01;35m[K""[m[K;
+      |                                [01;35m[K^~[m[K
+[01m[K./src/System/Power/Power.cpp:[m[K In function ‘[01m[Kvoid System::Power::shutdown()[m[K’:
+[01m[K./src/System/Power/Power.cpp:33:28:[m[K [01;35m[Kwarning: [m[Kunsigned conversion from ‘[01m[Kint[m[K’ to ‘[01m[Kunsigned char[m[K’ changes value from ‘[01m[K8192[m[K’ to ‘[01m[K0[m[K’ [[01;35m[K-Woverflow[m[K]
+   33 |     Port::byte_out(0xB004, [01;35m[K0x2000[m[K);
+      |                            [01;35m[K^~~~~~[m[K
+[01m[K./src/System/Power/Power.cpp:34:28:[m[K [01;35m[Kwarning: [m[Kunsigned conversion from ‘[01m[Kint[m[K’ to ‘[01m[Kunsigned char[m[K’ changes value from ‘[01m[K8192[m[K’ to ‘[01m[K0[m[K’ [[01;35m[K-Woverflow[m[K]
+   34 |     Port::byte_out(0x604,  [01;35m[K0x2000[m[K);
+      |                            [01;35m[K^~~~~~[m[K
+[01m[K./src/System/Power/Power.cpp:35:28:[m[K [01;35m[Kwarning: [m[Kunsigned conversion from ‘[01m[Kint[m[K’ to ‘[01m[Kunsigned char[m[K’ changes value from ‘[01m[K13312[m[K’ to ‘[01m[K0[m[K’ [[01;35m[K-Woverflow[m[K]
+   35 |     Port::byte_out(0x4004, [01;35m[K0x3400[m[K);
+      |                            [01;35m[K^~~~~~[m[K
+In file included from [01m[K./src/System/Power/Power.cpp:25[m[K:
+./src/System/Power/../kout/kout.hpp: In instantiation of ‘[01m[KSystem::Display::SerialLog& System::Display::SerialLog::operator<<(const T&) [with T = char [15]][m[K’:
+[01m[K./src/System/Power/Power.cpp:31:13:[m[K   required from here
+[01m[K./src/System/Power/../kout/kout.hpp:56:78:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   56 |                     System::IO::Serial::outString(System::IO::Serial::COM_1, [01;35m[K"["[m[K);
+      |                                                                              [01;35m[K^~~[m[K
+[01m[K./src/System/Power/../kout/kout.hpp:58:78:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   58 |                     System::IO::Serial::outString(System::IO::Serial::COM_1, [01;35m[K" in "[m[K);
+      |                                                                              [01;35m[K^~~~~~[m[K
+[01m[K./src/System/Power/../kout/kout.hpp:60:78:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   60 |                     System::IO::Serial::outString(System::IO::Serial::COM_1, [01;35m[K"]\t --> "[m[K);
+      |                                                                              [01;35m[K^~~~~~~~~~[m[K
+./src/System/Power/../kout/kout.hpp: In instantiation of ‘[01m[KSystem::Display::SerialLog& System::Display::SerialLog::operator<<(const T&) [with T = const char*][m[K’:
+[01m[K./src/System/Power/Power.cpp:31:33:[m[K   required from here
+[01m[K./src/System/Power/../kout/kout.hpp:56:78:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   56 |                     System::IO::Serial::outString(System::IO::Serial::COM_1, [01;35m[K"["[m[K);
+      |                                                                              [01;35m[K^~~[m[K
+[01m[K./src/System/Power/../kout/kout.hpp:58:78:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   58 |                     System::IO::Serial::outString(System::IO::Serial::COM_1, [01;35m[K" in "[m[K);
+      |                                                                              [01;35m[K^~~~~~[m[K
+[01m[K./src/System/Power/../kout/kout.hpp:60:78:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   60 |                     System::IO::Serial::outString(System::IO::Serial::COM_1, [01;35m[K"]\t --> "[m[K);
+      |                                                                              [01;35m[K^~~~~~~~~~[m[K
+./src/System/Power/../kout/kout.hpp: In instantiation of ‘[01m[KSystem::Display::SerialLog& System::Display::SerialLog::operator<<(const T&) [with T = char [12]][m[K’:
+[01m[K./src/System/Power/Power.cpp:39:13:[m[K   required from here
+[01m[K./src/System/Power/../kout/kout.hpp:56:78:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   56 |                     System::IO::Serial::outString(System::IO::Serial::COM_1, [01;35m[K"["[m[K);
+      |                                                                              [01;35m[K^~~[m[K
+[01m[K./src/System/Power/../kout/kout.hpp:58:78:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   58 |                     System::IO::Serial::outString(System::IO::Serial::COM_1, [01;35m[K" in "[m[K);
+      |                                                                              [01;35m[K^~~~~~[m[K
+[01m[K./src/System/Power/../kout/kout.hpp:60:78:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   60 |                     System::IO::Serial::outString(System::IO::Serial::COM_1, [01;35m[K"]\t --> "[m[K);
+      |                                                                              [01;35m[K^~~~~~~~~~[m[K
+./src/System/Power/../kout/kout.hpp: In instantiation of ‘[01m[KSystem::Display::SerialLog& System::Display::SerialLog::operator<<(const T&) [with T = char [11]][m[K’:
+[01m[K./src/System/Power/Power.cpp:49:13:[m[K   required from here
+[01m[K./src/System/Power/../kout/kout.hpp:56:78:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   56 |                     System::IO::Serial::outString(System::IO::Serial::COM_1, [01;35m[K"["[m[K);
+      |                                                                              [01;35m[K^~~[m[K
+[01m[K./src/System/Power/../kout/kout.hpp:58:78:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   58 |                     System::IO::Serial::outString(System::IO::Serial::COM_1, [01;35m[K" in "[m[K);
+      |                                                                              [01;35m[K^~~~~~[m[K
+[01m[K./src/System/Power/../kout/kout.hpp:60:78:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   60 |                     System::IO::Serial::outString(System::IO::Serial::COM_1, [01;35m[K"]\t --> "[m[K);
+      |                                                                              [01;35m[K^~~~~~~~~~[m[K
