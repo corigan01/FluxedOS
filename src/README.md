@@ -33,24 +33,7 @@ SOFTWARE.
 ```
 
 ## Building OS
-```bash
-# This installs the required packages to build [TESTED ON (UBUNTU / LINUX MINT)] 
-# NOTE :: You only need to do this step once
-# WARNING :: This script uses sudo / apt, please look over any script before you run as sudo
-# If you would like to install the packages on your own, or use don't use apt, the packages are
-# git 
-# g++ 
-# gcc
-# gcc-multilib 
-# g++-multilib -
-# qemu-system-x86 
-# xorriso 
-&> sudo bash install.sh 
-
-# This line will build and run the OS. 
-&> bash autocompile.sh
-```
-
+Please see https://github.com/corigan01/FluxedOS/blob/main/src/build/README.md
 
 
 
@@ -58,92 +41,133 @@ SOFTWARE.
 ## File structure
 
 ```bash
-.
-├── autocompile.sh
-├── bin
-│   ├── dir.exc
-│   └── test.exc
-├── boot
-│   └── boot.s
-├── checksum
-│   ├── 09f8e0126764a36489dfec100f1158b9  temp.txt new.txt
-│   ├── 2df5ea0438043fb2d22b1035db16ace2  temp.txt new.txt
-│   ├── 3d07b651fff69a88e26f1cbc9b5b1cf5  temp.txt new.txt
-│   ├── 62110ddc1731722c9ea7cac8f4b044bd  temp.txt new.txt
-│   ├── 8a91676008d15f8d6e2f8757e7d91181  temp.txt new.txt
-│   ├── d41d8cd98f00b204e9800998ecf8427e  temp.txt new.txt
-│   ├── d41d8cd98f00b204e9800998ecf8427e  temp.txt old.txt
-│   ├── da7e09838080a5fd70d15a68cf994b39  temp.txt new.txt
-│   ├── f113f794444a59656add6d82ba8f5b36  temp.txt new.txt
-│   ├──  new.txt
-│   └──  old.txt
-├── cpu
-│   ├── cpu.h
-│   ├── gdt.c
-│   ├── gdt.h
-│   ├── idt.c
-│   ├── idt.h
-│   ├── irq.c
-│   ├── irq.h
-│   ├── isr.c
-│   └── isr.h
-├── grub.cfg
-├── install.sh
-├── Kernal
-│   ├── BUILD.h
-│   ├── CppKern.cpp
-│   ├── CppKern.h
-│   ├── Kernal.c
-│   └── Kernal.h
-├── lib
-│   ├── compare
-│   │   ├── compare.cpp
-│   │   └── compare.h
-│   ├── core
-│   │   └── core.h
-│   ├── DisplayOut
-│   │   ├── displayout.cpp
-│   │   └── displayout.h
-│   ├── IO
-│   │   ├── keyboard.cpp
-│   │   ├── Keyboard.h
-│   │   ├── port.cpp
-│   │   └── port.h
-│   ├── String
-│   │   ├── String.cpp
-│   │   └── String.h
-│   ├── Term
-│   │   ├── Term.c
-│   │   └── Term.h
-│   ├── Vector
-│   │   ├── vector.cpp
-│   │   └── vector.h
-│   ├── VGA
-│   │   ├── VGA.cpp
-│   │   └── VGA.h
-│   └── VirtualConsole
-│       ├── VirtualConsole.cpp
-│       └── VirtualConsole.h
-├── linker.ld
+├── BuildHeadless.sh
+├── Build.sh
+├── CODE_OF_CONDUCT.md
+├── CONTRIBUTING.md
+├── ISO
+│   ├── FluxedOS.iso
+│   └── README.md
+├── LICENSE
 ├── log
-│   ├── A++OUTPUT.txt
-│   ├── G++COUTPUT.txt
+│   ├── GccOUTPUT.txt
 │   ├── G++OUTPUT.txt
 │   ├── GRUB.txt
 │   ├── isoLOG.txt
 │   └── LINKOUTPUT.txt
-└── Proc
-    ├── dir
-    │   ├── idk.cpp
-    │   └── log
-    │       └── G++OUTPUT.txt
-    └── test
-        ├── log
-        │   ├── G++OUTPUT.txt
-        │   └── LINKOUTPUT.txt
-        └── test.cpp
+├── os_pictures
+│   ├── build.png
+│   ├── commands.png
+│   ├── files.png
+│   ├── grub.png
+│   └── home screen.png
+├── README.md
+├── src
+│   ├── bin
+│   │   ├── dir.exc
+│   │   ├── README.md
+│   │   └── test.exc
+│   ├── boot
+│   │   ├── boot.h
+│   │   ├── boot.S
+│   │   └── KenelEntry.c
+│   ├── build
+│   │   ├── autocompile.sh
+│   │   ├── func.sh
+│   │   ├── install.sh
+│   │   └── makeimg.sh
+│   ├── Checksum
+│   │   ├── sum_new.check
+│   │   └── sum_old.check
+│   ├── CPU
+│   │   ├── cpu.c
+│   │   ├── cpu.h
+│   │   ├── cpu.S
+│   │   ├── gdt.c
+│   │   ├── gdt.h
+│   │   ├── gdt.S
+│   │   ├── idt.c
+│   │   ├── idt.h
+│   │   ├── irq.c
+│   │   ├── irq.h
+│   │   ├── irq.S
+│   │   ├── isr.c
+│   │   ├── isr.h
+│   │   └── isr.S
+│   ├── disk.img
+│   ├── fs
+│   │   └── test.txt
+│   ├── grub.cfg
+│   ├── Kernel
+│   │   ├── BUILD.b
+│   │   └── kernel.cpp
+│   ├── KEYS.txt
+│   ├── lib
+│   │   ├── bitmap
+│   │   │   ├── bitmap.cpp
+│   │   │   └── bitmap.hpp
+│   │   ├── core
+│   │   │   └── core.h
+│   │   ├── multiboot
+│   │   │   └── multiboot.h
+│   │   ├── StanderdOperations
+│   │   │   ├── Operations.cpp
+│   │   │   └── Operations.hpp
+│   │   ├── string
+│   │   │   ├── string.cpp
+│   │   │   └── string.hpp
+│   │   └── vector
+│   │       └── vector.hpp
+│   ├── linker.ld
+│   ├── log
+│   │   ├── A++OUTPUT.txt
+│   │   ├── diskimg_creation.txt
+│   │   ├── GccOUTPUT.txt
+│   │   ├── G++COUTPUT.txt
+│   │   ├── G++FAILED.txt
+│   │   ├── G++OUTPUT.txt
+│   │   ├── GRUB.txt
+│   │   ├── imgcreate.txt
+│   │   ├── isoLOG.txt
+│   │   └── LINKOUTPUT.txt
+│   ├── README.md
+│   ├── System
+│   │   ├── cpu
+│   │   │   ├── cpu.cpp
+│   │   │   └── cpu.hpp
+│   │   ├── Display
+│   │   │   ├── Display.cpp
+│   │   │   └── Display.hpp
+│   │   ├── Keyboard
+│   │   ├── kout
+│   │   │   ├── kout.cpp
+│   │   │   └── kout.hpp
+│   │   ├── memory
+│   │   │   ├── heap.cpp
+│   │   │   ├── heap.hpp
+│   │   │   ├── paging
+│   │   │   │   ├── page.cpp
+│   │   │   │   └── page.hpp
+│   │   │   └── pmm
+│   │   │       ├── pmm.cpp
+│   │   │       └── pmm.hpp
+│   │   ├── Port
+│   │   │   ├── port.cpp
+│   │   │   └── port.hpp
+│   │   ├── Power
+│   │   │   ├── Power.cpp
+│   │   │   └── Power.hpp
+│   │   ├── Serial
+│   │   │   ├── serial.cpp
+│   │   │   └── serial.hpp
+│   │   └── tty
+│   │       ├── tty.cpp
+│   │       └── tty.hpp
+│   └── test.txt
+└── visualize.sh
 
-21 directories, 62 files
+31 directories, 93 files
+
 
 
 ```
