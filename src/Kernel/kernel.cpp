@@ -24,12 +24,16 @@
 #include "../System/cpu/cpu.hpp"
 #include "../System/kout/kout.hpp"
 #include "../System/Power/Power.hpp"
+#include "../System/Clock/PIT/PIT.hpp"
+#include "../System/Clock/RTC/RTC.hpp"
 #include "../System/memory/pmm/pmm.hpp"
 #include "../System/Display/Display.hpp"
+
 
 using namespace System; 
 using namespace System::IO;
 using namespace System::CPU;
+using namespace System::Clock;
 using namespace System::Memory;
 using namespace System::Display;
 using namespace System::Display::Driver;

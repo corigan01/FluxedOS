@@ -4,7 +4,7 @@ Drive current: -outdev 'stdio:FluxedOS.iso'
 Media current: stdio file, overwriteable
 Media status : is blank
 Media summary: 0 sessions, 0 data blocks, 0 data,  637g free
-Added to ISO image: directory '/'='/tmp/grub.V7Nc0L'
+Added to ISO image: directory '/'='/tmp/grub.MANS76'
 xorriso : UPDATE :     574 files added in 1 seconds
 Added to ISO image: directory '/'='/home/corigan01/Desktop/Programming/FluxedOS/src/isodir'
 xorriso : UPDATE :     582 files added in 1 seconds
