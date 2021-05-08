@@ -59,11 +59,11 @@ Link_and_check & # Link the bin and check everything
 
 #building the iso file
 DisDone "Making boot/grub" 
-mkdir -p isodir/boot/grub & &> "log/isoLOG.txt"
+mkdir -p isodir/boot/grub  &> "log/isoLOG.txt"
 DisDone "Making boot/programs"
-mkdir -p isodir/programs & &> "log/isoLOG.txt"
+mkdir -p isodir/programs  &> "log/isoLOG.txt"
 DisDone "Moving programs"
-cp bin/* isodir/programs & &> "log/isoLOG.txt"
+cp bin/* isodir/programs  &> "log/isoLOG.txt"
 
 wait
 

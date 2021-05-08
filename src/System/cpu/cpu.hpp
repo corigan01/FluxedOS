@@ -100,5 +100,24 @@ namespace System
             void Sleep(i16 ms);
 
         }
+
+        namespace RTC {
+            void Read();
+
+            i8 GetRegister(int reg);
+            int getUpdateFlag();
+
+            enum {
+                cmos_address = 0x70,
+                cmos_data    = 0x71
+            };
+
+            i16 GetSeconds();
+            i16 GetMin();
+            i16 GetHours();
+            i16 GetDays();
+            i16 GetMonth();
+            i16 GetYear();
+        }
     }
 }

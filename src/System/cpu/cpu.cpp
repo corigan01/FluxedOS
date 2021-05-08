@@ -183,9 +183,6 @@ i32 timer_ticks = 0;
 i16 timer_phase = 18;
 
 i32 timer_seconds = 0;
-i32 timer_min = 0;
-i32 timer_hours = 0;
-i32 timer_days = 0;
 
 void PIT::init() {
     IRQ::installIRQ(0, System::CPU::PIT::TimerHandler);
@@ -210,20 +207,20 @@ void PIT::TimerHandler(register_t *r) {
 
     if (timer_ticks % timer_phase == 0) {
         NO_INSTRUCTION;
-        kout << "sec" << endl;
+        timer_seconds++;
     }
 
     PIC::SendEOI(0);
 }
 
 void PIT::Sleep(i16 ms) {
-    kout << "Sleep Started" << endl;
+    
 
     i16 timerTicksNeeded = timer_ticks + (timer_phase * (ms / 1000));
     INT_TO_STRING(timerTstr, timerTicksNeeded);
     INT_TO_STRING(timerNOWstr, timer_ticks);
 
-    kout << "TIMER : " << timerNOWstr << " to : " << timerTstr << endl;
+    
 
     i32 timerold = timer_ticks;
 
@@ -232,7 +229,6 @@ void PIT::Sleep(i16 ms) {
         NO_INSTRUCTION;
 
         if (timer_ticks == timerTicksNeeded) {
-            kout << "timer passed" << endl;
             return;
         }
         else {
@@ -246,4 +242,133 @@ void PIT::Sleep(i16 ms) {
     }
 
     kout << "Sleep Timed out!" << endl;
+}
+
+#define CURRENT_YEAR        2021                            // Change this each year!
+ 
+int century_register = 0x00;                                // Set by ACPI table parsing code if possible
+ 
+i16 second;
+i16 minute;
+i16 hour;
+i16 day;
+i16 month;
+i32 year;
+ 
+
+void RTC::Read() {
+    i16 century;
+    i16 last_second;
+    i16 last_minute;
+    i16 last_hour;
+    i16 last_day;
+    i16 last_month;
+    i16 last_year;
+    i16 last_century;
+    i16 registerB;
+
+    // Note: This uses the "read registers until you get the same values twice in a row" technique
+    //       to avoid getting dodgy/inconsistent values due to RTC updates
+
+    while (RTC::getUpdateFlag());                // Make sure an update isn't in progress
+    second = RTC::GetRegister(0x00);
+    minute = RTC::GetRegister(0x02);
+    hour = RTC::GetRegister(0x04);
+    day = RTC::GetRegister(0x07);
+    month = RTC::GetRegister(0x08);
+    year = RTC::GetRegister(0x09);
+    if(century_register != 0) {
+        century = RTC::GetRegister(century_register);
+    }
+
+    do {
+        last_second = second;
+        last_minute = minute;
+        last_hour = hour;
+        last_day = day;
+        last_month = month;
+        last_year = year;
+        last_century = century;
+
+        while (RTC::getUpdateFlag());           // Make sure an update isn't in progress
+        second = RTC::GetRegister(0x00);
+        minute = RTC::GetRegister(0x02);
+        hour = RTC::GetRegister(0x04);
+        day = RTC::GetRegister(0x07);
+        month = RTC::GetRegister(0x08);
+        year = RTC::GetRegister(0x09);
+        if(century_register != 0) {
+                century = RTC::GetRegister(century_register);
+        }
+    } while( (last_second != second) || (last_minute != minute) || (last_hour != hour) ||
+            (last_day != day) || (last_month != month) || (last_year != year) ||
+            (last_century != century) );
+
+    registerB = RTC::GetRegister(0x0B);
+
+    // Convert BCD to binary values if necessary
+
+    if (!(registerB & 0x04)) {
+        second = (second & 0x0F) + ((second / 16) * 10);
+        minute = (minute & 0x0F) + ((minute / 16) * 10);
+        hour = ( (hour & 0x0F) + (((hour & 0x70) / 16) * 10) ) | (hour & 0x80);
+        day = (day & 0x0F) + ((day / 16) * 10);
+        month = (month & 0x0F) + ((month / 16) * 10);
+        year = (year & 0x0F) + ((year / 16) * 10);
+        if(century_register != 0) {
+                century = (century & 0x0F) + ((century / 16) * 10);
+        }
+    }
+
+    // Convert 12 hour clock to 24 hour clock if necessary
+
+    if (!(registerB & 0x02) && (hour & 0x80)) {
+        hour = ((hour & 0x7F) + 12) % 24;
+    }
+
+    // Calculate the full (4-digit) year
+
+    if(century_register != 0) {
+        year += century * 100;
+    } else {
+        year += (CURRENT_YEAR / 100) * 100;
+        if(year < CURRENT_YEAR) year += 100;
+    }
+    kout << "RTC Read()" << endl;
+
+}
+
+
+i8 RTC::GetRegister(int reg) {
+    Port::byte_out(cmos_address, reg);
+    return Port::byte_in(cmos_data);
+}
+int RTC::getUpdateFlag() {
+    Port::byte_out(cmos_address, 0x0A);
+    return (Port::byte_in(cmos_data) & 0x80);
+}
+
+
+i16 RTC::GetSeconds() {
+    return second;
+}
+
+i16 RTC::GetMin() {
+    return minute;
+}
+
+i16 RTC::GetHours() {
+    return hour;
+}
+
+i16 RTC::GetDays() {
+    return day;
+
+}
+i16 RTC::GetMonth() {
+    return month;
+}
+
+i16 RTC::GetYear() {
+    return year;
 }

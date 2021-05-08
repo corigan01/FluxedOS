@@ -110,14 +110,41 @@ int kmain(multiboot_info_t* mbt, i32 magic) {
     PIT::init();
     //PIT::TimerPhase(10);
     KernelTTY->print_str("PIT INIT: OK\n");
+    RTC::Read();
+    KernelTTY->print_str("RTC INIT: OK\n");
+
+    INT_TO_STRING(SecStr, RTC::GetSeconds());
+    INT_TO_STRING(MinStr, RTC::GetMin());
+    INT_TO_STRING(HourStr, RTC::GetHours());
+    INT_TO_STRING(DayStr, RTC::GetDays());
+    INT_TO_STRING(Monthstr, RTC::GetMonth());
+    INT_TO_STRING(YearStr, RTC::GetYear());
+
+    kout << "Date: " << Monthstr << "/" << DayStr << "/" << YearStr << " - " << HourStr << ":" << MinStr << ":" << SecStr << endl;
+    KernelTTY->print_str("Date: ");
+    KernelTTY->print_str(Monthstr);
+    KernelTTY->print_str("/");
+    KernelTTY->print_str(DayStr);
+    KernelTTY->print_str("/");
+    KernelTTY->print_str(YearStr);
+    KernelTTY->print_str(" - ");
+    KernelTTY->print_str(HourStr);
+    KernelTTY->print_str(":");
+    KernelTTY->print_str(MinStr);
+    KernelTTY->print_str(":");
+    KernelTTY->print_str(SecStr);
+    KernelTTY->print_str("\n");
 
 
-    kout << "CPU INIT  OK" << endl;
+    kout << "INIT     OK" << endl;
 
     PIT::Sleep(1000);
-    KernelTTY->print_str("Kernel Finished!\n");
-    PIT::Sleep(5000);
-    KernelTTY->print_str("PowerHold!\n");
+    KernelTTY->print_str("Kernel Eneded");
+    for (int i = 0; i < 10; i++) {
+        PIT::Sleep(1000);
+        KernelTTY->print_str(".");
+    }
+    KernelTTY->print_str("\nPowerHold!\n");
     
     Power::hold();
 }
