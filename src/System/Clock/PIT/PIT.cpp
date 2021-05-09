@@ -63,14 +63,7 @@ void PIT::TimerHandler(register_t *r) {
 }
 
 void PIT::Sleep(i16 ms) {
-    
-
     i16 timerTicksNeeded = timer_ticks + (timer_phase * (ms / 1000));
-    INT_TO_STRING(timerTstr, timerTicksNeeded);
-    INT_TO_STRING(timerNOWstr, timer_ticks);
-
-    
-
     i32 timerold = timer_ticks;
 
     int i = 0;

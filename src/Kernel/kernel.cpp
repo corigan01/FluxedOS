@@ -28,16 +28,16 @@
 #include "../System/Clock/RTC/RTC.hpp"
 #include "../System/memory/pmm/pmm.hpp"
 #include "../System/Display/Display.hpp"
-
+#include "../System/Keyboard/keyboard.hpp"
 
 using namespace System; 
 using namespace System::IO;
+using namespace System::HID;
 using namespace System::CPU;
 using namespace System::Clock;
 using namespace System::Memory;
 using namespace System::Display;
 using namespace System::Display::Driver;
-
 
 extern i32 start;
 extern i32 end;
@@ -105,18 +105,18 @@ int kmain(multiboot_info_t* mbt, i32 magic) {
     KernelTTY->print_str("IRQ INIT: OK\n");
     IO_WAIT;
     EnableINT();
-    PIT::TimerPhase(1000);
     for (int i = 0; i < 16; i++) {
         PIC::SendEOI(i);
     }
     KernelTTY->print_str("PIC INIT: OK\n");
     IO_WAIT;
+    PIT::TimerPhase(1000);
     PIT::init();
-    //PIT::TimerPhase(10);
     KernelTTY->print_str("PIT INIT: OK\n");
     RTC::Read();
     KernelTTY->print_str("RTC INIT: OK\n");
 
+    // convert date and time to a string
     INT_TO_STRING(SecStr, RTC::GetSeconds());
     INT_TO_STRING(MinStr, RTC::GetMin());
     INT_TO_STRING(HourStr, RTC::GetHours());
@@ -125,22 +125,27 @@ int kmain(multiboot_info_t* mbt, i32 magic) {
     INT_TO_STRING(YearStr, RTC::GetYear());
 
     kout << "Date: " << Monthstr << "/" << DayStr << "/" << YearStr << " - " << HourStr << ":" << MinStr << ":" << SecStr << endl;
-    KernelTTY->print_str("Date: ");
-    KernelTTY->print_str(Monthstr);
-    KernelTTY->print_str("/");
-    KernelTTY->print_str(DayStr);
-    KernelTTY->print_str("/");
-    KernelTTY->print_str(YearStr);
-    KernelTTY->print_str(" - ");
-    KernelTTY->print_str(HourStr);
-    KernelTTY->print_str(":");
-    KernelTTY->print_str(MinStr);
-    KernelTTY->print_str(":");
-    KernelTTY->print_str(SecStr);
-    KernelTTY->print_str("\n");
+    KernelTTY->printf("Date: %s/%s/%s - %s:%s:%s \n", Monthstr, DayStr, YearStr, HourStr, MinStr, SecStr);
 
+    Keyboard::installIRQ();
+    KernelTTY->print_str("KBD INIT: OK\n");
 
+    // Init done message
     kout << "INIT     OK" << endl;
+
+
+    while (1) {
+        i8 OutputChar = Keyboard::GetKeyChar();
+        if (OutputChar != NULL) {
+            KernelTTY->print_char(OutputChar);
+        }
+        else {
+            NO_INSTRUCTION;
+        }
+    }
+
+
+    /* Kernel Finish */
 
     PIT::Sleep(1000);
     KernelTTY->print_str("Kernel Eneded");
@@ -149,6 +154,8 @@ int kmain(multiboot_info_t* mbt, i32 magic) {
         KernelTTY->print_str(".");
     }
     KernelTTY->print_str("\nPowerHold!\n");
+
+    
     
     Power::hold();
 }

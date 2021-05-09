@@ -138,3 +138,10 @@ void VGA::print_str(const char* str) {
         this->print_char(str[i]);
     }
 }
+
+void VGA::printf(const char* str, ...) {
+    va_list va;
+    va_start(va, str);
+    VGA::fmat(str, [this](int ch) { print_char(ch); }, va);
+    va_end(va);
+}

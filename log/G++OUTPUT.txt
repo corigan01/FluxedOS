@@ -1,134 +1,38 @@
-In file included from [01m[K./src/System/cpu/cpu.cpp:22[m[K:
-[01m[K./src/System/cpu/cpu.hpp:49:[m[K [01;35m[Kwarning: [m[K"PIC1_DATA" redefined
+In file included from [01m[K./src/System/Keyboard/keyboard.cpp:23[m[K:
+[01m[K./src/System/Keyboard/../cpu/cpu.hpp:49:[m[K [01;35m[Kwarning: [m[K"PIC1_DATA" redefined
    49 | #define PIC1_DATA                 (PIC1 + 1)
       | 
-[01m[K./src/System/cpu/cpu.hpp:28:[m[K [01;36m[Knote: [m[Kthis is the location of the previous definition
+[01m[K./src/System/Keyboard/../cpu/cpu.hpp:28:[m[K [01;36m[Knote: [m[Kthis is the location of the previous definition
    28 | #define PIC1_DATA                   0x21
       | 
-[01m[K./src/System/cpu/cpu.hpp:51:[m[K [01;35m[Kwarning: [m[K"PIC2_DATA" redefined
+[01m[K./src/System/Keyboard/../cpu/cpu.hpp:51:[m[K [01;35m[Kwarning: [m[K"PIC2_DATA" redefined
    51 | #define PIC2_DATA                 (PIC2 + 1)
       | 
-[01m[K./src/System/cpu/cpu.hpp:30:[m[K [01;36m[Knote: [m[Kthis is the location of the previous definition
+[01m[K./src/System/Keyboard/../cpu/cpu.hpp:30:[m[K [01;36m[Knote: [m[Kthis is the location of the previous definition
    30 | #define PIC2_DATA                   0xA1
       | 
-In file included from [01m[K./src/System/cpu/cpu.hpp:24[m[K,
-                 from [01m[K./src/System/cpu/cpu.cpp:22[m[K:
-[01m[K./src/System/cpu/../kout/kout.hpp:79:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+In file included from [01m[K./src/System/Keyboard/keyboard.hpp:24[m[K,
+                 from [01m[K./src/System/Keyboard/keyboard.cpp:22[m[K:
+[01m[K./src/System/Keyboard/../kout/kout.hpp:79:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
    79 |             char* CalledFunc = [01;35m[K""[m[K;
       |                                [01;35m[K^~[m[K
-[01m[K./src/System/cpu/../kout/kout.hpp:80:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+[01m[K./src/System/Keyboard/../kout/kout.hpp:80:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
    80 |             char* CalledFile = [01;35m[K""[m[K;
       |                                [01;35m[K^~[m[K
-[01m[K./src/System/cpu/cpu.cpp:187:6:[m[K [01;31m[Kerror: [m[K‘[01m[KPIT[m[K’ has not been declared
-  187 | void [01;31m[KPIT[m[K::init() {
-      |      [01;31m[K^~~[m[K
-[01m[K./src/System/cpu/cpu.cpp:[m[K In function ‘[01m[Kvoid init()[m[K’:
-[01m[K./src/System/cpu/cpu.cpp:188:37:[m[K [01;31m[Kerror: [m[K‘[01m[KSystem::CPU::PIT[m[K’ has not been declared
-  188 |     IRQ::installIRQ(0, System::CPU::[01;31m[KPIT[m[K::TimerHandler);
-      |                                     [01;31m[K^~~[m[K
-[01m[K./src/System/cpu/cpu.cpp:[m[K At global scope:
-[01m[K./src/System/cpu/cpu.cpp:192:6:[m[K [01;31m[Kerror: [m[K‘[01m[KPIT[m[K’ has not been declared
-  192 | void [01;31m[KPIT[m[K::TimerPhase(i16 hz) {
-      |      [01;31m[K^~~[m[K
-[01m[K./src/System/cpu/cpu.cpp:204:6:[m[K [01;31m[Kerror: [m[K‘[01m[KPIT[m[K’ has not been declared
-  204 | void [01;31m[KPIT[m[K::TimerHandler(register_t *r) {
-      |      [01;31m[K^~~[m[K
-[01m[K./src/System/cpu/cpu.cpp:216:6:[m[K [01;31m[Kerror: [m[K‘[01m[KPIT[m[K’ has not been declared
-  216 | void [01;31m[KPIT[m[K::Sleep(i16 ms) {
-      |      [01;31m[K^~~[m[K
-[01m[K./src/System/cpu/cpu.cpp:259:6:[m[K [01;31m[Kerror: [m[K‘[01m[KRTC[m[K’ has not been declared
-  259 | void [01;31m[KRTC[m[K::Read() {
-      |      [01;31m[K^~~[m[K
-[01m[K./src/System/cpu/cpu.cpp:[m[K In function ‘[01m[Kvoid Read()[m[K’:
-[01m[K./src/System/cpu/cpu.cpp:273:12:[m[K [01;31m[Kerror: [m[K‘[01m[KRTC[m[K’ has not been declared
-  273 |     while ([01;31m[KRTC[m[K::getUpdateFlag());                // Make sure an update isn't in progress
-      |            [01;31m[K^~~[m[K
-[01m[K./src/System/cpu/cpu.cpp:274:25:[m[K [01;31m[Kerror: [m[K‘[01m[KRTC[m[K’ has not been declared
-  274 |     RTC_SECOND_HOLD =   [01;31m[KRTC[m[K::GetRegister(0x00);
-      |                         [01;31m[K^~~[m[K
-[01m[K./src/System/cpu/cpu.cpp:275:25:[m[K [01;31m[Kerror: [m[K‘[01m[KRTC[m[K’ has not been declared
-  275 |     RTC_MINUTE_HOLD =   [01;31m[KRTC[m[K::GetRegister(0x02);
-      |                         [01;31m[K^~~[m[K
-[01m[K./src/System/cpu/cpu.cpp:276:25:[m[K [01;31m[Kerror: [m[K‘[01m[KRTC[m[K’ has not been declared
-  276 |     RTC_HOUR_HOLD   =   [01;31m[KRTC[m[K::GetRegister(0x04);
-      |                         [01;31m[K^~~[m[K
-[01m[K./src/System/cpu/cpu.cpp:277:25:[m[K [01;31m[Kerror: [m[K‘[01m[KRTC[m[K’ has not been declared
-  277 |     RTC_DAY_HOLD    =   [01;31m[KRTC[m[K::GetRegister(0x07);
-      |                         [01;31m[K^~~[m[K
-[01m[K./src/System/cpu/cpu.cpp:278:25:[m[K [01;31m[Kerror: [m[K‘[01m[KRTC[m[K’ has not been declared
-  278 |     RTC_MONTH_HOLD  =   [01;31m[KRTC[m[K::GetRegister(0x08);
-      |                         [01;31m[K^~~[m[K
-[01m[K./src/System/cpu/cpu.cpp:279:25:[m[K [01;31m[Kerror: [m[K‘[01m[KRTC[m[K’ has not been declared
-  279 |     RTC_YEAR_HOLD   =   [01;31m[KRTC[m[K::GetRegister(0x09);
-      |                         [01;31m[K^~~[m[K
-[01m[K./src/System/cpu/cpu.cpp:281:19:[m[K [01;31m[Kerror: [m[K‘[01m[KRTC[m[K’ has not been declared
-  281 |         century = [01;31m[KRTC[m[K::GetRegister(century_register);
-      |                   [01;31m[K^~~[m[K
-[01m[K./src/System/cpu/cpu.cpp:293:16:[m[K [01;31m[Kerror: [m[K‘[01m[KRTC[m[K’ has not been declared
-  293 |         while ([01;31m[KRTC[m[K::getUpdateFlag());           // Make sure an update isn't in progress
-      |                [01;31m[K^~~[m[K
-[01m[K./src/System/cpu/cpu.cpp:294:27:[m[K [01;31m[Kerror: [m[K‘[01m[KRTC[m[K’ has not been declared
-  294 |         RTC_SECOND_HOLD = [01;31m[KRTC[m[K::GetRegister(0x00);
-      |                           [01;31m[K^~~[m[K
-[01m[K./src/System/cpu/cpu.cpp:295:27:[m[K [01;31m[Kerror: [m[K‘[01m[KRTC[m[K’ has not been declared
-  295 |         RTC_MINUTE_HOLD = [01;31m[KRTC[m[K::GetRegister(0x02);
-      |                           [01;31m[K^~~[m[K
-[01m[K./src/System/cpu/cpu.cpp:296:25:[m[K [01;31m[Kerror: [m[K‘[01m[KRTC[m[K’ has not been declared
-  296 |         RTC_HOUR_HOLD = [01;31m[KRTC[m[K::GetRegister(0x04);
-      |                         [01;31m[K^~~[m[K
-[01m[K./src/System/cpu/cpu.cpp:297:24:[m[K [01;31m[Kerror: [m[K‘[01m[KRTC[m[K’ has not been declared
-  297 |         RTC_DAY_HOLD = [01;31m[KRTC[m[K::GetRegister(0x07);
-      |                        [01;31m[K^~~[m[K
-[01m[K./src/System/cpu/cpu.cpp:298:26:[m[K [01;31m[Kerror: [m[K‘[01m[KRTC[m[K’ has not been declared
-  298 |         RTC_MONTH_HOLD = [01;31m[KRTC[m[K::GetRegister(0x08);
-      |                          [01;31m[K^~~[m[K
-[01m[K./src/System/cpu/cpu.cpp:299:25:[m[K [01;31m[Kerror: [m[K‘[01m[KRTC[m[K’ has not been declared
-  299 |         RTC_YEAR_HOLD = [01;31m[KRTC[m[K::GetRegister(0x09);
-      |                         [01;31m[K^~~[m[K
-[01m[K./src/System/cpu/cpu.cpp:301:27:[m[K [01;31m[Kerror: [m[K‘[01m[KRTC[m[K’ has not been declared
-  301 |                 century = [01;31m[KRTC[m[K::GetRegister(century_register);
-      |                           [01;31m[K^~~[m[K
-[01m[K./src/System/cpu/cpu.cpp:307:17:[m[K [01;31m[Kerror: [m[K‘[01m[KRTC[m[K’ has not been declared
-  307 |     registerB = [01;31m[KRTC[m[K::GetRegister(0x0B);
-      |                 [01;31m[K^~~[m[K
-[01m[K./src/System/cpu/cpu.cpp:[m[K At global scope:
-[01m[K./src/System/cpu/cpu.cpp:342:4:[m[K [01;31m[Kerror: [m[K‘[01m[KRTC[m[K’ has not been declared
-  342 | i8 [01;31m[KRTC[m[K::GetRegister(int reg) {
-      |    [01;31m[K^~~[m[K
-[01m[K./src/System/cpu/cpu.cpp:[m[K In function ‘[01m[Ki8 GetRegister(int)[m[K’:
-[01m[K./src/System/cpu/cpu.cpp:343:20:[m[K [01;31m[Kerror: [m[K‘[01m[Kcmos_address[m[K’ was not declared in this scope
-  343 |     Port::byte_out([01;31m[Kcmos_address[m[K, reg);
-      |                    [01;31m[K^~~~~~~~~~~~[m[K
-[01m[K./src/System/cpu/cpu.cpp:344:26:[m[K [01;31m[Kerror: [m[K‘[01m[Kcmos_data[m[K’ was not declared in this scope
-  344 |     return Port::byte_in([01;31m[Kcmos_data[m[K);
-      |                          [01;31m[K^~~~~~~~~[m[K
-[01m[K./src/System/cpu/cpu.cpp:[m[K At global scope:
-[01m[K./src/System/cpu/cpu.cpp:346:5:[m[K [01;31m[Kerror: [m[K‘[01m[KRTC[m[K’ has not been declared
-  346 | int [01;31m[KRTC[m[K::getUpdateFlag() {
-      |     [01;31m[K^~~[m[K
-[01m[K./src/System/cpu/cpu.cpp:[m[K In function ‘[01m[Kint getUpdateFlag()[m[K’:
-[01m[K./src/System/cpu/cpu.cpp:347:20:[m[K [01;31m[Kerror: [m[K‘[01m[Kcmos_address[m[K’ was not declared in this scope
-  347 |     Port::byte_out([01;31m[Kcmos_address[m[K, 0x0A);
-      |                    [01;31m[K^~~~~~~~~~~~[m[K
-[01m[K./src/System/cpu/cpu.cpp:348:27:[m[K [01;31m[Kerror: [m[K‘[01m[Kcmos_data[m[K’ was not declared in this scope
-  348 |     return (Port::byte_in([01;31m[Kcmos_data[m[K) & 0x80);
-      |                           [01;31m[K^~~~~~~~~[m[K
-[01m[K./src/System/cpu/cpu.cpp:[m[K At global scope:
-[01m[K./src/System/cpu/cpu.cpp:352:5:[m[K [01;31m[Kerror: [m[K‘[01m[KRTC[m[K’ has not been declared
-  352 | i16 [01;31m[KRTC[m[K::GetSeconds() {
-      |     [01;31m[K^~~[m[K
-[01m[K./src/System/cpu/cpu.cpp:356:5:[m[K [01;31m[Kerror: [m[K‘[01m[KRTC[m[K’ has not been declared
-  356 | i16 [01;31m[KRTC[m[K::GetMin() {
-      |     [01;31m[K^~~[m[K
-[01m[K./src/System/cpu/cpu.cpp:360:5:[m[K [01;31m[Kerror: [m[K‘[01m[KRTC[m[K’ has not been declared
-  360 | i16 [01;31m[KRTC[m[K::GetHours() {
-      |     [01;31m[K^~~[m[K
-[01m[K./src/System/cpu/cpu.cpp:364:5:[m[K [01;31m[Kerror: [m[K‘[01m[KRTC[m[K’ has not been declared
-  364 | i16 [01;31m[KRTC[m[K::GetDays() {
-      |     [01;31m[K^~~[m[K
-[01m[K./src/System/cpu/cpu.cpp:368:5:[m[K [01;31m[Kerror: [m[K‘[01m[KRTC[m[K’ has not been declared
-  368 | i16 [01;31m[KRTC[m[K::GetMonth() {
-      |     [01;31m[K^~~[m[K
-[01m[K./src/System/cpu/cpu.cpp:372:5:[m[K [01;31m[Kerror: [m[K‘[01m[KRTC[m[K’ has not been declared
-  372 | i16 [01;31m[KRTC[m[K::GetYear() {
-      |     [01;31m[K^~~[m[K
+[01m[K./src/System/Keyboard/keyboard.cpp:[m[K In function ‘[01m[Kvoid System::HID::Keyboard::installIRQ()[m[K’:
+[01m[K./src/System/Keyboard/keyboard.cpp:46:24:[m[K [01;31m[Kerror: [m[K‘[01m[KRepStr[m[K’ was not declared in this scope
+   46 |     kout << "Reg: " << [01;31m[KRepStr[m[K << endl;
+      |                        [01;31m[K^~~~~~[m[K
+[01m[K./src/System/Keyboard/keyboard.cpp:[m[K At global scope:
+[01m[K./src/System/Keyboard/keyboard.cpp:54:29:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   54 | static char* LetterArrayQ = [01;35m[K"qwertyuiop"[m[K; // 0x10-0x1c
+      |                             [01;35m[K^~~~~~~~~~~~[m[K
+[01m[K./src/System/Keyboard/keyboard.cpp:55:29:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   55 | static char* LetterArrayA = [01;35m[K"asdfghjkl"[m[K;
+      |                             [01;35m[K^~~~~~~~~~~[m[K
+[01m[K./src/System/Keyboard/keyboard.cpp:56:29:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   56 | static char* LetterArrayY = [01;35m[K"zxcvbnm"[m[K;
+      |                             [01;35m[K^~~~~~~~~[m[K
+[01m[K./src/System/Keyboard/keyboard.cpp:57:29:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   57 | static char* NumberArray  = [01;35m[K"123456789"[m[K;
+      |                             [01;35m[K^~~~~~~~~~~[m[K

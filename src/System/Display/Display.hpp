@@ -88,7 +88,7 @@ namespace System
                     void setcolor(i8 f, i8 b);
                     void print_char(char c);
                     void print_str(const char* str);
-                    void printf(const char* str);
+                    void printf(const char* str, ...);
                     void clear_screen();
                     void clear_line(i32 linenumber);
 
@@ -101,6 +101,75 @@ namespace System
                     i8 BColor = COLOR::BLACK; 
 
                     i16 entry(char ch, i8 f, i8 b);
+
+                protected:
+
+                    template <typename T>
+                    void fmat(const char* fmt, T emit, va_list va) {
+                        int isLong = 0;
+                        auto fetchValue = [&]() -> uintmax_t {
+                            int wasLong = isLong;
+                            isLong = 0;
+                            switch (wasLong) {
+                                case 0:
+                                    return va_arg(va, unsigned int);
+                                case 1:
+                                    return va_arg(va, unsigned long);
+                                case 2:
+                                    return va_arg(va, unsigned long long);
+                            }
+                            return -1;
+                        };
+
+                        for (; *fmt != '\0'; ++fmt) {
+                            if (*fmt != '%') {
+                                emit(*fmt);
+                                continue;
+                            }
+
+                            fmt++;
+                            while (*fmt == 'l') {
+                                ++isLong, ++fmt;
+                            }
+
+                            switch (*fmt) {
+                                case 'c': {
+                                    char ch = va_arg(va, int);
+                                    emit(ch);
+                                    break;
+                                }
+                                case 'p': {
+                                    const uint32 v = va_arg(va, unsigned long);
+                                    INT_TO_STRING(strname, v);
+                                    this->print_str(strname);
+                                    isLong = 0;
+                                    break;
+                                }
+                                case 'x': {
+                                    const uintmax_t v = fetchValue();
+                                    INT_TO_STRING(strname, v);
+                                    this->print_str(strname);
+                                    break;
+                                }
+                                case 's': {
+                                    const char* s = va_arg(va, const char*);
+                                    while (*s != '\0')
+                                        emit(*s++);
+                                    break;
+                                }
+                                case 'd': {
+                                    const uintmax_t v = fetchValue();
+                                    INT_TO_STRING(strname, v);
+                                    this->print_str(strname);
+                                    break;
+                                }
+                                default:
+                                    emit('%');
+                                    emit(*fmt);
+                                    break;
+                            }
+                        }
+                    }
 
 
             };

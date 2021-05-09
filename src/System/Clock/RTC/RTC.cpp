@@ -53,12 +53,14 @@ void RTC::Read() {
     //       to avoid getting dodgy/inconsistent values due to RTC updates
 
     while (RTC::getUpdateFlag());                // Make sure an update isn't in progress
+
     RTC_SECOND_HOLD =   RTC::GetRegister(0x00);
     RTC_MINUTE_HOLD =   RTC::GetRegister(0x02);
     RTC_HOUR_HOLD   =   RTC::GetRegister(0x04);
     RTC_DAY_HOLD    =   RTC::GetRegister(0x07);
     RTC_MONTH_HOLD  =   RTC::GetRegister(0x08);
     RTC_YEAR_HOLD   =   RTC::GetRegister(0x09);
+
     if(century_register != 0) {
         century = RTC::GetRegister(century_register);
     }
@@ -73,18 +75,25 @@ void RTC::Read() {
         last_century    =   century;
 
         while (RTC::getUpdateFlag());           // Make sure an update isn't in progress
+
         RTC_SECOND_HOLD = RTC::GetRegister(0x00);
         RTC_MINUTE_HOLD = RTC::GetRegister(0x02);
-        RTC_HOUR_HOLD = RTC::GetRegister(0x04);
-        RTC_DAY_HOLD = RTC::GetRegister(0x07);
-        RTC_MONTH_HOLD = RTC::GetRegister(0x08);
-        RTC_YEAR_HOLD = RTC::GetRegister(0x09);
+        RTC_HOUR_HOLD   = RTC::GetRegister(0x04);
+        RTC_DAY_HOLD    = RTC::GetRegister(0x07);
+        RTC_MONTH_HOLD  = RTC::GetRegister(0x08);
+        RTC_YEAR_HOLD   = RTC::GetRegister(0x09);
+
         if(century_register != 0) {
                 century = RTC::GetRegister(century_register);
         }
-    } while( (last_second != RTC_SECOND_HOLD) || (last_minute != RTC_MINUTE_HOLD) || (last_hour != RTC_HOUR_HOLD) ||
-            (last_day != RTC_DAY_HOLD) || (last_month != RTC_MONTH_HOLD) || (last_year != RTC_YEAR_HOLD) ||
-            (last_century != century) );
+
+    } while((last_second != RTC_SECOND_HOLD) ||
+            (last_minute != RTC_MINUTE_HOLD) || 
+            (last_hour != RTC_HOUR_HOLD)     ||
+            (last_day != RTC_DAY_HOLD)       || 
+            (last_month != RTC_MONTH_HOLD)   || 
+            (last_year != RTC_YEAR_HOLD)     ||
+            (last_century != century))       ;;
 
     registerB = RTC::GetRegister(0x0B);
 
@@ -93,7 +102,7 @@ void RTC::Read() {
     if (!(registerB & 0x04)) {
         RTC_SECOND_HOLD = (RTC_SECOND_HOLD & 0x0F) + ((RTC_SECOND_HOLD / 16) * 10);
         RTC_MINUTE_HOLD = (RTC_MINUTE_HOLD & 0x0F) + ((RTC_MINUTE_HOLD / 16) * 10);
-        RTC_HOUR_HOLD = (( (RTC_HOUR_HOLD & 0x0F) + (((RTC_HOUR_HOLD & 0x70) / 16) * 10) ) | (RTC_HOUR_HOLD & 0x80)) + 7; // <---- changed to our time zone
+        RTC_HOUR_HOLD = (( (RTC_HOUR_HOLD & 0x0F) + (((RTC_HOUR_HOLD & 0x70) / 16) * 10) ) | (RTC_HOUR_HOLD & 0x80)) + (7 - 12); // <---- changed to our time zone
         RTC_DAY_HOLD = (RTC_DAY_HOLD & 0x0F) + ((RTC_DAY_HOLD / 16) * 10); 
         RTC_MONTH_HOLD = (RTC_MONTH_HOLD & 0x0F) + ((RTC_MONTH_HOLD / 16) * 10);
         RTC_YEAR_HOLD = (RTC_YEAR_HOLD & 0x0F) + ((RTC_YEAR_HOLD / 16) * 10);
@@ -112,10 +121,13 @@ void RTC::Read() {
 
     if(century_register != 0) {
         RTC_YEAR_HOLD += century * 100;
-    } else {
+    } 
+    else {
         RTC_YEAR_HOLD += (CURRENT_YEAR / 100) * 100;
         if(RTC_YEAR_HOLD < CURRENT_YEAR) RTC_YEAR_HOLD += 100;
     }
+
+
     kout << "RTC Read()" << endl;
 
 }
