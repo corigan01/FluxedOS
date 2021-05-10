@@ -1,38 +1,52 @@
-In file included from [01m[K./src/System/Keyboard/keyboard.cpp:23[m[K:
-[01m[K./src/System/Keyboard/../cpu/cpu.hpp:49:[m[K [01;35m[Kwarning: [m[K"PIC1_DATA" redefined
-   49 | #define PIC1_DATA                 (PIC1 + 1)
-      | 
-[01m[K./src/System/Keyboard/../cpu/cpu.hpp:28:[m[K [01;36m[Knote: [m[Kthis is the location of the previous definition
-   28 | #define PIC1_DATA                   0x21
-      | 
-[01m[K./src/System/Keyboard/../cpu/cpu.hpp:51:[m[K [01;35m[Kwarning: [m[K"PIC2_DATA" redefined
-   51 | #define PIC2_DATA                 (PIC2 + 1)
-      | 
-[01m[K./src/System/Keyboard/../cpu/cpu.hpp:30:[m[K [01;36m[Knote: [m[Kthis is the location of the previous definition
-   30 | #define PIC2_DATA                   0xA1
-      | 
-In file included from [01m[K./src/System/Keyboard/keyboard.hpp:24[m[K,
-                 from [01m[K./src/System/Keyboard/keyboard.cpp:22[m[K:
-[01m[K./src/System/Keyboard/../kout/kout.hpp:79:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   79 |             char* CalledFunc = [01;35m[K""[m[K;
-      |                                [01;35m[K^~[m[K
-[01m[K./src/System/Keyboard/../kout/kout.hpp:80:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   80 |             char* CalledFile = [01;35m[K""[m[K;
-      |                                [01;35m[K^~[m[K
-[01m[K./src/System/Keyboard/keyboard.cpp:[m[K In function ‘[01m[Kvoid System::HID::Keyboard::installIRQ()[m[K’:
-[01m[K./src/System/Keyboard/keyboard.cpp:46:24:[m[K [01;31m[Kerror: [m[K‘[01m[KRepStr[m[K’ was not declared in this scope
-   46 |     kout << "Reg: " << [01;31m[KRepStr[m[K << endl;
-      |                        [01;31m[K^~~~~~[m[K
-[01m[K./src/System/Keyboard/keyboard.cpp:[m[K At global scope:
-[01m[K./src/System/Keyboard/keyboard.cpp:54:29:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   54 | static char* LetterArrayQ = [01;35m[K"qwertyuiop"[m[K; // 0x10-0x1c
-      |                             [01;35m[K^~~~~~~~~~~~[m[K
-[01m[K./src/System/Keyboard/keyboard.cpp:55:29:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   55 | static char* LetterArrayA = [01;35m[K"asdfghjkl"[m[K;
-      |                             [01;35m[K^~~~~~~~~~~[m[K
-[01m[K./src/System/Keyboard/keyboard.cpp:56:29:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   56 | static char* LetterArrayY = [01;35m[K"zxcvbnm"[m[K;
-      |                             [01;35m[K^~~~~~~~~[m[K
-[01m[K./src/System/Keyboard/keyboard.cpp:57:29:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   57 | static char* NumberArray  = [01;35m[K"123456789"[m[K;
-      |                             [01;35m[K^~~~~~~~~~~[m[K
+In file included from [01m[K./src/System/Console/console.cpp:22[m[K:
+[01m[K./src/System/Console/console.hpp:24:27:[m[K [01;31m[Kerror: [m[Kno include path in which to search for lib/core/core.h
+   24 | #include <lib/core/core.h>
+      |                           [01;31m[K^[m[K
+[01m[K./src/System/Console/console.hpp:25:32:[m[K [01;31m[Kerror: [m[Kno include path in which to search for System/kout/kout.hpp
+   25 | #include <System/kout/kout.hpp>
+      |                                [01;31m[K^[m[K
+[01m[K./src/System/Console/console.hpp:26:30:[m[K [01;31m[Kerror: [m[Kno include path in which to search for System/tty/tty.hpp
+   26 | #include <System/tty/tty.hpp>
+      |                              [01;31m[K^[m[K
+[01m[K./src/System/Console/console.cpp:23:40:[m[K [01;31m[Kerror: [m[Kno include path in which to search for System/Keyboard/keyboard.hpp
+   23 | #include <System/Keyboard/keyboard.hpp>
+      |                                        [01;31m[K^[m[K
+In file included from [01m[K./src/System/Console/console.cpp:22[m[K:
+[01m[K./src/System/Console/console.hpp:36:29:[m[K [01;31m[Kerror: [m[K‘[01m[KSystem::Display[m[K’ has not been declared
+   36 |             console(System::[01;31m[KDisplay[m[K::tty * tty);
+      |                             [01;31m[K^~~~~~~[m[K
+[01m[K./src/System/Console/console.hpp:36:41:[m[K [01;31m[Kerror: [m[Kexpected ‘[01m[K)[m[K’ before ‘[01m[K*[m[K’ token
+   36 |             console[34m[K([m[KSystem::Display::tty[01;31m[K [m[K[32m[K*[m[K tty);
+      |                    [34m[K~[m[K                    [01;31m[K^[m[K[32m[K~[m[K
+      |                                         [32m[K)[m[K
+[01m[K./src/System/Console/console.hpp:39:32:[m[K [01;31m[Kerror: [m[K‘[01m[Ki8[m[K’ has not been declared
+   39 |             void HandleKeyCode([01;31m[Ki8[m[K keycode);
+      |                                [01;31m[K^~[m[K
+[01m[K./src/System/Console/console.hpp:46:13:[m[K [01;31m[Kerror: [m[K‘[01m[Ki16[m[K’ does not name a type
+   46 |             [01;31m[Ki16[m[K CommandLen = 0;
+      |             [01;31m[K^~~[m[K
+[01m[K./src/System/Console/console.hpp:49:13:[m[K [01;31m[Kerror: [m[K‘[01m[Ki8[m[K’ does not name a type
+   49 |             [01;31m[Ki8[m[K LastChar = 0;
+      |             [01;31m[K^~[m[K
+[01m[K./src/System/Console/console.hpp:51:21:[m[K [01;31m[Kerror: [m[K‘[01m[KDisplay[m[K’ in namespace ‘[01m[KSystem[m[K’ does not name a type
+   51 |             System::[01;31m[KDisplay[m[K::tty * OurTTY;
+      |                     [01;31m[K^~~~~~~[m[K
+[01m[K./src/System/Console/console.hpp:47:33:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   47 |             char * UserString = [01;35m[K""[m[K;
+      |                                 [01;35m[K^~[m[K
+[01m[K./src/System/Console/console.cpp:26:25:[m[K [01;31m[Kerror: [m[K‘[01m[KHID[m[K’ is not a namespace-name
+   26 | using namespace System::[01;31m[KHID[m[K;
+      |                         [01;31m[K^~~[m[K
+[01m[K./src/System/Console/console.cpp:29:17:[m[K [01;31m[Kerror: [m[Kexpected constructor, destructor, or type conversion before ‘[01m[K([m[K’ token
+   29 | console::console[01;31m[K([m[KSystem::Display::tty * tty) {
+      |                 [01;31m[K^[m[K
+[01m[K./src/System/Console/console.cpp:36:6:[m[K [01;31m[Kerror: [m[Kvariable or field ‘[01m[KHandleKeyCode[m[K’ declared void
+   36 | void [01;31m[Kconsole[m[K::HandleKeyCode(i8 keycode) {
+      |      [01;31m[K^~~~~~~[m[K
+[01m[K./src/System/Console/console.cpp:36:29:[m[K [01;31m[Kerror: [m[K‘[01m[Ki8[m[K’ was not declared in this scope
+   36 | void console::HandleKeyCode([01;31m[Ki8[m[K keycode) {
+      |                             [01;31m[K^~[m[K
+[01m[K./src/System/Console/console.cpp:[m[K In member function ‘[01m[Kchar* System::Console::console::GetString()[m[K’:
+[01m[K./src/System/Console/console.cpp:66:1:[m[K [01;35m[Kwarning: [m[Kcontrol reaches end of non-void function [[01;35m[K-Wreturn-type[m[K]
+   66 | [01;35m[K}[m[K
+      | [01;35m[K^[m[K

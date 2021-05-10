@@ -44,10 +44,10 @@ void Keyboard::installIRQ() {
     kout << "Keyboard Init  OK" << endl;
 }
 
-static char* LetterArrayQ = "qwertyuiop"; 
-static char* LetterArrayA = "asdfghjkl";
-static char* LetterArrayY = "zxcvbnm";
-static char* NumberArray  = "123456789";
+const char* LetterArrayQ = "qwertyuiop"; 
+const char* LetterArrayA = "asdfghjkl";
+const char* LetterArrayY = "zxcvbnm";
+const char* NumberArray  = "123456789";
 
 char Keyboard::KeycodeAsciiConverter(i8 keycode) {
     switch (keycode) {
@@ -100,9 +100,7 @@ void  Keyboard::IRQ_handler(register_t *r) {
             i8 Output = KeycodeAsciiConverter(K);
 
             if (Output != NULL) {
-               kout << "Got Keycode : ";
-               Serial::outChar(Serial::COM_1, Output);
-               kout << endl;
+
             }
         
             
@@ -114,7 +112,7 @@ void  Keyboard::IRQ_handler(register_t *r) {
 
 void Keyboard::IRQ12_handler(register_t *r) {
     KeycodeArr[0] = Keyboard::Keycode::Q_PRESSED;
-    kout << "Keyboard IRQ" << endl;
+    kout << "Keyboard IRQ12" << endl;
     Port::byte_in(0x60);
     PIC::SendEOI(12);
 }

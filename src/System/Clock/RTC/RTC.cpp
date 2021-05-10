@@ -100,12 +100,14 @@ void RTC::Read() {
     // Convert BCD to binary values if necessary
 
     if (!(registerB & 0x04)) {
+
         RTC_SECOND_HOLD = (RTC_SECOND_HOLD & 0x0F) + ((RTC_SECOND_HOLD / 16) * 10);
         RTC_MINUTE_HOLD = (RTC_MINUTE_HOLD & 0x0F) + ((RTC_MINUTE_HOLD / 16) * 10);
-        RTC_HOUR_HOLD = (( (RTC_HOUR_HOLD & 0x0F) + (((RTC_HOUR_HOLD & 0x70) / 16) * 10) ) | (RTC_HOUR_HOLD & 0x80)) + (7 - 12); // <---- changed to our time zone
-        RTC_DAY_HOLD = (RTC_DAY_HOLD & 0x0F) + ((RTC_DAY_HOLD / 16) * 10); 
-        RTC_MONTH_HOLD = (RTC_MONTH_HOLD & 0x0F) + ((RTC_MONTH_HOLD / 16) * 10);
-        RTC_YEAR_HOLD = (RTC_YEAR_HOLD & 0x0F) + ((RTC_YEAR_HOLD / 16) * 10);
+        RTC_HOUR_HOLD   = (((RTC_HOUR_HOLD & 0x0F) + (((RTC_HOUR_HOLD & 0x70) / 16) * 10) ) | (RTC_HOUR_HOLD & 0x80)) + (7 - 12); // <---- changed to our time zone
+        RTC_DAY_HOLD    = (RTC_DAY_HOLD & 0x0F)    + ((RTC_DAY_HOLD / 16) * 10); 
+        RTC_MONTH_HOLD  = (RTC_MONTH_HOLD & 0x0F)  + ((RTC_MONTH_HOLD / 16) * 10);
+        RTC_YEAR_HOLD   = (RTC_YEAR_HOLD & 0x0F)   + ((RTC_YEAR_HOLD / 16) * 10);
+
         if(century_register != 0) {
                 century = (century & 0x0F) + ((century / 16) * 10);
         }
@@ -165,4 +167,15 @@ i16 RTC::GetMonth() {
 
 i16 RTC::GetYear() {
     return RTC_YEAR_HOLD;
+}
+
+RTC::Date RTC::GetDate() {
+    return {
+        RTC::GetSeconds(),
+        RTC::GetMin(),
+        RTC::GetHours(),
+        RTC::GetDays(),
+        RTC::GetMonth(),
+        RTC::GetYear()
+    };
 }

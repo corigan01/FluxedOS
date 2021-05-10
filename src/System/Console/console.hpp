@@ -23,40 +23,34 @@
 
 #include <lib/core/core.h>
 #include <System/kout/kout.hpp>
+#include <System/tty/tty.hpp>
 
 namespace System
 {
-    namespace Clock
+    namespace Console
     {
-        namespace RTC
-        {
-            struct Date {
-                i16 Second = 0;
-                i16 Minute = 0;
-                i16 Hour   = 0;
-                i16 Day    = 0;
-                i16 Month  = 0;
-                i16 Year   = 0;
-            };
 
-            void Read();
+        class console   {
+            public:
 
-            i8 GetRegister(int reg);
-            int getUpdateFlag();
+            console(System::Display::tty * tty);
+            ~console();
 
-            enum {
-                cmos_address = 0x70,
-                cmos_data    = 0x71
-            };
+            void HandleKeyCode(i8 keycode);
+            char* GetString();
+            void ReturnInput();
 
-            i16 GetSeconds();
-            i16 GetMin();
-            i16 GetHours();
-            i16 GetDays();
-            i16 GetMonth();
-            i16 GetYear();
+            protected:
 
-            Date GetDate();
-        }
-    }
-}
+            bool HasFinalUserString = false;
+            i16 CommandLen = 0;
+            char * UserString = "";
+            i8 LastChar = 0;
+
+            System::Display::tty * OurTTY;
+
+        };
+
+    } // namespace Console
+    
+} // namespace System

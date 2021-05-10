@@ -19,44 +19,63 @@
  *   
  */
 
-#pragma once
+#include "console.hpp"
+#include <System/Keyboard/keyboard.hpp>
 
-#include <lib/core/core.h>
-#include <System/kout/kout.hpp>
+using namespace System;
+using namespace System::HID;
+using namespace System::Console;
 
-namespace System
-{
-    namespace Clock
-    {
-        namespace RTC
-        {
-            struct Date {
-                i16 Second = 0;
-                i16 Minute = 0;
-                i16 Hour   = 0;
-                i16 Day    = 0;
-                i16 Month  = 0;
-                i16 Year   = 0;
-            };
+console::console(System::Display::tty * tty) {
+    OurTTY = tty;
+}
+console::~console() {
+    ;
+}
 
-            void Read();
+void console::HandleKeyCode(i8 keycode) {
+    this->LastChar = keycode;
 
-            i8 GetRegister(int reg);
-            int getUpdateFlag();
+    switch (keycode) {
+    case Keyboard::Keycode::BACKSPACE_PRESSED:
 
-            enum {
-                cmos_address = 0x70,
-                cmos_data    = 0x71
-            };
-
-            i16 GetSeconds();
-            i16 GetMin();
-            i16 GetHours();
-            i16 GetDays();
-            i16 GetMonth();
-            i16 GetYear();
-
-            Date GetDate();
+        if (this->CommandLen > 0) {
+            OurTTY->print_char('\e');
+            this->CommandLen--;    
+            NO_INSTRUCTION;
         }
+
+        break;
+
+    case Keyboard::Keycode::ENTER_PRESSED:
+        this->HasFinalUserString = true;
+        this->UserString[this->CommandLen++] = '\0';
+        OurTTY->print_str("\ncommand!\n");
+
+        kout << "User entered command --> \'" << this->UserString << "\'" << endl;
+
+        break;
+
+    default:
+        i8 OutputChar = Keyboard::KeycodeAsciiConverter(keycode);
+
+        if (OutputChar != NULL) { 
+            OurTTY->print_char(OutputChar); 
+            this->UserString[this->CommandLen++] = OutputChar;
+        }
+        else NO_INSTRUCTION;
+
+        break;
     }
+}
+char* console::GetString() {
+    if (this->HasFinalUserString) {
+        this->HasFinalUserString = false;
+        return this->UserString;
+    }
+    return NULL;
+}
+
+void console::ReturnInput() {
+    OurTTY->print_str("> ");
 }

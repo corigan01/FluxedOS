@@ -21,8 +21,8 @@
 
 #pragma once
 
-#include "../../../lib/core/core.h"
-#include "../../kout/kout.hpp"
+#include <lib/core/core.h>
+#include <System/kout/kout.hpp>
 
 namespace System
 {

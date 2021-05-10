@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include "../../lib/core/core.h"
+#include <lib/core/core.h>
 #include "../Serial/serial.hpp"
 #include "../../lib/StanderdOperations/Operations.hpp"
 #include "../tty/tty.hpp"

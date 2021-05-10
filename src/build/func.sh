@@ -109,7 +109,7 @@ compilec_() {
     local ts=$(date +%s%N)
 
 
-    if cc -m32 -elf_i386  -O -O2 -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-stack-protector -fpic -fshort-wchar -mno-red-zone -fno-builtin -c  $OUTPUT -fdiagnostics-color=always &> /dev/null; then
+    if cc -m32 -I src/ -elf_i386  -O -O2 -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-stack-protector -fpic -fshort-wchar -mno-red-zone -fno-builtin -c  $OUTPUT -fdiagnostics-color=always &> /dev/null; then
          local PFD=$((($(date +%s%N) - $ts)/1000000))
          printf "%-40s%-4s\e[0;32mDONE - $PFD ms\e[0;34m\n"  "${OUTPUT:0:40}" " "
     else
@@ -136,7 +136,7 @@ compilec() {
     mkdir log &> /dev/null
     local ts=$(date +%s%N)
 
-    if c++ -m32 -elf_i386 -std=c++2a -O -fstrength-reduce -fomit-frame-pointer -O2 -finline-functions -nostdinc -fno-builtin -c  $OUTPUT -fdiagnostics-color=always &> /dev/null; then
+    if c++ -m32 -I src/ -elf_i386 -std=c++2a -O -fstrength-reduce -fomit-frame-pointer -O2 -finline-functions -nostdinc -fno-builtin -c  $OUTPUT -fdiagnostics-color=always &> /dev/null; then
          local PFD=$((($(date +%s%N) - $ts)/1000000))
          printf "%-40s%-4s\e[0;32mDONE - $PFD ms\e[0;34m\n"  "${OUTPUT:0:40}" " "
     else
