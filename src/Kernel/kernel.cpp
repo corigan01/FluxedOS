@@ -30,6 +30,7 @@
 #include <System/Display/Display.hpp>
 #include <System/Console/console.hpp>
 #include <System/Keyboard/keyboard.hpp>
+#include <System/CommandHandler/CommandHandler.hpp>
 
 
 using namespace System; 
@@ -51,20 +52,20 @@ int kmain(multiboot_info_t* mbt, i32 magic) {
 
     kout << "Flux Kernel Started..." << endl;                           // tell the console we started the kernel
 
-    auto VGA_DRIVER = Driver::VGA((void*)mbt->framebuffer_addr);      // tell VGA what addr the framebuffer is at
-    tty* KernelTTY = &VGA_DRIVER;    // bind the tty to the display driver
+    auto VGA_DRIVER = Driver::VGA((void*)mbt->framebuffer_addr);        // tell VGA what addr the framebuffer is at
+    tty* KernelTTY = &VGA_DRIVER;                                       // bind the tty to the display driver
 
     KernelTTY->setcolor(COLOR::BRIGHT_MAGENTA, COLOR::BLACK);    
 
+    IO_WAIT;
+    GDT::init();
+    KernelTTY->print_str("GDT ");
     IO_WAIT;
     IDT::init();
     KernelTTY->print_str("IDT ");
     IO_WAIT;
     ISR::init();
     KernelTTY->print_str("ISR ");
-    IO_WAIT;
-    GDT::init();
-    KernelTTY->print_str("GDT ");
     IO_WAIT;
     IRQ::init();
     KernelTTY->print_str("IRQ ");
@@ -126,26 +127,28 @@ int kmain(multiboot_info_t* mbt, i32 magic) {
         KernelTTY->print_str("\n\n\n");
     }
 
-    KernelTTY->setcolor(COLOR::BRIGHT_GREEN, COLOR::BLACK);
+    
 
-    KernelTTY->print_str("> ");
+    
+    auto Shell = VirtualConsole::KernelShell(KernelTTY, COLOR::BRIGHT_GREEN, COLOR::BLACK);
+    VirtualConsole::console *sh = &Shell;
 
-    Console::console sh(KernelTTY);
+    sh->ReturnUser();
 
-    while (1) {
-        sh.HandleKeyCode(Keyboard::GetKeyCode());
+    while (sh->IsAlive()) {
+        sh->HandleKeyCode(Keyboard::GetKeyCode());
 
-        char * CommandOutput = sh.GetString();
+        char * CommandOutput = sh->GetRawCommand();
         if (CommandOutput != NULL) {
-            sh.ReturnInput();
+            sh->ReturnUser();
         }
     }
 
 
     /* Kernel Finish */
-
+    KernelTTY->setcolor(COLOR::WHITE, COLOR::BLACK);
     PIT::Sleep(1000);
-    KernelTTY->print_str("Kernel Eneded");
+    KernelTTY->print_str("--------------------------------------------------------------------------------------\nKernel Eneded");
     for (int i = 0; i < 10; i++) {
         PIT::Sleep(1000);
         KernelTTY->print_str(".");

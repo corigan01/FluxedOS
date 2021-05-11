@@ -21,14 +21,20 @@
 
 #include "console.hpp"
 #include <System/Keyboard/keyboard.hpp>
+#include <System/Display/Display.hpp>
 
 using namespace System;
 using namespace System::HID;
-using namespace System::Console;
+using namespace System::VirtualConsole;
 
-console::console(System::Display::tty * tty) {
+/*console::console(System::Display::tty * tty, i16 ColorF, i16 ColorB) {
     OurTTY = tty;
-}
+
+    this->ColorF = ColorF;
+    this->ColorB = ColorB;
+
+    OurTTY->setcolor(ColorF, ColorB);
+}*/
 console::~console() {
     ;
 }
@@ -50,9 +56,14 @@ void console::HandleKeyCode(i8 keycode) {
     case Keyboard::Keycode::ENTER_PRESSED:
         this->HasFinalUserString = true;
         this->UserString[this->CommandLen++] = '\0';
-        OurTTY->print_str("\ncommand!\n");
 
-        kout << "User entered command --> \'" << this->UserString << "\'" << endl;
+        //kout << "User entered command --> \'" << this->UserString << "\'" << endl;
+
+
+        this->OurTTY->print_str("     \n");
+        this->HandleCommand(this->GetRawCommand());
+        kout << "handled command" << endl;
+
 
         break;
 
@@ -68,7 +79,7 @@ void console::HandleKeyCode(i8 keycode) {
         break;
     }
 }
-char* console::GetString() {
+char* console::GetRawCommand() {
     if (this->HasFinalUserString) {
         this->HasFinalUserString = false;
         return this->UserString;
@@ -76,6 +87,37 @@ char* console::GetString() {
     return NULL;
 }
 
-void console::ReturnInput() {
-    OurTTY->print_str("> ");
+void console::ReturnUser() {
+    if (this->IsAlive()) {
+        OurTTY->setcolor(ColorF, ColorB);
+        OurTTY->print_str("> ");
+    }
+
+    this->HasFinalUserString = false;
+    this->UserString = "";
+    this->CommandLen = 0;
+    
+}
+
+void console::KillTerm() {
+    this->TermActive = false;
+
+    OurTTY->print_str("\n\nTerminal Killed!\n\n");
+}
+
+bool console::IsAlive() {
+    return TermActive;
+}
+
+void console::HandleCommand(const char* str) {
+    OurTTY->print_str("Command Handler Not found!\n");
+}
+
+void console::init(System::Display::tty * tty, i16 ColorF, i16 ColorB) {
+    OurTTY = tty;
+
+    this->ColorF = ColorF;
+    this->ColorB = ColorB;
+
+    OurTTY->setcolor(ColorF, ColorB);
 }

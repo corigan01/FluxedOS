@@ -36,7 +36,7 @@ tty::tty() {
 
     Serial::init(Serial::COM_1); // inits the class so we know we setup COM_1   
     kout << "New tty" << ttyNumberStr << " Started!" << endl; 
-    //this->print_str("+++++ TTY STARTED +++++\n");
+    
 }
 
 tty::~tty() {

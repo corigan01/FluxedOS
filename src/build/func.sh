@@ -116,7 +116,7 @@ compilec_() {
         printf "%-40s%-4s\e[0;31mFAILED\e[0;34m\n"  "${OUTPUT:0:40}" " "
         #ouput the errors
 
-        cc -m32 -elf_i386  -O -O2 -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-stack-protector -fpic -fshort-wchar -mno-red-zone -fno-builtin -c  $OUTPUT -fdiagnostics-color=always &> "log/GccOUTPUT.txt"
+        cc -m32 -I src/ -elf_i386  -O -O2 -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-stack-protector -fpic -fshort-wchar -mno-red-zone -fno-builtin -c  $OUTPUT -fdiagnostics-color=always &> "log/GccOUTPUT.txt"
         printf "%s" "$(<log/GccOUTPUT.txt)"
         echo ""
         #rm temp.txt
@@ -143,7 +143,7 @@ compilec() {
         printf "%-40s%-4s\e[0;31mFAILED\e[0;34m\n"  "${OUTPUT:0:40}" " "
         #ouput the errors
 
-        c++ -m32 -elf_i386 -std=c++2a -O -fstrength-reduce -fomit-frame-pointer -O2 -finline-functions -nostdinc -fno-builtin -c  $OUTPUT -fdiagnostics-color=always  &> "log/G++OUTPUT.txt"
+        c++ -m32 -I src/ -elf_i386 -std=c++2a -O -fstrength-reduce -fomit-frame-pointer -O2 -finline-functions -nostdinc -fno-builtin -c  $OUTPUT -fdiagnostics-color=always  &> "log/G++OUTPUT.txt"
         printf "%s" "$(<log/G++OUTPUT.txt)"
         echo ""
         #rm temp.txt

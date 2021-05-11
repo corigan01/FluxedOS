@@ -33,6 +33,7 @@ SerialLog::SerialLog(const char * function, const char * file, int line) {
 
     this->CalledFile = (char*)file;
     this->CalledFunc = (char*)function;
+    this->CalledLine = line;
 
 }
 

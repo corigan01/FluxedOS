@@ -25,7 +25,7 @@
 #include "../Serial/serial.hpp"
 #include "../../lib/StanderdOperations/Operations.hpp"
 
-constexpr const char* endl = "\n";
+constexpr const char* endl = "\n\0";
 
 namespace System
 {
@@ -54,10 +54,13 @@ namespace System
                 
                 if (Check::DidEndLine() ) {
                     System::IO::Serial::outString(System::IO::Serial::COM_1, "[");
-                    System::IO::Serial::outString(System::IO::Serial::COM_1, this->CalledFile);
-                    System::IO::Serial::outString(System::IO::Serial::COM_1, " in ");
                     System::IO::Serial::outString(System::IO::Serial::COM_1, this->CalledFunc);
-                    System::IO::Serial::outString(System::IO::Serial::COM_1, "]\t --> ");
+                    System::IO::Serial::outString(System::IO::Serial::COM_1, ":");
+                    INT_TO_STRING(IntStr, CalledLine);
+                    
+                    System::IO::Serial::outString(System::IO::Serial::COM_1, IntStr);
+
+                    System::IO::Serial::outString(System::IO::Serial::COM_1, "]\t\t --> ");
                     already_displayed = true;
                     Check::StartLine();
                 }
@@ -78,6 +81,7 @@ namespace System
 
             char* CalledFunc = "";
             char* CalledFile = "";
+            int CalledLine = 0;
 
             
             bool already_displayed = false;

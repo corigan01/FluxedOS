@@ -25,32 +25,46 @@
 #include <System/kout/kout.hpp>
 #include <System/tty/tty.hpp>
 
+
 namespace System
 {
-    namespace Console
+    namespace VirtualConsole
     {
 
-        class console   {
+        class console  {
             public:
 
-            console(System::Display::tty * tty);
+            
+            //console(System::Display::tty * tty, i16 ColorF, i16 ColorB);
             ~console();
 
             void HandleKeyCode(i8 keycode);
-            char* GetString();
-            void ReturnInput();
+            void ReturnUser();
+            
+            void KillTerm();
+
+            char* GetRawCommand();
+            bool IsAlive();
 
             protected:
 
+            void init(System::Display::tty * tty, i16 ColorF, i16 ColorB);
+
+            virtual void HandleCommand(const char* str);
+
             bool HasFinalUserString = false;
+            bool HandlerInstalled = false;
+            bool TermActive = true;
+
+            i16 ColorF, ColorB;
             i16 CommandLen = 0;
-            char * UserString = "";
             i8 LastChar = 0;
 
-            System::Display::tty * OurTTY;
+            char * UserString = "";
 
+            System::Display::tty * OurTTY;
         };
 
-    } // namespace Console
+    } // namespace VirtualConsole
     
 } // namespace System

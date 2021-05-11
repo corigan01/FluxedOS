@@ -1,18 +1,26 @@
-In file included from [01m[K./src/System/tty/tty.cpp:23[m[K:
-[01m[K./src/System/tty/../kout/kout.hpp:79:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   79 |             char* CalledFunc = [01;35m[K""[m[K;
+In file included from [01m[K./src/System/CommandHandler/CommandHandler.hpp:26[m[K,
+                 from [01m[K./src/System/CommandHandler/CommandHandler.cpp:22[m[K:
+[01m[K./src/System/CommandHandler/../../System/kout/kout.hpp:82:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   82 |             char* CalledFunc = [01;35m[K""[m[K;
       |                                [01;35m[K^~[m[K
-[01m[K./src/System/tty/../kout/kout.hpp:80:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   80 |             char* CalledFile = [01;35m[K""[m[K;
+[01m[K./src/System/CommandHandler/../../System/kout/kout.hpp:83:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   83 |             char* CalledFile = [01;35m[K""[m[K;
       |                                [01;35m[K^~[m[K
- is the location of the previous definition
-   30 | #define PIC2_DATA                   0xA1
-      | 
-In file included from [01m[K./src/System/Clock/PIT/PIT.hpp:25[m[K,
-                 from [01m[K./src/System/Clock/PIT/PIT.cpp:22[m[K:
-[01m[Ksrc/System/kout/kout.hpp:79:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   79 |             char* CalledFunc = [01;35m[K""[m[K;
-      |                                [01;35m[K^~[m[K
-[01m[Ksrc/System/kout/kout.hpp:80:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   80 |             char* CalledFile = [01;35m[K""[m[K;
-      |                                [01;35m[K^~[m[K
+In file included from [01m[K./src/System/CommandHandler/CommandHandler.hpp:27[m[K,
+                 from [01m[K./src/System/CommandHandler/CommandHandler.cpp:22[m[K:
+[01m[Ksrc/System/Console/console.hpp:63:33:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   63 |             char * UserString = [01;35m[K""[m[K;
+      |                                 [01;35m[K^~[m[K
+In file included from [01m[K./src/System/CommandHandler/CommandHandler.cpp:22[m[K:
+[01m[K./src/System/CommandHandler/CommandHandler.hpp:37:35:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   37 |             char *  Command     = [01;35m[K""[m[K;
+      |                                   [01;35m[K^~[m[K
+[01m[K./src/System/CommandHandler/CommandHandler.cpp:[m[K In member function ‘[01m[Kvirtual void System::VirtualConsole::KernelShell::HandleCommand(const char*)[m[K’:
+[01m[K./src/System/CommandHandler/CommandHandler.cpp:49:46:[m[K [01;31m[Kerror: [m[K‘[01m[KInternalCommand[m[K’ was not declared in this scope; did you mean ‘[01m[KInternalCommands[m[K’?
+   49 |             kout << "User Entered Valid " << [01;31m[KInternalCommand[m[K[i] << " Command" << endl;
+      |                                              [01;31m[K^~~~~~~~~~~~~~~[m[K
+      |                                              [32m[KInternalCommands[m[K
+[01m[K./src/System/CommandHandler/CommandHandler.cpp:[m[K In member function ‘[01m[KSystem::VirtualConsole::ParsedCommand System::VirtualConsole::KernelShell::ParseCommand(const char*)[m[K’:
+[01m[K./src/System/CommandHandler/CommandHandler.cpp:71:13:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   71 |     return {[01;35m[K"exit"[m[K, 4, {}, 0};
+      |             [01;35m[K^~~~~~[m[K
