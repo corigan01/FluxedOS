@@ -37,3 +37,4 @@ EXTNC_ struct regs
 EXTNC_ void register_interrupt_handler(int num, isr_t handler);
 
 EXTNC_ void fault_handler(struct regs *r);
+EXTNC_ void register_fault_handler(isr_t handler) ;

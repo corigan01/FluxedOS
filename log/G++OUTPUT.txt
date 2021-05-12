@@ -1,26 +1,35 @@
-In file included from [01m[K./src/System/CommandHandler/CommandHandler.hpp:26[m[K,
-                 from [01m[K./src/System/CommandHandler/CommandHandler.cpp:22[m[K:
-[01m[K./src/System/CommandHandler/../../System/kout/kout.hpp:82:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+In file included from [01m[K./src/Kernel/kernel.cpp:24[m[K:
+[01m[Ksrc/System/cpu/cpu.hpp:49:[m[K [01;35m[Kwarning: [m[K"PIC1_DATA" redefined
+   49 | #define PIC1_DATA                 (PIC1 + 1)
+      | 
+[01m[Ksrc/System/cpu/cpu.hpp:28:[m[K [01;36m[Knote: [m[Kthis is the location of the previous definition
+   28 | #define PIC1_DATA                   0x21
+      | 
+[01m[Ksrc/System/cpu/cpu.hpp:51:[m[K [01;35m[Kwarning: [m[K"PIC2_DATA" redefined
+   51 | #define PIC2_DATA                 (PIC2 + 1)
+      | 
+[01m[Ksrc/System/cpu/cpu.hpp:30:[m[K [01;36m[Knote: [m[Kthis is the location of the previous definition
+   30 | #define PIC2_DATA                   0xA1
+      | 
+In file included from [01m[Ksrc/System/cpu/cpu.hpp:25[m[K,
+                 from [01m[K./src/Kernel/kernel.cpp:24[m[K:
+[01m[Ksrc/System/kout/kout.hpp:82:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
    82 |             char* CalledFunc = [01;35m[K""[m[K;
       |                                [01;35m[K^~[m[K
-[01m[K./src/System/CommandHandler/../../System/kout/kout.hpp:83:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+[01m[Ksrc/System/kout/kout.hpp:83:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
    83 |             char* CalledFile = [01;35m[K""[m[K;
       |                                [01;35m[K^~[m[K
-In file included from [01m[K./src/System/CommandHandler/CommandHandler.hpp:27[m[K,
-                 from [01m[K./src/System/CommandHandler/CommandHandler.cpp:22[m[K:
+In file included from [01m[K./src/Kernel/kernel.cpp:31[m[K:
 [01m[Ksrc/System/Console/console.hpp:63:33:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
    63 |             char * UserString = [01;35m[K""[m[K;
       |                                 [01;35m[K^~[m[K
-In file included from [01m[K./src/System/CommandHandler/CommandHandler.cpp:22[m[K:
-[01m[K./src/System/CommandHandler/CommandHandler.hpp:37:35:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+In file included from [01m[K./src/Kernel/kernel.cpp:33[m[K:
+[01m[Ksrc/System/CommandHandler/CommandHandler.hpp:37:35:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
    37 |             char *  Command     = [01;35m[K""[m[K;
       |                                   [01;35m[K^~[m[K
-[01m[K./src/System/CommandHandler/CommandHandler.cpp:[m[K In member function ‘[01m[Kvirtual void System::VirtualConsole::KernelShell::HandleCommand(const char*)[m[K’:
-[01m[K./src/System/CommandHandler/CommandHandler.cpp:49:46:[m[K [01;31m[Kerror: [m[K‘[01m[KInternalCommand[m[K’ was not declared in this scope; did you mean ‘[01m[KInternalCommands[m[K’?
-   49 |             kout << "User Entered Valid " << [01;31m[KInternalCommand[m[K[i] << " Command" << endl;
-      |                                              [01;31m[K^~~~~~~~~~~~~~~[m[K
-      |                                              [32m[KInternalCommands[m[K
-[01m[K./src/System/CommandHandler/CommandHandler.cpp:[m[K In member function ‘[01m[KSystem::VirtualConsole::ParsedCommand System::VirtualConsole::KernelShell::ParseCommand(const char*)[m[K’:
-[01m[K./src/System/CommandHandler/CommandHandler.cpp:71:13:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   71 |     return {[01;35m[K"exit"[m[K, 4, {}, 0};
-      |             [01;35m[K^~~~~~[m[K
+[01m[K./src/Kernel/kernel.cpp:[m[K In function ‘[01m[Kint kmain(multiboot_info_t*, i32)[m[K’:
+[01m[K./src/Kernel/kernel.cpp:189:1:[m[K [01;35m[Kwarning: [m[Kno return statement in function returning non-void [[01;35m[K-Wreturn-type[m[K]
+  189 | [01;35m[K}[m[K
+      | [01;35m[K^[m[K
+./src/Kernel/kernel.cpp: Assembler messages:
+./src/Kernel/kernel.cpp:160: Error: number of operands mismatch for `int'

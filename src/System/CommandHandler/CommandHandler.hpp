@@ -48,7 +48,7 @@ namespace System
             KernelShell(System::Display::tty *tty, i16 ColorF, i16 ColorB);
             ~KernelShell() {};
 
-            void HandleCommand(const char* str);
+            int HandleCommand(const char* str);
 
             private:
 

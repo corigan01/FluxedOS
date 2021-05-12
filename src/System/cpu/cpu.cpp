@@ -76,6 +76,43 @@ IRQ	        Description
 
 */
 
+char *Err[] =
+{
+    "Division By Zero",
+    "Debug",
+    "Non Maskable Interrupt",
+    "Breakpoint",
+    "Into Detected Overflow",
+    "Out of Bounds",
+    "Invalid Opcode",
+    "No Coprocessor",
+    "Double Fault",
+    "Coprocessor Segment Overrun",
+    "Bad TSS",
+    "Segment Not Present",
+    "Stack Fault",
+    "General Protection Fault",
+    "Page Fault",
+    "Unknown Interrupt",
+    "Coprocessor Fault",
+    "Alignment Check",
+    "Machine Check",
+    "Out of Memory", // 19
+    "Reserved",
+    "Reserved",
+    "Reserved",
+    "Reserved",
+    "Reserved",
+    "Reserved",
+    "Reserved",
+    "Reserved",
+    "Reserved",
+    "Reserved",
+    "Reserved",
+    "Reserved"
+};
+
+
 void System::CPU::IRQ::installIRQ(int irq, void(*handler)(register_t *r)) {
     INT_TO_STRING(PortStr, irq);
     kout << "Installed new IRQ on port: " << PortStr << "!" << endl;
@@ -91,9 +128,20 @@ void System::CPU::IRQ::uninstallIRQ(int irq) {
 void System::CPU::ISR::init() {
     kout << "ISR INIT ";
     isr_install();
+    register_fault_handler(System::CPU::ISR::Err_hanlder);
     kout << " OK" << endl;
 }
 
+void System::CPU::ISR::Err_hanlder(register_t *r) {
+    
+    
+    kout << "\n\nCRITICAL ERROR ENCOUNTERED\n=================================" << endl;
+
+    NO_INSTRUCTION;
+    NO_INSTRUCTION;
+
+    HALT;
+}
 
 void PIC::SendEOI(i8 irq) {
     if(irq >= 8) {

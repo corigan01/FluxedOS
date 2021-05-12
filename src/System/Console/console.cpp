@@ -40,7 +40,10 @@ console::~console() {
 }
 
 void console::HandleKeyCode(i8 keycode) {
+    kout << "START" << endl;
     this->LastChar = keycode;
+
+   
 
     switch (keycode) {
     case Keyboard::Keycode::BACKSPACE_PRESSED:
@@ -59,9 +62,11 @@ void console::HandleKeyCode(i8 keycode) {
 
         //kout << "User entered command --> \'" << this->UserString << "\'" << endl;
 
-
-        this->OurTTY->print_str("     \n");
-        this->HandleCommand(this->GetRawCommand());
+        this->OurTTY->print_str("\n");
+        kout << "B" << endl;
+        //HandleCommand(UserString);
+        ReturnUser();
+        kout << "E" << endl;
         kout << "handled command" << endl;
 
 
@@ -78,6 +83,7 @@ void console::HandleKeyCode(i8 keycode) {
 
         break;
     }
+    kout << "END\n" << endl;
 }
 char* console::GetRawCommand() {
     if (this->HasFinalUserString) {
@@ -109,8 +115,9 @@ bool console::IsAlive() {
     return TermActive;
 }
 
-void console::HandleCommand(const char* str) {
+int console::HandleCommand(const char* str) {
     OurTTY->print_str("Command Handler Not found!\n");
+    return 1;
 }
 
 void console::init(System::Display::tty * tty, i16 ColorF, i16 ColorB) {

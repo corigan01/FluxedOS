@@ -27,12 +27,14 @@ using namespace System::VirtualConsole;
 using namespace System::Display;
 
 KernelShell::KernelShell(System::Display::tty *tty, i16 ColorF, i16 ColorB) {
-    tty->print_str("\nWelcome to KernelShell, FluxedOS's Debug Shell\n");
+    tty->print_str("\nWelcome to KernelShell!\nThe FluxedOS Debug Shell\n-------------------------\n");
     this->init(tty, ColorF, ColorB);
 }
 
-void KernelShell::HandleCommand(const char* str) {
+int KernelShell::HandleCommand(const char* str) {
+    kout << "R" << endl;
     ParsedCommand Command = this->ParseCommand((char*)str);
+   
 
     #define InternalCommandLen 1
     static const char * InternalCommands[InternalCommandLen] = {
@@ -50,6 +52,8 @@ void KernelShell::HandleCommand(const char* str) {
         }
     }
 
+     
+
     switch (UsedCommand)
     {
     case 1:
@@ -57,19 +61,21 @@ void KernelShell::HandleCommand(const char* str) {
         break;
     
     default:
-        OurTTY->setcolor(Display::Driver::COLOR::RED, Display::Driver::COLOR::BLACK);
-        OurTTY->print_str("Command \"");
-        OurTTY->print_str(Command.Command);
-        OurTTY->print_str("\" Not Found!\n");
+        //OurTTY->setcolor(Display::Driver::COLOR::RED, Display::Driver::COLOR::BLACK);
+        //OurTTY->print_str("Command \"");
+        //OurTTY->print_str(Command.Command);
+        //OurTTY->print_str("\" Not Found!\n\0");
         break;
     }
 
+    
+
     this->ReturnUser();
+    kout << "W" << endl;
+    return 0;
 }
 
 ParsedCommand KernelShell::ParseCommand(char* str) {
-    kout << "parsing command" << endl;
-
     i32 len = strlen(str);
     str[len] = ' ';
     len++;
@@ -102,6 +108,7 @@ ParsedCommand KernelShell::ParseCommand(char* str) {
     i32 commandLen = 0;
     char *command = "";
     char **args = {};
+
 
     for (int i = start; i < end; i++) {
         command[commandLen++] = str[i];
@@ -141,7 +148,6 @@ ParsedCommand KernelShell::ParseCommand(char* str) {
         }
     }
 
-    
     
 
     return {command, (int)commandLen, args, (int)argNum};

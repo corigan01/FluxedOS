@@ -140,6 +140,7 @@ char *exception_messages[] =
 };
 
 isr_t interrupt_handlers[256];
+isr_t Fault_handler;
 
 void fault_handler(struct regs *r)
 {
@@ -147,33 +148,8 @@ void fault_handler(struct regs *r)
     
     if (r->int_no < 32)
     {
+        Fault_handler(&r);
         
-        /*print_int(r->cs);
-        print_string(" : ", RED, BLACK);
-        print_int(r->ds);
-        print_string(" : ", RED, BLACK);
-        print_int(r->eax);
-        print_string(" : ", RED, BLACK);
-        print_int(r->ebx);
-        print_string(" : ", RED, BLACK);
-        print_int(r->ecx);
-        print_string(" : ", RED, BLACK);
-        print_int(r->edx);
-        print_string(" : ", RED, BLACK);
-        print_int(r->edi);
-        print_string(" : ", RED, BLACK);
-        print_int(r->eip);
-        print_string(" : ", RED, BLACK);
-        print_int(r->err_code);
-        print_string(" : ", RED, BLACK);
-        print_int(r->es);
-        print_string("\n", RED, BLACK);*/
-        
-        //utb(0xA0, 0x20);
-        //outb(0x20, 0x20);
-
-        // FIXME this needs to not be this sad
-        while(1);
     } 
     if(interrupt_handlers[r->int_no] != NULL) {
          isr_t handler = interrupt_handlers[r->int_no];
@@ -187,5 +163,8 @@ void register_interrupt_handler(int num, isr_t handler) {
     if(num < 256)
         interrupt_handlers[num] = handler;
 
-    
+}
+
+void register_fault_handler(isr_t handler) {
+    Fault_handler = handler;
 }

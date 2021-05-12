@@ -55,5 +55,5 @@ stublet:
 
 
 SECTION .bss
-    resb 1024*1024               ; This reserves memory here
+    resb 1024*1024*10               ; This reserves memory here
 _sys_stack:

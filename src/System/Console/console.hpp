@@ -50,7 +50,7 @@ namespace System
 
             void init(System::Display::tty * tty, i16 ColorF, i16 ColorB);
 
-            virtual void HandleCommand(const char* str);
+            virtual int HandleCommand(const char* str);
 
             bool HasFinalUserString = false;
             bool HandlerInstalled = false;

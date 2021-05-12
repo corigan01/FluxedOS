@@ -47,115 +47,138 @@ extern i32 end;
 
 #define IO_WAIT for (int i = 0; i < 100000; i++) {};
 
+class Kernel {
+    public:
+
+    Kernel(multiboot_info_t* mbt, i32 magic) {
+        this->mbt = mbt;
+
+        kout << "Flux Kernel Started..." << endl;                           // tell the console we started the kernel
+
+        auto VGA_DRIVER = Driver::VGA((void*)mbt->framebuffer_addr);        // tell VGA what addr the framebuffer is at
+        KernelTTY = &VGA_DRIVER;                                            // bind the tty to the display driver
+
+    }
+
+    ~Kernel() {
+        /* Kernel Finish */
+        KernelTTY->setcolor(COLOR::WHITE, COLOR::BLACK);
+        PIT::Sleep(1000);
+        KernelTTY->print_str("--------------------------------------------------------------------------------------\nKernel Eneded");
+        for (int i = 0; i < 10; i++) {
+            PIT::Sleep(1000);
+            KernelTTY->print_str(".");
+        }
+        KernelTTY->print_str("\nPowerHold!\n");
+
+        
+        
+        Power::hold();
+
+    }
+
+    void boot() {
+        KernelTTY->setcolor(COLOR::BRIGHT_MAGENTA, COLOR::BLACK);    
+
+        
+        GDT::init(); KernelTTY->print_str("GDT ");
+
+        
+        IDT::init(); KernelTTY->print_str("IDT ");
+
+        
+        ISR::init(); KernelTTY->print_str("ISR ");
+
+        
+        IRQ::init(); KernelTTY->print_str("IRQ ");
+
+        
+        EnableINT();
+        for (int i = 0; i < 16; i++) { PIC::SendEOI(i); }
+        KernelTTY->print_str("PIC ");
+
+        
+        PIT::TimerPhase(1000);
+        PIT::init();
+        KernelTTY->print_str("PIT ");
+
+        RTC::Read(); KernelTTY->print_str("RTC ");
+
+        Keyboard::installIRQ();
+        KernelTTY->print_str("Keyboard ");
+
+        pmm::init(mbt);
+        KernelTTY->print_str("PMM ");
+
+        
+        #define BootupLogoColor COLOR::BLACK
+        
+        { // Tell the user we started the kernel
+            RTC::Date BootTime = RTC::GetDate();
+            KernelTTY->setcolor(COLOR::DARK_GREY, COLOR::DARK_GREY);
+            KernelTTY->print_str(R"(
+=========================)");
+            KernelTTY->setcolor(COLOR::BRIGHT_BLUE, BootupLogoColor);
+            KernelTTY->print_str(R"(
+                    ______            __ __                 __
+                   / __/ /_ ____ __  / //_/__ _______  ___ / /
+                  / _// / // /\ \ / / ,< / -_) __/ _ \/ -_) / 
+                 /_/ /_/\___//_\_\ /_/|_|\__/_/ /_//_/\__/_/ )");
+            KernelTTY->setcolor(COLOR::WHITE, BootupLogoColor);
+            KernelTTY->print_str("\n                BUILD: ");
+            INT_TO_STRING(BuildNumberStr, BUILD);
+            INT_TO_STRING(MemoryNumberStr, (mbt->mem_lower + mbt->mem_upper) / 1024);
+            KernelTTY->setcolor(COLOR::GREEN, BootupLogoColor);
+            KernelTTY->print_str(BuildNumberStr);
+            KernelTTY->print_str("               ");
+            KernelTTY->print_str(MemoryNumberStr);
+            KernelTTY->setcolor(COLOR::WHITE, BootupLogoColor);
+            KernelTTY->print_str(" MB Installed!\n                Disp Addr: ");
+            INT_TO_STRING(FrameBufferStr, mbt->framebuffer_addr);
+            INT_TO_STRING(MultiBootInfoStr, mbt->vbe_mode_info);
+            KernelTTY->print_str(FrameBufferStr);
+            KernelTTY->print_str("         ");
+            KernelTTY->printf("%d/%d/%d - %d:%d:%d \n", BootTime.Month, BootTime.Day, BootTime.Year, BootTime.Hour > 12 ? BootTime.Hour - 12 : BootTime.Hour, BootTime.Minute, BootTime.Second);
+            KernelTTY->setcolor(COLOR::DARK_GREY, COLOR::DARK_GREY);
+            KernelTTY->print_str(R"(
+=========================)");
+            KernelTTY->setcolor(COLOR::WHITE, COLOR::BLACK);
+            KernelTTY->print_str("\n\n\n");
+        }
+
+        kout << "Boot OK" << endl;
+
+    }
+
+
+
+    void run() {
+        NO_INSTRUCTION;
+
+
+        //auto Shell = VirtualConsole::KernelShell(KernelTTY, COLOR::BRIGHT_GREEN, COLOR::BLACK); // Shell handles all the commands that console has
+        //VirtualConsole::console *sh = &Shell;                                                   // plug shell into the console
+        //while (sh->IsAlive()) { 
+        //    sh->HandleKeyCode(Keyboard::Keycode::ENTER_PRESSED);
+        //}
+
+
+
+        
+
+       
+    }
+
+    multiboot_info_t* mbt;
+    tty* KernelTTY;
+
+};
+
 int kmain(multiboot_info_t* mbt, i32 magic) {
     
-
-    kout << "Flux Kernel Started..." << endl;                           // tell the console we started the kernel
-
-    auto VGA_DRIVER = Driver::VGA((void*)mbt->framebuffer_addr);        // tell VGA what addr the framebuffer is at
-    tty* KernelTTY = &VGA_DRIVER;                                       // bind the tty to the display driver
-
-    KernelTTY->setcolor(COLOR::BRIGHT_MAGENTA, COLOR::BLACK);    
-
-    IO_WAIT;
-    GDT::init();
-    KernelTTY->print_str("GDT ");
-    IO_WAIT;
-    IDT::init();
-    KernelTTY->print_str("IDT ");
-    IO_WAIT;
-    ISR::init();
-    KernelTTY->print_str("ISR ");
-    IO_WAIT;
-    IRQ::init();
-    KernelTTY->print_str("IRQ ");
-    IO_WAIT;
-    EnableINT();
-    for (int i = 0; i < 16; i++) {
-        PIC::SendEOI(i);
-    }
-    KernelTTY->print_str("PIC ");
-    IO_WAIT;
-    PIT::TimerPhase(1000);
-    PIT::init();
-    KernelTTY->print_str("PIT ");
-    RTC::Read();
-    KernelTTY->print_str("RTC ");
-    Keyboard::installIRQ();
-    KernelTTY->print_str("Keyboard ");
-
-    // Init done message
-    kout << "INIT     OK" << endl;
-
-
-
-    RTC::Date BootTime = RTC::GetDate();
-    
-
-
-    #define BootupLogoColor COLOR::BLACK
-    
-    { // Tell the user we started the kernel
-        KernelTTY->setcolor(COLOR::DARK_GREY, COLOR::DARK_GREY);
-        KernelTTY->print_str(R"(
---------------------------------------------------------------------------------------\n)");
-        KernelTTY->setcolor(COLOR::BRIGHT_BLUE, BootupLogoColor);
-        KernelTTY->print_str(R"(
-                   ______            __ __                 __
-                  / __/ /_ ____ __  / //_/__ _______  ___ / /
-                 / _// / // /\ \ / / ,< / -_) __/ _ \/ -_) / 
-                /_/ /_/\___//_\_\ /_/|_|\__/_/ /_//_/\__/_/ )");
-        KernelTTY->setcolor(COLOR::WHITE, BootupLogoColor);
-        KernelTTY->print_str("\n                BUILD: ");
-        INT_TO_STRING(BuildNumberStr, BUILD);
-        INT_TO_STRING(MemoryNumberStr, (mbt->mem_lower + mbt->mem_upper) / 1024);
-        KernelTTY->setcolor(COLOR::GREEN, BootupLogoColor);
-        KernelTTY->print_str(BuildNumberStr);
-        KernelTTY->print_str("               ");
-        KernelTTY->print_str(MemoryNumberStr);
-        KernelTTY->setcolor(COLOR::WHITE, BootupLogoColor);
-        KernelTTY->print_str(" MB Installed!\n                Disp Addr: ");
-        INT_TO_STRING(FrameBufferStr, mbt->framebuffer_addr);
-        INT_TO_STRING(MultiBootInfoStr, mbt->vbe_mode_info);
-        KernelTTY->print_str(FrameBufferStr);
-        KernelTTY->print_str("         ");
-        KernelTTY->printf("%d/%d/%d - %d:%d:%d \n", BootTime.Month, BootTime.Day, BootTime.Year, BootTime.Hour > 12 ? BootTime.Hour - 12 : BootTime.Hour, BootTime.Minute, BootTime.Second);
-        KernelTTY->setcolor(COLOR::DARK_GREY, COLOR::DARK_GREY);
-        KernelTTY->print_str(R"(
---------------------------------------------------------------------------------------\n)");
-        KernelTTY->setcolor(COLOR::WHITE, COLOR::BLACK);
-        KernelTTY->print_str("\n\n\n");
-    }
+    Kernel krnl(mbt, magic);
+    krnl.boot();
+    krnl.run();
 
     
-
-    
-    auto Shell = VirtualConsole::KernelShell(KernelTTY, COLOR::BRIGHT_GREEN, COLOR::BLACK);
-    VirtualConsole::console *sh = &Shell;
-
-    sh->ReturnUser();
-
-    while (sh->IsAlive()) {
-        sh->HandleKeyCode(Keyboard::GetKeyCode());
-
-        char * CommandOutput = sh->GetRawCommand();
-        if (CommandOutput != NULL) {
-            sh->ReturnUser();
-        }
-    }
-
-
-    /* Kernel Finish */
-    KernelTTY->setcolor(COLOR::WHITE, COLOR::BLACK);
-    PIT::Sleep(1000);
-    KernelTTY->print_str("--------------------------------------------------------------------------------------\nKernel Eneded");
-    for (int i = 0; i < 10; i++) {
-        PIT::Sleep(1000);
-        KernelTTY->print_str(".");
-    }
-    KernelTTY->print_str("\nPowerHold!\n");
-
-    
-    
-    Power::hold();
 }
