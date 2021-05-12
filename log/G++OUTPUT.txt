@@ -27,9 +27,15 @@ In file included from [01m[K./src/Kernel/kernel.cpp:33[m[K:
 [01m[Ksrc/System/CommandHandler/CommandHandler.hpp:37:35:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
    37 |             char *  Command     = [01;35m[K""[m[K;
       |                                   [01;35m[K^~[m[K
+[01m[K./src/Kernel/kernel.cpp:[m[K In member function ‘[01m[Kvoid Kernel::run()[m[K’:
+[01m[K./src/Kernel/kernel.cpp:158:25:[m[K [01;31m[Kerror: [m[Ktoo few arguments to function ‘[01m[Kvoid System::Memory::pmm::ListMemory(System::Display::tty*)[m[K’
+  158 |         pmm::ListMemory([01;31m[K)[m[K;
+      |                         [01;31m[K^[m[K
+In file included from [01m[K./src/Kernel/kernel.cpp:29[m[K:
+[01m[Ksrc/System/memory/pmm/pmm.hpp:36:18:[m[K [01;36m[Knote: [m[Kdeclared here
+   36 |             void [01;36m[KListMemory[m[K(System::Display::tty *tty);
+      |                  [01;36m[K^~~~~~~~~~[m[K
 [01m[K./src/Kernel/kernel.cpp:[m[K In function ‘[01m[Kint kmain(multiboot_info_t*, i32)[m[K’:
-[01m[K./src/Kernel/kernel.cpp:189:1:[m[K [01;35m[Kwarning: [m[Kno return statement in function returning non-void [[01;35m[K-Wreturn-type[m[K]
-  189 | [01;35m[K}[m[K
+[01m[K./src/Kernel/kernel.cpp:185:1:[m[K [01;35m[Kwarning: [m[Kno return statement in function returning non-void [[01;35m[K-Wreturn-type[m[K]
+  185 | [01;35m[K}[m[K
       | [01;35m[K^[m[K
-./src/Kernel/kernel.cpp: Assembler messages:
-./src/Kernel/kernel.cpp:160: Error: number of operands mismatch for `int'

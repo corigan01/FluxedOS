@@ -1,5 +1,8 @@
 #!/bin/bash
 
+bold=$(tput bold)
+normal=$(tput sgr0)
+
 displayWelcome() {
     # Display the welcome
     
@@ -59,7 +62,7 @@ compilea() {
 
     if nasm -f elf $OUTPUT -o $OUTPUT.o  &> "log/A++OUTPUT.txt"; then
         local PFD=$((($(date +%s%N) - $ts)/1000000))
-        printf "%-40s%-4s\e[0;32mDONE - $PFD ms\e[0;34m\n"  "${OUTPUT:0:40}" " "
+        printf "%-40s%-4s\e[0;32m  $bold DONE - $PFD ms\e[0;34m\n"  "${OUTPUT:0:40}" " $normal"
     else
 
         #ouput the errors
@@ -83,7 +86,7 @@ compileProc() {
     mkdir log &> /dev/null
 
     if g++ -m32 -elf_i386 -nostdinc -nostartfiles -lgcc_s $OUTPUT -o "$FILES.exc" -ffreestanding -O2 -Wall -Wextra -fdiagnostics-color=always -lstdc++  &> "log/G++OUTPUT.txt"; then
-         printf "%-40s%-4s\e[0;32mDONE\e[0;34m\n"  "${OUTPUT:0:40}" " "
+         printf "%-40s%-4s\e[0;32m  $bold DONE\e[0;34m\n"  "${OUTPUT:0:40}" " $normal"
     else
 
         #ouput the errors
@@ -111,7 +114,7 @@ compilec_() {
 
     if cc -m32 -I src/ -elf_i386  -O -O2 -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-stack-protector -fpic -fshort-wchar -mno-red-zone -fno-builtin -c  $OUTPUT -fdiagnostics-color=always &> /dev/null; then
          local PFD=$((($(date +%s%N) - $ts)/1000000))
-         printf "%-40s%-4s\e[0;32mDONE - $PFD ms\e[0;34m\n"  "${OUTPUT:0:40}" " "
+         printf "%-40s%-4s\e[0;32m  $bold DONE - $PFD ms\e[0;34m\n"  "${OUTPUT:0:40}" " $normal"
     else
         printf "%-40s%-4s\e[0;31mFAILED\e[0;34m\n"  "${OUTPUT:0:40}" " "
         #ouput the errors
@@ -138,7 +141,7 @@ compilec() {
 
     if c++ -m32 -I src/ -elf_i386 -std=c++2a -O -fstrength-reduce -fomit-frame-pointer -O2 -finline-functions -nostdinc -fno-builtin -c  $OUTPUT -fdiagnostics-color=always &> /dev/null; then
          local PFD=$((($(date +%s%N) - $ts)/1000000))
-         printf "%-40s%-4s\e[0;32mDONE - $PFD ms\e[0;34m\n"  "${OUTPUT:0:40}" " "
+         printf "%-40s%-4s\e[0;32m  $bold DONE - $PFD ms\e[0;34m\n"  "${OUTPUT:0:40}" " $normal"
     else
         printf "%-40s%-4s\e[0;31mFAILED\e[0;34m\n"  "${OUTPUT:0:40}" " "
         #ouput the errors
@@ -166,7 +169,7 @@ compilestuff() {
         BUILDCOUNT=$(( 1 + BUILDCOUNT))
         compilec_ $OUTPUT 
     else
-        printf "%-40s%-4s\e[0;32mDONE\e[0;34m\n"  "${OUTPUT:0:40}" " "
+        printf "%-40s%-4s\e[0;32m  $bold DONE\e[0;34m\n"  "${OUTPUT:0:40}" " $normal"
     fi
 }
 
@@ -177,7 +180,7 @@ Link_and_check() {
     if g++ -m32 -O2 -lstdc++ -nostartfiles -Wno-undef -nostdinc -T linker.ld  obj/*.o -o FluxedOS.bin  &> "log/LINKOUTPUT.txt"; then
         DisDone "Linking FluxedOS.bin"
         PFD=$((($(date +%s%N) - $ts)/1000000))
-        printf "%-40s%-4s\e[0;32mDONE - $PFD ms\e[0;34m\n"  "${TEx:0:40}" " "
+        printf "%-40s%-4s\e[0;32m  $bold DONE - $PFD ms\e[0;34m\n"  "${TEx:0:40}" " $normal"
     else
 
                 #ouput the errors
@@ -216,7 +219,7 @@ Link_and_check() {
 DisDone() {
     OUTPUT="$1"
 
-    printf "%-40s%-4s\e[0;32mDONE\e[0;34m\n"  "${OUTPUT:0:40}" " "
+    printf "%-40s%-4s\e[0;32m  $bold DONE\e[0;34m\n"  "${OUTPUT:0:40}" " $normal"
 }
 
 run_build() {

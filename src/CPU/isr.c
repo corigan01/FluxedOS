@@ -145,7 +145,6 @@ isr_t Fault_handler;
 void fault_handler(struct regs *r)
 {
     
-    
     if (r->int_no < 32)
     {
         Fault_handler(&r);

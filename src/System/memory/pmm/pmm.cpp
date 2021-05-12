@@ -24,55 +24,82 @@
 using namespace System;
 using namespace System::Memory;
 
+#define PageSize 4096
+#define MAX_MEMORY_ENTRY 64
+
+// The raw memory map that grub gives us
 struct MemoryMap {
 	multiboot_memory_map_t * Addr;
 	i32 Len = 0;
 } MemoryDiscriptor;
 
+// The refined memory map with null entries removed
 struct MemoryEntry {
-	i32 MemoryAddr;
-	i8 MemoryType;
-	i32 Len;
-} *MemoryArray;
+	i32 MemoryAddr = 0;
+	i32 MemoryType = 0;
+	i32 Len		   = 0;
+} *MemoryArray; i32 MemoryArraySize = 0;
+
 
 void pmm::init(multiboot_info_t *mbt) {
 	MemoryDiscriptor.Addr = (multiboot_memory_map_t*)mbt->mmap_addr; 
 	MemoryDiscriptor.Len = mbt->mmap_length;
 
-	multiboot_memory_map_t* entry = MemoryDiscriptor.Addr;
-	while(entry < MemoryDiscriptor.Addr + MemoryDiscriptor.Len) {
+	
+	for (multiboot_memory_map_t* entry = MemoryDiscriptor.Addr; entry < MemoryDiscriptor.Addr + MemoryDiscriptor.Len;) {
 		
 		entry = (multiboot_memory_map_t*) ((unsigned int) entry + entry->size + sizeof(entry->size));
 		
 		if (entry->base_addr_low > 0 && (entry->length_low / (1024 * 1024)) > 0) {
-			INT_TO_STRING(Addr, entry->base_addr_low);
-			INT_TO_STRING(AddE, entry->base_addr_low + entry->length_low);
-			INT_TO_STRING(LenS, entry->length_low / (1024 * 1024));
-			kout << "Found \'" << (entry->type == MULTIBOOT_MEMORY_AVAILABLE ? "FREE" : "RESERVED")  << "\' Memory: *" << Addr << " " << LenS << " MB [" << Addr << ", " << AddE << "]" << endl;
+			if (entry->type == MULTIBOOT_MEMORY_AVAILABLE && MemoryArraySize == 0) {
+				MemoryArray = (MemoryEntry*)entry->base_addr_low;
 
+				entry->base_addr_low += sizeof(MemoryEntry) * MAX_MEMORY_ENTRY;
+			}
+			MemoryArray[MemoryArraySize++] = {.MemoryAddr = entry->base_addr_low, .MemoryType = entry->type, .Len = entry->length_low};
+			
+			INT_TO_STRING(Addr, MemoryArray[MemoryArraySize - 1].MemoryAddr);
+			INT_TO_STRING(AddE, MemoryArray[MemoryArraySize - 1].MemoryAddr + MemoryArray[MemoryArraySize - 1].Len);
+			INT_TO_STRING(LenS, MemoryArray[MemoryArraySize - 1].Len / (1024 * 1024));
 
+			kout << "Found \'" << (MemoryArray[MemoryArraySize - 1].MemoryType == MULTIBOOT_MEMORY_AVAILABLE ? "FREE" : "RESERVED")  << "\' Memory: *" << Addr << " " << LenS << " MB [" << Addr << ", " << AddE << "]" << endl;
 		}
 	}	
 
 }
 
+i32 pmm::PagesAvailable() {
+	i32 Pages = 0;
+	for (int i = 0 ; i < MemoryArraySize; i++) {
+		auto m_entry = &MemoryArray[i];
+
+		if (m_entry->MemoryType == MULTIBOOT_MEMORY_AVAILABLE) {
+			Pages += (m_entry->MemoryAddr + m_entry->Len) / PageSize; 
+		}
+	}
+}
+
 void pmm::ListMemory(System::Display::tty *tty) {
 	kout << "-------------MEMORY DUMP-------------" << endl;
 
-	multiboot_memory_map_t* entry = MemoryDiscriptor.Addr;
-	while(entry < MemoryDiscriptor.Addr + MemoryDiscriptor.Len) {
-		
-		entry = (multiboot_memory_map_t*) ((unsigned int) entry + entry->size + sizeof(entry->size));
+	
+	for (int i = 0 ; i < MemoryArraySize; i ++) {
+		auto m_entry = MemoryArray[i];
 
-		INT_TO_STRING(Addr, entry->base_addr_low);
-		INT_TO_STRING(LenS, entry->length_low / (1024 * 1024));
+		tty->printf("Found \'%s\' Memory: (void*)%d (Len %d MB) \n", (m_entry.MemoryType == MULTIBOOT_MEMORY_AVAILABLE ? "FREE" : "RESERVED"), m_entry.MemoryAddr, (m_entry.Len / (1024 * 1024)));
 
-		if (entry->base_addr_low > 0 && (entry->length_low / (1024 * 1024)) > 0) {
-			kout << "[*" << Addr << ", " << LenS << "]" << endl;
-			tty->printf("Found \'%s\' Memory: (void*)%d (Len %d MB) \n", (entry->type == MULTIBOOT_MEMORY_AVAILABLE ? "FREE" : "RESERVED")  ,entry->base_addr_low, (entry->length_low / (1024 * 1024)));
-		}
-	}	
+	}		
+	
+			
+
+	//tty->printf("Total Pages Available %d \n", pmm::PagesAvailable());
 
 
 	kout << "-------------MEMORY DUMP-------------" << endl;
+}
+
+
+
+void RequestPage() {
+
 }

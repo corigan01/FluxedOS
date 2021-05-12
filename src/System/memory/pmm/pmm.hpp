@@ -34,7 +34,7 @@ namespace System
         {
             void init(multiboot_info_t *mbt);
             void ListMemory(System::Display::tty *tty);
-
+            i32 PagesAvailable();
 
 
         } // namespace pmm

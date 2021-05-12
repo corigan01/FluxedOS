@@ -82,13 +82,10 @@ class Kernel {
 
         
         GDT::init(); KernelTTY->print_str("GDT ");
-
         
         IDT::init(); KernelTTY->print_str("IDT ");
-
         
         ISR::init(); KernelTTY->print_str("ISR ");
-
         
         IRQ::init(); KernelTTY->print_str("IRQ ");
 
@@ -155,6 +152,7 @@ class Kernel {
     void run() {
         NO_INSTRUCTION;
 
+        pmm::ListMemory(KernelTTY);
 
         //auto Shell = VirtualConsole::KernelShell(KernelTTY, COLOR::BRIGHT_GREEN, COLOR::BLACK); // Shell handles all the commands that console has
         //VirtualConsole::console *sh = &Shell;                                                   // plug shell into the console

@@ -133,9 +133,15 @@ void System::CPU::ISR::init() {
 }
 
 void System::CPU::ISR::Err_hanlder(register_t *r) {
+    kout << "\n\nCRITICAL ERROR ENCOUNTERED\n========================================\n";
+    if (r->int_no > 32) {
+        kout << "INTERRUPT ERROR TYPE MISMATCH! NO FURTHER INFOMATION GIVEN!" << endl;
+    } 
+    else {
+        kout << "ERROR: " << Err[r->int_no] << endl;
+
+    }
     
-    
-    kout << "\n\nCRITICAL ERROR ENCOUNTERED\n=================================" << endl;
 
     NO_INSTRUCTION;
     NO_INSTRUCTION;
