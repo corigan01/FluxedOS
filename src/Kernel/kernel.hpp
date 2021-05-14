@@ -19,37 +19,26 @@
  *   
  */
 
-#pragma once
-
-#include <lib/core/core.h>
+#include "BUILD.b"
+#include <boot/boot.h>
+#include <System/tty/tty.hpp>
+#include <System/cpu/cpu.hpp>
 #include <System/kout/kout.hpp>
-#include <lib/multiboot/multiboot.h>
+#include <System/Power/Power.hpp>
+#include <System/Clock/PIT/PIT.hpp>
+#include <System/Clock/RTC/RTC.hpp>
+#include <System/memory/pmm/pmm.hpp>
 #include <System/Display/Display.hpp>
-
-#define PAGE_SIZE 4096
-#define MAX_MEMORY_ENTRY 64
-
-namespace System
-{
-    namespace Memory
-    {
-        namespace pmm
-        {
-            void init(multiboot_info_t *mbt);
-            void TestMemory(System::Display::tty *tty);
-            i32 PagesAvailable();
-
-            i32 ReservePage();
-            void freePage(i32 addr);
-
-            // This is to reserve many pages at once, and pages makes a book :)
-            i32 ReserveBook(i16 PagesNumber);
-            void freeBook(i32 Addr, i16 Pages);
+#include <System/Console/console.hpp>
+#include <System/Keyboard/keyboard.hpp>
+#include <System/CommandHandler/CommandHandler.hpp>
 
 
-
-        } // namespace pmm
-        
-    } // namespace Memory
-    
-}
+using namespace System; 
+using namespace System::IO;
+using namespace System::HID;
+using namespace System::CPU;
+using namespace System::Clock;
+using namespace System::Memory;
+using namespace System::Display;
+using namespace System::Display::Driver;

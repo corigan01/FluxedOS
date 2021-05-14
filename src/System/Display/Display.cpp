@@ -145,3 +145,7 @@ void VGA::printf(const char* str, ...) {
     VGA::fmat(str, [this](int ch) { print_char(ch); }, va);
     va_end(va);
 }
+
+i16 COLOR::ColorVar(i8 ForgroundColor, i8 BackroundColor) {
+    return (BackroundColor << 8) | ForgroundColor;
+}

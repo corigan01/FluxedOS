@@ -19,37 +19,5 @@
  *   
  */
 
-#pragma once
+#include "kernel.hpp"
 
-#include <lib/core/core.h>
-#include <System/kout/kout.hpp>
-#include <lib/multiboot/multiboot.h>
-#include <System/Display/Display.hpp>
-
-#define PAGE_SIZE 4096
-#define MAX_MEMORY_ENTRY 64
-
-namespace System
-{
-    namespace Memory
-    {
-        namespace pmm
-        {
-            void init(multiboot_info_t *mbt);
-            void TestMemory(System::Display::tty *tty);
-            i32 PagesAvailable();
-
-            i32 ReservePage();
-            void freePage(i32 addr);
-
-            // This is to reserve many pages at once, and pages makes a book :)
-            i32 ReserveBook(i16 PagesNumber);
-            void freeBook(i32 Addr, i16 Pages);
-
-
-
-        } // namespace pmm
-        
-    } // namespace Memory
-    
-}

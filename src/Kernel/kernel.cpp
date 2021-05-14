@@ -18,29 +18,8 @@
  *  
  *   
  */
-#include "BUILD.b"
-#include <boot/boot.h>
-#include <System/tty/tty.hpp>
-#include <System/cpu/cpu.hpp>
-#include <System/kout/kout.hpp>
-#include <System/Power/Power.hpp>
-#include <System/Clock/PIT/PIT.hpp>
-#include <System/Clock/RTC/RTC.hpp>
-#include <System/memory/pmm/pmm.hpp>
-#include <System/Display/Display.hpp>
-#include <System/Console/console.hpp>
-#include <System/Keyboard/keyboard.hpp>
-#include <System/CommandHandler/CommandHandler.hpp>
 
-
-using namespace System; 
-using namespace System::IO;
-using namespace System::HID;
-using namespace System::CPU;
-using namespace System::Clock;
-using namespace System::Memory;
-using namespace System::Display;
-using namespace System::Display::Driver;
+#include "kernel.hpp"
 
 extern i32 start;
 extern i32 end;
@@ -64,7 +43,7 @@ class Kernel {
         /* Kernel Finish */
         KernelTTY->setcolor(COLOR::WHITE, COLOR::BLACK);
         PIT::Sleep(1000);
-        KernelTTY->print_str("--------------------------------------------------------------------------------------\nKernel Eneded");
+        KernelTTY->print_str("\n\n--------------------------------------------------------------------------------------\nKernel Eneded");
         for (int i = 0; i < 10; i++) {
             PIT::Sleep(1000);
             KernelTTY->print_str(".");
@@ -122,19 +101,7 @@ class Kernel {
                   / _// / // /\ \ / / ,< / -_) __/ _ \/ -_) / 
                  /_/ /_/\___//_\_\ /_/|_|\__/_/ /_//_/\__/_/ )");
             KernelTTY->setcolor(COLOR::WHITE, BootupLogoColor);
-            KernelTTY->print_str("\n                BUILD: ");
-            INT_TO_STRING(BuildNumberStr, BUILD);
-            INT_TO_STRING(MemoryNumberStr, (mbt->mem_lower + mbt->mem_upper) / 1024);
-            KernelTTY->setcolor(COLOR::GREEN, BootupLogoColor);
-            KernelTTY->print_str(BuildNumberStr);
-            KernelTTY->print_str("               ");
-            KernelTTY->print_str(MemoryNumberStr);
-            KernelTTY->setcolor(COLOR::WHITE, BootupLogoColor);
-            KernelTTY->print_str(" MB Installed!\n                Disp Addr: ");
-            INT_TO_STRING(FrameBufferStr, mbt->framebuffer_addr);
-            INT_TO_STRING(MultiBootInfoStr, mbt->vbe_mode_info);
-            KernelTTY->print_str(FrameBufferStr);
-            KernelTTY->print_str("         ");
+            KernelTTY->printf("\n                BUILD: %e%d              %d%e MB Installed!\n                Disp Addr: %d          ", COLOR::ColorVar(COLOR::GREEN, COLOR::BLACK), BUILD, (pmm::PagesAvailable() * PAGE_SIZE) / (1024 * 1024), COLOR::ColorVar(COLOR::WHITE, COLOR::BLACK), mbt->framebuffer_addr );
             KernelTTY->printf("%d/%d/%d - %d:%d:%d \n", BootTime.Month, BootTime.Day, BootTime.Year, BootTime.Hour > 12 ? BootTime.Hour - 12 : BootTime.Hour, BootTime.Minute, BootTime.Second);
             KernelTTY->setcolor(COLOR::DARK_GREY, COLOR::DARK_GREY);
             KernelTTY->print_str(R"(
@@ -152,18 +119,7 @@ class Kernel {
     void run() {
         NO_INSTRUCTION;
 
-        pmm::ListMemory(KernelTTY);
-
-        //auto Shell = VirtualConsole::KernelShell(KernelTTY, COLOR::BRIGHT_GREEN, COLOR::BLACK); // Shell handles all the commands that console has
-        //VirtualConsole::console *sh = &Shell;                                                   // plug shell into the console
-        //while (sh->IsAlive()) { 
-        //    sh->HandleKeyCode(Keyboard::Keycode::ENTER_PRESSED);
-        //}
-
-
-
-        
-
+        pmm::TestMemory(KernelTTY);
        
     }
 

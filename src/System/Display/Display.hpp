@@ -54,6 +54,8 @@ namespace System
                     YELLOW,
                     WHITE,
                 };
+
+                i16 ColorVar(i8 ForgroundColor, i8 BackroundColor);
             }
             
 
@@ -161,6 +163,15 @@ namespace System
                                     const uintmax_t v = fetchValue();
                                     INT_TO_STRING(strname, v);
                                     this->print_str(strname);
+                                    break;
+                                }
+                                case 'e': {
+                                    const i16 v = fetchValue();
+                                    
+                                    i8 Fc = (i8)v;
+                                    i8 Bc = (i8)(v << 8);
+
+                                    this->setcolor(Fc, Bc);
                                     break;
                                 }
                                 default:

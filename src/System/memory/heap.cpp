@@ -20,11 +20,14 @@
  */
 
 #include "heap.hpp"
+#include <System/memory/pmm/pmm.hpp>
 
-/*
 void* heapStart;
 void* heapEnd;
 HeapSegment* LastHdr;
+
+using namespace System;
+using namespace System::Memory;
 
 void initHeap(void* heapAddress, size_t pageCount){
     void* pos = heapAddress;
@@ -143,4 +146,3 @@ void HeapSegment::CombineForward(){
 void HeapSegment::CombineBackward(){
     if (last != NULL && last->free) last->CombineForward();
 }
-*/
