@@ -33,7 +33,6 @@
 #include <System/Keyboard/keyboard.hpp>
 #include <System/CommandHandler/CommandHandler.hpp>
 
-
 using namespace System; 
 using namespace System::IO;
 using namespace System::HID;
@@ -42,3 +41,41 @@ using namespace System::Clock;
 using namespace System::Memory;
 using namespace System::Display;
 using namespace System::Display::Driver;
+ 
+class Kernel {
+    public:
+
+    multiboot_info_t* mbt;
+    tty* KernelTTY;
+
+    Kernel(multiboot_info_t* mbt, i32 magic) {
+        this->mbt = mbt;
+
+        kout << "Flux Kernel Started..." << endl;                           // tell the console we started the kernel
+
+        auto VGA_DRIVER = Driver::VGA((void*)mbt->framebuffer_addr);        // tell VGA what addr the framebuffer is at
+        KernelTTY = &VGA_DRIVER;                                            // bind the tty to the display driver
+
+    }
+    ~Kernel() {
+        /* Kernel Finish */
+        KernelTTY->setcolor(COLOR::WHITE, COLOR::BLACK);
+        KernelTTY->print_str("\n\n--------------------------------------------------------------------------------------\nKernel Eneded");
+        
+        for (int i = 0; i < 10; i++) {
+            PIT::Sleep(1000);
+            KernelTTY->print_str(".");
+        }
+        KernelTTY->print_str("\nPowerHold!\n");
+
+        
+        
+        Power::hold();
+
+    }
+
+    void boot();
+    void runtime();
+
+
+};

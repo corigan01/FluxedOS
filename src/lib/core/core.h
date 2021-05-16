@@ -54,6 +54,7 @@ typedef uint32              uintmax_t;
 typedef uint8               i8;
 typedef uint16              i16;
 typedef uint32              i32;
+typedef uint64              i64;
 
 
 // Register structs for interrupt/exception

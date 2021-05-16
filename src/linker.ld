@@ -1,37 +1,35 @@
-ENTRY(start)
- 
-SECTIONS
-{
+ENTRY(_start)
 
-    . = 1M;
+KERNEL_BASE = 0xFFFFFFFF80000000; /* -2GB in 64bit address space, so 32bit signed relative addressing can reach the kernel data */
+SECTIONS {
+    . = KERNEL_BASE + 0x00100000; /* Kernel starts at 1MB offset */
 
-    . = start;
-
-    .text BLOCK(4K) : ALIGN(4K)
-    {
-      *(.multiboot)
-      *(.text)
+    .text : AT(ADDR(.text) - KERNEL_BASE) {
+        *(.multiboot_header)
+        *(.text .text.*)
     }
-
-    /* Read-only data. */
-    .rodata BLOCK(4K) : ALIGN(4K)
-    {
-      *(.rodata)
+    
+    .init_array : AT(ADDR(.init_array) - KERNEL_BASE) {
+        start_ctors = .;
+        KEEP(*( .init_array ));
+        KEEP(*(SORT_BY_INIT_PRIORITY( .init_array.* )));
+        end_ctors = .;
     }
-
-    /* Read-write data (initialized) */
-    .data BLOCK(4K) : ALIGN(4K)
-    {
-      *(.data)
+    
+    .fini_array : AT(ADDR(.fini_array) - KERNEL_BASE) {
+        KEEP(*( .fini_array ));
+        KEEP(*(SORT_BY_INIT_PRIORITY( .fini_array.* )));
+    } 
+        
+    .data : AT(ADDR(.data) - KERNEL_BASE) {
+        *(.data .data.*)
     }
-
-    /* Read-write data (uninitialized) and stack */
-    .bss BLOCK(4K) : ALIGN(4K)
-    {
-      *(COMMON)
-      *(.bss)
+    
+    .rodata : AT(ADDR(.rodata) - KERNEL_BASE) {
+        *(.rodata .rodata.*)
     }
-
-    end = .;
-
+        
+    .bss : AT(ADDR(.bss) - KERNEL_BASE) {
+        *(.bss .bss.*)
+    } 
 }

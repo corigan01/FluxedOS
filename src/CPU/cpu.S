@@ -30,7 +30,7 @@ load_idt:
 extern boot.S
 global load
 extern gp
-extern stublet
+
 load:
     xor ax, ax
     mov ds, ax
@@ -52,8 +52,6 @@ load:
     lidt [idtp]
     
     
-    jmp stublet
-
 extern isr.S
 extern irq.S
 extern gdt.S

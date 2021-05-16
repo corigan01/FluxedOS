@@ -1,2 +1,7 @@
-/usr/bin/ld: obj/boot.S.o: warning: relocation in read-only section `.text'
-/usr/bin/ld: warning: creating DT_TEXTREL in a PIE
+/usr/bin/ld: i386 architecture of input file `obj/cpu.S.o' is incompatible with i386:x86-64 output
+/usr/bin/ld: i386 architecture of input file `obj/gdt.S.o' is incompatible with i386:x86-64 output
+/usr/bin/ld: i386 architecture of input file `obj/irq.S.o' is incompatible with i386:x86-64 output
+/usr/bin/ld: i386 architecture of input file `obj/isr.S.o' is incompatible with i386:x86-64 output
+/usr/bin/ld: obj/boot.asm.o: relocation R_X86_64_32 against `.bss' can not be used when making a PIE object; recompile with -fPIE
+/usr/bin/ld: obj/longmode.asm.o: relocation R_X86_64_32S against `.rodata' can not be used when making a PIE object; recompile with -fPIE
+collect2: error: ld returned 1 exit status

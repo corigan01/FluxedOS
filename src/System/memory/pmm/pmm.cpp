@@ -47,7 +47,7 @@ void pmm::init(multiboot_info_t *mbt) {
 
 	for (multiboot_memory_map_t* entry = MemoryDiscriptor.Addr; entry < MemoryDiscriptor.Addr + MemoryDiscriptor.Len;) {
 		
-		entry = (multiboot_memory_map_t*) ((unsigned int) entry + entry->size + sizeof(entry->size));
+		entry = (multiboot_memory_map_t*) ((i64) entry + entry->size + sizeof(entry->size));
 		
 		if (entry->base_addr_low > 0 && (entry->length_low / (1024 * 1024)) > 0) {
 			

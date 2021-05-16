@@ -3,9 +3,10 @@
 bold=$(tput bold)
 normal=$(tput sgr0)
 
+#
+# Display the welcome
+#
 displayWelcome() {
-    # Display the welcome
-    
     echo "      ________                    __   ______          "
     echo "     / ____/ /_  ___  _____  ____/ /  / ____/___  ____ "
     echo "    / /_  / / / / / |/_/ _ \/ __  /  / /   / __ \\/ __ \\"
@@ -17,6 +18,9 @@ displayWelcome() {
     echo
 }
 
+#
+# Check the files for changes
+#
 md5sum_check() {
     mkdir Checksum &> /dev/null
     md5sum $(find ./ -type f -iregex '.*/.*\.\(c\|cpp\|h\|s\|S\|hpp\)$' ) &> Checksum/sum_new.check
@@ -30,6 +34,9 @@ md5sum_check() {
     fi
 }
 
+#
+# Add 1 to the Build number defined in Build.b
+#
 addToBuild() {
     # add one to the build number
     echo "---------------- ADDING TO BUILD ----------------"
@@ -40,7 +47,9 @@ addToBuild() {
     echo
 }
 
-#clean up files
+#
+# Remove all the working files
+#
 clean() {
     echo -e "\e[0;33m---------------- CLEANED UP FILES ---------------"
     rm -r isodir &> /dev/null
@@ -54,7 +63,9 @@ clean() {
     
 }
 
-#assemble boot.s file
+#
+# assemble XX.s files [ .S = nasm ]
+#
 compilea() {
     OUTPUT="$1"
     touch "log/A++OUTPUT.txt" &> /dev/null
@@ -79,22 +90,73 @@ compilea() {
 
 }
 
+#
+# assemble XX.asm files [ .asm = as ]
+#
+compilegas() {
+    OUTPUT="$1"
+    touch "log/A++OUTPUT.txt" &> /dev/null
+    local ts=$(date +%s%N)
+
+    if as --64 $OUTPUT -o $OUTPUT.o  &> "log/A++OUTPUT.txt"; then
+        local PFD=$((($(date +%s%N) - $ts)/1000000))
+        printf "%-40s%-4s\e[0;32m  $bold DONE - $PFD ms\e[0;34m\n"  "${OUTPUT:0:40}" " $normal"
+    else
+
+        #ouput the errors
+        echo -e "\e[0;31m ------------------ GAS FAILED! ------------------ "
+        printf "%s" "$(<log/A++OUTPUT.txt)"
+        echo ""
+        echo -e "\e[0;31m ------------------- GAS DONE! ------------------- "
+        #rm temp.txt
+
+        clean
+
+        exit -1
+    fi
+
+}
+
+
+
+#
+# Asm Helper for detecting the type of asm file
+#
+compileasm() {
+    OUTPUT="$1"
+    
+    if [[ $OUTPUT == *".S"* ]]; then
+        BUILDCOUNT=$(( 1 + BUILDCOUNT))
+        compilea $OUTPUT 
+    elif [[ $OUTPUT == *".asm"* ]]; then
+        BUILDCOUNT=$(( 1 + BUILDCOUNT))
+        compilegas $OUTPUT 
+    else
+        printf "%-40s%-4s\e[0;32m  $bold DONE\e[0;34m\n"  "${OUTPUT:0:40}" " $normal"
+    fi
+
+
+}
+
+#
+# This is for userspace (NOT WORKING)
+#
 compileProc() {
     OUTPUT="$1"
     OUTNAME="$2"
 
     mkdir log &> /dev/null
 
-    if g++ -m32 -elf_i386 -nostdinc -nostartfiles -lgcc_s $OUTPUT -o "$FILES.exc" -ffreestanding -O2 -Wall -Wextra -fdiagnostics-color=always -lstdc++  &> "log/G++OUTPUT.txt"; then
+    if g++ -m64 -elf_i386 -nostdinc -nostartfiles -lgcc_s $OUTPUT -o "$FILES.exc" -ffreestanding -O2 -Wall -Wextra -fdiagnostics-color=always  -lstdc++  &> "log/G++OUTPUT.txt"; then
          printf "%-40s%-4s\e[0;32m  $bold DONE\e[0;34m\n"  "${OUTPUT:0:40}" " $normal"
     else
 
-        #ouput the errors
+
         echo -e "\e[0;31m ------------------ CPP FAILED! ------------------ "
         printf "%s" "$(<log/G++OUTPUT.txt)"
         echo ""
         echo -e "\e[0;31m ------------------- CPP DONE! ------------------- "
-        #rm temp.txt
+
 
         clean
 
@@ -104,7 +166,9 @@ compileProc() {
     mv "$FILES.exc" ../../bin/
 }
 
-#compile the given file with g++
+#
+# compile XX.c files [ .c = cc ]
+#
 compilec_() {
     OUTPUT="$1"
 
@@ -112,17 +176,15 @@ compilec_() {
     local ts=$(date +%s%N)
 
 
-    if cc -m32 -I src/ -elf_i386  -O -O2 -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-stack-protector -fpic -fshort-wchar -mno-red-zone -fno-builtin -c  $OUTPUT -fdiagnostics-color=always &> /dev/null; then
+    if cc -m64 -I src/ -elf_i386  -O -O2 -mcmodel=large -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-stack-protector -fpic -fshort-wchar -mno-red-zone -fno-builtin -c  $OUTPUT -fdiagnostics-color=always &> /dev/null; then
          local PFD=$((($(date +%s%N) - $ts)/1000000))
          printf "%-40s%-4s\e[0;32m  $bold DONE - $PFD ms\e[0;34m\n"  "${OUTPUT:0:40}" " $normal"
     else
         printf "%-40s%-4s\e[0;31mFAILED\e[0;34m\n"  "${OUTPUT:0:40}" " "
-        #ouput the errors
 
-        cc -m32 -I src/ -elf_i386  -O -O2 -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-stack-protector -fpic -fshort-wchar -mno-red-zone -fno-builtin -c  $OUTPUT -fdiagnostics-color=always &> "log/GccOUTPUT.txt"
+        cc -m64 -I src/ -elf_i386  -O -O2 -mcmodel=large -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-stack-protector -fpic -fshort-wchar -mno-red-zone -fno-builtin -c  $OUTPUT -fdiagnostics-color=always &> "log/GccOUTPUT.txt"
         printf "%s" "$(<log/GccOUTPUT.txt)"
         echo ""
-        #rm temp.txt
 
         clean
 
@@ -132,24 +194,25 @@ compilec_() {
     
 }
 
-#compile the given file with g++
+#
+# compile XX.cpp files [ .cpp = c++ ]
+#
 compilec() {
     OUTPUT="$1"
 
     mkdir log &> /dev/null
     local ts=$(date +%s%N)
 
-    if c++ -m32 -I src/ -elf_i386 -std=c++2a -O -fstrength-reduce -fomit-frame-pointer -O2 -finline-functions -nostdinc -fno-builtin -c  $OUTPUT -fdiagnostics-color=always &> /dev/null; then
+    if c++ -m64 -I src/ -elf_i386 -std=c++2a -mcmodel=large -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -O -fstrength-reduce -fomit-frame-pointer -O2 -finline-functions -nostdinc -fno-builtin -c  $OUTPUT -fdiagnostics-color=always &> /dev/null; then
          local PFD=$((($(date +%s%N) - $ts)/1000000))
          printf "%-40s%-4s\e[0;32m  $bold DONE - $PFD ms\e[0;34m\n"  "${OUTPUT:0:40}" " $normal"
     else
         printf "%-40s%-4s\e[0;31mFAILED\e[0;34m\n"  "${OUTPUT:0:40}" " "
-        #ouput the errors
 
-        c++ -m32 -I src/ -elf_i386 -std=c++2a -O -fstrength-reduce -fomit-frame-pointer -O2 -finline-functions -nostdinc -fno-builtin -c  $OUTPUT -fdiagnostics-color=always  &> "log/G++OUTPUT.txt"
+
+        c++ -m64 -I src/ -elf_i386 -std=c++2a -mcmodel=large -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -O -fstrength-reduce -fomit-frame-pointer -O2 -finline-functions -nostdinc -fno-builtin -c  $OUTPUT -fdiagnostics-color=always  &> "log/G++OUTPUT.txt"
         printf "%s" "$(<log/G++OUTPUT.txt)"
         echo ""
-        #rm temp.txt
 
         clean
 
@@ -158,6 +221,9 @@ compilec() {
     fi
 }
 
+#
+# Handler for compiling C/C++ 
+#
 compilestuff() {
     OUTPUT="$1"
     if [[ $OUTPUT == *"Proc"* ]]; then
@@ -173,11 +239,12 @@ compilestuff() {
     fi
 }
 
-
+#
+# Link all compiled obj into one bin file, then check if the bin file is multiboot
+#
 Link_and_check() {
     ts=$(date +%s%N)
-    #linking the kernel with kernel.o and boot.o files
-    if g++ -m32 -O2 -lstdc++ -nostartfiles -Wno-undef -nostdinc -T linker.ld  obj/*.o -o FluxedOS.bin  &> "log/LINKOUTPUT.txt"; then
+    if g++ -m64 -O2 -lstdc++ -nostartfiles -mcmodel=large -mno-red-zone -mno-mmx -mno-sse -mno-sse2 -Wno-undef -nostdinc -T linker.ld  obj/*.o -o FluxedOS.bin  &> "log/LINKOUTPUT.txt"; then
         DisDone "Linking FluxedOS.bin"
         PFD=$((($(date +%s%N) - $ts)/1000000))
         printf "%-40s%-4s\e[0;32m  $bold DONE - $PFD ms\e[0;34m\n"  "${TEx:0:40}" " $normal"
@@ -197,7 +264,6 @@ Link_and_check() {
     fi
     echo "$((($(date +%s%N) - $tis)/1000000)) ms" 
     echo "---------------- BUILDING ISO -------------------"
-    #check FluxedOS.bin file is x86 multiboot file or not
     if grub-file --is-x86-multiboot FluxedOS.bin &> "log/GRUB.txt"; then
         DisDone "Generating grub files"
         
@@ -216,12 +282,18 @@ Link_and_check() {
     fi
 }
 
+#
+# Helper for the nice 'DONE' Message
+#
 DisDone() {
     OUTPUT="$1"
 
     printf "%-40s%-4s\e[0;32m  $bold DONE\e[0;34m\n"  "${OUTPUT:0:40}" " $normal"
 }
 
+#
+# Run the build with Qemu
+#
 run_build() {
     
     qemu-system-x86_64                          \

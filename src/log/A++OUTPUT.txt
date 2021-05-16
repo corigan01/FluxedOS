@@ -1,0 +1,3 @@
+./boot/boot.asm: Assembler messages:
+./boot/boot.asm: Warning: end of file not at end of a line; newline inserted
+nserted

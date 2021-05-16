@@ -191,7 +191,7 @@ namespace System
         // graphics mode output
         namespace vesa {
 
-            //void PRINT_CHAR(char c, void* framebuffer);
+            
 
         }
     }
