@@ -75,8 +75,7 @@ void pmm::init(multiboot_info_t *mbt) {
 				entry->length_low -= ReservedLen;
 
 				// Print the result
-				INT_TO_STRING(ReservedLenstr, ReservedLen);
-				kout << "Memory Taken by Array is " << ReservedLenstr << "!" << endl;
+				kout << "Memory Taken by Array is " << ReservedLen << "!" << endl;
 			}
 
 			MemoryArray[MemoryArraySize++] = {.MemoryAddr = entry->base_addr_low, .MemoryType = entry->type, .Len = entry->length_low};
@@ -90,6 +89,7 @@ void pmm::init(multiboot_info_t *mbt) {
 	}	
 
 	kout << "Memory map complete!" << endl;
+	
 }
 
 i32 pmm::PagesAvailable() {

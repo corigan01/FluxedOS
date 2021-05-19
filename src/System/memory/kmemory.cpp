@@ -42,6 +42,8 @@ i32 page_dir[512] __attribute__((aligned(0x1000)));
 extern i32* current_dir;
 extern i32* root_dir;
 
+extern i32 end;
+
 // Some of the code below was made by [https://github.com/16Bitt/virtix/blob/master/src/paging.c]
 // This code is not going to stay in FluxedOS, but is only here for learning. 
 // I will write my own paging once I figure out how it works :)
@@ -83,6 +85,8 @@ void dump_page(i32* dir){
 
 
 void map_vpage_to_ppage(i32 virt, i32 physical){
+    kout.printf("Currently mapping Virt: %d --> [Phy: %d] \n", virt, physical);
+
 	short id = virt >> 22;
 	for(i32 i = 0; i < 1024; i++){
 		last_page[i] = physical | 3;
@@ -92,10 +96,14 @@ void map_vpage_to_ppage(i32 virt, i32 physical){
 	last_page = (i32*) (((i32) last_page) + 4096);
 }
 void enable_paging(){
+	kout << "Attempting to enable paging" << endl;
+
 	asm volatile ("mov %%eax, %%cr3" :: "a" (page_dir_location));
 	asm volatile ("mov %cr0, %eax");
 	asm volatile ("orl $0x80000000, %eax");
 	asm volatile ("mov %eax, %cr0");
+
+    kout.printf("Paging enabled for dir %d! \n", page_dir_location);
 }
 void switch_page(i32* page_dir){
 	current_dir = page_dir;
@@ -104,6 +112,7 @@ void switch_page(i32* page_dir){
     dump_page(page_dir);
     dump_page((i32*) ((i32) ((*((i32*) page_dir))) & 0xFFFFF000));
 	
+    kout.printf("Flushing page %d \n", page_dir);
 	asm volatile("mov %0, %%cr3":: "r"(&page_dir[0]));
 	i32 cr0;
 	asm volatile("mov %%cr0, %0": "=r"(cr0));
@@ -115,18 +124,18 @@ void Idmap_kernel() {
     for(i32 i = 0; i < 1024; i++)
 		current_dir[i] = 0 | 2;
 
-	for(i32 i = 0; i < 0x8000000; i += PAGE_S)
-		map_vpage_to_ppage(i, i);	//Identity mapping the entire kernel
+	for(i32 i = 0; i < 0x8000000; i += PAGE_S) {
+        auto KernSize = 0;//0xC000000;
+		map_vpage_to_ppage(i + KernSize, i);	//Identity mapping the entire kernel
+
+    }
 }
 
 void init_paging(){
 	current_dir		    = (i32*) PAGE_S;
 	page_dir_location	= (i32) current_dir;
 	last_page		    = (i32*) (PAGE_S + 4096);
-	last_page		    = (i32*)(((i32) current_dir) + PAGE_S);
 	root_dir		    = current_dir;
-
-	
 }
 
 
@@ -161,7 +170,6 @@ void mmap_page(i32* page_dir, i32 vpage, i32 ppage){
 	page_dir[id] = ((i32) page) | 3;	//User mode, RW, present
 }
 
-
 #include <System/Display/Display.hpp>
 #include <System/Clock/PIT/PIT.hpp>
 
@@ -177,22 +185,14 @@ void Memory::init_kmalloc() {
 
     init_paging();
 
-    map_vpage_to_ppage(0xC8B000, 753664); // why no work?
-    Display::Driver::VGA dis((void*)0xC8B000);
-
     Idmap_kernel();
+    
     switch_page(root_dir);
 
     enable_paging();
-    
 
-    dis.print_str("Happy land!!\n");
-    dis.print_str("Happy land!!\n");
-    dis.print_str("Happy land!!\n");
-
-    Clock::PIT::Sleep(1000);
     
-    // This does not work, idk
+    
 
     
     

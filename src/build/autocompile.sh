@@ -55,7 +55,7 @@ rm temp.txt &> /dev/null
 
 cd src
 
-Link_and_check & # Link the bin and check everything
+Link_and_check  # Link the bin and check everything
 
 #building the iso file
 DisDone "Making boot/grub" 
@@ -65,7 +65,7 @@ mkdir -p isodir/programs  &> "log/isoLOG.txt"
 DisDone "Moving programs"
 cp bin/* isodir/programs  &> "log/isoLOG.txt"
 
-wait
+
 
 DisDone "Moving FluxedOS.bin"
 cp FluxedOS.bin isodir/boot/FluxedOS.bin &>> "log/isoLOG.txt"

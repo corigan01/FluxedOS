@@ -48,27 +48,15 @@ namespace System
         class SerialLog {
             public:        
             SerialLog(const char * function, const char * file, int line);
-
             
+            SerialLog &operator<<(const char* v);
+            SerialLog &operator<<(const int &v);
+            SerialLog &operator<<(const i32 &v);
+            SerialLog &operator<<(const i16 &v);
+            SerialLog &operator<<(const i8 &v);
+            SerialLog &operator<<(const char &v);
 
-            template <class T> 
-            SerialLog &operator<<(const T &v){
-                
-                OutputTraceInfo((const char*)v);
-
-                System::IO::Serial::outString(System::IO::Serial::COM_1, (char*)v );
-            
-                return *this;
-            }
-
-            void printf(const char* str, ...) {
-                OutputTraceInfo((const char*)str);
-
-                va_list va;
-                va_start(va, str);
-                fmat(str, [this](int ch) { System::IO::Serial::outChar(System::IO::Serial::COM_1, (char)ch ); }, va);
-                va_end(va);
-            }
+            void printf(const char* str, ...);
 
             
 
@@ -77,7 +65,11 @@ namespace System
             
             void OutputTraceInfo(const char * v) {
 
-                if (Check::DidEndLine() ) {
+                // Make the terminal look important :)
+                System::IO::Serial::outString(System::IO::Serial::COM_1, "\e[0;33m");
+
+                /*
+                if (Check::DidEndLine()  ) {
                     System::IO::Serial::outString(System::IO::Serial::COM_1, "[");
                     System::IO::Serial::outString(System::IO::Serial::COM_1, this->CalledFunc);
                     System::IO::Serial::outString(System::IO::Serial::COM_1, ":");
@@ -92,7 +84,7 @@ namespace System
                 
                 if (strcmp(v, endl) == 0) {
                     Check::EndLine();
-                }
+                }*/
 
             }
 

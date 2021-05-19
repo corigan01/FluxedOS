@@ -51,6 +51,74 @@ void Check::StartLine() {
     endline = false;
 }
 
+void SerialLog::printf(const char* str, ...) {
+    OutputTraceInfo((const char*)str);
+
+    va_list va;
+    va_start(va, str);
+    fmat(str, [this](int ch) { System::IO::Serial::outChar(System::IO::Serial::COM_1, (char)ch ); }, va);
+    va_end(va);
+}
+
+SerialLog &SerialLog::operator<<(const char* v){
+                
+    OutputTraceInfo((const char*)v);
+
+    System::IO::Serial::outString(System::IO::Serial::COM_1, (char*)v );
+
+    return *this;
+}
+
+SerialLog &SerialLog::operator<<(const int &v) {
+    INT_TO_STRING(v_str, v);
+
+    OutputTraceInfo(v_str);
+
+    System::IO::Serial::outString(System::IO::Serial::COM_1, (char*)v_str);
+
+    return *this;
+}
+
+SerialLog &SerialLog::operator<<(const i32 &v) {
+    INT_TO_STRING(v_str, v);
+
+    OutputTraceInfo(v_str);
+
+    System::IO::Serial::outString(System::IO::Serial::COM_1, (char*)v_str);
+
+    return *this;
+}
+
+SerialLog &SerialLog::operator<<(const i16 &v) {
+    INT_TO_STRING(v_str, v);
+
+    OutputTraceInfo(v_str);
+
+    System::IO::Serial::outString(System::IO::Serial::COM_1, (char*)v_str);
+
+    return *this;
+}
+
+SerialLog &SerialLog::operator<<(const i8 &v) {
+    INT_TO_STRING(v_str, v);
+
+    OutputTraceInfo(v_str);
+
+    System::IO::Serial::outString(System::IO::Serial::COM_1, (char*)v_str);
+
+    return *this;
+}
+
+SerialLog &SerialLog::operator<<(const char &v) {
+    char* v_str = "";
+    v_str[0] = v;
+
+    OutputTraceInfo(v_str);
+
+    System::IO::Serial::outString(System::IO::Serial::COM_1, (char*)v_str);
+
+    return *this;
+}
 
 /*template <class T> 
 SerialLog &SerialLog::operator<<(const T &v) {

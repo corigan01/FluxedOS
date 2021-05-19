@@ -39,8 +39,7 @@ void PIT::init() {
 }
 
 void PIT::TimerPhase(i16 hz) {
-    INT_TO_STRING(TimerPhaseStr, hz);
-    kout << "TimerPhase Reset to " << TimerPhaseStr << " hz" << endl;
+    kout << "TimerPhase Reset to " << hz << " hz" << endl;
 
     timer_phase = hz;
     int divisor = 1193180 / hz;             /* Calculate our divisor */

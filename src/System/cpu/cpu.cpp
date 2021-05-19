@@ -114,14 +114,12 @@ char *Err[] =
 
 
 void System::CPU::IRQ::installIRQ(int irq, void(*handler)(register_t *r)) {
-    INT_TO_STRING(PortStr, irq);
-    kout << "Installed new IRQ on port: " << PortStr << "!" << endl;
+    kout << "Installed new IRQ on port: " << irq << "!" << endl;
     irq_install_handler(irq, handler);
 }
 
 void System::CPU::IRQ::uninstallIRQ(int irq) {
-    INT_TO_STRING(PortStr, irq);
-    kout << "Uninstalled old IRQ on port: " << PortStr << "!" << endl;
+    kout << "Uninstalled old IRQ on port: " << irq << "!" << endl;
     irq_uninstall_handler(irq);
 }
 
