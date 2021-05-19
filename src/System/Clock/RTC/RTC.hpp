@@ -30,7 +30,7 @@ namespace System
     {
         namespace RTC
         {
-            struct Date {
+            struct time_t {
                 i16 Second = 0;
                 i16 Minute = 0;
                 i16 Hour   = 0;
@@ -39,7 +39,8 @@ namespace System
                 i16 Year   = 0;
             };
 
-            void Read();
+            void Update();
+            time_t now();
 
             i8 GetRegister(int reg);
             int getUpdateFlag();
@@ -56,7 +57,7 @@ namespace System
             i16 GetMonth();
             i16 GetYear();
 
-            Date GetDate();
+            
         }
     }
 }

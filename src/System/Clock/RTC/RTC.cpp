@@ -38,7 +38,7 @@ i16 RTC_MONTH_HOLD;
 i32 RTC_YEAR_HOLD;
  
 
-void RTC::Read() {
+void RTC::Update() {
     i16 century;
     i16 last_second;
     i16 last_minute;
@@ -169,7 +169,7 @@ i16 RTC::GetYear() {
     return RTC_YEAR_HOLD;
 }
 
-RTC::Date RTC::GetDate() {
+RTC::time_t RTC::now() {
     return {
         RTC::GetSeconds(),
         RTC::GetMin(),

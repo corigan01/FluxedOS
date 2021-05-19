@@ -1,7 +1,10 @@
-[01m[K./src/CPU/isr.c:[m[K In function ‘[01m[Kfault_handler[m[K’:
-[01m[K./src/CPU/isr.c:180:18:[m[K [01;35m[Kwarning: [m[Kpassing argument 1 of ‘[01m[Khandler[m[K’ from incompatible pointer type [[01;35m[K-Wincompatible-pointer-types[m[K]
-  180 |          handler([01;35m[K&r[m[K);
-      |                  [01;35m[K^~[m[K
-      |                  [01;35m[K|[m[K
-      |                  [01;35m[Kstruct regs **[m[K
-[01m[K./src/CPU/isr.c:180:18:[m[K [01;36m[Knote: [m[Kexpected ‘[01m[Kregister_t *[m[K’ {aka ‘[01m[Kstruct registers *[m[K’} but argument is of type ‘[01m[Kstruct regs **[m[K’
+[01m[K./src/CPU/irq.c:106:25:[m[K [01;35m[Kwarning: [m[K‘[01m[Kstruct regs[m[K’ declared inside parameter list will not be visible outside of this definition or declaration
+  106 | void irq_handler(struct [01;35m[Kregs[m[K *r){
+      |                         [01;35m[K^~~~[m[K
+[01m[K./src/CPU/irq.c:[m[K In function ‘[01m[Kirq_handler[m[K’:
+[01m[K./src/CPU/irq.c:112:29:[m[K [01;31m[Kerror: [m[Kinvalid use of undefined type ‘[01m[Kstruct regs[m[K’
+  112 |     handler = irq_routines[r[01;31m[K->[m[Kint_no - 32];
+      |                             [01;31m[K^~[m[K
+[01m[K./src/CPU/irq.c:118:9:[m[K [01;31m[Kerror: [m[Kinvalid use of undefined type ‘[01m[Kstruct regs[m[K’
+  118 |     if(r[01;31m[K->[m[Kint_no >= 40){
+      |         [01;31m[K^~[m[K

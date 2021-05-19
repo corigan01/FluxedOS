@@ -89,10 +89,11 @@ void pmm::init(multiboot_info_t *mbt) {
 		}
 	}	
 
+	kout << "Memory map complete!" << endl;
 }
 
 i32 pmm::PagesAvailable() {
-	i32 Pages = 0;
+	i32 Pages = NULL;
 
 	for (int i = 0; i < PagesAlloc->bytes * 8; i++) {
 		if (!test_bit(PagesAlloc, i)) {
@@ -101,7 +102,7 @@ i32 pmm::PagesAvailable() {
 	}
 
 	
-
+	
 	return Pages;
 }
 

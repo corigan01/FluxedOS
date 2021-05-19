@@ -21,3 +21,11 @@
 
 #include "kernel.hpp"
 
+
+void Kernel::system_init() {
+    NO_INSTRUCTION;
+
+        pmm::TestMemory(KernelTTY);
+    
+    
+}

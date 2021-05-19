@@ -125,29 +125,32 @@ void System::CPU::IRQ::uninstallIRQ(int irq) {
     irq_uninstall_handler(irq);
 }
 
-void System::CPU::ISR::init() {
-    kout << "ISR INIT ";
-    isr_install();
-    register_fault_handler(System::CPU::ISR::Err_hanlder);
-    kout << " OK" << endl;
-}
-
-void System::CPU::ISR::Err_hanlder(register_t *r) {
-    kout << "\n\nCRITICAL ERROR ENCOUNTERED\n========================================\n";
+void Err_hanlder(struct regs *r) {
+    kout << "\n\nCRITICAL FAULT ENCOUNTERED\n========================================";
     if (r->int_no > 32) {
-        kout << "INTERRUPT ERROR TYPE MISMATCH! NO FURTHER INFOMATION GIVEN!" << endl;
+        kout << "\nINTERRUPT ERROR TYPE MISMATCH! COULD NOT FIND INFO HEADER (regs*->int_no > 32)" << endl;
     } 
     else {
-        kout << "ERROR: " << Err[r->int_no] << endl;
+        kout.printf("\nFound Header info at %d!     \nError Type: %s\nErr code: %d\nreg info eax=%d ebx=%d ecx=%d edx=%d\n\n", (i32)r, Err[r->int_no], r->err_code, r->eax, r->ebx, r->ecx, r->edx);
 
     }
     
+    kout.printf("======\n+HALT+\n======\n");
 
     NO_INSTRUCTION;
     NO_INSTRUCTION;
 
     HALT;
 }
+
+void System::CPU::ISR::init() {
+    kout << "ISR INIT ";
+    isr_install();
+    register_fault_handler(Err_hanlder);
+    kout << " OK" << endl;
+}
+
+
 
 void PIC::SendEOI(i8 irq) {
     if(irq >= 8) {

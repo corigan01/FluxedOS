@@ -20,4 +20,69 @@
  */
 
 #include "kernel.hpp"
+#include <System/memory/kmemory.hpp>
 
+void Kernel::init_kernel() {
+        KernelTTY->setcolor(COLOR::BRIGHT_MAGENTA, COLOR::BLACK);    
+
+        
+        GDT::init(); KernelTTY->print_str("GDT ");
+        
+        IDT::init(); KernelTTY->print_str("IDT ");
+        
+        ISR::init(); KernelTTY->print_str("ISR ");
+        
+        IRQ::init(); KernelTTY->print_str("IRQ ");
+
+        
+        EnableINT();
+        for (int i = 0; i < 16; i++) { PIC::SendEOI(i); }
+        KernelTTY->print_str("PIC ");
+
+        
+        PIT::TimerPhase(1000);
+        PIT::init();
+        KernelTTY->print_str("PIT ");
+
+        RTC::Update(); KernelTTY->print_str("RTC ");
+
+        Keyboard::installIRQ();
+        KernelTTY->print_str("Keyboard ");
+
+        pmm::init(mbt);
+        KernelTTY->print_str("PMM ");
+
+        init_kmalloc();
+        KernelTTY->print_str("kalloc ");
+
+        //Paging::init();
+        KernelTTY->print_str("Paging ");
+        
+        #define BootupLogoColor COLOR::BLACK
+        
+        { // Tell the user we started the kernel
+            RTC::time_t BootTime = RTC::now();
+            KernelTTY->setcolor(COLOR::DARK_GREY, COLOR::DARK_GREY);
+            KernelTTY->print_str(R"(
+=========================)");
+            KernelTTY->setcolor(COLOR::BRIGHT_BLUE, BootupLogoColor);
+            KernelTTY->print_str(R"(
+                    ______            __ __                 __
+                   / __/ /_ ____ __  / //_/__ _______  ___ / /
+                  / _// / // /\ \ / / ,< / -_) __/ _ \/ -_) / 
+                 /_/ /_/\___//_\_\ /_/|_|\__/_/ /_//_/\__/_/ )");
+            KernelTTY->setcolor(COLOR::WHITE, BootupLogoColor);
+            KernelTTY->printf("\n                BUILD: %e%d              %d%e MB Installed!\n                Disp Addr: %d          ", COLOR::ColorVar(COLOR::GREEN, COLOR::BLACK), BUILD, (pmm::PagesAvailable() * PAGE_SIZE) / (1024 * 1024), 0x0F, (i32)mbt->framebuffer_addr );
+            KernelTTY->printf("%d/%d/%d - %d:%d:%d \n", BootTime.Month, BootTime.Day, BootTime.Year, BootTime.Hour > 12 ? BootTime.Hour - 12 : BootTime.Hour, BootTime.Minute, BootTime.Second);
+            KernelTTY->setcolor(COLOR::DARK_GREY, COLOR::DARK_GREY);
+            KernelTTY->print_str(R"(
+=========================)");
+            KernelTTY->setcolor(COLOR::WHITE, COLOR::BLACK);
+            KernelTTY->print_str("\n\n\n");
+        }
+
+        kout << "Boot OK" << endl;
+
+        
+
+    }

@@ -140,19 +140,29 @@ char *exception_messages[] =
 };
 
 isr_t interrupt_handlers[256];
-isr_t Fault_handler;
+isr_t Fault_handler = 0;
 
 void fault_handler(struct regs *r)
 {
+
+     //blank function pointer
+    void (*handler)(struct regs *r);
+
     
     if (r->int_no < 32)
     {
-        Fault_handler(&r);
+        handler = Fault_handler;
+
+        if(handler){
+            handler(r);
+        }
         
     } 
-    if(interrupt_handlers[r->int_no] != NULL) {
-         isr_t handler = interrupt_handlers[r->int_no];
-         handler(&r);
+    else {
+        handler = interrupt_handlers[r->int_no];
+
+        if (handler)
+            handler(r);
     }
 }
 

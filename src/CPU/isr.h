@@ -23,9 +23,6 @@
 
 #include "../lib/core/core.h"
 
-EXTNC_ typedef void (*isr_t)(register_t * );
-EXTNC_ void isr_install();
-
 EXTNC_ struct regs
 {
     unsigned int gs, fs, es, ds;      /* pushed the segs last */
@@ -33,6 +30,11 @@ EXTNC_ struct regs
     unsigned int int_no, err_code;    /* our 'push byte #' and ecodes do this */
     unsigned int eip, cs, eflags, useresp, ss;   /* pushed by the processor automatically */ 
 };
+
+EXTNC_ typedef void (*isr_t)(struct regs * );
+EXTNC_ void isr_install();
+
+
 
 EXTNC_ void register_interrupt_handler(int num, isr_t handler);
 

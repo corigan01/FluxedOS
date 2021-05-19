@@ -49,9 +49,34 @@ namespace System
             public:        
             SerialLog(const char * function, const char * file, int line);
 
+            
+
             template <class T> 
             SerialLog &operator<<(const T &v){
                 
+                OutputTraceInfo((const char*)v);
+
+                System::IO::Serial::outString(System::IO::Serial::COM_1, (char*)v );
+            
+                return *this;
+            }
+
+            void printf(const char* str, ...) {
+                OutputTraceInfo((const char*)str);
+
+                va_list va;
+                va_start(va, str);
+                fmat(str, [this](int ch) { System::IO::Serial::outChar(System::IO::Serial::COM_1, (char)ch ); }, va);
+                va_end(va);
+            }
+
+            
+
+            private:
+
+            
+            void OutputTraceInfo(const char * v) {
+
                 if (Check::DidEndLine() ) {
                     System::IO::Serial::outString(System::IO::Serial::COM_1, "[");
                     System::IO::Serial::outString(System::IO::Serial::COM_1, this->CalledFunc);
@@ -65,19 +90,79 @@ namespace System
                     Check::StartLine();
                 }
                 
-                if (strcmp((const char*)v, endl) == 0) {
+                if (strcmp(v, endl) == 0) {
                     Check::EndLine();
                 }
 
-                System::IO::Serial::outString(System::IO::Serial::COM_1, (char*)v );
-            
-                
-
-                
-                return *this;
             }
 
-            private:
+            template <typename T>
+            void fmat(const char* fmt, T emit, va_list va) {
+                int isLong = 0;
+                auto fetchValue = [&]() -> uintmax_t {
+                    int wasLong = isLong;
+                    isLong = 0;
+                    switch (wasLong) {
+                        case 0:
+                            return va_arg(va, unsigned int);
+                        case 1:
+                            return va_arg(va, unsigned long);
+                        case 2:
+                            return va_arg(va, unsigned long long);
+                    }
+                    return -1;
+                };
+
+                for (; *fmt != '\0'; ++fmt) {
+                    if (*fmt != '%') {
+                        emit(*fmt);
+                        continue;
+                    }
+
+                    fmt++;
+                    while (*fmt == 'l') {
+                        ++isLong, ++fmt;
+                    }
+
+                    switch (*fmt) {
+                        case 'c': {
+                            char ch = va_arg(va, int);
+                            emit(ch);
+                            break;
+                        }
+                        case 'p': {
+                            const uint32 v = va_arg(va, unsigned long);
+                            INT_TO_STRING(strname, v);
+                            System::IO::Serial::outString(System::IO::Serial::COM_1, (char*)strname );
+                            isLong = 0;
+                            break;
+                        }
+                        case 'x': {
+                            const uintmax_t v = fetchValue();
+                            INT_TO_STRING(strname, v);
+                            System::IO::Serial::outString(System::IO::Serial::COM_1, (char*)strname );
+                            break;
+                        }
+                        case 's': {
+                            const char* s = va_arg(va, const char*);
+                            while (*s != '\0')
+                                emit(*s++);
+                            break;
+                        }
+                        case 'd': {
+                            const uintmax_t v = fetchValue();
+                            INT_TO_STRING(strname, v);
+                            System::IO::Serial::outString(System::IO::Serial::COM_1, (char*)strname );
+                            break;
+                        }
+
+                        default:
+                            emit('%');
+                            emit(*fmt);
+                            break;
+                    }
+                }
+            }
 
             char* CalledFunc = "";
             char* CalledFile = "";

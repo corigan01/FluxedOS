@@ -77,7 +77,7 @@ namespace System
         namespace ISR  {
             void init();
 
-            void Err_hanlder(register_t *r);
+            
         }
 
         namespace PIC {
