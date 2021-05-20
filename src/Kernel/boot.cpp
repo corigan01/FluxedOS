@@ -21,6 +21,7 @@
 
 #include "kernel.hpp"
 #include <System/memory/kmemory.hpp>
+#include <System/memory/paging/page.hpp>
 
 void Kernel::init_kernel() {
         KernelTTY->setcolor(COLOR::BRIGHT_MAGENTA, COLOR::BLACK);    
@@ -55,7 +56,10 @@ void Kernel::init_kernel() {
         init_kmalloc();
         KernelTTY->print_str("kalloc ");
 
-        //Paging::init();
+        Page::init();
+        Page::id_map(0x0, 0x0, 0x8000000);
+        Page::switch_page(Page::RootDir());
+        Page::enable_paging();
         KernelTTY->print_str("Paging ");
         
         #define BootupLogoColor COLOR::BLACK

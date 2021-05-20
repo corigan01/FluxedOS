@@ -71,6 +71,9 @@ namespace System
 
                         print_char('*');
                         print_char('\n');
+
+                        cursor_enable(1, 10);
+
                     }
 
                     VGA() {};
@@ -93,6 +96,9 @@ namespace System
                     void printf(const char* str, ...);
                     void clear_screen();
                     void clear_line(i32 linenumber);
+
+                    void cursor_update(i8 cs, i8 ce);
+                    void cursor_enable(i8 cursor_start, i8 cursor_end);
 
                 private:
                     i16* internalBuffer;

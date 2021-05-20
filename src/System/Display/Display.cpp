@@ -20,9 +20,11 @@
  */
 
 #include "Display.hpp" 
- 
-using namespace System::Display::Driver;
+#include <System/Port/port.hpp>
+
 using namespace System;
+using namespace System::IO;
+using namespace System::Display::Driver;
 
 
 
@@ -45,6 +47,23 @@ uint16_t VGA::entry(char ch, i8 f, i8 b) {
     ax |= al;
 
     return ax;
+}
+
+void VGA::cursor_enable(i8 cursor_start, i8 cursor_end) {
+    Port::byte_out(0x3D4, 0x0A);
+	Port::byte_out(0x3D5, (Port::byte_in(0x3D5) & 0xC0) | cursor_start);
+ 
+	Port::byte_out(0x3D4, 0x0B);
+	Port::byte_out(0x3D5, (Port::byte_in(0x3D5) & 0xE0) | cursor_end);  
+}
+
+void VGA::cursor_update(i8 cs, i8 ce) {
+    i16 pos = ce * 80 + cs;
+
+    Port::byte_out(0x3D4, 0x0F);
+	Port::byte_out(0x3D5, (uint8_t) (pos & 0xFF));
+	Port::byte_out(0x3D4, 0x0E);
+	Port::byte_out(0x3D5, (uint8_t) ((pos >> 8) & 0xFF));
 }
 
 void VGA::print_char(char c) {
@@ -72,7 +91,6 @@ void VGA::print_char(char c) {
             else {
                 BufferSize = 80 * lineNumber;
                 lineNumber++;
-                //incLine(); 
             }
 
             
@@ -99,10 +117,10 @@ void VGA::print_char(char c) {
         BufferSize++;
         
 
-        //break;
+        
     }
 
-    //VGA::CURSOR::UPDATE(BufferSize - (lineNumber * 80), lineNumber + 0);
+    cursor_update(BufferSize - (lineNumber * 80), lineNumber + 0);
 }
 void VGA::clear_screen() {
     auto reset = [this]() {

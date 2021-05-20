@@ -3,8 +3,8 @@ xorriso 1.5.4 : RockRidge filesystem manipulator, libburnia project.
 Drive current: -outdev 'stdio:FluxedOS.iso'
 Media current: stdio file, overwriteable
 Media status : is blank
-Media summary: 0 sessions, 0 data blocks, 0 data, 26.6g free
-Added to ISO image: directory '/'='/tmp/grub.FuHxHQ'
+Media summary: 0 sessions, 0 data blocks, 0 data, 23.9g free
+Added to ISO image: directory '/'='/tmp/grub.g5Bftc'
 xorriso : UPDATE :     922 files added in 1 seconds
 Added to ISO image: directory '/'='/home/corigan01/Desktop/Programming/FluxedOS/src/isodir'
 xorriso : UPDATE :     930 files added in 1 seconds

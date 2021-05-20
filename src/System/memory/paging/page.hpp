@@ -24,6 +24,10 @@
 #include "../../../lib/core/core.h"
 #include "../../Serial/serial.hpp"
 
+
+
+#define PAGE_S 0x400000
+
 namespace System
 {
     namespace Memory
@@ -31,7 +35,40 @@ namespace System
         namespace Page
         {
             
-            
+            void init();
+            void switch_page(i32* page_dir);
+            void enable_paging();
+
+            void map_addr(i32 v, i32 p);
+            void map_page(i32* page_dir, i32 vpage, i32 ppage);
+
+            void id_map(i32 PStart, i32 VStart, i32 Offset);
+            void dump_page(i32* page);
+
+            i32* mk_page();
+            i32* mk_page_dir();
+
+            i32* RootDir();
+
+            typedef struct{
+                i32 present	: 1;
+                i32 rw		: 1;
+                i32 user	: 1;
+                i32 accessed: 1;
+                i32 dirty	: 1;
+                i32 unused	: 7;
+                i32 frame	: 20;
+            } page_t;
+
+            typedef struct{
+                page_t pages[1024];
+            } page_table_t;
+
+            typedef struct{
+                page_table_t* tables[1024];
+                i32 tables_physical[1024];
+                i32 physical_address;
+            } page_directory_t;
 
 
         } // namespace Page
