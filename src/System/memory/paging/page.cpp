@@ -68,7 +68,7 @@ void Page::enable_paging() {
 }
 
 void Page::map_addr(i32 v, i32 p) {
-    kout.printf("Currently mapping Virt: %d --> [Phy: %d] \n", v, p);
+    kout.printf("Currently mapping\t%d  \tto\t%d \t; Page id %d \n", v, p, v / PAGE_S);
 
 	// Bit 0 (P) is the Present flag.
 	// Bit 1 (R/W) is the Read/Write flag.
