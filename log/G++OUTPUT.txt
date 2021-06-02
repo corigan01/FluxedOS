@@ -1,12 +1,41 @@
-In file included from [01m[K./src/System/memory/kmemory.hpp:25[m[K,
-                 from [01m[K./src/System/memory/kmemory.cpp:22[m[K:
-[01m[Ksrc/System/kout/kout.hpp:167:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-  167 |             char* CalledFunc = [01;35m[K""[m[K;
+In file included from [01m[K./src/Kernel/kernel.hpp:25[m[K,
+                 from [01m[K./src/Kernel/boot.cpp:22[m[K:
+[01m[Ksrc/System/cpu/cpu.hpp:49:[m[K [01;35m[Kwarning: [m[K"PIC1_DATA" redefined
+   49 | #define PIC1_DATA                       (PIC1 + 1)
+      | 
+[01m[Ksrc/System/cpu/cpu.hpp:28:[m[K [01;36m[Knote: [m[Kthis is the location of the previous definition
+   28 | #define PIC1_DATA                   0x21
+      | 
+[01m[Ksrc/System/cpu/cpu.hpp:51:[m[K [01;35m[Kwarning: [m[K"PIC2_DATA" redefined
+   51 | #define PIC2_DATA                       (PIC2 + 1)
+      | 
+[01m[Ksrc/System/cpu/cpu.hpp:30:[m[K [01;36m[Knote: [m[Kthis is the location of the previous definition
+   30 | #define PIC2_DATA                   0xA1
+      | 
+In file included from [01m[Ksrc/System/cpu/cpu.hpp:25[m[K,
+                 from [01m[K./src/Kernel/kernel.hpp:25[m[K,
+                 from [01m[K./src/Kernel/boot.cpp:22[m[K:
+[01m[Ksrc/System/kout/kout.hpp:159:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+  159 |             char* CalledFunc = [01;35m[K""[m[K;
       |                                [01;35m[K^~[m[K
-[01m[Ksrc/System/kout/kout.hpp:168:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-  168 |             char* CalledFile = [01;35m[K""[m[K;
+[01m[Ksrc/System/kout/kout.hpp:160:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+  160 |             char* CalledFile = [01;35m[K""[m[K;
       |                                [01;35m[K^~[m[K
-[01m[K./src/System/memory/kmemory.cpp:[m[K In function ‘[01m[Kvoid switch_page(i32*)[m[K’:
-[01m[K./src/System/memory/kmemory.cpp:93:17:[m[K [01;31m[Kerror: [m[K‘[01m[Kdump_page[m[K’ was not declared in this scope
-   93 |                 [01;31m[Kdump_page[m[K(page_dir);
-      |                 [01;31m[K^~~~~~~~~[m[K
+In file included from [01m[K./src/Kernel/kernel.hpp:32[m[K,
+                 from [01m[K./src/Kernel/boot.cpp:22[m[K:
+[01m[Ksrc/System/Console/console.hpp:63:33:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   63 |             char * UserString = [01;35m[K""[m[K;
+      |                                 [01;35m[K^~[m[K
+In file included from [01m[K./src/Kernel/kernel.hpp:34[m[K,
+                 from [01m[K./src/Kernel/boot.cpp:22[m[K:
+[01m[Ksrc/System/CommandHandler/CommandHandler.hpp:37:35:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   37 |             char *  Command     = [01;35m[K""[m[K;
+      |                                   [01;35m[K^~[m[K
+[01m[K./src/Kernel/boot.cpp:[m[K In member function ‘[01m[Kvoid Kernel::init_kernel()[m[K’:
+[01m[K./src/Kernel/boot.cpp:63:21:[m[K [01;31m[Kerror: [m[Ktoo few arguments to function ‘[01m[Kvoid System::Memory::Page::id_map(i32, i32, i32, i8)[m[K’
+   63 |         [01;31m[KPage::id_map(0x0, 0x0, 0x8000000)[m[K;
+      |         [01;31m[K~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~[m[K
+In file included from [01m[K./src/Kernel/boot.cpp:24[m[K:
+[01m[Ksrc/System/memory/paging/page.hpp:45:18:[m[K [01;36m[Knote: [m[Kdeclared here
+   45 |             void [01;36m[Kid_map[m[K(i32 PStart, i32 VStart, i32 Offset, i8 perm);
+      |                  [01;36m[K^~~~~~[m[K

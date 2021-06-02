@@ -32,7 +32,8 @@
 #include <System/Console/console.hpp>
 #include <System/Keyboard/keyboard.hpp>
 #include <System/CommandHandler/CommandHandler.hpp>
-
+#include <System/Port/port.hpp>
+#include <System/PCI/pci.hpp>
 
 using namespace System; 
 using namespace System::IO;

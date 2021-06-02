@@ -50,6 +50,9 @@ void Kernel::init_kernel() {
         Keyboard::installIRQ();
         KernelTTY->print_str("Keyboard ");
 
+        
+        kout << "Done!" << endl;
+
         pmm::init(mbt);
         KernelTTY->print_str("PMM ");
 
@@ -57,7 +60,7 @@ void Kernel::init_kernel() {
         KernelTTY->print_str("kalloc ");
 
         Page::init();
-        Page::id_map(0x0, 0x0, 0x8000000);
+        Page::id_map(0x0, 0x0, 0x8000000, PRESENT_FLAG | SUPER_USER_MEMORY | READ_WRITE_ENABLED);
         Page::switch_page(Page::RootDir());
         Page::enable_paging();
         KernelTTY->print_str("Paging ");

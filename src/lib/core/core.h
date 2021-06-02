@@ -65,6 +65,13 @@ typedef struct registers
     uint32_t eip, cs, eflags, useresp, ss;
 }register_t;
 
+struct reg_packed {
+	uint32_t edi, esi, ebp, esp;
+	uint32_t ebx, edx, ecx, eax;
+	uint16_t flags;
+	uint16_t es, ds, fs, gs;
+} __attribute__ ((packed));
+
 // NULL
 #define NULL 0x00
 
@@ -82,7 +89,6 @@ typedef struct registers
 
 // Making c++ into a string
 #define MacroStrCon(x) #x
-
 
 // va args
 typedef __builtin_va_list va_list;

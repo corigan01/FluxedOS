@@ -28,8 +28,8 @@
 #define PIC1_DATA                   0x21
 #define PIC2_CMD                    0xA0
 #define PIC2_DATA                   0xA1
-#define PIC_READ_IRR                0x0a    /* OCW3 irq ready next CMD read */
-#define PIC_READ_ISR                0x0b    /* OCW3 irq service next CMD read */
+#define PIC_READ_IRR                0x0a        /* OCW3 irq ready next CMD read */
+#define PIC_READ_ISR                0x0b        /* OCW3 irq service next CMD read */
 
 #define ICW1_ICW4	                0x01		/* ICW4 (not) needed */
 #define ICW1_SINGLE	                0x02		/* Single (cascade) mode */
@@ -76,8 +76,6 @@ namespace System
 
         namespace ISR  {
             void init();
-
-            
         }
 
         namespace PIC {

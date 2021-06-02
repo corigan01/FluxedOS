@@ -22,10 +22,86 @@
 #include "kernel.hpp"
 
 
+using namespace System::IO;
+
+
+uint16_t pciConfigReadWord (uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset) {
+    uint32_t address;
+    uint32_t lbus  = (uint32_t)bus;
+    uint32_t lslot = (uint32_t)slot;
+    uint32_t lfunc = (uint32_t)func;
+    uint16_t tmp = 0;
+ 
+    /* create configuration address as per Figure 1 */
+    address = (uint32_t)((lbus << 16) | (lslot << 11) |
+              (lfunc << 8) | (offset & 0xfc) | ((uint32_t)0x80000000));
+ 
+    /* write out the address */
+    Port::long_out(0xCF8, address);
+    /* read in the data */
+    /* (offset & 2) * 8) = 0 will choose the first word of the 32 bits register */
+    tmp = (uint16_t)((Port::long_in(0xCFC) >> ((offset & 2) * 8)) & 0xffff);
+    return (tmp);
+}
+
+uint16_t pciCheckVendor(uint8_t bus, uint8_t slot) {
+    uint16_t vendor, device;
+    /* try and read the first configuration register. Since there are no */
+    /* vendors that == 0xFFFF, it must be a non-existent device. */
+    if ((vendor = pciConfigReadWord(bus,slot,0,0)) != 0xFFFF) {
+       device = pciConfigReadWord(bus,slot,0,2);
+       return vendor;
+    } 
+    else {
+        return NULL;
+    }
+}
+
+const char * ClassCodeName[] = {
+    "Unclassified Device",
+    "Mass Storage Controller",
+    "Network Controller ",
+    "Display Controller ",
+    "Multimedia Controller",
+    "Memory Controller",
+    "Bridge Device",
+    "Simple Communication Controller",
+    "Base System Peripheral",
+    "Input Device Controller",
+    "Docking Station",
+    "Processor",
+    "Serial Bus Controller",
+    "Wireless Controller",
+    "Intelligent Controller",
+    "Satellite Communication Controller",
+    "Encryption Controller",
+    "Signal Processing Controller",
+    "Processing Accelerator",
+    "Non-Essential Instrumentation",
+    "0x3F (Reserved)"
+};
+
 void Kernel::system_init() {
     NO_INSTRUCTION;
 
-        pmm::TestMemory(KernelTTY);
+    pmm::TestMemory(KernelTTY);
+    
+    for (int i = 0; i < 64; i++) {
+        i16 pci = pciCheckVendor(0, i);
+        i16 device = pciConfigReadWord(0,i,0,2);
+
+        if (pci != NULL) {
+            i16 Class = pciConfigReadWord(0, i, 0, 8);
+
+            i16 SubClass = Class >> 8;
+            i8 ClassCode  = (i8)Class;
+
+            kout << "Device (" << pci << ", " << device << ")\t, Class = " << ClassCodeName[Class] << " : Subclass = " << SubClass << endl;
+            PCI::get_device(pci, device, Class);
+        }
+    }
     
     
+    
+        
 }

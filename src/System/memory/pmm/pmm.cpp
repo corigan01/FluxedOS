@@ -169,7 +169,8 @@ void pmm::TestMemory(System::Display::tty *tty) {
 	for (int i = 0 ; i < MemoryArraySize; i ++) {
 		auto m_entry = MemoryArray[i];
 
-		tty->printf("Found \'%s\' Memory: (void*)%d (Len %d MB) \n", (m_entry.MemoryType == MULTIBOOT_MEMORY_AVAILABLE ? "FREE" : "RESERVED"), m_entry.MemoryAddr, (m_entry.Len / (1024 * 1024)));
+		if (!m_entry.Len || !m_entry.MemoryAddr)
+			tty->printf("Found \'%s\' Memory: (void*)%d (Len %d MB) \n", (m_entry.MemoryType == MULTIBOOT_MEMORY_AVAILABLE ? "FREE" : "RESERVED"), m_entry.MemoryAddr == NULL ? 0 : m_entry.MemoryAddr , ((m_entry.Len == NULL ? 1 : m_entry.Len) / (1024 * 1024)));
 	}		
 
 

@@ -3,9 +3,10 @@
 bold=$(tput bold)
 normal=$(tput sgr0)
 
+#
+# Display the welcome
+#
 displayWelcome() {
-    # Display the welcome
-    
     echo "      ________                    __   ______          "
     echo "     / ____/ /_  ___  _____  ____/ /  / ____/___  ____ "
     echo "    / /_  / / / / / |/_/ _ \/ __  /  / /   / __ \\/ __ \\"
@@ -17,6 +18,9 @@ displayWelcome() {
     echo
 }
 
+#
+# Check the files for changes
+#
 md5sum_check() {
     mkdir Checksum &> /dev/null
     md5sum $(find ./ -type f -iregex '.*/.*\.\(c\|cpp\|h\|s\|S\|hpp\)$' ) &> Checksum/sum_new.check
@@ -30,6 +34,9 @@ md5sum_check() {
     fi
 }
 
+#
+# Add 1 to the Build number defined in Build.b
+#
 addToBuild() {
     # add one to the build number
     echo "---------------- ADDING TO BUILD ----------------"
@@ -40,7 +47,9 @@ addToBuild() {
     echo
 }
 
-#clean up files
+#
+# Remove all the working files
+#
 clean() {
     echo -e "\e[0;33m---------------- CLEANED UP FILES ---------------"
     rm -r isodir &> /dev/null
@@ -54,7 +63,9 @@ clean() {
     
 }
 
-#assemble boot.s file
+#
+# assemble XX.s files [ .S = nasm ]
+#
 compilea() {
     OUTPUT="$1"
     touch "log/A++OUTPUT.txt" &> /dev/null
@@ -76,6 +87,54 @@ compilea() {
 
         exit -1
     fi
+
+}
+
+#
+# assemble XX.asm files [ .asm = as ]
+#
+compilegas() {
+    OUTPUT="$1"
+    touch "log/A++OUTPUT.txt" &> /dev/null
+    local ts=$(date +%s%N)
+
+    if as --32 $OUTPUT -o $OUTPUT.o  &> "log/A++OUTPUT.txt"; then
+        local PFD=$((($(date +%s%N) - $ts)/1000000))
+        printf "%-40s%-4s\e[0;32m  $bold DONE - $PFD ms\e[0;34m\n"  "${OUTPUT:0:40}" " $normal"
+    else
+
+        #ouput the errors
+        echo -e "\e[0;31m ------------------ GAS FAILED! ------------------ "
+        printf "%s" "$(<log/A++OUTPUT.txt)"
+        echo ""
+        echo -e "\e[0;31m ------------------- GAS DONE! ------------------- "
+        #rm temp.txt
+
+        clean
+
+        exit -1
+    fi
+
+}
+
+
+
+#
+# Asm Helper for detecting the type of asm file
+#
+compileasm() {
+    OUTPUT="$1"
+    
+    if [[ $OUTPUT == *".S"* ]]; then
+        BUILDCOUNT=$(( 1 + BUILDCOUNT))
+        compilea $OUTPUT 
+    elif [[ $OUTPUT == *".asm"* ]]; then
+        BUILDCOUNT=$(( 1 + BUILDCOUNT))
+        compilegas $OUTPUT 
+    else
+        printf "%-40s%-4s\e[0;32m  $bold DONE\e[0;34m\n"  "${OUTPUT:0:40}" " $normal"
+    fi
+
 
 }
 

@@ -67,14 +67,14 @@ void Page::enable_paging() {
     kout.printf("Paging enabled for dir %d! \n", page_dir_location);
 }
 
-void Page::map_addr(i32 v, i32 p) {
+void Page::map_addr(i32 v, i32 p, i8 perm) {
     kout.printf("Currently mapping\t%d  \tto\t%d \t; Page id %d \n", v, p, v / PAGE_S);
 
 	// Bit 0 (P) is the Present flag.
 	// Bit 1 (R/W) is the Read/Write flag.
 	// Bit 2 (U/S) is the User/Supervisor flag.
 
-    i8 perm = 0b011;
+    //i8 perm = 0b011;
 
 	short id = v >> 22;
 	for(i32 i = 0; i < 1024; i++){
@@ -99,10 +99,10 @@ void Page::map_page(i32* page_dir, i32 vpage, i32 ppage) {
 	page_dir[id] = ((i32) page) | 3;	    //User mode, RW, present
 }
 
-void Page::id_map(i32 PStart, i32 VStart, i32 Offset) {
+void Page::id_map(i32 PStart, i32 VStart, i32 Offset, i8 perm) {
 
     for (i32 i = PStart; i < Offset; i += PAGE_S) {
-        map_addr(i + VStart, i);
+        map_addr(i + VStart, i, perm);
     }
 
 }

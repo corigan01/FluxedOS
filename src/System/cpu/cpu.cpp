@@ -124,6 +124,7 @@ void System::CPU::IRQ::uninstallIRQ(int irq) {
 }
 
 void Err_hanlder(struct regs *r) {
+    kout << "\0\0\0\0\n" << endl;
     kout << "\n\nCRITICAL FAULT ENCOUNTERED\n========================================";
     if (r->int_no > 32) {
         kout << "\nINTERRUPT ERROR TYPE MISMATCH! COULD NOT FIND INFO HEADER (regs*->int_no > 32)" << endl;

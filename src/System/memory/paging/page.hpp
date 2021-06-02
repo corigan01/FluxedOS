@@ -24,7 +24,15 @@
 #include "../../../lib/core/core.h"
 #include "../../Serial/serial.hpp"
 
+// Bit 0 (P) is the Present flag.
+// Bit 1 (R/W) is the Read/Write flag.
+// Bit 2 (U/S) is the User/Supervisor flag.
 
+
+#define PRESENT_FLAG        0b001
+#define READ_WRITE_ENABLED  0b010
+#define SUPER_USER_MEMORY   0b000
+#define USER_SPACE_MEMORY   0b100
 
 #define PAGE_S 0x400000
 
@@ -39,10 +47,10 @@ namespace System
             void switch_page(i32* page_dir);
             void enable_paging();
 
-            void map_addr(i32 v, i32 p);
+            void map_addr(i32 v, i32 p, i8 perm);
             void map_page(i32* page_dir, i32 vpage, i32 ppage);
 
-            void id_map(i32 PStart, i32 VStart, i32 Offset);
+            void id_map(i32 PStart, i32 VStart, i32 Offset, i8 perm);
             void dump_page(i32* page);
 
             i32* mk_page();
@@ -51,13 +59,13 @@ namespace System
             i32* RootDir();
 
             typedef struct{
-                i32 present	: 1;
-                i32 rw		: 1;
-                i32 user	: 1;
-                i32 accessed: 1;
-                i32 dirty	: 1;
-                i32 unused	: 7;
-                i32 frame	: 20;
+                i32 present	  : 1;
+                i32 rw		  : 1;
+                i32 user	  : 1;
+                i32 accessed  : 1;
+                i32 dirty	  : 1;
+                i32 unused	  : 7;
+                i32 frame	  : 20;
             } page_t;
 
             typedef struct{

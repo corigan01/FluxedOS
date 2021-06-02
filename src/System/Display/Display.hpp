@@ -25,6 +25,7 @@
 #include "../Serial/serial.hpp"
 #include "../../lib/StanderdOperations/Operations.hpp"
 #include "../tty/tty.hpp"
+#include <lib/assert/assert.hpp>
 
 namespace System
 {
@@ -59,7 +60,7 @@ namespace System
             }
             
 
-            class VGA : public tty{
+            class VGA : public tty {
                 public:
 
                     VGA (void* buffer) {
@@ -194,11 +195,7 @@ namespace System
 
         }
 
-        // graphics mode output
-        namespace vesa {
+        
 
-            //void PRINT_CHAR(char c, void* framebuffer);
-
-        }
     }
 } // namespace System

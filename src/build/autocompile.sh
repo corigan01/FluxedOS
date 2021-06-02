@@ -18,10 +18,10 @@ echo "$((($(date +%s%N) - $tis)/1000000)) ms"
 echo "---------------- BUILDING ASM -------------------"
 # Compile the asm files
 
-for OUTPUT in $(find ./ -type f -iregex '.*/.*\.\(s\)$')
+for OUTPUT in $(find ./ -type f -iregex '.*/.*\.\(s\|asm\)$')
 do
     BUILDCOUNT=$(( 1 + BUILDCOUNT))
-    compilea $OUTPUT &
+    compileasm $OUTPUT &
 done
 
 wait
