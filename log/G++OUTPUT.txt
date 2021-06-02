@@ -1,41 +1,37 @@
-In file included from [01m[K./src/Kernel/kernel.hpp:25[m[K,
-                 from [01m[K./src/Kernel/boot.cpp:22[m[K:
-[01m[Ksrc/System/cpu/cpu.hpp:49:[m[K [01;35m[Kwarning: [m[K"PIC1_DATA" redefined
-   49 | #define PIC1_DATA                       (PIC1 + 1)
-      | 
-[01m[Ksrc/System/cpu/cpu.hpp:28:[m[K [01;36m[Knote: [m[Kthis is the location of the previous definition
-   28 | #define PIC1_DATA                   0x21
-      | 
-[01m[Ksrc/System/cpu/cpu.hpp:51:[m[K [01;35m[Kwarning: [m[K"PIC2_DATA" redefined
-   51 | #define PIC2_DATA                       (PIC2 + 1)
-      | 
-[01m[Ksrc/System/cpu/cpu.hpp:30:[m[K [01;36m[Knote: [m[Kthis is the location of the previous definition
-   30 | #define PIC2_DATA                   0xA1
-      | 
-In file included from [01m[Ksrc/System/cpu/cpu.hpp:25[m[K,
-                 from [01m[K./src/Kernel/kernel.hpp:25[m[K,
-                 from [01m[K./src/Kernel/boot.cpp:22[m[K:
-[01m[Ksrc/System/kout/kout.hpp:159:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+In file included from [01m[K./src/System/kout/kout.cpp:22[m[K:
+[01m[K./src/System/kout/kout.hpp:159:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
   159 |             char* CalledFunc = [01;35m[K""[m[K;
       |                                [01;35m[K^~[m[K
-[01m[Ksrc/System/kout/kout.hpp:160:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+[01m[K./src/System/kout/kout.hpp:160:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
   160 |             char* CalledFile = [01;35m[K""[m[K;
       |                                [01;35m[K^~[m[K
-In file included from [01m[K./src/Kernel/kernel.hpp:32[m[K,
-                 from [01m[K./src/Kernel/boot.cpp:22[m[K:
-[01m[Ksrc/System/Console/console.hpp:63:33:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   63 |             char * UserString = [01;35m[K""[m[K;
-      |                                 [01;35m[K^~[m[K
-In file included from [01m[K./src/Kernel/kernel.hpp:34[m[K,
-                 from [01m[K./src/Kernel/boot.cpp:22[m[K:
-[01m[Ksrc/System/CommandHandler/CommandHandler.hpp:37:35:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   37 |             char *  Command     = [01;35m[K""[m[K;
-      |                                   [01;35m[K^~[m[K
-[01m[K./src/Kernel/boot.cpp:[m[K In member function ‘[01m[Kvoid Kernel::init_kernel()[m[K’:
-[01m[K./src/Kernel/boot.cpp:63:21:[m[K [01;31m[Kerror: [m[Ktoo few arguments to function ‘[01m[Kvoid System::Memory::Page::id_map(i32, i32, i32, i8)[m[K’
-   63 |         [01;31m[KPage::id_map(0x0, 0x0, 0x8000000)[m[K;
-      |         [01;31m[K~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~[m[K
-In file included from [01m[K./src/Kernel/boot.cpp:24[m[K:
-[01m[Ksrc/System/memory/paging/page.hpp:45:18:[m[K [01;36m[Knote: [m[Kdeclared here
-   45 |             void [01;36m[Kid_map[m[K(i32 PStart, i32 VStart, i32 Offset, i8 perm);
-      |                  [01;36m[K^~~~~~[m[K
+[01m[K./src/System/kout/kout.cpp:[m[K In member function ‘[01m[KSystem::Display::SerialLog& System::Display::SerialLog::operator<<(const char&)[m[K’:
+[01m[K./src/System/kout/kout.cpp:113:19:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+  113 |     char* v_str = [01;35m[K""[m[K;
+      |                   [01;35m[K^~[m[K
+[01m[K./src/System/kout/kout.cpp:[m[K At global scope:
+[01m[K./src/System/kout/kout.cpp:123:12:[m[K [01;31m[Kerror: [m[Kno declaration matches ‘[01m[KSystem::Display::SerialLog& System::Display::SerialLog::operator<<(bool&)[m[K’
+  123 | SerialLog &[01;31m[KSerialLog[m[K::operator<<(bool &v) {
+      |            [01;31m[K^~~~~~~~~[m[K
+[01m[K./src/System/kout/kout.cpp:112:12:[m[K [01;36m[Knote: [m[Kcandidates are: ‘[01m[KSystem::Display::SerialLog& System::Display::SerialLog::operator<<(const char&)[m[K’
+  112 | SerialLog &[01;36m[KSerialLog[m[K::operator<<(const char &v) {
+      |            [01;36m[K^~~~~~~~~[m[K
+[01m[K./src/System/kout/kout.cpp:102:12:[m[K [01;36m[Knote: [m[K                ‘[01m[KSystem::Display::SerialLog& System::Display::SerialLog::operator<<(const i8&)[m[K’
+  102 | SerialLog &[01;36m[KSerialLog[m[K::operator<<(const i8 &v) {
+      |            [01;36m[K^~~~~~~~~[m[K
+[01m[K./src/System/kout/kout.cpp:92:12:[m[K [01;36m[Knote: [m[K                ‘[01m[KSystem::Display::SerialLog& System::Display::SerialLog::operator<<(const i16&)[m[K’
+   92 | SerialLog &[01;36m[KSerialLog[m[K::operator<<(const i16 &v) {
+      |            [01;36m[K^~~~~~~~~[m[K
+[01m[K./src/System/kout/kout.cpp:82:12:[m[K [01;36m[Knote: [m[K                ‘[01m[KSystem::Display::SerialLog& System::Display::SerialLog::operator<<(const i32&)[m[K’
+   82 | SerialLog &[01;36m[KSerialLog[m[K::operator<<(const i32 &v) {
+      |            [01;36m[K^~~~~~~~~[m[K
+[01m[K./src/System/kout/kout.cpp:72:12:[m[K [01;36m[Knote: [m[K                ‘[01m[KSystem::Display::SerialLog& System::Display::SerialLog::operator<<(const int&)[m[K’
+   72 | SerialLog &[01;36m[KSerialLog[m[K::operator<<(const int &v) {
+      |            [01;36m[K^~~~~~~~~[m[K
+[01m[K./src/System/kout/kout.cpp:63:12:[m[K [01;36m[Knote: [m[K                ‘[01m[KSystem::Display::SerialLog& System::Display::SerialLog::operator<<(const char*)[m[K’
+   63 | SerialLog &[01;36m[KSerialLog[m[K::operator<<(const char* v){
+      |            [01;36m[K^~~~~~~~~[m[K
+In file included from [01m[K./src/System/kout/kout.cpp:22[m[K:
+[01m[K./src/System/kout/kout.hpp:48:15:[m[K [01;36m[Knote: [m[K‘[01m[Kclass System::Display::SerialLog[m[K’ defined here
+   48 |         class [01;36m[KSerialLog[m[K {
+      |               [01;36m[K^~~~~~~~~[m[K

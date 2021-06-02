@@ -137,6 +137,20 @@ i32 pmm::ReserveBook(i16 PagesNumber) {
 	return FirstPage;
 }
 
+void ForcePage(i32 offset) {
+	if (test_bit(PagesAlloc, offset / PAGE_SIZE)) {
+		ASSERT_NOT_REACHED("TRIED TO MAP ALREADY MAPPED ADDRESS!");
+	}
+
+	set_bit(PagesAlloc, offset / PAGE_SIZE);
+}
+
+i32 pmm::ForceBook(i16 PagesNumber, i32 offset) {
+	for (int i = 0; i < PagesNumber; i++) {
+		ForcePage(offset + (i * PAGE_SIZE));
+	}
+}
+
 void pmm::freeBook(i32 Addr, i16 Pages) {
 	for (i32 i = 0; i < Pages; i++) {
 		pmm::freePage(Addr + (PAGE_SIZE * i));

@@ -120,6 +120,20 @@ SerialLog &SerialLog::operator<<(const char &v) {
     return *this;
 }
 
+SerialLog &SerialLog::operator<<(bool &v) {
+    char* v_str = "FALSE";
+    
+    if (v) {
+        v_str = "TRUE";
+    }
+
+    OutputTraceInfo(v_str);
+
+    System::IO::Serial::outString(System::IO::Serial::COM_1, (char*)v_str);
+
+    return *this;
+}
+
 /*template <class T> 
 SerialLog &SerialLog::operator<<(const T &v) {
     

@@ -20,6 +20,7 @@
  */
 
 #include "assert.hpp"
+#include <System/Display/Display.hpp>
 
 void _ASSERT(bool arg, const char * Filename, const char * Func, i32 Line) {
     if (arg)
@@ -27,5 +28,12 @@ void _ASSERT(bool arg, const char * Filename, const char * Func, i32 Line) {
 
     kout << "[" << Filename << ":" << Line << " in " << Func << "] > ASSERT FAILED! System HALT..." << endl;
     
+    System::Display::Driver::VGA vga;
+
+    vga.init((void*)0xB8000);
+    
+    vga.printf("%e ASSERT FAILED!", System::Display::Driver::COLOR::ColorVar(System::Display::Driver::COLOR::RED, System::Display::Driver::COLOR::BLACK));
+
+
     for(;;) {};
 }

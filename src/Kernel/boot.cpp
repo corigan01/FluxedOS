@@ -56,14 +56,16 @@ void Kernel::init_kernel() {
         pmm::init(mbt);
         KernelTTY->print_str("PMM ");
 
-        init_kmalloc();
-        KernelTTY->print_str("kalloc ");
-
         Page::init();
         Page::id_map(0x0, 0x0, 0x8000000, PRESENT_FLAG | SUPER_USER_MEMORY | READ_WRITE_ENABLED);
         Page::switch_page(Page::RootDir());
         Page::enable_paging();
         KernelTTY->print_str("Paging ");
+
+        init_kmalloc(0x8000001);
+        KernelTTY->print_str("kalloc ");
+
+        
         
         #define BootupLogoColor COLOR::BLACK
         

@@ -24,21 +24,34 @@
 #include <System/memory/MemorySizes.hpp>
 #include <System/Display/Display.hpp>
 #include <System/Clock/PIT/PIT.hpp>
+#include <System/memory/paging/page.hpp>
 
 using namespace System;
 using namespace System::Memory;
 
-#define MAX_POOL_SIZE ( 2  _MB )
+#define MAX_POOL_SIZE ( 8  _MB )
 #define MAX_ALLOC     (100 _KB )
 
+i32 AddressSpace = 0;
 
 
-void Memory::init_kmalloc() {
+void Memory::init_kmalloc(i32 KernelEnd) {
+    Page::id_map(KernelEnd, KernelEnd, KernelEnd + MAX_POOL_SIZE, SUPER_USER_MEMORY | PRESENT_FLAG | READ_WRITE_ENABLED);
+    Page::switch_page(Page::RootDir());
+
+    AddressSpace = KernelEnd;
+}
+
+void* kmalloc(i32 size) { 
+    if (size > MAX_ALLOC) {
+        ASSERT_NOT_REACHED("KALLOC OVER SIZED");
+    }
+
     
 
 
 
 }
+void kfree(void* pointer) {
 
-void* kmalloc() { return nullptr; }
-void kfree(void* pointer) {};
+};

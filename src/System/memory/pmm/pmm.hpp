@@ -25,8 +25,9 @@
 #include <System/kout/kout.hpp>
 #include <lib/multiboot/multiboot.h>
 #include <System/Display/Display.hpp>
+#include <System/memory/paging/page.hpp>
 
-#define PAGE_SIZE 4096
+#define PAGE_SIZE PAGE_S
 #define MAX_MEMORY_ENTRY 64
 
 namespace System
@@ -46,7 +47,8 @@ namespace System
             i32 ReserveBook(i16 PagesNumber);
             void freeBook(i32 Addr, i16 Pages);
 
-
+            // Force alloc
+            i32 ForceBook(i16 PagesNumber, i32 offset);
 
         } // namespace pmm
         

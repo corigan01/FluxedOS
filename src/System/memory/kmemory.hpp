@@ -29,9 +29,9 @@ namespace System
     namespace Memory
     {
 
-        void init_kmalloc();
+        void init_kmalloc(i32 KernelEnd);
 
-        void* kmalloc();
+        void* kmalloc(i32 size);
         void kfree(void* pointer);
 
 

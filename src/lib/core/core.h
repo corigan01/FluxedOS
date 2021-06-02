@@ -55,6 +55,8 @@ typedef uint8               i8;
 typedef uint16              i16;
 typedef uint32              i32;
 
+// Check one bit
+#define CHECK_BIT(var,pos) (((var)>>(pos)) & 1)
 
 // Register structs for interrupt/exception
 typedef struct registers
