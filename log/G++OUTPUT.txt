@@ -1,37 +1,20 @@
-In file included from [01m[K./src/System/kout/kout.cpp:22[m[K:
-[01m[K./src/System/kout/kout.hpp:159:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-  159 |             char* CalledFunc = [01;35m[K""[m[K;
+In file included from [01m[Ksrc/lib/assert/assert.hpp:24[m[K,
+                 from [01m[K./src/lib/SmartPointer/smartpointer.hpp:26[m[K,
+                 from [01m[K./src/lib/SmartPointer/smartpointer.cpp:22[m[K:
+[01m[Ksrc/System/kout/kout.hpp:160:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+  160 |             char* CalledFunc = [01;35m[K""[m[K;
       |                                [01;35m[K^~[m[K
-[01m[K./src/System/kout/kout.hpp:160:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-  160 |             char* CalledFile = [01;35m[K""[m[K;
+[01m[Ksrc/System/kout/kout.hpp:161:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+  161 |             char* CalledFile = [01;35m[K""[m[K;
       |                                [01;35m[K^~[m[K
-[01m[K./src/System/kout/kout.cpp:[m[K In member function ‘[01m[KSystem::Display::SerialLog& System::Display::SerialLog::operator<<(const char&)[m[K’:
-[01m[K./src/System/kout/kout.cpp:113:19:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-  113 |     char* v_str = [01;35m[K""[m[K;
-      |                   [01;35m[K^~[m[K
-[01m[K./src/System/kout/kout.cpp:[m[K At global scope:
-[01m[K./src/System/kout/kout.cpp:123:12:[m[K [01;31m[Kerror: [m[Kno declaration matches ‘[01m[KSystem::Display::SerialLog& System::Display::SerialLog::operator<<(bool&)[m[K’
-  123 | SerialLog &[01;31m[KSerialLog[m[K::operator<<(bool &v) {
-      |            [01;31m[K^~~~~~~~~[m[K
-[01m[K./src/System/kout/kout.cpp:112:12:[m[K [01;36m[Knote: [m[Kcandidates are: ‘[01m[KSystem::Display::SerialLog& System::Display::SerialLog::operator<<(const char&)[m[K’
-  112 | SerialLog &[01;36m[KSerialLog[m[K::operator<<(const char &v) {
-      |            [01;36m[K^~~~~~~~~[m[K
-[01m[K./src/System/kout/kout.cpp:102:12:[m[K [01;36m[Knote: [m[K                ‘[01m[KSystem::Display::SerialLog& System::Display::SerialLog::operator<<(const i8&)[m[K’
-  102 | SerialLog &[01;36m[KSerialLog[m[K::operator<<(const i8 &v) {
-      |            [01;36m[K^~~~~~~~~[m[K
-[01m[K./src/System/kout/kout.cpp:92:12:[m[K [01;36m[Knote: [m[K                ‘[01m[KSystem::Display::SerialLog& System::Display::SerialLog::operator<<(const i16&)[m[K’
-   92 | SerialLog &[01;36m[KSerialLog[m[K::operator<<(const i16 &v) {
-      |            [01;36m[K^~~~~~~~~[m[K
-[01m[K./src/System/kout/kout.cpp:82:12:[m[K [01;36m[Knote: [m[K                ‘[01m[KSystem::Display::SerialLog& System::Display::SerialLog::operator<<(const i32&)[m[K’
-   82 | SerialLog &[01;36m[KSerialLog[m[K::operator<<(const i32 &v) {
-      |            [01;36m[K^~~~~~~~~[m[K
-[01m[K./src/System/kout/kout.cpp:72:12:[m[K [01;36m[Knote: [m[K                ‘[01m[KSystem::Display::SerialLog& System::Display::SerialLog::operator<<(const int&)[m[K’
-   72 | SerialLog &[01;36m[KSerialLog[m[K::operator<<(const int &v) {
-      |            [01;36m[K^~~~~~~~~[m[K
-[01m[K./src/System/kout/kout.cpp:63:12:[m[K [01;36m[Knote: [m[K                ‘[01m[KSystem::Display::SerialLog& System::Display::SerialLog::operator<<(const char*)[m[K’
-   63 | SerialLog &[01;36m[KSerialLog[m[K::operator<<(const char* v){
-      |            [01;36m[K^~~~~~~~~[m[K
-In file included from [01m[K./src/System/kout/kout.cpp:22[m[K:
-[01m[K./src/System/kout/kout.hpp:48:15:[m[K [01;36m[Knote: [m[K‘[01m[Kclass System::Display::SerialLog[m[K’ defined here
-   48 |         class [01;36m[KSerialLog[m[K {
-      |               [01;36m[K^~~~~~~~~[m[K
+[01m[K./src/lib/SmartPointer/smartpointer.cpp:25:6:[m[K [01;31m[Kerror: [m[K‘[01m[Ktemplate<class T> class SPointer[m[K’ used without template arguments
+   25 | void [01;31m[KSPointer[m[K::MoveContents(void* NewLocation) {
+      |      [01;31m[K^~~~~~~~[m[K
+[01m[K./src/lib/SmartPointer/smartpointer.cpp:[m[K In function ‘[01m[Kvoid MoveContents(void*)[m[K’:
+[01m[K./src/lib/SmartPointer/smartpointer.cpp:26:32:[m[K [01;31m[Kerror: [m[K‘[01m[KPointer[m[K’ was not declared in this scope; did you mean ‘[01m[KSPointer[m[K’?
+   26 |     memcpy(NewLocation, (void*)[01;31m[KPointer[m[K, Size);
+      |                                [01;31m[K^~~~~~~[m[K
+      |                                [32m[KSPointer[m[K
+[01m[K./src/lib/SmartPointer/smartpointer.cpp:26:41:[m[K [01;31m[Kerror: [m[K‘[01m[KSize[m[K’ was not declared in this scope
+   26 |     memcpy(NewLocation, (void*)Pointer, [01;31m[KSize[m[K);
+      |                                         [01;31m[K^~~~[m[K

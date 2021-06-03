@@ -1,2 +1,0 @@
-/usr/bin/ld: obj/boot.S.o: warning: relocation in read-only section `.text'
-/usr/bin/ld: warning: creating DT_TEXTREL in a PIE

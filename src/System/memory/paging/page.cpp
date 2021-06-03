@@ -98,7 +98,7 @@ void Page::map_addr(i32 v, i32 p, i8 perm) {
 	current_dir[id] = ((i32) last_page) | perm;
 	last_page = (i32*) (((i32) last_page) + 4096);
 
-	pmm::ForceBook(1, p);
+	//pmm::ForceBook(1, p);
 }
 void Page::map_page(i32* page_dir, i32 vpage, i32 ppage) {
     kout << "idk" << endl;

@@ -193,8 +193,10 @@ void pmm::TestMemory(System::Display::tty *tty) {
 
 	i32 page1 = ReservePage();
 	i32 page2 = ReservePage();
+	kout << "Made Page!" << endl;
 	freePage(page2);
 	freePage(page1);
+	kout << "Free Page!" << endl;
 	i32 page3 = ReservePage();
 	i32 page4 = ReservePage();
 
