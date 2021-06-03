@@ -43,7 +43,7 @@ namespace System {
 
             void init();
             
-            void GrabMemory(Permission perm)
+            void GrabMemory(Permission perm);
 
 
         }
