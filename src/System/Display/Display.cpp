@@ -27,8 +27,6 @@ using namespace System::IO;
 using namespace System::Display::Driver;
 
 
-
-
 void VGA::setcolor(i8 f, i8 b) {
     FColor = f;
     BColor = b;
