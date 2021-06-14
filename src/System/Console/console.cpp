@@ -28,12 +28,12 @@ using namespace System::HID;
 using namespace System::VirtualConsole;
 
 /*console::console(System::Display::tty * tty, i16 ColorF, i16 ColorB) {
-    OurTTY = tty;
+    m_tty = tty;
 
     this->ColorF = ColorF;
     this->ColorB = ColorB;
 
-    OurTTY->setcolor(ColorF, ColorB);
+    m_tty->setcolor(ColorF, ColorB);
 }*/
 console::~console() {
     ;
@@ -49,7 +49,7 @@ void console::HandleKeyCode(i8 keycode) {
     case Keyboard::Keycode::BACKSPACE_PRESSED:
 
         if (this->CommandLen > 0) {
-            OurTTY->print_char('\e');
+            m_tty->print_char('\e');
             this->CommandLen--;    
             NO_INSTRUCTION;
         }
@@ -60,13 +60,13 @@ void console::HandleKeyCode(i8 keycode) {
         this->HasFinalUserString = true;
         this->UserString[this->CommandLen++] = '\0';
 
-        //kout << "User entered command --> \'" << this->UserString << "\'" << endl;
+        kout << "User entered command --> \'" << this->UserString << "\'" << endl;
 
-        this->OurTTY->print_str("\n");
-        kout << "B" << endl;
-        //HandleCommand(UserString);
+        this->m_tty->print_str("\n");
+        
+        HandleCommand(UserString);
         ReturnUser();
-        kout << "E" << endl;
+
         kout << "handled command" << endl;
 
 
@@ -76,14 +76,14 @@ void console::HandleKeyCode(i8 keycode) {
         i8 OutputChar = Keyboard::KeycodeAsciiConverter(keycode);
 
         if (OutputChar != NULL) { 
-            OurTTY->print_char(OutputChar); 
+            m_tty->print_char(OutputChar); 
             this->UserString[this->CommandLen++] = OutputChar;
         }
         else NO_INSTRUCTION;
 
         break;
     }
-    kout << "END\n" << endl;
+    
 }
 char* console::GetRawCommand() {
     if (this->HasFinalUserString) {
@@ -95,8 +95,8 @@ char* console::GetRawCommand() {
 
 void console::ReturnUser() {
     if (this->IsAlive()) {
-        OurTTY->setcolor(ColorF, ColorB);
-        OurTTY->print_str("> ");
+        m_tty->setcolor(ColorF, ColorB);
+        m_tty->print_str("> ");
     }
 
     this->HasFinalUserString = false;
@@ -108,7 +108,7 @@ void console::ReturnUser() {
 void console::KillTerm() {
     this->TermActive = false;
 
-    OurTTY->print_str("\n\nTerminal Killed!\n\n");
+    m_tty->print_str("\n\nTerminal Killed!\n\n");
 }
 
 bool console::IsAlive() {
@@ -116,15 +116,15 @@ bool console::IsAlive() {
 }
 
 int console::HandleCommand(const char* str) {
-    OurTTY->print_str("Command Handler Not found!\n");
+    m_tty->print_str("Command Handler Not found!\n");
     return 1;
 }
 
 void console::init(System::Display::tty * tty, i16 ColorF, i16 ColorB) {
-    OurTTY = tty;
+    m_tty = tty;
 
     this->ColorF = ColorF;
     this->ColorB = ColorB;
 
-    OurTTY->setcolor(ColorF, ColorB);
+    m_tty->setcolor(ColorF, ColorB);
 }

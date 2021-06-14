@@ -21,6 +21,7 @@
 
 #include "Display.hpp" 
 #include <System/Port/port.hpp>
+#include <System/memory/pmm/pmm.hpp>
 
 using namespace System;
 using namespace System::IO;
@@ -70,7 +71,7 @@ void VGA::print_char(char c) {
     case '\n':
             if (lineNumber > 24 || true) {
                 
-                uint16 * VBUF;
+                uint16 * VBUF; // TODO: Malloc this!
                 int bufS = 80*80;
                 memcpy(VBUF, internalBuffer, bufS);
 
@@ -78,6 +79,8 @@ void VGA::print_char(char c) {
                 for (int i = 80 ; i < bufS - 80*2 ; i++) {
                     internalBuffer[VGA_INT++] = VBUF[i];
                 }
+
+                memset(VBUF, 0x0, bufS);
 
                 lineNumber = 24;
                 BufferSize = 80*24;

@@ -42,13 +42,13 @@ namespace System
         
 
         // This will handle commands
-        class KernelShell : public console {
+        class BuiltinShell : public console {
             public:
 
-            KernelShell(System::Display::tty *tty, i16 ColorF, i16 ColorB);
-            ~KernelShell() {};
+            BuiltinShell(System::Display::tty *tty, i16 ColorF, i16 ColorB);
+            ~BuiltinShell() {};
 
-            int HandleCommand(const char* str);
+            int HandleCommand(const char* str) override;
 
             private:
 

@@ -23,6 +23,7 @@
 
 #include <lib/core/core.h>
 #include <System/kout/kout.hpp>
+#include <lib/multiboot/multiboot.h>
 
 #define PIC1_CMD                    0x20
 #define PIC1_DATA                   0x21
@@ -59,6 +60,8 @@ namespace System
 
         inline void EnableINT()  {Vasm("sti");};
         inline void DisableINT() {Vasm("cli");};
+
+        void init(multiboot_info_t* mbt);
         namespace IDT {
             void init();
         }

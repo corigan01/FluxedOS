@@ -25,7 +25,9 @@ global start
 extern cpu.s
 extern load
 start:
-    mov esp, _sys_stack     ; This points the stack to our new stack area
+    xor ebp, ebp
+    mov esp, _sys_stack         ; This points the stack to our new stack area
+    xor ebp, ebp
     jmp stublet
 
 
@@ -55,5 +57,5 @@ stublet:
 
 
 SECTION .bss
-    resb 1024*1024*10               ; This reserves memory here
+    resb 1024*10               ; This reserves memory here
 _sys_stack:

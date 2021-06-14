@@ -64,30 +64,7 @@ namespace System
             private:
 
             
-            void OutputTraceInfo(const char * v) {
-
-                // Make the terminal look important :)
-                System::IO::Serial::outString(System::IO::Serial::COM_1, "\e[0;33m");
-
-                /*
-                if (Check::DidEndLine()  ) {
-                    System::IO::Serial::outString(System::IO::Serial::COM_1, "[");
-                    System::IO::Serial::outString(System::IO::Serial::COM_1, this->CalledFunc);
-                    System::IO::Serial::outString(System::IO::Serial::COM_1, ":");
-                    INT_TO_STRING(IntStr, CalledLine);
-                    
-                    System::IO::Serial::outString(System::IO::Serial::COM_1, IntStr);
-
-                    System::IO::Serial::outString(System::IO::Serial::COM_1, "]\t\t --> ");
-                    already_displayed = true;
-                    Check::StartLine();
-                }
-                
-                if (strcmp(v, endl) == 0) {
-                    Check::EndLine();
-                }*/
-
-            }
+            void OutputTraceInfo(const char * v) const { System::IO::Serial::outString(System::IO::Serial::COM_1, "\e[0;33m"); };
 
             template <typename T>
             void fmat(const char* fmt, T emit, va_list va) {
@@ -131,9 +108,17 @@ namespace System
                             break;
                         }
                         case 'x': {
-                            const uintmax_t v = fetchValue();
-                            INT_TO_STRING(strname, v);
-                            System::IO::Serial::outString(System::IO::Serial::COM_1, (char*)strname );
+                            const i8 v = fetchValue();
+
+                            i8 v4 = (i8)(v << 4) >> 4;
+                            i8 v8 = (i8)v >> 4;
+
+                            char PHex_4 = hex_c[v8];
+                            char PHex_8 = hex_c[v4];
+
+                            System::IO::Serial::outChar(System::IO::Serial::COM_1, PHex_4 );
+                            System::IO::Serial::outChar(System::IO::Serial::COM_1, PHex_8 );
+
                             break;
                         }
                         case 's': {
@@ -163,6 +148,8 @@ namespace System
 
             
             bool already_displayed = false;
+
+            char hex_c[17] = "0123456789ABCDEF";
         };
     }
 }

@@ -26,12 +26,12 @@ using namespace System;
 using namespace System::VirtualConsole;
 using namespace System::Display;
 
-KernelShell::KernelShell(System::Display::tty *tty, i16 ColorF, i16 ColorB) {
-    tty->print_str("\nWelcome to KernelShell!\nThe FluxedOS Debug Shell\n-------------------------\n");
+BuiltinShell::BuiltinShell(System::Display::tty *tty, i16 ColorF, i16 ColorB) {
+    tty->print_str("\nWelcome to BuiltinShell!\nThe FluxedOS Debug Shell\n-------------------------\n");
     this->init(tty, ColorF, ColorB);
 }
 
-int KernelShell::HandleCommand(const char* str) {
+int BuiltinShell::HandleCommand(const char* str) {
     kout << "R" << endl;
     ParsedCommand Command = this->ParseCommand((char*)str);
    
@@ -52,8 +52,7 @@ int KernelShell::HandleCommand(const char* str) {
         }
     }
 
-     
-
+    
     switch (UsedCommand)
     {
     case 1:
@@ -61,21 +60,20 @@ int KernelShell::HandleCommand(const char* str) {
         break;
     
     default:
-        //OurTTY->setcolor(Display::Driver::COLOR::RED, Display::Driver::COLOR::BLACK);
-        //OurTTY->print_str("Command \"");
-        //OurTTY->print_str(Command.Command);
-        //OurTTY->print_str("\" Not Found!\n\0");
+        m_tty->setcolor(Display::Driver::COLOR::RED, Display::Driver::COLOR::BLACK);
+        m_tty->print_str("Command \"");
+        m_tty->print_str(Command.Command);
+        m_tty->print_str("\" Not Found!\n\0");
         break;
     }
 
-    
 
     this->ReturnUser();
     kout << "W" << endl;
     return 0;
 }
 
-ParsedCommand KernelShell::ParseCommand(char* str) {
+ParsedCommand BuiltinShell::ParseCommand(char* str) {
     i32 len = strlen(str);
     str[len] = ' ';
     len++;

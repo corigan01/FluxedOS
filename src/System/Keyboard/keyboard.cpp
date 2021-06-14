@@ -30,11 +30,13 @@ using namespace System::HID;
 using namespace System::CPU;
 using namespace System::Display;
 
-#define MAX_KEYCODE_ARR 15 // I don't know why it hangs over 15, but it does
+#define MAX_KEYCODE_ARR 15 // I don't know why it hangs over 15, but it does 
 
 i8 *KeycodeArr     ;
 i8 KeycodePointer   = 0;
 i8 UsedKeycode      = 0;
+
+i8 EventQueEmpty = true;
 
 void Keyboard::installIRQ() {    
 
@@ -44,10 +46,10 @@ void Keyboard::installIRQ() {
     kout << "Keyboard Init  OK" << endl;
 }
 
-const char* LetterArrayQ = "qwertyuiop"; 
-const char* LetterArrayA = "asdfghjkl";
-const char* LetterArrayY = "zxcvbnm";
-const char* NumberArray  = "123456789";
+constexpr const char* LetterArrayQ = "qwertyuiop"; 
+constexpr const char* LetterArrayA = "asdfghjkl";
+constexpr const char* LetterArrayY = "zxcvbnm";
+constexpr const char* NumberArray  = "123456789";
 
 char Keyboard::KeycodeAsciiConverter(i8 keycode) {
     switch (keycode) {
@@ -106,6 +108,8 @@ void  Keyboard::IRQ_handler(register_t *r) {
             
         }    
     }
+
+    EventQueEmpty = false;
     
     PIC::SendEOI(1);
 }
@@ -129,4 +133,14 @@ char Keyboard::GetKeyChar() {
     return KeycodeAsciiConverter(Keyboard::GetKeyCode());
 }
 
+bool Keyboard::TriggerEvent() {
+    if (!EventQueEmpty) {
+        return true;
+    }
+    return false;
+}
 
+void Keyboard::EventHandled() {
+    EventQueEmpty = true;
+
+}

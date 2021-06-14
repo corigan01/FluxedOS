@@ -113,6 +113,10 @@ namespace System
 
             char GetKeyCode();
             char GetKeyChar();
+
+            
+            bool TriggerEvent(); // Gives a true statement once a key is pressed for action triggering
+            void EventHandled(); // Sets the TriggerEvent to false 
             
 
 

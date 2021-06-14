@@ -1,20 +1,24 @@
-In file included from [01m[Ksrc/lib/assert/assert.hpp:24[m[K,
-                 from [01m[K./src/lib/SmartPointer/smartpointer.hpp:26[m[K,
-                 from [01m[K./src/lib/SmartPointer/smartpointer.cpp:22[m[K:
-[01m[Ksrc/System/kout/kout.hpp:160:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-  160 |             char* CalledFunc = [01;35m[K""[m[K;
+In file included from [01m[K./src/System/CommandHandler/CommandHandler.hpp:26[m[K,
+                 from [01m[K./src/System/CommandHandler/CommandHandler.cpp:22[m[K:
+[01m[K./src/System/CommandHandler/../../System/kout/kout.hpp:145:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+  145 |             char* CalledFunc = [01;35m[K""[m[K;
       |                                [01;35m[K^~[m[K
-[01m[Ksrc/System/kout/kout.hpp:161:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-  161 |             char* CalledFile = [01;35m[K""[m[K;
+[01m[K./src/System/CommandHandler/../../System/kout/kout.hpp:146:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+  146 |             char* CalledFile = [01;35m[K""[m[K;
       |                                [01;35m[K^~[m[K
-[01m[K./src/lib/SmartPointer/smartpointer.cpp:25:6:[m[K [01;31m[Kerror: [m[K‘[01m[Ktemplate<class T> class SPointer[m[K’ used without template arguments
-   25 | void [01;31m[KSPointer[m[K::MoveContents(void* NewLocation) {
-      |      [01;31m[K^~~~~~~~[m[K
-[01m[K./src/lib/SmartPointer/smartpointer.cpp:[m[K In function ‘[01m[Kvoid MoveContents(void*)[m[K’:
-[01m[K./src/lib/SmartPointer/smartpointer.cpp:26:32:[m[K [01;31m[Kerror: [m[K‘[01m[KPointer[m[K’ was not declared in this scope; did you mean ‘[01m[KSPointer[m[K’?
-   26 |     memcpy(NewLocation, (void*)[01;31m[KPointer[m[K, Size);
-      |                                [01;31m[K^~~~~~~[m[K
-      |                                [32m[KSPointer[m[K
-[01m[K./src/lib/SmartPointer/smartpointer.cpp:26:41:[m[K [01;31m[Kerror: [m[K‘[01m[KSize[m[K’ was not declared in this scope
-   26 |     memcpy(NewLocation, (void*)Pointer, [01;31m[KSize[m[K);
-      |                                         [01;31m[K^~~~[m[K
+In file included from [01m[K./src/System/CommandHandler/CommandHandler.cpp:22[m[K:
+[01m[K./src/System/CommandHandler/CommandHandler.hpp:37:35:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   37 |             char *  Command     = [01;35m[K""[m[K;
+      |                                   [01;35m[K^~[m[K
+[01m[K./src/System/CommandHandler/CommandHandler.hpp:51:17:[m[K [01;31m[Kerror: [m[Kvirtual function ‘[01m[Kvirtual int System::VirtualConsole::BuiltinShell::HandleCommand(const char*)[m[K’ overriding final function
+   51 |             int [01;31m[KHandleCommand[m[K(const char* str) override;
+      |                 [01;31m[K^~~~~~~~~~~~~[m[K
+In file included from [01m[K./src/System/CommandHandler/CommandHandler.hpp:27[m[K,
+                 from [01m[K./src/System/CommandHandler/CommandHandler.cpp:22[m[K:
+[01m[Ksrc/System/Console/console.hpp:52:25:[m[K [01;36m[Knote: [m[Koverridden function is ‘[01m[Kvirtual int System::VirtualConsole::console::HandleCommand(const char*)[m[K’
+   52 |             virtual int [01;36m[KHandleCommand[m[K(const char* str) final;
+      |                         [01;36m[K^~~~~~~~~~~~~[m[K
+[01m[K./src/System/CommandHandler/CommandHandler.cpp:[m[K In member function ‘[01m[KSystem::VirtualConsole::ParsedCommand System::VirtualConsole::BuiltinShell::ParseCommand(char*)[m[K’:
+[01m[K./src/System/CommandHandler/CommandHandler.cpp:107:21:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+  107 |     char *command = [01;35m[K""[m[K;
+      |                     [01;35m[K^~[m[K

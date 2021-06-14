@@ -44,7 +44,6 @@ typedef unsigned short      uint16_t;
 typedef unsigned int        uint32_t;
 typedef unsigned int        size_t;
 
-
 typedef unsigned char       uint8;
 typedef unsigned short      uint16;
 typedef unsigned int        uint32;
@@ -54,6 +53,7 @@ typedef uint32              uintmax_t;
 typedef uint8               i8;
 typedef uint16              i16;
 typedef uint32              i32;
+typedef uint32              time_t;
 
 // Check one bit
 #define CHECK_BIT(var,pos) (((var)>>(pos)) & 1)

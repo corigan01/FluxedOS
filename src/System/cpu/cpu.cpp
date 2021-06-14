@@ -23,6 +23,7 @@
 #include "../../CPU/cpu.h"
 #include "../kout/kout.hpp"
 #include "../Port/port.hpp"
+#include <System/panic/panic.hpp>
 
 using namespace System;
 using namespace System::IO; 
@@ -30,6 +31,14 @@ using namespace System::CPU;
 
 // This file may look simple and thats because its only job is to link the C++ with the C functions so asm can talk with us. 
 // I don't want to have irq_install() without its protected namespace!
+
+multiboot_info_t* m_mbt;
+bool mb_set = false;
+
+void System::CPU::init(multiboot_info_t* mbt) {
+    m_mbt = mbt;
+    mb_set = true;
+}
 
 void System::CPU::IDT::init() {
     kout << "IDT INIT ";
@@ -134,10 +143,31 @@ void Err_hanlder(struct regs *r) {
 
     }
     
-    kout.printf("======\n+HALT+\n======\n");
+    
 
     NO_INSTRUCTION;
     NO_INSTRUCTION;
+
+    CPU::DisableINT();
+
+    if (mb_set) {
+        
+
+        const PANIC::panic_structure panic = {
+            Err[r->int_no],
+            PANIC::type::FAULT,
+            "info",
+            "A FAULT IS NOT RECOVERABLE, SYSTEM MUST RESTART!"
+        };
+
+        PANIC::smart_panic(m_mbt, panic);
+    }
+    
+
+    NO_INSTRUCTION;
+    NO_INSTRUCTION;
+
+    kout.printf("======\n+HALT+\n======\n");
 
     HALT;
 }

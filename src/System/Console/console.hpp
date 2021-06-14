@@ -49,21 +49,24 @@ namespace System
             protected:
 
             void init(System::Display::tty * tty, i16 ColorF, i16 ColorB);
-
             virtual int HandleCommand(const char* str);
+
+
+            protected:
 
             bool HasFinalUserString = false;
             bool HandlerInstalled = false;
             bool TermActive = true;
 
-            i16 ColorF, ColorB;
+            i16 ColorF = 1, ColorB = 0;
             i16 CommandLen = 0;
             i8 LastChar = 0;
 
-            char * UserString = "";
+            char * UserString;
 
-            System::Display::tty * OurTTY;
+            System::Display::tty * m_tty;
         };
+
 
     } // namespace VirtualConsole
     

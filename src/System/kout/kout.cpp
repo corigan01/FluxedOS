@@ -139,5 +139,32 @@ SerialLog &SerialLog::operator<<(const T &v) {
     
     System::IO::Serial::outString(System::IO::Serial::COM_1, (char*)v);
     return *this;
-}*/
+}
+
+ {
+
+                // Make the terminal look important :)
+                System::IO::Serial::outString(System::IO::Serial::COM_1, "\e[0;33m");
+
+                /*
+                if (Check::DidEndLine()  ) {
+                    System::IO::Serial::outString(System::IO::Serial::COM_1, "[");
+                    System::IO::Serial::outString(System::IO::Serial::COM_1, this->CalledFunc);
+                    System::IO::Serial::outString(System::IO::Serial::COM_1, ":");
+                    INT_TO_STRING(IntStr, CalledLine);
+                    
+                    System::IO::Serial::outString(System::IO::Serial::COM_1, IntStr);
+
+                    System::IO::Serial::outString(System::IO::Serial::COM_1, "]\t\t --> ");
+                    already_displayed = true;
+                    Check::StartLine();
+                }
+                
+                if (strcmp(v, endl) == 0) {
+                    Check::EndLine();
+                }
+
+            }
+
+*/
         

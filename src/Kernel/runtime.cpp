@@ -20,10 +20,12 @@
  */
 
 #include "kernel.hpp"
+#include <System/Console/console.hpp>
+#include <System/CommandHandler/CommandHandler.hpp>
 
 
 using namespace System::IO;
-
+using namespace System::VirtualConsole;
 
 uint16_t pciConfigReadWord (uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset) {
     uint32_t address;
@@ -99,8 +101,26 @@ void Kernel::system_init() {
             kout << "Device (" << pci << ", " << device << ")\t, Class = " << ClassCodeName[Class] << " : Subclass = " << SubClass << endl;
         }
     }
+
+
+
+    console *dev_console;
+    auto KernShell = VirtualConsole::BuiltinShell(KernelTTY, COLOR::GREEN, 0);
+
+    dev_console = &KernShell;
+
+
+    while(dev_console->IsAlive()) {
+        if (Keyboard::TriggerEvent()) {
+
+            dev_console->HandleKeyCode(Keyboard::GetKeyCode());
+            Keyboard::EventHandled();
+
+        }
+        
+    }
     
-    
+
     
         
 }
