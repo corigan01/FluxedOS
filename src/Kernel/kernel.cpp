@@ -22,17 +22,10 @@
 #include "kernel.hpp"
 
 
-
-
-
-
 int kmain(multiboot_info_t* mbt, i32 magic) {
     
     Kernel krnl(mbt, magic);
     krnl.init_kernel();
     krnl.system_init();
 
-
-
-    
 }

@@ -97,7 +97,7 @@ struct multiboot_info
   uint16 vbe_interface_seg;
   uint16 vbe_interface_off;
   uint16 vbe_interface_len;
-  uint64 framebuffer_addr;
+  uint32 framebuffer_addr;
   uint32 framebuffer_pitch;
   uint32 framebuffer_width;
   uint32 framebuffer_height;

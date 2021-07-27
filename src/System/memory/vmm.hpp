@@ -29,23 +29,11 @@ namespace System {
     namespace Memory {
         namespace vmm {
 
-            struct Permission {
-                i8 ACCESS = 0;
-                i32 MAGIC = 0;
-
-                bool LOCKED_MEMORY = false;
-                bool NEVER_FREE = false;    
             
-                i32 PID = 0;
-            };
+            
             
 
-
-            void init();
             
-            void GrabMemory(Permission perm);
-
-
         }
     }
 }

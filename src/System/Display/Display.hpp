@@ -91,10 +91,10 @@ namespace System
                         print_char('\n');
                     }
 
-                    void setcolor(i8 f, i8 b);
-                    void print_char(char c);
-                    void print_str(const char* str);
-                    void printf(const char* str, ...);
+                    void setcolor(i8 f, i8 b) override;
+                    void print_char(char c) override;
+                    void print_str(const char* str) override;
+                    void printf(const char* str, ...) override; 
                     void clear_screen();
                     void clear_line(i32 linenumber);
 

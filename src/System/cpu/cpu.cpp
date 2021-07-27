@@ -240,9 +240,10 @@ void PIC::ClearMask(i8 irq) {
     uint16_t port;
     uint8_t value;
  
-    if(irq < 8) {
+    if (irq < 8) {
         port = PIC1_DATA;
-    } else {
+    } 
+    else {
         port = PIC2_DATA;
         irq -= 8;
     }

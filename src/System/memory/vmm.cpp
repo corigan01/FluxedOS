@@ -23,3 +23,7 @@
 #include <System/kout/kout.hpp>
 
 using namespace System;
+
+void test() {
+    
+}

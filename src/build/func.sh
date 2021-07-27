@@ -242,10 +242,8 @@ Link_and_check() {
         printf "%-40s%-4s\e[0;32m  $bold DONE - $PFD ms\e[0;34m\n"  "${TEx:0:40}" " $normal"
 
         DisDone "Stripping Symbols"
-        objcopy --only-keep-debug FluxedOS.bin FluxedOS.debug
-        strip --strip-debug --strip-unneeded FluxedOS.bin
-
-
+        #objcopy --only-keep-debug FluxedOS.bin FluxedOS.debug
+        #strip --strip-debug --strip-unneeded FluxedOS.bin
         
     else
 
@@ -292,6 +290,23 @@ run_build() {
     
     qemu-system-x86_64                          \
         -cdrom ../ISO/FluxedOS.iso              \
+        -boot strict=on                         \
+        -cpu max                                \
+        -smp 1,sockets=1,cores=1,threads=1      \
+        -display gtk                            \
+        -drive file=disk.img,if=ide,format=raw  \
+        -m 500m                                 \
+        -k en-us                                \
+        -serial stdio                           \
+        -vga std
+        #-vga [std|cirrus|vmware|qxl|xenfb|tcx|cg3|virtio|none]
+
+}
+
+run_build_backup() {
+    
+    qemu-system-x86_64                          \
+        -kernel isodir/boot/FluxedOS.bin        \
         -boot strict=on                         \
         -cpu max                                \
         -smp 1,sockets=1,cores=1,threads=1      \
