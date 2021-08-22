@@ -32,26 +32,35 @@ using namespace System::Memory;
 #define MAX_POOL_SIZE ( 8  _MB )
 #define MAX_ALLOC     (100 _KB )
 
-i32 AddressSpace = 0;
-
-
-void Memory::init_kmalloc(i32 KernelEnd) {
-    Page::id_map(KernelEnd, KernelEnd, KernelEnd + MAX_POOL_SIZE, SUPER_USER_MEMORY | PRESENT_FLAG | READ_WRITE_ENABLED);
-    Page::switch_page(Page::RootDir());
-
-    AddressSpace = KernelEnd;
+void Memory::init_memory(multiboot_info_t *mbt) {
+    pmm::init(mbt);
+    kout << "Starting memory manger: " << pmm::PagesAvailable() << " pages available!" << endl;
 }
 
-void* kmalloc(i32 size) { 
-    if (size > MAX_ALLOC) {
-        ASSERT_NOT_REACHED("KALLOC OVER SIZED");
-    }
+Page_Entry Memory::map_page(Permission_Entry perm) {
+    Page_Entry entry;
+    entry.ptr = (void*)pmm::ReservePage();
+    entry.perm = perm;
+    entry.size = PAGE_S;
 
-    
+    kout << "Mapped page at: " << (i32)entry.ptr << " with permission: " << perm.perm << endl;
 
-
+    return entry;
+}
+bool Memory::unmap_page(Page_Entry page) {
 
 }
-void kfree(void* pointer) {
 
-};
+void Memory::map_page_pool(Page_Entry * page_pool, uint32_t count) {
+
+}
+void Memory::unmap_page_pool(Page_Entry * page_pool, uint32_t count) {
+
+}
+
+void* Memory::kmalloc(size_t size) {
+
+}
+void Memory::kfree(void* ptr) {
+
+}

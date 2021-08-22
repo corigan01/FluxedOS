@@ -57,19 +57,20 @@ void Kernel::init_kernel() {
         
         kout << "Done!" << endl;
 
-        pmm::init(mbt);
         KernelTTY->print_str("PMM ");
 
         Page::init();
-        Page::id_map(0x0, 0x0, 0xC000000, PRESENT_FLAG | SUPER_USER_MEMORY | READ_WRITE_ENABLED);
+        Page::id_map(0x0, 0x1, 0xC000000, PRESENT_FLAG | SUPER_USER_MEMORY | READ_WRITE_ENABLED);
         Page::switch_page(Page::RootDir());
         Page::enable_paging();
         KernelTTY->print_str("Paging ");
 
-        init_kmalloc(0xC000001);
+        //init_kmalloc(0xC000001);
+        init_memory(mbt);
         KernelTTY->print_str("kalloc ");
 
-        
+        map_page({PRESENT_FLAG | SUPER_USER_MEMORY | READ_WRITE_ENABLED});
+
         
         #define BootupLogoColor COLOR::BLACK
         
@@ -95,9 +96,9 @@ void Kernel::init_kernel() {
         }
 
         kout << "Boot OK" << endl;
-
         
+        
+        kout << "Hello World!" << endl;
+        kout << "nice meme you got there" << endl;
 }
-
-
-// 
+ 

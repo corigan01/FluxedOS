@@ -89,24 +89,24 @@ char Keyboard::KeycodeAsciiConverter(i8 keycode) {
 }
 
 void  Keyboard::IRQ_handler(register_t *r) {
-    for (int i = 0; i < 100000; i++) {
-         if((Port::byte_in(0x64) & 1) != 0) {
-             i8 K = Port::byte_in(0x60);
+    
+        if((Port::byte_in(0x64) & 1) != 0) {
+            i8 K = Port::byte_in(0x60);
 
-            if (KeycodePointer > MAX_KEYCODE_ARR) {
-                KeycodePointer = 0;
-            }   
-            KeycodeArr[0] = K;
-            NO_INSTRUCTION;   
+        if (KeycodePointer > MAX_KEYCODE_ARR) {
+            KeycodePointer = 0;
+        }   
+        KeycodeArr[0] = K;
+        NO_INSTRUCTION;   
 
-            i8 Output = KeycodeAsciiConverter(K);
+        i8 Output = KeycodeAsciiConverter(K);
 
-            if (Output != NULL) {
+        if (Output != NULL) {
 
-            }
-        
+        }
+    
             
-        }    
+        
     }
 
     EventQueEmpty = false;

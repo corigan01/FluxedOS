@@ -46,12 +46,12 @@ align 4
 	dd CHECKSUM
  
 global stublet
-extern kernal_entry
+extern kernel_entry
 
 stublet:
     push eax
     push ebx
-    call kernal_entry
+    call kernel_entry
     jmp stublet
     
 

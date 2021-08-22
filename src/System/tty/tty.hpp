@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include "../../lib/core/core.h"
+#include <lib/core/core.h>
 
 namespace System
 {

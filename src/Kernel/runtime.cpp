@@ -105,8 +105,8 @@ void Kernel::system_init() {
 
 
     console *dev_console;
+    
     auto KernShell = VirtualConsole::BuiltinShell(KernelTTY, COLOR::GREEN, 0);
-
     dev_console = &KernShell;
 
 
