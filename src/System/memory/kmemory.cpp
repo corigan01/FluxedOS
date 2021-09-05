@@ -25,7 +25,7 @@
 #include <System/Display/Display.hpp>
 #include <System/Clock/PIT/PIT.hpp>
 #include <System/memory/paging/page.hpp>
-#include <lib/vector/vector.hpp>
+#include <lib/vector/k_vector.hpp>
 
 using namespace System;
 using namespace System::Memory;
@@ -42,7 +42,7 @@ struct MemoryEntry
     i32 End;
     bool Used;
 };
-Vector<MemoryEntry> MemoryMap;
+K_Vector<MemoryEntry> MemoryMap(0);
 
 
 void Memory::init_memory(multiboot_info_t *mbt) {
@@ -148,5 +148,5 @@ void* Memory::kmalloc(size_t size) {
     return (void*)NULL;
 }
 void Memory::kfree(void* ptr) {
-
+    
 }

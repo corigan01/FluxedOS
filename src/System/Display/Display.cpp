@@ -65,13 +65,20 @@ void VGA::cursor_update(i8 cs, i8 ce) {
 	Port::byte_out(0x3D5, (uint8_t) ((pos >> 8) & 0xFF));
 }
 
+void VGA::BufferSet(i16* buffer) {
+    VBUF = buffer;
+    memset(VBUF, NULL, sizeof(i16) * 80 * 25);
+    
+    //for (int i = 0; i < 25; i++) print_char('\n');
+}
+
 void VGA::print_char(char c) {
     switch (c)
     {
     case '\n':
             if (lineNumber > 24 || true) {
                 
-                uint16 * VBUF; // TODO: Malloc this!
+                
                 int bufS = 80*80;
                 memcpy(VBUF, internalBuffer, bufS);
 

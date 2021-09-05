@@ -23,7 +23,7 @@
 #include <System/memory/kmemory.hpp>
 #include <System/memory/paging/page.hpp>
 #include <System/panic/panic.hpp>
-#include <lib/vector/vector.hpp>
+#include <lib/vector/k_vector.hpp>
 
 void Kernel::init_kernel() {
         KernelTTY->setcolor(COLOR::BRIGHT_MAGENTA, COLOR::BLACK);    
@@ -84,6 +84,8 @@ void Kernel::init_kernel() {
 
         KernelTTY->print_str("kalloc ");
 
+        KernelTTY->BufferSet((i16*)pmm::ReservePage());
+
         //map_page({PRESENT_FLAG | SUPER_USER_MEMORY | READ_WRITE_ENABLED});
 
         
@@ -91,9 +93,9 @@ void Kernel::init_kernel() {
         
         { // Tell the user we started the kernel
             RTC::time_t BootTime = RTC::now();
-            KernelTTY->setcolor(COLOR::DARK_GREY, COLOR::DARK_GREY);
+            KernelTTY->setcolor(COLOR::WHITE, COLOR::WHITE);
             KernelTTY->print_str(R"(
-=========================)");
+====================================================================================================)");
             KernelTTY->setcolor(COLOR::BRIGHT_BLUE, BootupLogoColor);
             KernelTTY->print_str(R"(
                     ______            __ __                 __
@@ -103,9 +105,9 @@ void Kernel::init_kernel() {
             KernelTTY->setcolor(COLOR::WHITE, BootupLogoColor);
             KernelTTY->printf("\n                BUILD: %e%d              %d%e MB Installed!\n                Disp Addr: %d          ", COLOR::ColorVar(COLOR::GREEN, COLOR::BLACK), BUILD, (pmm::PagesAvailable() * PAGE_SIZE) / (1024 * 1024), 0x0F, (i32)mbt->framebuffer_addr );
             KernelTTY->printf("%d/%d/%d - %d:%d:%d \n", BootTime.Month, BootTime.Day, BootTime.Year, BootTime.Hour > 12 ? BootTime.Hour - 12 : BootTime.Hour, BootTime.Minute, BootTime.Second);
-            KernelTTY->setcolor(COLOR::DARK_GREY, COLOR::DARK_GREY);
+            KernelTTY->setcolor(COLOR::WHITE, COLOR::WHITE);
             KernelTTY->print_str(R"(
-=========================)");
+====================================================================================================)");
             KernelTTY->setcolor(COLOR::WHITE, COLOR::BLACK);
             KernelTTY->print_str("\n\n\n");
         }
@@ -113,7 +115,6 @@ void Kernel::init_kernel() {
         kout << "Boot OK" << endl;
         
         
-        kout << "Hello World!" << endl;
         
 }
  

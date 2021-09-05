@@ -33,6 +33,7 @@ namespace System
             tty();
             ~tty();
 
+            virtual void BufferSet(i16* buffer);
             virtual void init(void* buffer); 
             virtual void print_char(char c);
             virtual void print_str(const char * str);

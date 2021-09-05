@@ -31,7 +31,7 @@
 #define VECTOR_MAX_SIZE (4 _MB)
 
 template <class T>
-class Vector {
+class K_Vector {
     protected:
         struct D {
             T Data; // Data Storage
@@ -45,10 +45,10 @@ class Vector {
 
     public:
 
-        Vector(size_t loc) {
+        K_Vector(size_t loc) {
             
         }
-        Vector() {
+        K_Vector() {
             h = (D *) System::Memory::pmm::ReservePage();
         }
         
@@ -56,12 +56,7 @@ class Vector {
             h = (D *) p;
         }
 
-        
-
-        //~Vector() {
-            // free the vector
-            //free(h);
-        //}
+    
 
     public:
 
@@ -70,7 +65,7 @@ class Vector {
             for (int i = 0; i < VectorSize ; i++) {
                 if (h[i].DoesPoint == 0) {
 
-                    // Assign Vector
+                    // Assign K_Vector
                     h[i].PointsTo = EndOfVector;
                     h[i].DoesPoint = 1;
                     h[i].Data = data;
@@ -82,8 +77,9 @@ class Vector {
                 }
             }
 
-            if (VectorSize >= VECTOR_MAX_SIZE) {
-                //G_ERR(VGA::PRINT_STR("Vector at max size\n"));
+            if (VectorSize * sizeof(T) >= VECTOR_MAX_SIZE) {
+                //G_ERR(VGA::PRINT_STR("K_Vector at max size\n"));
+                kout << "K_Vector at max size\n";
                 return;
             }
 
@@ -188,7 +184,7 @@ class Vector {
             return h[-1].Data; // we could not find that value
         }
 
-        void operator =(Vector s) {
+        void operator =(K_Vector s) {
             this->EndOfVector = s.EndOfVector;
             this->VectorSize  = s.VectorSize;
             this.h            = s.h;

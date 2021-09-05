@@ -59,3 +59,7 @@ void tty::printf(const char *str, ...) {
 void tty::setcolor(i8 f, i8 b) {
     ;
 }
+
+void tty::BufferSet(i16* buffer) {
+    ;
+}

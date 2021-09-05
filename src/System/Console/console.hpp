@@ -38,6 +38,8 @@ namespace System
             //console(System::Display::tty * tty, i16 ColorF, i16 ColorB);
             ~console();
 
+            void begin();
+
             void HandleKeyCode(i8 keycode);
             void ReturnUser();
             
@@ -63,6 +65,7 @@ namespace System
             i8 LastChar = 0;
 
             char * UserString;
+            char * DuUserString;
 
             System::Display::tty * m_tty;
         };

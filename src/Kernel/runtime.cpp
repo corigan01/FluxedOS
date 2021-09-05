@@ -116,16 +116,16 @@ void Kernel::system_init() {
 
 
     console *dev_console;
-    
     auto KernShell = VirtualConsole::BuiltinShell(KernelTTY, COLOR::GREEN, 0);
     dev_console = &KernShell;
 
+    dev_console->begin();
 
     while(dev_console->IsAlive()) {
-        if (Keyboard::TriggerEvent()) {
+        if (Keyboard::TriggerEvent() || 1) {
 
             dev_console->HandleKeyCode(Keyboard::GetKeyCode());
-            Keyboard::EventHandled();
+            //Keyboard::EventHandled();
 
         }
         

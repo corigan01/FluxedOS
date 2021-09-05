@@ -4,12 +4,12 @@ Drive current: -outdev 'stdio:FluxedOS.iso'
 Media current: stdio file, overwriteable
 Media status : is blank
 Media summary: 0 sessions, 0 data blocks, 0 data,  428g free
-Added to ISO image: directory '/'='/tmp/grub.zIJSrK'
+Added to ISO image: directory '/'='/tmp/grub.qPUhlU'
 xorriso : UPDATE :     972 files added in 1 seconds
 Added to ISO image: directory '/'='/home/corigan01/Desktop/Programming/FluxedOS/src/isodir'
 xorriso : UPDATE :     976 files added in 1 seconds
 xorriso : NOTE : Copying to System Area: 512 bytes from file '/usr/lib/grub/i386-pc/boot_hybrid.img'
-ISO image produced: 12998 sectors
-Written to medium : 12998 sectors at LBA 0
+ISO image produced: 13000 sectors
+Written to medium : 13000 sectors at LBA 0
 Writing to 'stdio:FluxedOS.iso' completed successfully.
 

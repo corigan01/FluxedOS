@@ -27,16 +27,16 @@ using namespace System::VirtualConsole;
 using namespace System::Display;
 
 BuiltinShell::BuiltinShell(System::Display::tty *tty, i16 ColorF, i16 ColorB) {
-    tty->print_str("\nWelcome to BuiltinShell!\nThe FluxedOS Debug Shell\n-------------------------\n");
+    tty->print_str("\nWelcome to the Built-in-Shell!\nThe FluxedOS Kernel Debug Shell\n-------------------------\n");
     this->init(tty, ColorF, ColorB);
 }
 
 int BuiltinShell::HandleCommand(const char* str) {
-    kout << "R" << endl;
+    kout << "Command Handler recived command \'" << str << "\'" << endl;
     ParsedCommand Command = this->ParseCommand((char*)str);
    
 
-    #define InternalCommandLen 1
+    const i8 InternalCommandLen = 1;
     static const char * InternalCommands[InternalCommandLen] = {
         "exit"
     };
@@ -61,15 +61,15 @@ int BuiltinShell::HandleCommand(const char* str) {
     
     default:
         m_tty->setcolor(Display::Driver::COLOR::RED, Display::Driver::COLOR::BLACK);
-        m_tty->print_str("Command \"");
-        m_tty->print_str(Command.Command);
-        m_tty->print_str("\" Not Found!\n\0");
+        NO_INSTRUCTION;
+        //m_tty->printf("Command \'%d\' Not Found!\n", Command.Command);
+        m_tty->print_str("This is a big test!");
         break;
     }
 
 
-    this->ReturnUser();
-    kout << "W" << endl;
+    
+    kout << "Returning User!" << endl;
     return 0;
 }
 

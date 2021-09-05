@@ -91,6 +91,8 @@ namespace System
                         print_char('\n');
                     }
 
+                    void BufferSet(i16* buffer);
+
                     void setcolor(i8 f, i8 b) override;
                     void print_char(char c) override;
                     void print_str(const char* str) override;
@@ -110,6 +112,8 @@ namespace System
                     i8 BColor = COLOR::BLACK; 
 
                     i16 entry(char ch, i8 f, i8 b);
+
+                    uint16 * VBUF;
 
                 protected:
 

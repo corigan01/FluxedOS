@@ -22,9 +22,11 @@
 #include "console.hpp"
 #include <System/Keyboard/keyboard.hpp>
 #include <System/Display/Display.hpp>
+#include <System/memory/kmemory.hpp>
 
 using namespace System;
 using namespace System::HID;
+using namespace System::Memory;
 using namespace System::VirtualConsole;
 
 /*console::console(System::Display::tty * tty, i16 ColorF, i16 ColorB) {
@@ -39,50 +41,68 @@ console::~console() {
     ;
 }
 
+void console::begin() {
+    m_tty->setcolor(ColorF, ColorB);
+    m_tty->print_str("\n");
+
+    this->UserString = (char*)kmalloc(sizeof(char) * 256);
+    memset(this->UserString, 0, sizeof(char) * 256);
+    this->DuUserString = (char*)kmalloc(sizeof(char) * 256);
+    memset(this->DuUserString, 0, sizeof(char) * 256);
+
+    this->ReturnUser();
+}
+
 void console::HandleKeyCode(i8 keycode) {
-    kout << "START" << endl;
     this->LastChar = keycode;
 
-   
-
     switch (keycode) {
-    case Keyboard::Keycode::BACKSPACE_PRESSED:
+        case Keyboard::Keycode::BACKSPACE_PRESSED:
 
-        if (this->CommandLen > 0) {
-            m_tty->print_char('\e');
-            this->CommandLen--;    
+            if (this->CommandLen > 0) {
+                m_tty->print_char('\e');
+                this->CommandLen--;    
+                NO_INSTRUCTION;
+            }
+
+            break;
+
+        case Keyboard::Keycode::ENTER_PRESSED:
+            this->HasFinalUserString = true;
+            this->UserString[this->CommandLen++] = '\0';
+            memcpy(this->DuUserString, this->UserString, this->CommandLen);
+            memset(this->UserString, 0, sizeof(char) * 256);
+
+            //kout << "User entered command --> \'" << this->UserString << "\'" << endl;
+
+            
             NO_INSTRUCTION;
-        }
 
-        break;
+            m_tty->print_str("\n");
 
-    case Keyboard::Keycode::ENTER_PRESSED:
-        this->HasFinalUserString = true;
-        this->UserString[this->CommandLen++] = '\0';
+            HandleCommand(DuUserString);
+            
 
-        kout << "User entered command --> \'" << this->UserString << "\'" << endl;
+            ReturnUser();
 
-        this->m_tty->print_str("\n");
-        
-        HandleCommand(UserString);
-        ReturnUser();
-
-        kout << "handled command" << endl;
+            kout << "handled command" << endl;
 
 
-        break;
+            break;
 
-    default:
-        i8 OutputChar = Keyboard::KeycodeAsciiConverter(keycode);
+        default:
+            i8 OutputChar = Keyboard::KeycodeAsciiConverter(keycode);
 
-        if (OutputChar != NULL) { 
-            m_tty->print_char(OutputChar); 
-            this->UserString[this->CommandLen++] = OutputChar;
-        }
-        else NO_INSTRUCTION;
+            if (OutputChar != NULL) { 
+                m_tty->print_char(OutputChar); 
+                this->UserString[this->CommandLen++] = OutputChar;
+            }
+            else NO_INSTRUCTION;
 
-        break;
+            break;
     }
+
+    return;
     
 }
 char* console::GetRawCommand() {
