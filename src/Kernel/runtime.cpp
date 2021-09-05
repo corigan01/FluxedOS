@@ -22,10 +22,12 @@
 #include "kernel.hpp"
 #include <System/Console/console.hpp>
 #include <System/CommandHandler/CommandHandler.hpp>
+#include <System/memory/kmemory.hpp>
 
-
+using namespace System;
 using namespace System::IO;
 using namespace System::VirtualConsole;
+using namespace System::Memory;
 
 uint16_t pciConfigReadWord (uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset) {
     uint32_t address;
@@ -103,6 +105,15 @@ void Kernel::system_init() {
     }
 
 
+    kout << endl << endl << endl;
+    kout << "Memory Test ------------" << endl;
+    auto v1 = kmalloc(10);
+    
+    kout << (i32)v1 << endl;
+
+    kout << "System Done!" << endl;
+
+
 
     console *dev_console;
     
@@ -119,8 +130,8 @@ void Kernel::system_init() {
         }
         
     }
-    
 
+   
     
         
 }

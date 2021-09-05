@@ -1,0 +1,23 @@
+{
+    "files.associations": {
+        "string_view": "cpp",
+        "vector": "cpp",
+        "array": "cpp",
+        "*.tcc": "cpp",
+        "functional": "cpp",
+        "tuple": "cpp",
+        "fstream": "cpp",
+        "ostream": "cpp",
+        "sstream": "cpp",
+        "streambuf": "cpp",
+        "typeinfo": "cpp",
+        "map": "cpp",
+        "system_error": "cpp",
+        "boot.h": "c",
+        "ctime": "cpp",
+        "memory_resource": "cpp",
+        "istream": "cpp",
+        "stop_token": "cpp",
+        "*.inc": "cpp"
+    }
+}

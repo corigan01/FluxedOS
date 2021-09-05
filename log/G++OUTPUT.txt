@@ -1,57 +1,16 @@
-In file included from [01m[K./src/Kernel/kernel.hpp:25[m[K,
-                 from [01m[K./src/Kernel/kernel.cpp:22[m[K:
-[01m[Ksrc/System/cpu/cpu.hpp:50:[m[K [01;35m[Kwarning: [m[K"PIC1_DATA" redefined
-   50 | #define PIC1_DATA                       (PIC1 + 1)
-      | 
-[01m[Ksrc/System/cpu/cpu.hpp:29:[m[K [01;36m[Knote: [m[Kthis is the location of the previous definition
-   29 | #define PIC1_DATA                   0x21
-      | 
-[01m[Ksrc/System/cpu/cpu.hpp:52:[m[K [01;35m[Kwarning: [m[K"PIC2_DATA" redefined
-   52 | #define PIC2_DATA                       (PIC2 + 1)
-      | 
-[01m[Ksrc/System/cpu/cpu.hpp:31:[m[K [01;36m[Knote: [m[Kthis is the location of the previous definition
-   31 | #define PIC2_DATA                   0xA1
-      | 
-In file included from [01m[Ksrc/System/cpu/cpu.hpp:25[m[K,
-                 from [01m[K./src/Kernel/kernel.hpp:25[m[K,
-                 from [01m[K./src/Kernel/kernel.cpp:22[m[K:
+In file included from [01m[K./src/System/memory/kmemory.hpp:25[m[K,
+                 from [01m[K./src/System/memory/kmemory.cpp:22[m[K:
 [01m[Ksrc/System/kout/kout.hpp:145:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
   145 |             char* CalledFunc = [01;35m[K""[m[K;
       |                                [01;35m[K^~[m[K
 [01m[Ksrc/System/kout/kout.hpp:146:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
   146 |             char* CalledFile = [01;35m[K""[m[K;
       |                                [01;35m[K^~[m[K
-In file included from [01m[K./src/Kernel/kernel.hpp:34[m[K,
-                 from [01m[K./src/Kernel/kernel.cpp:22[m[K:
-[01m[Ksrc/System/CommandHandler/CommandHandler.hpp:37:35:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-   37 |             char *  Command     = [01;35m[K""[m[K;
-      |                                   [01;35m[K^~[m[K
-In file included from [01m[K./src/Kernel/kernel.cpp:22[m[K:
-[01m[K./src/Kernel/kernel.hpp:[m[K In constructor ‘[01m[KKernel::Kernel(multiboot_info_t*, i32)[m[K’:
-[01m[K./src/Kernel/kernel.hpp:56:39:[m[K [01;31m[Kerror: [m[Kambiguous overload for ‘[01m[Koperator<<[m[K’ (operand types are ‘[01m[KSystem::Display::SerialLog[m[K’ and ‘[01m[Kuint64[m[K’ {aka ‘[01m[Klong long unsigned int[m[K’})
-   56 |         kout << "Framebuffer addr : " [01;31m[K<<[m[K [32m[Kmbt->framebuffer_addr[m[K << endl;
-      |                                       [01;31m[K^~[m[K [32m[K~~~~~~~~~~~~~~~~~~~~~[m[K
-      |                                               [32m[K|[m[K
-      |                                               [32m[Kuint64 {aka long long unsigned int}[m[K
-In file included from [01m[Ksrc/System/cpu/cpu.hpp:25[m[K,
-                 from [01m[K./src/Kernel/kernel.hpp:25[m[K,
-                 from [01m[K./src/Kernel/kernel.cpp:22[m[K:
-[01m[Ksrc/System/kout/kout.hpp:53:24:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[KSystem::Display::SerialLog& System::Display::SerialLog::operator<<(const int&)[m[K’
-   53 |             SerialLog &[01;36m[Koperator[m[K<<(const int &v);
-      |                        [01;36m[K^~~~~~~~[m[K
-[01m[Ksrc/System/kout/kout.hpp:54:24:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[KSystem::Display::SerialLog& System::Display::SerialLog::operator<<(const i32&)[m[K’
-   54 |             SerialLog &[01;36m[Koperator[m[K<<(const i32 &v);
-      |                        [01;36m[K^~~~~~~~[m[K
-[01m[Ksrc/System/kout/kout.hpp:55:24:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[KSystem::Display::SerialLog& System::Display::SerialLog::operator<<(const i16&)[m[K’
-   55 |             SerialLog &[01;36m[Koperator[m[K<<(const i16 &v);
-      |                        [01;36m[K^~~~~~~~[m[K
-[01m[Ksrc/System/kout/kout.hpp:56:24:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[KSystem::Display::SerialLog& System::Display::SerialLog::operator<<(const i8&)[m[K’
-   56 |             SerialLog &[01;36m[Koperator[m[K<<(const i8 &v);
-      |                        [01;36m[K^~~~~~~~[m[K
-[01m[Ksrc/System/kout/kout.hpp:57:24:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[KSystem::Display::SerialLog& System::Display::SerialLog::operator<<(const char&)[m[K’
-   57 |             SerialLog &[01;36m[Koperator[m[K<<(const char &v);
-      |                        [01;36m[K^~~~~~~~[m[K
-[01m[K./src/Kernel/kernel.cpp:[m[K In function ‘[01m[Kint kmain(multiboot_info_t*, i32)[m[K’:
-[01m[K./src/Kernel/kernel.cpp:31:1:[m[K [01;35m[Kwarning: [m[Kno return statement in function returning non-void [[01;35m[K-Wreturn-type[m[K]
-   31 | [01;35m[K}[m[K
-      | [01;35m[K^[m[K
+[01m[K./src/System/memory/kmemory.cpp:[m[K In function ‘[01m[Kvoid* System::Memory::kmalloc(size_t)[m[K’:
+[01m[K./src/System/memory/kmemory.cpp:142:14:[m[K [01;31m[Kerror: [m[Kexpected primary-expression before ‘[01m[K)[m[K’ token
+  142 |     return (*[01;31m[K)[m[KNULL;
+      |              [01;31m[K^[m[K
+[01m[K./src/System/memory/kmemory.cpp:142:15:[m[K [01;31m[Kerror: [m[Kexpected ‘[01m[K;[m[K’ before numeric constant
+  142 |     return (*)[01;31m[KN[m[KULL;
+      |               [01;31m[K^[m[K
+      |               [32m[K;[m[K

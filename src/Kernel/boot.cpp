@@ -23,6 +23,7 @@
 #include <System/memory/kmemory.hpp>
 #include <System/memory/paging/page.hpp>
 #include <System/panic/panic.hpp>
+#include <lib/vector/vector.hpp>
 
 void Kernel::init_kernel() {
         KernelTTY->setcolor(COLOR::BRIGHT_MAGENTA, COLOR::BLACK);    
@@ -59,17 +60,31 @@ void Kernel::init_kernel() {
 
         KernelTTY->print_str("PMM ");
 
-        Page::init();
-        Page::id_map(0x0, 0x1, 0xC000000, PRESENT_FLAG | SUPER_USER_MEMORY | READ_WRITE_ENABLED);
-        Page::switch_page(Page::RootDir());
-        Page::enable_paging();
+        //Page::init();
+        //Page::id_map(0x0, 0x1, 0xC000000, PRESENT_FLAG | SUPER_USER_MEMORY | READ_WRITE_ENABLED);
+        //Page::switch_page(Page::RootDir());
+        //Page::enable_paging();
         KernelTTY->print_str("Paging ");
 
         //init_kmalloc(0xC000001);
+
+        kout << endl << endl;
         init_memory(mbt);
+        
+        Page_Entry * Pages;
+        size_t Pages_size = 1;
+
+        for (i32 i = 0; i < Pages_size; i++) {
+                Pages[0] = Memory::map_page({});
+        }
+        Memory::PagePool(Pages, Pages_size);
+
+        kout << endl << endl;
+
+
         KernelTTY->print_str("kalloc ");
 
-        map_page({PRESENT_FLAG | SUPER_USER_MEMORY | READ_WRITE_ENABLED});
+        //map_page({PRESENT_FLAG | SUPER_USER_MEMORY | READ_WRITE_ENABLED});
 
         
         #define BootupLogoColor COLOR::BLACK
@@ -99,6 +114,6 @@ void Kernel::init_kernel() {
         
         
         kout << "Hello World!" << endl;
-        kout << "nice meme you got there" << endl;
+        
 }
  

@@ -44,8 +44,9 @@ namespace System
         Page_Entry map_page(Permission_Entry perm);
         bool unmap_page(Page_Entry page);
 
-        void map_page_pool(Page_Entry * page_pool, uint32_t count);
-        void unmap_page_pool(Page_Entry * page_pool, uint32_t count);
+        void PagePool(Page_Entry *pool, i32 size);
+        //void map_page_pool(Page_Entry * page_pool, uint32_t count);
+        //void unmap_page_pool(Page_Entry * page_pool, uint32_t count);
 
         void* kmalloc(size_t size);
         void kfree(void* ptr);

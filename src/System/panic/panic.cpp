@@ -123,7 +123,7 @@ void PANIC::smart_panic(multiboot_info_t* mbt, panic_structure panic) {
     m_tty->print_str("\n");
 
 
-    stack_dump();
+    //stack_dump();
 
     while(1);
 

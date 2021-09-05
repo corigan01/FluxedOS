@@ -88,7 +88,7 @@ char Keyboard::KeycodeAsciiConverter(i8 keycode) {
 	return NULL;
 }
 
-void  Keyboard::IRQ_handler(register_t *r) {
+void Keyboard::IRQ_handler(register_t *r) {
     
         if((Port::byte_in(0x64) & 1) != 0) {
             i8 K = Port::byte_in(0x60);
