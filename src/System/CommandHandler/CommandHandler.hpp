@@ -48,7 +48,7 @@ namespace System
             BuiltinShell(System::Display::tty *tty, i16 ColorF, i16 ColorB);
             ~BuiltinShell() {};
 
-            int HandleCommand(const char* str) override;
+            int HandleCommand(const char* str, i32 commandLen) override;
 
             private:
 

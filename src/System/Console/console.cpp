@@ -69,9 +69,9 @@ void console::HandleKeyCode(i8 keycode) {
 
         case Keyboard::Keycode::ENTER_PRESSED:
             this->HasFinalUserString = true;
-            this->UserString[this->CommandLen++] = '\0';
-            memcpy(this->DuUserString, this->UserString, this->CommandLen);
-            memset(this->UserString, 0, sizeof(char) * 256);
+            //this->UserString[this->CommandLen + 1] = '\0';
+            memcpy(this->DuUserString, this->UserString, 256);
+            memset(this->UserString, '\0', sizeof(char) * 256);
 
             //kout << "User entered command --> \'" << this->UserString << "\'" << endl;
 
@@ -80,7 +80,7 @@ void console::HandleKeyCode(i8 keycode) {
 
             m_tty->print_str("\n");
 
-            HandleCommand(DuUserString);
+            HandleCommand(DuUserString, this->CommandLen);
             
 
             ReturnUser();
@@ -135,7 +135,7 @@ bool console::IsAlive() {
     return TermActive;
 }
 
-int console::HandleCommand(const char* str) {
+int console::HandleCommand(const char* str, i32 commandLen) {
     m_tty->print_str("Command Handler Not found!\n");
     return 1;
 }

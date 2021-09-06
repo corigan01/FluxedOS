@@ -51,7 +51,7 @@ namespace System
             protected:
 
             void init(System::Display::tty * tty, i16 ColorF, i16 ColorB);
-            virtual int HandleCommand(const char* str);
+            virtual int HandleCommand(const char* str, i32 commandLen);
 
 
             protected:

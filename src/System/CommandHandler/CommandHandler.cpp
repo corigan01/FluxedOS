@@ -31,7 +31,7 @@ BuiltinShell::BuiltinShell(System::Display::tty *tty, i16 ColorF, i16 ColorB) {
     this->init(tty, ColorF, ColorB);
 }
 
-int BuiltinShell::HandleCommand(const char* str) {
+int BuiltinShell::HandleCommand(const char* str, i32 commandLen) {
     kout << "Command Handler recived command \'" << str << "\'" << endl;
     ParsedCommand Command = this->ParseCommand((char*)str);
    
@@ -63,6 +63,7 @@ int BuiltinShell::HandleCommand(const char* str) {
         m_tty->setcolor(Display::Driver::COLOR::RED, Display::Driver::COLOR::BLACK);
         NO_INSTRUCTION;
         //m_tty->printf("Command \'%d\' Not Found!\n", Command.Command);
+        kout << "Command \'" << Command.Command << "\' Not Found!" << endl;
         m_tty->print_str("This is a big test!");
         break;
     }

@@ -109,10 +109,17 @@ void Kernel::system_init() {
     kout << "Memory Test ------------" << endl;
     auto v1 = kmalloc(10);
     
+    KernelTTY->setcolor(COLOR::GREEN, COLOR::BLACK);
     kout << (i32)v1 << endl;
-
+    if (v1 != NULL) {
+        KernelTTY->print_str("Memory test passed!!");
+        KernelTTY->printf(" Got addr *%d for memory! \n", (i32)v1);
+    }
+    else {
+        KernelTTY->print_str("Memory test failed!!");
+    }
     kout << "System Done!" << endl;
-
+    KernelTTY->setcolor(COLOR::WHITE, COLOR::BLACK);
 
 
     console *dev_console;

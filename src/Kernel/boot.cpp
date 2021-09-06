@@ -72,10 +72,10 @@ void Kernel::init_kernel() {
         init_memory(mbt);
         
         Page_Entry * Pages;
-        size_t Pages_size = 1;
+        size_t Pages_size = 10;
 
         for (i32 i = 0; i < Pages_size; i++) {
-                Pages[0] = Memory::map_page({});
+                Pages[i] = Memory::map_page({});
         }
         Memory::PagePool(Pages, Pages_size);
 
