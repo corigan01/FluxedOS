@@ -39,7 +39,7 @@ struct MemoryEntry {
 } *MemoryArray; i32 MemoryArraySize = 0;
 
 bitmap_type* PagesAlloc;
-
+i32 InstalledMemory = 0;
 
 void pmm::init(multiboot_info_t *mbt) {
 	MemoryDiscriptor.Addr = (multiboot_memory_map_t*)mbt->mmap_addr; 
@@ -57,6 +57,7 @@ void pmm::init(multiboot_info_t *mbt) {
 				// We need to know the amount of memory we take, so we store the inital memory here
 				i32 Memory = entry->base_addr_low;
 
+
 				// Define the pointer for MemoryArray
 				MemoryArray = (MemoryEntry*)entry->base_addr_low;
 				entry->base_addr_low += sizeof(MemoryEntry) * MAX_MEMORY_ENTRY;
@@ -67,7 +68,7 @@ void pmm::init(multiboot_info_t *mbt) {
 				PagesAlloc->bytes = ((((mbt->mem_lower + mbt->mem_upper) * 1024) / PAGE_SIZE) / 8);
 				clear_all_bits(PagesAlloc);
 				
-
+				
 				entry->base_addr_low += sizeof(bitmap_type) * PagesAlloc->bytes; 
 
 				// Calculate the differnce 
@@ -84,12 +85,23 @@ void pmm::init(multiboot_info_t *mbt) {
 			INT_TO_STRING(AddE, MemoryArray[MemoryArraySize - 1].MemoryAddr + MemoryArray[MemoryArraySize - 1].Len);
 			INT_TO_STRING(LenS, MemoryArray[MemoryArraySize - 1].Len / (1024 * 1024));
 
-			kout << "Found \'" << (MemoryArray[MemoryArraySize - 1].MemoryType == MULTIBOOT_MEMORY_AVAILABLE ? "FREE" : "RESERVED")  << "\' Memory: *" << Addr << " " << LenS << " MB [" << Addr << ", " << AddE << "]" << endl;
+			kout << "Found \'" << (MemoryArray[MemoryArraySize - 1].MemoryType == MULTIBOOT_MEMORY_AVAILABLE ? "FREE" : "RESERVED")
+			  	 << "\' Memory: *" << Addr << " "
+				 << LenS << " MB [" << Addr << ", "
+				 << AddE << "]" << endl;
+
+			InstalledMemory += (MemoryArray[MemoryArraySize - 1].MemoryType == MULTIBOOT_MEMORY_AVAILABLE ? 1 : 0) * MemoryArray[MemoryArraySize - 1].Len;
+
 		}
 	}	
 
 	kout << "Memory map complete!" << endl;
 	
+}
+
+i32 pmm::RequestInitial(){
+
+	return InstalledMemory;
 }
 
 i32 pmm::PagesAvailable() {

@@ -27,6 +27,7 @@
 
 void Kernel::init_kernel() {
         KernelTTY->setcolor(COLOR::BRIGHT_MAGENTA, COLOR::BLACK);    
+        KernelTTY->print_str("STARTING STAGE 1\n");
 
         CPU::init(mbt); KernelTTY->print_str("CPU ");
         
@@ -103,7 +104,7 @@ void Kernel::init_kernel() {
                   / _// / // /\ \ / / ,< / -_) __/ _ \/ -_) / 
                  /_/ /_/\___//_\_\ /_/|_|\__/_/ /_//_/\__/_/ )");
             KernelTTY->setcolor(COLOR::WHITE, BootupLogoColor);
-            KernelTTY->printf("\n                BUILD: %e%d              %d%e MB Installed!\n                Disp Addr: %d          ", COLOR::ColorVar(COLOR::GREEN, COLOR::BLACK), BUILD, (pmm::PagesAvailable() * PAGE_SIZE) / (1024 * 1024), 0x0F, (i32)mbt->framebuffer_addr );
+            KernelTTY->printf("\n                BUILD: %e%d              %d%e MB Installed!\n                Disp Addr: %d          ", COLOR::ColorVar(COLOR::GREEN, COLOR::BLACK), BUILD, pmm::RequestInitial() / (1024 * 1024), 0x0F, (i32)mbt->framebuffer_addr );
             KernelTTY->printf("%d/%d/%d - %d:%d:%d \n", BootTime.Month, BootTime.Day, BootTime.Year, BootTime.Hour > 12 ? BootTime.Hour - 12 : BootTime.Hour, BootTime.Minute, BootTime.Second);
             KernelTTY->setcolor(COLOR::WHITE, COLOR::WHITE);
             KernelTTY->print_str(R"(

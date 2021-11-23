@@ -39,6 +39,7 @@ namespace System
             void init(multiboot_info_t *mbt);
             void TestMemory(System::Display::tty *tty);
             i32 PagesAvailable();
+            i32 RequestInitial();
 
             i32 ReservePage();
             void freePage(i32 addr);
