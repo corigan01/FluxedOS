@@ -88,8 +88,27 @@ void Memory::PagePool(Page_Entry *pool, i32 size) {
     }
 
     for (i32 i = 0; i < MemoryMap.size(); i ++) {
-        kout << MemoryMap[i].Start << " --> " << MemoryMap[i].End << endl;
+        kout << MemoryMap[i].Start << ", " << MemoryMap[i].End << endl;
+        //ConJoin(i);
     }
+
+    i32 MSize = MemoryMap.size();
+    for (i32 i = 0; i < MSize; i++) {
+        ConJoin(0);
+    }
+}
+
+void Memory::ConJoin(i32 m1) {
+    if (m1 < MemoryMap.size()) {
+        if (MemoryMap[m1].Used == false) {
+            if (MemoryMap[m1].End == MemoryMap[m1 + 1].Start) {
+                kout << "Joined Memory index " << m1 << " with " << m1 + 1 << " | (" << MemoryMap[m1].Start << ", " << MemoryMap[m1].End << ") --> (" << MemoryMap[m1].Start << ", " << MemoryMap[m1 + 1].End << ")" << endl;
+                MemoryMap[m1].End = MemoryMap[m1 + 1].End;
+                MemoryMap.pop_at(m1);
+            }
+        }
+    }
+    
 }
 
 void* Memory::kmalloc(size_t size) {

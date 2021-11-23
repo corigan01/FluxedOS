@@ -1,28 +1,19 @@
-In file included from [01m[K./src/System/memory/pmm/pmm.hpp:25[m[K,
-                 from [01m[K./src/System/memory/pmm/pmm.cpp:22[m[K:
+In file included from [01m[K./src/System/memory/kmemory.hpp:25[m[K,
+                 from [01m[K./src/System/memory/kmemory.cpp:22[m[K:
 [01m[Ksrc/System/kout/kout.hpp:145:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
   145 |             char* CalledFunc = [01;35m[K""[m[K;
       |                                [01;35m[K^~[m[K
 [01m[Ksrc/System/kout/kout.hpp:146:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
   146 |             char* CalledFile = [01;35m[K""[m[K;
       |                                [01;35m[K^~[m[K
-[01m[K./src/System/memory/pmm/pmm.cpp:[m[K In function ‘[01m[Kvoid System::Memory::pmm::init(multiboot_info_t*)[m[K’:
-[01m[K./src/System/memory/pmm/pmm.cpp:82:59:[m[K [01;31m[Kerror: [m[K‘[01m[KMemoryAddr[m[K’ was not declared in this scope
-   82 |                         MemoryArray[MemoryArraySize++] = {[01;31m[KMemoryAddr[m[K = entry->base_addr_low, .MemoryType = entry->type, .Len = entry->length_low};
-      |                                                           [01;31m[K^~~~~~~~~~[m[K
-[01m[K./src/System/memory/pmm/pmm.cpp:82:94:[m[K [01;31m[Kerror: [m[Keither all initializer clauses should be designated or none of them should be
-   82 |                         MemoryArray[MemoryArraySize++] = {MemoryAddr = entry->base_addr_low, [01;31m[K.[m[KMemoryType = entry->type, .Len = entry->length_low};
-      |                                                                                              [01;31m[K^[m[K
-[01m[K./src/System/memory/pmm/pmm.cpp:82:145:[m[K [01;31m[Kerror: [m[Kno match for ‘[01m[Koperator=[m[K’ (operand types are ‘[01m[KMemoryEntry[m[K’ and ‘[01m[K<brace-enclosed initializer list>[m[K’)
-   82 |                         MemoryArray[MemoryArraySize++] = {MemoryAddr = entry->base_addr_low, .MemoryType = entry->type, .Len = entry->length_low[01;31m[K}[m[K;
-      |                                                                                                                                                 [01;31m[K^[m[K
-[01m[K./src/System/memory/pmm/pmm.cpp:35:8:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Kconstexpr MemoryEntry& MemoryEntry::operator=(const MemoryEntry&)[m[K’
-   35 | struct [01;36m[KMemoryEntry[m[K {
+In file included from [01m[K./src/System/memory/kmemory.cpp:28[m[K:
+src/lib/vector/k_vector.hpp: In instantiation of ‘[01m[Kvoid K_Vector<T>::pop_at(size_t) [with T = MemoryEntry; size_t = unsigned int][m[K’:
+[01m[K./src/System/memory/kmemory.cpp:103:29:[m[K   required from here
+[01m[Ksrc/lib/vector/k_vector.hpp:122:31:[m[K [01;31m[Kerror: [m[Kno match for ‘[01m[Koperator=[m[K’ (operand types are ‘[01m[KMemoryEntry[m[K’ and ‘[01m[Kint[m[K’)
+  122 |                     h[i].Data = NULL;
+[01m[K./src/System/memory/kmemory.cpp:39:8:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Kconstexpr MemoryEntry& MemoryEntry::operator=(const MemoryEntry&)[m[K’
+   39 | struct [01;36m[KMemoryEntry[m[K
       |        [01;36m[K^~~~~~~~~~~[m[K
-[01m[K./src/System/memory/pmm/pmm.cpp:35:8:[m[K [01;36m[Knote: [m[K  no known conversion for argument 1 from ‘[01m[K<brace-enclosed initializer list>[m[K’ to ‘[01m[Kconst MemoryEntry&[m[K’
-[01m[K./src/System/memory/pmm/pmm.cpp:35:8:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Kconstexpr MemoryEntry& MemoryEntry::operator=(MemoryEntry&&)[m[K’
-[01m[K./src/System/memory/pmm/pmm.cpp:35:8:[m[K [01;36m[Knote: [m[K  no known conversion for argument 1 from ‘[01m[K<brace-enclosed initializer list>[m[K’ to ‘[01m[KMemoryEntry&&[m[K’
-[01m[K./src/System/memory/pmm/pmm.cpp:[m[K In function ‘[01m[Ki32 System::Memory::pmm::ForceBook(i16, i32)[m[K’:
-[01m[K./src/System/memory/pmm/pmm.cpp:164:1:[m[K [01;35m[Kwarning: [m[Kno return statement in function returning non-void [[01;35m[K-Wreturn-type[m[K]
-  164 | [01;35m[K}[m[K
-      | [01;35m[K^[m[K
+[01m[K./src/System/memory/kmemory.cpp:39:8:[m[K [01;36m[Knote: [m[K  no known conversion for argument 1 from ‘[01m[Kint[m[K’ to ‘[01m[Kconst MemoryEntry&[m[K’
+[01m[K./src/System/memory/kmemory.cpp:39:8:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Kconstexpr MemoryEntry& MemoryEntry::operator=(MemoryEntry&&)[m[K’
+[01m[K./src/System/memory/kmemory.cpp:39:8:[m[K [01;36m[Knote: [m[K  no known conversion for argument 1 from ‘[01m[Kint[m[K’ to ‘[01m[KMemoryEntry&&[m[K’

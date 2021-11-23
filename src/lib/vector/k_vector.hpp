@@ -100,7 +100,6 @@ class K_Vector {
                     
 
                     h[i].DoesPoint = 0;
-                    h[i].Data = NULL;
                     EndOfVector--;
                     
                     return;
@@ -119,7 +118,6 @@ class K_Vector {
             for (int i = 0; i < VectorSize; i++) {
                 if (h[i].PointsTo == s) {
                     h[i].DoesPoint = 0;
-                    h[i].Data = NULL;
                     EndOfVector--;
                     IncRemaining(i, -1);
 

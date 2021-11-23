@@ -51,5 +51,7 @@ namespace System
         void* kmalloc(size_t size);
         void kfree(void* ptr);
 
+        void ConJoin(i32 m1);
+
     }
 }
