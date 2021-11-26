@@ -99,17 +99,19 @@ void Memory::PagePool(Page_Entry *pool, i32 size) {
 }
 
 void Memory::ConJoin(i32 m1) {
-    if (m1 < MemoryMap.size()) {
+    if (m1 < MemoryMap.size() && m1 >= 0) {
         if (MemoryMap[m1].Used == false) {
-            if (MemoryMap[m1].End == MemoryMap[m1 + 1].Start) {
+            if (MemoryMap[m1].End == MemoryMap[m1 + 1].Start || MemoryMap[m1].End == MemoryMap[m1 + 1].Start - 1) {
                 kout << "Joined Memory index " << m1 << " with " << m1 + 1 << " | (" << MemoryMap[m1].Start << ", " << MemoryMap[m1].End << ") --> (" << MemoryMap[m1].Start << ", " << MemoryMap[m1 + 1].End << ")" << endl;
                 MemoryMap[m1].End = MemoryMap[m1 + 1].End;
                 MemoryMap.pop_at(m1);
+                return;
             }
         }
     }
-    
+    kout << "ERROR JOINING MEMORY : " << (m1 < MemoryMap.size() && m1 >= 0) << (MemoryMap[m1].Used == false) << (MemoryMap[m1].End == MemoryMap[m1 + 1].Start || MemoryMap[m1].End == MemoryMap[m1].Start + 1) << endl;
 }
+
 
 void* Memory::kmalloc(size_t size) {
     if (size > MAX_ALLOC) {
@@ -156,7 +158,7 @@ void* Memory::kmalloc(size_t size) {
                 MemoryMap.insert_at(i, NewMemoryEntry);
 
                 for (int i = 0; i < MemoryMap.size(); i++) {
-                    kout << "MEMORY : " << MemoryMap[i].Start << " --> " << MemoryMap[i].End << ", SIZE: " << MemoryMap[i].End - MemoryMap[i].Start << endl;
+                    kout << "MEMORY : " << MemoryMap[i].Start << " --> " << MemoryMap[i].End << ", SIZE: " << MemoryMap[i].End - MemoryMap[i].Start  << "\t USED: " << (MemoryMap[i].Used ? "(USED)" : "(FREE)") << endl;
                 }
 
                 memset((void*)MemoryStart, NULL, size);
@@ -167,12 +169,22 @@ void* Memory::kmalloc(size_t size) {
         }
     }
 
-    // [=] [+] <-- Free space [=====] [++++++++] [=====] ++++++++++++++++++++++++++++++++++++++]
-    // [=] need to find this free
-    // [=] [=] <--- Now used  [=====] [++++++++] [=====] [++++++++++++++++++++++++++++++++++++++]
     kout << "COULD NOT FIND MEMORY, OR IS OUT OF MEMORY!" << endl;
     return (void*)NULL;
 }
 void Memory::kfree(void* ptr) {
-
+    for (i32 i = 0; i < MemoryMap.size(); i++) {
+        if ((i32)ptr == MemoryMap[i].Start) {
+            MemoryMap[i].Used = 0;
+            kout << "Freed memory at " << (i32)ptr << endl;
+            ConJoin(i - 1);
+            ConJoin(i);
+            ConJoin(i + 1);
+            for (int i = 0; i < MemoryMap.size(); i++) {
+                kout << "MEMORY : " << MemoryMap[i].Start << " --> " << MemoryMap[i].End << ", SIZE: " << MemoryMap[i].End - MemoryMap[i].Start  << "\t USED: " << (MemoryMap[i].Used ? "(USED)" : "(FREE)") << endl;
+            }
+            return;
+        }
+    }
+    kout << "Could not find memory to free!" << endl;
 }

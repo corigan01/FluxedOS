@@ -104,7 +104,7 @@ void Kernel::system_init() {
         }
     }
 
-
+    /*
     kout << endl << endl << endl;
     kout << "Memory Test ------------" << endl;
     auto v1 = kmalloc(10);
@@ -120,6 +120,7 @@ void Kernel::system_init() {
     }
     kout << "System Done!" << endl;
     KernelTTY->setcolor(COLOR::WHITE, COLOR::BLACK);
+    kfree(v1);*/
 
 
     console *dev_console;

@@ -6,14 +6,20 @@ In file included from [01m[K./src/System/memory/kmemory.hpp:25[m[K,
 [01m[Ksrc/System/kout/kout.hpp:146:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
   146 |             char* CalledFile = [01;35m[K""[m[K;
       |                                [01;35m[K^~[m[K
-In file included from [01m[K./src/System/memory/kmemory.cpp:28[m[K:
-src/lib/vector/k_vector.hpp: In instantiation of ‘[01m[Kvoid K_Vector<T>::pop_at(size_t) [with T = MemoryEntry; size_t = unsigned int][m[K’:
-[01m[K./src/System/memory/kmemory.cpp:103:29:[m[K   required from here
-[01m[Ksrc/lib/vector/k_vector.hpp:122:31:[m[K [01;31m[Kerror: [m[Kno match for ‘[01m[Koperator=[m[K’ (operand types are ‘[01m[KMemoryEntry[m[K’ and ‘[01m[Kint[m[K’)
-  122 |                     h[i].Data = NULL;
-[01m[K./src/System/memory/kmemory.cpp:39:8:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Kconstexpr MemoryEntry& MemoryEntry::operator=(const MemoryEntry&)[m[K’
-   39 | struct [01;36m[KMemoryEntry[m[K
-      |        [01;36m[K^~~~~~~~~~~[m[K
-[01m[K./src/System/memory/kmemory.cpp:39:8:[m[K [01;36m[Knote: [m[K  no known conversion for argument 1 from ‘[01m[Kint[m[K’ to ‘[01m[Kconst MemoryEntry&[m[K’
-[01m[K./src/System/memory/kmemory.cpp:39:8:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Kconstexpr MemoryEntry& MemoryEntry::operator=(MemoryEntry&&)[m[K’
-[01m[K./src/System/memory/kmemory.cpp:39:8:[m[K [01;36m[Knote: [m[K  no known conversion for argument 1 from ‘[01m[Kint[m[K’ to ‘[01m[KMemoryEntry&&[m[K’
+[01m[K./src/System/memory/kmemory.cpp:[m[K In function ‘[01m[Kvoid System::Memory::ConJoin(i32)[m[K’:
+[01m[K./src/System/memory/kmemory.cpp:112:96:[m[K [01;31m[Kerror: [m[Kinvalid operands of types ‘[01m[Kconst char [6][m[K’ and ‘[01m[Kbool[m[K’ to binary ‘[01m[Koperator<<[m[K’
+  112 |     kout << "ERROR JOINING MEMORY : " << (m1 < MemoryMap.size() && m1 >= 0) ? "true" : [32m[K"false"[m[K [01;31m[K<<[m[K [34m[K(MemoryMap[m1].Used == false)[m[K ? "true" : "false" << (MemoryMap[m1].End == MemoryMap[m1 + 1].Start || MemoryMap[m1].End == MemoryMap[m1].Start + 1) ? "true" : "false"  << endl;
+      |                                                                                        [32m[K~~~~~~~[m[K [01;31m[K^~[m[K [34m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+      |                                                                                        [32m[K|[m[K                              [34m[K|[m[K
+      |                                                                                        [32m[Kconst char [6][m[K                 [34m[Kbool[m[K
+[01m[K./src/System/memory/kmemory.cpp:112:148:[m[K [01;31m[Kerror: [m[Kinvalid operands of types ‘[01m[Kconst char [6][m[K’ and ‘[01m[Kbool[m[K’ to binary ‘[01m[Koperator<<[m[K’
+  112 |     kout << "ERROR JOINING MEMORY : " << (m1 < MemoryMap.size() && m1 >= 0) ? "true" : "false" << (MemoryMap[m1].Used == false) ? "true" : [32m[K"false"[m[K [01;31m[K<<[m[K [34m[K(MemoryMap[m1].End == MemoryMap[m1 + 1].Start || MemoryMap[m1].End == MemoryMap[m1].Start + 1)[m[K ? "true" : "false"  << endl;
+      |                                                                                                                                            [32m[K~~~~~~~[m[K [01;31m[K^~[m[K [34m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+      |                                                                                                                                            [32m[K|[m[K                                                        [34m[K|[m[K
+      |                                                                                                                                            [32m[Kconst char [6][m[K                                           [34m[Kbool[m[K
+[01m[K./src/System/memory/kmemory.cpp:112:266:[m[K [01;31m[Kerror: [m[Kinvalid operands of types ‘[01m[Kconst char [6][m[K’ and ‘[01m[Kconst char* const[m[K’ to binary ‘[01m[Koperator<<[m[K’
+  112 |     kout << "ERROR JOINING MEMORY : " << (m1 < MemoryMap.size() && m1 >= 0) ? "true" : "false" << (MemoryMap[m1].Used == false) ? "true" : "false" << (MemoryMap[m1].End == MemoryMap[m1 + 1].Start || MemoryMap[m1].End == MemoryMap[m1].Start + 1) ? "true" : [32m[K"false"[m[K  [01;31m[K<<[m[K [34m[Kendl[m[K;
+      |                                                                                                                                                                                                                                                                 [32m[K~~~~~~~[m[K  [01;31m[K^~[m[K [34m[K~~~~[m[K
+      |                                                                                                                                                                                                                                                                 [32m[K|[m[K           [34m[K|[m[K
+      |                                                                                                                                                                                                                                                                 [32m[K|[m[K           [34m[Kconst char* const[m[K
+      |                                                                                                                                                                                                                                                                 [32m[Kconst char [6][m[K
