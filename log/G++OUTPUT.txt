@@ -1,25 +1,18 @@
-In file included from [01m[K./src/System/memory/kmemory.hpp:25[m[K,
-                 from [01m[K./src/System/memory/kmemory.cpp:22[m[K:
-[01m[Ksrc/System/kout/kout.hpp:145:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-  145 |             char* CalledFunc = [01;35m[K""[m[K;
-      |                                [01;35m[K^~[m[K
-[01m[Ksrc/System/kout/kout.hpp:146:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
-  146 |             char* CalledFile = [01;35m[K""[m[K;
-      |                                [01;35m[K^~[m[K
-[01m[K./src/System/memory/kmemory.cpp:[m[K In function ‘[01m[Kvoid System::Memory::ConJoin(i32)[m[K’:
-[01m[K./src/System/memory/kmemory.cpp:112:96:[m[K [01;31m[Kerror: [m[Kinvalid operands of types ‘[01m[Kconst char [6][m[K’ and ‘[01m[Kbool[m[K’ to binary ‘[01m[Koperator<<[m[K’
-  112 |     kout << "ERROR JOINING MEMORY : " << (m1 < MemoryMap.size() && m1 >= 0) ? "true" : [32m[K"false"[m[K [01;31m[K<<[m[K [34m[K(MemoryMap[m1].Used == false)[m[K ? "true" : "false" << (MemoryMap[m1].End == MemoryMap[m1 + 1].Start || MemoryMap[m1].End == MemoryMap[m1].Start + 1) ? "true" : "false"  << endl;
-      |                                                                                        [32m[K~~~~~~~[m[K [01;31m[K^~[m[K [34m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
-      |                                                                                        [32m[K|[m[K                              [34m[K|[m[K
-      |                                                                                        [32m[Kconst char [6][m[K                 [34m[Kbool[m[K
-[01m[K./src/System/memory/kmemory.cpp:112:148:[m[K [01;31m[Kerror: [m[Kinvalid operands of types ‘[01m[Kconst char [6][m[K’ and ‘[01m[Kbool[m[K’ to binary ‘[01m[Koperator<<[m[K’
-  112 |     kout << "ERROR JOINING MEMORY : " << (m1 < MemoryMap.size() && m1 >= 0) ? "true" : "false" << (MemoryMap[m1].Used == false) ? "true" : [32m[K"false"[m[K [01;31m[K<<[m[K [34m[K(MemoryMap[m1].End == MemoryMap[m1 + 1].Start || MemoryMap[m1].End == MemoryMap[m1].Start + 1)[m[K ? "true" : "false"  << endl;
-      |                                                                                                                                            [32m[K~~~~~~~[m[K [01;31m[K^~[m[K [34m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
-      |                                                                                                                                            [32m[K|[m[K                                                        [34m[K|[m[K
-      |                                                                                                                                            [32m[Kconst char [6][m[K                                           [34m[Kbool[m[K
-[01m[K./src/System/memory/kmemory.cpp:112:266:[m[K [01;31m[Kerror: [m[Kinvalid operands of types ‘[01m[Kconst char [6][m[K’ and ‘[01m[Kconst char* const[m[K’ to binary ‘[01m[Koperator<<[m[K’
-  112 |     kout << "ERROR JOINING MEMORY : " << (m1 < MemoryMap.size() && m1 >= 0) ? "true" : "false" << (MemoryMap[m1].Used == false) ? "true" : "false" << (MemoryMap[m1].End == MemoryMap[m1 + 1].Start || MemoryMap[m1].End == MemoryMap[m1].Start + 1) ? "true" : [32m[K"false"[m[K  [01;31m[K<<[m[K [34m[Kendl[m[K;
-      |                                                                                                                                                                                                                                                                 [32m[K~~~~~~~[m[K  [01;31m[K^~[m[K [34m[K~~~~[m[K
-      |                                                                                                                                                                                                                                                                 [32m[K|[m[K           [34m[K|[m[K
-      |                                                                                                                                                                                                                                                                 [32m[K|[m[K           [34m[Kconst char* const[m[K
-      |                                                                                                                                                                                                                                                                 [32m[Kconst char [6][m[K
+In file included from [01m[K./src/Kernel/kernel.hpp:25[m[K,
+                 from [01m[K./src/Kernel/boot.cpp:22[m[K:
+[01m[Ksrc/System/cpu/cpu.hpp:50:[m[K [01;35m[Kwarning: [m[K"PIC1_DATA" redefined
+   50 | #define PIC1_DATA                       (PIC1 + 1)
+      | 
+[01m[Ksrc/System/cpu/cpu.hpp:29:[m[K [01;36m[Knote: [m[Kthis is the location of the previous definition
+   29 | #define PIC1_DATA                   0x21
+      | 
+[01m[Ksrc/System/cpu/cpu.hpp:52:[m[K [01;35m[Kwarning: [m[K"PIC2_DATA" redefined
+   52 | #define PIC2_DATA                       (PIC2 + 1)
+      | 
+[01m[Ksrc/System/cpu/cpu.hpp:31:[m[K [01;36m[Knote: [m[Kthis is the location of the previous definition
+   31 | #define PIC2_DATA                   0xA1
+      | 
+[01m[K./src/Kernel/boot.cpp:26:10:[m[K [01;31m[Kfatal error: [m[Klib/vector/k_vector.hpp: No such file or directory
+   26 | #include [01;31m[K<lib/vector/k_vector.hpp>[m[K
+      |          [01;31m[K^~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+compilation terminated.

@@ -25,7 +25,7 @@
 #include <System/Display/Display.hpp>
 #include <System/Clock/PIT/PIT.hpp>
 #include <System/memory/paging/page.hpp>
-#include <lib/vector/k_vector.hpp>
+#include <lib/vector/KernelVector.hpp>
 
 using namespace System;
 using namespace System::Memory;
@@ -109,7 +109,7 @@ void Memory::ConJoin(i32 m1) {
             }
         }
     }
-    kout << "ERROR JOINING MEMORY : " << (m1 < MemoryMap.size() && m1 >= 0) << (MemoryMap[m1].Used == false) << (MemoryMap[m1].End == MemoryMap[m1 + 1].Start || MemoryMap[m1].End == MemoryMap[m1].Start + 1) << endl;
+    kout << "ERROR JOINING MEMORY (ERROR CODE): " << (m1 < MemoryMap.size() && m1 >= 0) << (MemoryMap[m1].Used == false) << (MemoryMap[m1].End == MemoryMap[m1 + 1].Start || MemoryMap[m1].End == MemoryMap[m1].Start + 1) << endl;
 }
 
 

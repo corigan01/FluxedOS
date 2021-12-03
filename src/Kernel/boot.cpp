@@ -23,7 +23,7 @@
 #include <System/memory/kmemory.hpp>
 #include <System/memory/paging/page.hpp>
 #include <System/panic/panic.hpp>
-#include <lib/vector/k_vector.hpp>
+#include <lib/vector/KernelVector.hpp>
 
 void Kernel::init_kernel() {
         KernelTTY->setcolor(COLOR::BRIGHT_MAGENTA, COLOR::BLACK);    

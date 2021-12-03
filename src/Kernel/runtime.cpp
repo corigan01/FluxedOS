@@ -88,14 +88,13 @@ const char * ClassCodeName[] = {
 void Kernel::system_init() {
     NO_INSTRUCTION;
 
-    //pmm::TestMemory(KernelTTY);
-    
-    for (int i = 0; i < 64; i++) {
-        i16 pci = pciCheckVendor(0, i);
-        i16 device = pciConfigReadWord(0,i,0,2);
+    for (int e = 0; e < 16; e++) {
+        for (int i = 0; i < 64; i++) {
+        i16 pci = pciCheckVendor(e, i);
+        i16 device = pciConfigReadWord(e,i,0,2);
 
         if (pci != NULL) {
-            i16 Class = pciConfigReadWord(0, i, 0, 8);
+            i16 Class = pciConfigReadWord(e, i, 0, 8);
 
             i16 SubClass = Class >> 8;
             i8 ClassCode  = (i8)Class;
@@ -103,6 +102,8 @@ void Kernel::system_init() {
             kout << "Device (" << pci << ", " << device << ")\t, Class = " << ClassCodeName[Class] << " : Subclass = " << SubClass << endl;
         }
     }
+    }
+    
 
     /*
     kout << endl << endl << endl;

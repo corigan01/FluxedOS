@@ -134,6 +134,82 @@ SerialLog &SerialLog::operator<<(bool &v) {
     return *this;
 }
 
+template <typename T>
+void SerialLog::fmat(const char* fmt, T emit, va_list va) {
+    int isLong = 0;
+    auto fetchValue = [&]() -> uintmax_t {
+        int wasLong = isLong;
+        isLong = 0;
+        switch (wasLong) {
+            case 0:
+                return va_arg(va, unsigned int);
+            case 1:
+                return va_arg(va, unsigned long);
+            case 2:
+                return va_arg(va, unsigned long long);
+        }
+        return -1;
+    };
+
+    for (; *fmt != '\0'; ++fmt) {
+        if (*fmt != '%') {
+            emit(*fmt);
+            continue;
+        }
+
+        fmt++;
+        while (*fmt == 'l') {
+            ++isLong, ++fmt;
+        }
+
+        switch (*fmt) {
+            case 'c': {
+                char ch = va_arg(va, int);
+                emit(ch);
+                break;
+            }
+            case 'p': {
+                const uint32 v = va_arg(va, unsigned long);
+                INT_TO_STRING(strname, v);
+                System::IO::Serial::outString(System::IO::Serial::COM_1, (char*)strname );
+                isLong = 0;
+                break;
+            }
+            case 'x': {
+                const i8 v = fetchValue();
+
+                i8 v4 = (i8)(v << 4) >> 4;
+                i8 v8 = (i8)v >> 4;
+
+                char PHex_4 = hex_c[v8];
+                char PHex_8 = hex_c[v4];
+
+                System::IO::Serial::outChar(System::IO::Serial::COM_1, PHex_4 );
+                System::IO::Serial::outChar(System::IO::Serial::COM_1, PHex_8 );
+
+                break;
+            }
+            case 's': {
+                const char* s = va_arg(va, const char*);
+                while (*s != '\0')
+                    emit(*s++);
+                break;
+            }
+            case 'd': {
+                const uintmax_t v = fetchValue();
+                INT_TO_STRING(strname, v);
+                System::IO::Serial::outString(System::IO::Serial::COM_1, (char*)strname );
+                break;
+            }
+
+            default:
+                emit('%');
+                emit(*fmt);
+                break;
+        }
+    }
+}
+
 /*template <class T> 
 SerialLog &SerialLog::operator<<(const T &v) {
     
