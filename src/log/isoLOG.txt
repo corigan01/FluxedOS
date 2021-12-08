@@ -3,13 +3,13 @@ xorriso 1.5.4 : RockRidge filesystem manipulator, libburnia project.
 Drive current: -outdev 'stdio:FluxedOS.iso'
 Media current: stdio file, overwriteable
 Media status : is blank
-Media summary: 0 sessions, 0 data blocks, 0 data,  290g free
-Added to ISO image: directory '/'='/tmp/grub.rI3n1x'
+Media summary: 0 sessions, 0 data blocks, 0 data,  289g free
+Added to ISO image: directory '/'='/tmp/grub.a1VyBT'
 xorriso : UPDATE :     972 files added in 1 seconds
 Added to ISO image: directory '/'='/home/corigan01/Desktop/Programming/FluxedOS/src/isodir'
 xorriso : UPDATE :     976 files added in 1 seconds
 xorriso : NOTE : Copying to System Area: 512 bytes from file '/usr/lib/grub/i386-pc/boot_hybrid.img'
-ISO image produced: 13008 sectors
-Written to medium : 13008 sectors at LBA 0
+ISO image produced: 13006 sectors
+Written to medium : 13006 sectors at LBA 0
 Writing to 'stdio:FluxedOS.iso' completed successfully.
 

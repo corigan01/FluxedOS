@@ -19,50 +19,5 @@
  *   
  */
 
-#include <lib/vector/KernelVector.hpp>
-#include <lib/core/core.h>
-#include <lib/assert/assert.hpp>
-#include <System/kout/kout.hpp>
-#include <lib/StanderdOperations/Operations.hpp>
+#include "kernelout.hpp"
 
-// String is just a vector with type "const char*" with additional helpfulness regarding strings
-class String : public K_Vector<char> {
-    public:
-
-    // Standered constructors
-    String();
-    String(char* str);
-    String(const char* str);
-    
-    ~String();
-    
-    // Standered operations that string must support
-    void operator= (char* str);
-    void operator= (const char* str);
-    void operator= (String str);
-
-    void operator+= (char str);
-    void operator+= (char* str);
-    void operator+= (const char* str);
-    void operator+= (String str);
-
-    String operator+ (char* str);
-    String operator+ (const char* str);
-    String operator+ (String str);
-
-    // to_string's for each type of thing we want to stringify
-    String to_string(char i);
-    String to_string(int i);
-    String to_string(i32 i);
-    String to_string(i16 i);
-    String to_string(i8 i);
-
-    const char * c_str();
-    char*       cc_str();
-
-    // may work on a find command because it can be helpful when programming complext things with string later down the line
-    i32 find(String str);
-
-    
-    
-};

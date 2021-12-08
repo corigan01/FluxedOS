@@ -33,22 +33,29 @@
 template <class T>
 class K_Vector {
     protected:
-        struct D {
+        struct D { // This is the main data storage for the vector, it contains the accual content
             T Data; // Data Storage
             int PointsTo = 0; // The index this unit will point to 
             int DoesPoint = 0; // This tells if this data has been popped 
         };
-        D *h;
+        struct DB { // This is the data vector which stores banks of content for allocating more memory when the vector fills up
+            D *h;
+            int MemoryBank = 0;
+        } *content;
+        i32 contentsize = 0;
 
-        int VectorSize = 0;
-        int EndOfVector = 0;
+        i32 VectorSize = 0; // how many alive entries there are
+        i32 EndOfVector = 0; // how many total entries there are
 
     public:
 
         K_Vector(size_t loc);
         K_Vector();
         
+        ~K_Vector();
+
         void ChangePointer(void* p);
+        void free_pointer();
 
     public:
 

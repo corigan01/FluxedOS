@@ -1,18 +1,52 @@
-In file included from [01m[K./src/Kernel/kernel.hpp:25[m[K,
-                 from [01m[K./src/Kernel/boot.cpp:22[m[K:
-[01m[Ksrc/System/cpu/cpu.hpp:50:[m[K [01;35m[Kwarning: [m[K"PIC1_DATA" redefined
-   50 | #define PIC1_DATA                       (PIC1 + 1)
-      | 
-[01m[Ksrc/System/cpu/cpu.hpp:29:[m[K [01;36m[Knote: [m[Kthis is the location of the previous definition
-   29 | #define PIC1_DATA                   0x21
-      | 
-[01m[Ksrc/System/cpu/cpu.hpp:52:[m[K [01;35m[Kwarning: [m[K"PIC2_DATA" redefined
-   52 | #define PIC2_DATA                       (PIC2 + 1)
-      | 
-[01m[Ksrc/System/cpu/cpu.hpp:31:[m[K [01;36m[Knote: [m[Kthis is the location of the previous definition
-   31 | #define PIC2_DATA                   0xA1
-      | 
-[01m[K./src/Kernel/boot.cpp:26:10:[m[K [01;31m[Kfatal error: [m[Klib/vector/k_vector.hpp: No such file or directory
-   26 | #include [01;31m[K<lib/vector/k_vector.hpp>[m[K
-      |          [01;31m[K^~~~~~~~~~~~~~~~~~~~~~~~~[m[K
-compilation terminated.
+In file included from [01m[K./src/System/memory/kmemory.hpp:25[m[K,
+                 from [01m[K./src/System/memory/kmemory.cpp:22[m[K:
+[01m[Ksrc/System/kout/kout.hpp:72:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   72 |             char* CalledFunc = [01;35m[K""[m[K;
+      |                                [01;35m[K^~[m[K
+[01m[Ksrc/System/kout/kout.hpp:73:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   73 |             char* CalledFile = [01;35m[K""[m[K;
+      |                                [01;35m[K^~[m[K
+In file included from [01m[Ksrc/lib/vector/KernelVector.hpp:28[m[K,
+                 from [01m[K./src/System/memory/kmemory.cpp:28[m[K:
+[01m[Ksrc/lib/vector/k_vector/k_vector.cpp:[m[K In constructor ‘[01m[KK_Vector<T>::K_Vector(size_t)[m[K’:
+[01m[Ksrc/lib/vector/k_vector/k_vector.cpp:37:15:[m[K [01;31m[Kerror: [m[Kexpected ‘[01m[K;[m[K’ before ‘[01m[K}[m[K’ token
+   37 |     content[0]
+      |               [01;31m[K^[m[K
+      |               [32m[K;[m[K
+   38 | [32m[K}[m[K
+      | [32m[K~[m[K              
+src/lib/vector/k_vector/k_vector.cpp: In instantiation of ‘[01m[KT& K_Vector<T>::operator[](size_t) [with T = MemoryEntry; size_t = unsigned int][m[K’:
+[01m[K./src/System/memory/kmemory.cpp:91:28:[m[K   required from here
+[01m[Ksrc/lib/vector/k_vector/k_vector.cpp:84:1:[m[K [01;35m[Kwarning: [m[Kno return statement in function returning non-void [[01;35m[K-Wreturn-type[m[K]
+   84 | [01;35m[K}[m[K
+      | [01;35m[K^[m[K
+arning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
+   37 |             char *  Command     = [01;35m[K""[m[K;
+      |                                   [01;35m[K^~[m[K
+In file included from [01m[Ksrc/lib/vector/KernelVector.hpp:28[m[K,
+                 from [01m[K./src/Kernel/boot.cpp:26[m[K:
+[01m[Ksrc/lib/vector/k_vector/k_vector.cpp:[m[K In constructor ‘[01m[KK_Vector<T>::K_Vector(size_t)[m[K’:
+[01m[Ksrc/lib/vector/k_vector/k_vector.cpp:37:15:[m[K [01;31m[Kerror: [m[Kexpected ‘[01m[K;[m[K’ before ‘[01m[K}[m[K’ token
+   37 |     content[0]
+      |               [01;31m[K^[m[K
+      |               [32m[K;[m[K
+   38 | [32m[K}[m[K
+      | [32m[K~[m[K              
+[32m[K;[m[K
+   38 | [32m[K}[m[K
+      | [32m[K~[m[K              
+src/lib/vector/k_vector/k_vector.cpp: In instantiation of ‘[01m[KT& K_Vector<T>::operator[](size_t) [with T = int; size_t = unsigned int][m[K’:
+[01m[K./src/Kernel/runtime.cpp:136:30:[m[K   required from here
+[01m[Ksrc/lib/vector/k_vector/k_vector.cpp:84:1:[m[K [01;35m[Kwarning: [m[Kno return statement in function returning non-void [[01;35m[K-Wreturn-type[m[K]
+   84 | [01;35m[K}[m[K
+      | [01;35m[K^[m[K
+[m[K’:
+[01m[K./src/lib/string/string.cpp:76:26:[m[K   required from here
+[01m[Ksrc/lib/vector/k_vector/k_vector.cpp:84:1:[m[K [01;35m[Kwarning: [m[Kno return statement in function returning non-void [[01;35m[K-Wreturn-type[m[K]
+   84 | [01;35m[K}[m[K
+      | [01;35m[K^[m[K
+src/lib/vector/k_vector/k_vector.cpp: In instantiation of ‘[01m[KT K_Vector<T>::getat(uint32) [with T = char; uint32 = unsigned int][m[K’:
+[01m[K./src/lib/string/string.cpp:151:26:[m[K   required from here
+[01m[Ksrc/lib/vector/k_vector/k_vector.cpp:79:1:[m[K [01;35m[Kwarning: [m[Kno return statement in function returning non-void [[01;35m[K-Wreturn-type[m[K]
+   79 | [01;35m[K}[m[K
+      | [01;35m[K^[m[K

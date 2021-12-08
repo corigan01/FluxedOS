@@ -23,6 +23,7 @@
 #include <System/Console/console.hpp>
 #include <System/CommandHandler/CommandHandler.hpp>
 #include <System/memory/kmemory.hpp>
+#include <lib/string/string.hpp>
 
 using namespace System;
 using namespace System::IO;
@@ -122,6 +123,27 @@ void Kernel::system_init() {
     kout << "System Done!" << endl;
     KernelTTY->setcolor(COLOR::WHITE, COLOR::BLACK);
     kfree(v1);*/
+
+    K_Vector<int> test_vector;
+
+    for (int i = 0; i < 10; i ++) {
+        test_vector.push_back(i);
+    }
+
+    test_vector.pop_at(3);
+
+    for (auto i = 0; i < test_vector.size() ; i ++) {
+        kout << test_vector[i] << endl;
+    }
+
+
+
+    // damn code
+    {
+        String str = "";
+        String str2 = "";
+        String str3 = "";
+    }
 
 
     console *dev_console;

@@ -104,7 +104,7 @@ void Memory::ConJoin(i32 m1) {
             if (MemoryMap[m1].End == MemoryMap[m1 + 1].Start || MemoryMap[m1].End == MemoryMap[m1 + 1].Start - 1) {
                 kout << "Joined Memory index " << m1 << " with " << m1 + 1 << " | (" << MemoryMap[m1].Start << ", " << MemoryMap[m1].End << ") --> (" << MemoryMap[m1].Start << ", " << MemoryMap[m1 + 1].End << ")" << endl;
                 MemoryMap[m1].End = MemoryMap[m1 + 1].End;
-                MemoryMap.pop_at(m1);
+                MemoryMap.pop_at(m1 + 1);
                 return;
             }
         }
@@ -177,9 +177,7 @@ void Memory::kfree(void* ptr) {
         if ((i32)ptr == MemoryMap[i].Start) {
             MemoryMap[i].Used = 0;
             kout << "Freed memory at " << (i32)ptr << endl;
-            ConJoin(i - 1);
             ConJoin(i);
-            ConJoin(i + 1);
             for (int i = 0; i < MemoryMap.size(); i++) {
                 kout << "MEMORY : " << MemoryMap[i].Start << " --> " << MemoryMap[i].End << ", SIZE: " << MemoryMap[i].End - MemoryMap[i].Start  << "\t USED: " << (MemoryMap[i].Used ? "(USED)" : "(FREE)") << endl;
             }
