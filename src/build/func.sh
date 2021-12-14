@@ -173,9 +173,9 @@ compilec_() {
 
     if cc -m32 -g -I src/ -elf_i386  -O -O2 -fno-use-cxa-atexit -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-stack-protector -fpic -fshort-wchar -mno-red-zone -fno-builtin -c  $OUTPUT -fdiagnostics-color=always &> /dev/null; then
          local PFD=$((($(date +%s%N) - $ts)/1000000))
-         printf "%-40s%-4s\e[0;32m  $bold DONE - $PFD ms\e[0;34m\n"  "${OUTPUT:0:40}" " $normal"
+         printf "[ C ] %-40s%-4s\e[0;32m  $bold DONE - $PFD ms\e[0;34m\n"  "${OUTPUT:0:40}" " $normal"
     else
-        printf "%-40s%-4s\e[0;31mFAILED\e[0;34m\n"  "${OUTPUT:0:40}" " "
+        printf "[ C ] %-40s%-4s\e[0;31mFAILED\e[0;34m\n"  "${OUTPUT:0:40}" " "
         #ouput the errors
 
         cc -m32 -I src/ -elf_i386  -O -O2 -fno-use-cxa-atexit -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-stack-protector -fpic -fshort-wchar -mno-red-zone -fno-builtin -c  $OUTPUT -fdiagnostics-color=always &> "log/GccOUTPUT.txt"
@@ -200,13 +200,13 @@ compilec() {
 
     if c++ -m32 -g -I src/ -elf_i386 -std=c++2a -O -fstrength-reduce -fno-use-cxa-atexit -fomit-frame-pointer -O2 -finline-functions -nostdinc -fno-builtin -c  $OUTPUT -fdiagnostics-color=always &> /dev/null; then
          local PFD=$((($(date +%s%N) - $ts)/1000000))
-         printf "%-40s%-4s\e[0;32m  $bold DONE - $PFD ms\e[0;34m\n"  "${OUTPUT:0:40}" " $normal"
+         printf "[C++] %-40s%-4s\e[0;32m  $bold DONE - $PFD ms\e[0;34m\n"  "${OUTPUT:0:40}" " $normal"
     else
         printf "%-40s%-4s\e[0;31mFAILED\e[0;34m\n"  "${OUTPUT:0:40}" " "
         #ouput the errors
 
         c++ -m32 -I src/ -elf_i386 -std=c++2a -O -fstrength-reduce -fno-use-cxa-atexit -fomit-frame-pointer -O2 -finline-functions -nostdinc -fno-builtin -c  $OUTPUT -fdiagnostics-color=always  &> "log/G++OUTPUT.txt"
-        printf "%s" "$(<log/G++OUTPUT.txt)"
+        printf "[C++] %s" "$(<log/G++OUTPUT.txt)"
         echo ""
         #rm temp.txt
 
@@ -220,7 +220,7 @@ compilec() {
 compilestuff() {
     OUTPUT="$1"
     if [[ $OUTPUT == *"Proc"* ]]; then
-        printf "%-40s%-4s\e[0;33mSKIP\e[0;34m\n"  "${OUTPUT:0:40}" " "
+        printf "[PRG] %-40s%-4s\e[0;33mSKIP\e[0;34m\n"  "${OUTPUT:0:40}" " "
     elif [[ $OUTPUT == *".cpp"* ]]; then
         BUILDCOUNT=$(( 1 + BUILDCOUNT))
         compilec $OUTPUT 
@@ -228,7 +228,7 @@ compilestuff() {
         BUILDCOUNT=$(( 1 + BUILDCOUNT))
         compilec_ $OUTPUT 
     else
-        printf "%-40s%-4s\e[0;32m  $bold DONE\e[0;34m\n"  "${OUTPUT:0:40}" " $normal"
+        printf "[ H ] %-40s%-4s\e[0;32m  $bold DONE\e[0;34m\n"  "${OUTPUT:0:40}" " $normal"
     fi
 }
 
@@ -242,8 +242,8 @@ Link_and_check() {
         printf "%-40s%-4s\e[0;32m  $bold DONE - $PFD ms\e[0;34m\n"  "${TEx:0:40}" " $normal"
 
         DisDone "Stripping Symbols"
-        #objcopy --only-keep-debug FluxedOS.bin FluxedOS.debug
-        #strip --strip-debug --strip-unneeded FluxedOS.bin
+        objcopy --only-keep-debug FluxedOS.bin FluxedOS.debug
+        strip --strip-debug --strip-unneeded FluxedOS.bin
         
     else
 

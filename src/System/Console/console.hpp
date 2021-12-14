@@ -24,6 +24,7 @@
 #include <lib/core/core.h>
 #include <System/kout/kout.hpp>
 #include <System/tty/tty.hpp>
+#include <lib/string/string.hpp>
 
 
 namespace System
@@ -36,6 +37,7 @@ namespace System
 
             
             //console(System::Display::tty * tty, i16 ColorF, i16 ColorB);
+            console();
             ~console();
 
             void begin();
@@ -61,11 +63,9 @@ namespace System
             bool TermActive = true;
 
             i16 ColorF = 1, ColorB = 0;
-            i16 CommandLen = 0;
             i8 LastChar = 0;
 
-            char * UserString;
-            char * DuUserString;
+            String UserCommand;
 
             System::Display::tty * m_tty;
         };

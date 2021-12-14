@@ -88,7 +88,7 @@ void Memory::PagePool(Page_Entry *pool, i32 size) {
     }
 
     for (i32 i = 0; i < MemoryMap.size(); i ++) {
-        kout << MemoryMap[i].Start << ", " << MemoryMap[i].End << endl;
+        kout << "MEMORY BEFORE CONJOIN : " << MemoryMap[i].Start << ", " << MemoryMap[i].End << endl;
         //ConJoin(i);
     }
 
@@ -100,7 +100,7 @@ void Memory::PagePool(Page_Entry *pool, i32 size) {
 
 void Memory::ConJoin(i32 m1) {
     if (m1 < MemoryMap.size() && m1 >= 0) {
-        if (MemoryMap[m1].Used == false) {
+        if (MemoryMap[m1].Used == false && MemoryMap[m1 + 1].Used == false) {
             if (MemoryMap[m1].End == MemoryMap[m1 + 1].Start || MemoryMap[m1].End == MemoryMap[m1 + 1].Start - 1) {
                 kout << "Joined Memory index " << m1 << " with " << m1 + 1 << " | (" << MemoryMap[m1].Start << ", " << MemoryMap[m1].End << ") --> (" << MemoryMap[m1].Start << ", " << MemoryMap[m1 + 1].End << ")" << endl;
                 MemoryMap[m1].End = MemoryMap[m1 + 1].End;
@@ -128,21 +128,21 @@ void* Memory::kmalloc(size_t size) {
     for (i32 i = 0; i < MemoryMap.size(); i++) {
         //kout << "Finding Memory..." << endl;
         i32 CurrentMemorySize = MemoryMap[i].End - MemoryMap[i].Start;
-        kout << "Found Memory at loc : " << (i32)MemoryMap[i].Start << " - " << (i32)MemoryMap[i].End << " [" << ((i32)MemoryMap[i].End - (i32)MemoryMap[i].Start)  << " bytes]" << endl; 
+        //kout << "Found Memory at loc : " << (i32)MemoryMap[i].Start << " - " << (i32)MemoryMap[i].End << " [" << ((i32)MemoryMap[i].End - (i32)MemoryMap[i].Start)  << " bytes]" << endl; 
         if (!MemoryMap[i].Used && CurrentMemorySize != 0) {
             
 
             if (CurrentMemorySize == size) {
                 MemoryMap[i].Used = 1;
 
-                kout << "Found Exact Free Memory Size! " << endl;
+                //kout << "Found Exact Free Memory Size! " << endl;
 
                 memset((void*)MemoryMap[i].Start, NULL, CurrentMemorySize);
                 kout << "Returning memory addr *" << (i32)MemoryMap[i].Start << " with size of " << size << endl << endl;
                 return (void*)MemoryMap[i].Start;
             }
             if (CurrentMemorySize > size) {
-                kout << "Resizing Memory to fit : [" << CurrentMemorySize << "] --> {[" << size << "], [" << CurrentMemorySize - size << "]} " << endl;
+                //kout << "Resizing Memory to fit : [" << CurrentMemorySize << "] --> {[" << size << "], [" << CurrentMemorySize - size << "]} " << endl;
                 i32 MemoryStart = MemoryMap[i].Start;
                 MemoryEntry NewMemoryEntry = {
                     MemoryStart,
@@ -157,9 +157,9 @@ void* Memory::kmalloc(size_t size) {
                 MemoryMap[i] = CurrentMemoryEntry;
                 MemoryMap.insert_at(i, NewMemoryEntry);
 
-                for (int i = 0; i < MemoryMap.size(); i++) {
-                    kout << "MEMORY : " << MemoryMap[i].Start << " --> " << MemoryMap[i].End << ", SIZE: " << MemoryMap[i].End - MemoryMap[i].Start  << "\t USED: " << (MemoryMap[i].Used ? "(USED)" : "(FREE)") << endl;
-                }
+                //for (int i = 0; i < MemoryMap.size(); i++) {
+                //    kout << "MEMORY : " << MemoryMap[i].Start << " --> " << MemoryMap[i].End << ", SIZE: " << MemoryMap[i].End - MemoryMap[i].Start  << "\t USED: " << (MemoryMap[i].Used ? "(USED)" : "(FREE)") << endl;
+                //}
 
                 memset((void*)MemoryStart, NULL, size);
                 kout << "Returning memory addr *" << (i32)MemoryStart << " with size of " << size << endl << endl;

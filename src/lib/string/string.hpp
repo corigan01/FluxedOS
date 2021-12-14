@@ -19,6 +19,8 @@
  *   
  */
 
+#pragma once
+
 #include <lib/vector/KernelVector.hpp>
 #include <lib/core/core.h>
 #include <lib/assert/assert.hpp>

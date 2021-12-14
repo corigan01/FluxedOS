@@ -47,8 +47,10 @@ void String::operator= (char* str) {
 }
 void String::operator= (const char* str){
     empty();
-	for (i32 i = 0; str[i] != 0; i++) {
-        auto e = str[i];
+    kout << "GOT INPUT OF \'" << str << "\'" << endl;
+	for (i32 i = 0; i < strlen(str); i++) {
+        char e = str[i];
+        kout << e << endl;
 		this->push_back(e);
 	}
 }
@@ -57,6 +59,7 @@ void String::operator= (String str) {
 }
 
 void String::operator+= (char str) {
+    kout << str << " ahhhh " << endl;
     this->push_back(str);
 }
 
@@ -144,13 +147,23 @@ i32 String::find(String str) {
 }
 
 const char * String::c_str() {
-    char * ch = "";
+    NO_INSTRUCTION;
+    char * ch;
 	int all = 0;
 
 	for (int i = 0; i < size(); i++) {
-		ch[all++] = (char)getat(i);
+        NO_INSTRUCTION;
+		ch[all++] = operator[](i);
 	}
+    ch[all++] = '\0';
 
+    kout << size() << "::";
+    for (int i = 0; i < size(); i++) {
+        kout << operator[](i);
+    }
+    kout << endl;
+
+    NO_INSTRUCTION;
 	return (const char *)ch;
 }
 
@@ -159,8 +172,10 @@ char* String::cc_str() {
 	int all = 0;
 
 	for (int i = 0; i < size(); i++) {
-		ch[all++] = (char)getat(i);
+        NO_INSTRUCTION;
+		ch[all++] = operator[](i);
 	}
+    ch[all++] = '\0';
 
 	return ch;
 }

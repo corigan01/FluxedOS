@@ -48,6 +48,7 @@ void Serial::outString(Serial::SerialDevice st, const char * s) {
         while (Serial::transmitEmpty(st) == 0);
         Port::byte_out(st , s[i]);
     }
+    Port::byte_out(st , '\0');
 }
 
 int Serial::inByte(Serial::SerialDevice st) {

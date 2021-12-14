@@ -112,6 +112,7 @@ SerialLog &SerialLog::operator<<(const i8 &v) {
 SerialLog &SerialLog::operator<<(const char &v) {
     char* v_str = "";
     v_str[0] = v;
+    v_str[1] = '\0';
 
     OutputTraceInfo(v_str);
 

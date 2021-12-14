@@ -37,6 +37,11 @@ using namespace System::VirtualConsole;
 
     m_tty->setcolor(ColorF, ColorB);
 }*/
+
+console::console() {
+    
+}
+
 console::~console() {
     ;
 }
@@ -44,11 +49,7 @@ console::~console() {
 void console::begin() {
     m_tty->setcolor(ColorF, ColorB);
     m_tty->print_str("\n");
-
-    this->UserString = (char*)kmalloc(sizeof(char) * 256);
-    memset(this->UserString, 0, sizeof(char) * 256);
-    this->DuUserString = (char*)kmalloc(sizeof(char) * 256);
-    memset(this->DuUserString, 0, sizeof(char) * 256);
+    
 
     this->ReturnUser();
 }
@@ -59,9 +60,9 @@ void console::HandleKeyCode(i8 keycode) {
     switch (keycode) {
         case Keyboard::Keycode::BACKSPACE_PRESSED:
 
-            if (this->CommandLen > 0) {
+            if (UserCommand.size() > 0) {
                 m_tty->print_char('\e');
-                this->CommandLen--;    
+                UserCommand.pop_back();    
                 NO_INSTRUCTION;
             }
 
@@ -70,18 +71,17 @@ void console::HandleKeyCode(i8 keycode) {
         case Keyboard::Keycode::ENTER_PRESSED:
             this->HasFinalUserString = true;
             //this->UserString[this->CommandLen + 1] = '\0';
-            memcpy(this->DuUserString, this->UserString, 256);
-            memset(this->UserString, '\0', sizeof(char) * 256);
 
-            //kout << "User entered command --> \'" << this->UserString << "\'" << endl;
+            kout << "User entered command --> \'" << UserCommand.c_str() << "\'" << endl;
 
-            
+            NO_INSTRUCTION;
             NO_INSTRUCTION;
 
             m_tty->print_str("\n");
 
-            HandleCommand(DuUserString, this->CommandLen);
+            //HandleCommand(UserCommand.c_str(), UserCommand.size());
             
+
 
             ReturnUser();
 
@@ -95,7 +95,7 @@ void console::HandleKeyCode(i8 keycode) {
 
             if (OutputChar != NULL) { 
                 m_tty->print_char(OutputChar); 
-                this->UserString[this->CommandLen++] = OutputChar;
+                UserCommand += OutputChar;
             }
             else NO_INSTRUCTION;
 
@@ -108,7 +108,7 @@ void console::HandleKeyCode(i8 keycode) {
 char* console::GetRawCommand() {
     if (this->HasFinalUserString) {
         this->HasFinalUserString = false;
-        return this->UserString;
+        return UserCommand.cc_str();
     }
     return NULL;
 }
@@ -120,8 +120,7 @@ void console::ReturnUser() {
     }
 
     this->HasFinalUserString = false;
-    this->UserString = "";
-    this->CommandLen = 0;
+    UserCommand.empty();
     
 }
 

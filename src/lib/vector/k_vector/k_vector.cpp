@@ -24,37 +24,53 @@
 
 template <class T> 
 K_Vector<T>::~K_Vector() {
-    
+    free_pointer();
 }
 
 template <class T>
 void K_Vector<T>::free_pointer() {
-    
+    for (int bank = 0; bank < contentsize; bank++) {
+        auto ContentBank = &content[bank];
+        System::Memory::kfree((void*)ContentBank);
+    }
 }
 
 template <class T>
 K_Vector<T>::K_Vector(size_t loc) {
-    content[0];
+    ChangePointer((void*)loc);
 }
 
 template <class T>
 K_Vector<T>::K_Vector() {
+    ChangePointer(System::Memory::kmalloc((sizeof(T) * 1000) + (sizeof(DB) * 10)));
     
 }
         
 template <class T>
 void K_Vector<T>::ChangePointer(void* p) {
+    void* FirstMemoryPointer = (void*)p;
+    content = (DB*)FirstMemoryPointer;
+    contentsize = 0;
     
+    FirstMemoryPointer += (sizeof(DB) * 10);
+
+    D* temp_content = (D*)FirstMemoryPointer;
+    content[contentsize].h = temp_content;
+    content[contentsize++].MemoryBank = 0;
+
+    VectorSize = 0;
+    EndOfVector = 0;
 }
 
 template <class T>
-void K_Vector<T>::push_back(T data) {
+void K_Vector<T>::push_back(T input) {
+    insert_at(VectorSize, input);
 
 }
 
 template <class T>
 void K_Vector<T>::pop_back() {
-    
+    pop_at(VectorSize - 1);
 }
 
 template <class T>
@@ -64,23 +80,136 @@ int K_Vector<T>::size() {
 
 template <class T>
 void K_Vector<T>::pop_at(size_t s) {
+    bool SuccessfulAlloc = false;
+    // we dont find the address already so we have to create a new one
+    for (int bank = 0; bank < contentsize; bank++) {
+        auto ContentBank = &content[bank];
+        
+        for (int i = 0; i < ContentBank->alloc; i++) {
+            // then we look through the data and see if we can find an full space
+            auto data = &ContentBank->h[i];
+            if (data->DoesPoint == true && data->PointsTo == s) {
+                if (!SuccessfulAlloc) {
+                    // we then remove that entry 
+                    data->DoesPoint = false;
+                    data->PointsTo = -1;
+                    VectorSize--;
+                    
 
+                    SuccessfulAlloc = true;
+                }
+            }
+            else {
+                if (data->PointsTo >= s) {
+                    data->PointsTo--;
+                }
+            }
+        }
+     
+        
+
+    }    
 }
 
 template <class T>
 void K_Vector<T>::insert_at(size_t s, T d) {
-    
+    bool SuccessfulAlloc = false;
+    // we dont find the address already so we have to create a new one
+    for (int bank = 0; bank < contentsize; bank++) {
+        auto ContentBank = &content[bank];
 
+        // then we check if that bank is full or not
+        if (ContentBank->alloc < 1000) {
+            for (int i = 0; i < ContentBank->alloc; i++) {
+
+                // then we look through the data and see if we can find an empty space
+                auto data = &ContentBank->h[i];
+                if (data->DoesPoint == false ) {
+                    if (!SuccessfulAlloc) {
+                        // we then fill that entry 
+                        data->DoesPoint = true;
+                        data->PointsTo = s;
+                        data->Data = d;
+
+                        VectorSize++;
+
+                        SuccessfulAlloc = true;
+                    }
+                }
+                else {
+                    if (data->PointsTo >= s) {
+                        data->PointsTo++;
+                    }
+                }
+            }
+        }
+    }
+
+    // alloc new bank here because we dont have any empty addresses
+    if (!SuccessfulAlloc) {
+        bool HasRoom = false;
+        for (int bank = 0; bank < contentsize; bank++) {
+            auto ContentBank = &content[bank];
+
+            if (ContentBank->alloc < 1000) {
+                HasRoom = true;
+
+                ContentBank->h[ContentBank->alloc++] = {d, s, true};
+                VectorSize++;
+            }
+        }
+    }
+
+    /*for (int bank = 0; bank < contentsize; bank++) {
+        auto ContentBank = content[bank];
+
+        
+        for (int i = 0; i < ContentBank.alloc; i++) {
+
+            // then we look through the data and see if we can find an empty space
+            auto data = &ContentBank.h[i];
+            
+            kout << data->DoesPoint << " ------ " << data->PointsTo << endl;
+            
+        }
+        
+    }
+
+    kout << endl << endl;*/
+    
 }
 
 template <class T>
 T K_Vector<T>::getat(uint32 s) {
-    
+    for (int bank = 0; bank < contentsize; bank++) {
+        auto ContentBank = &content[bank];   
+
+        for (int i = 0; i < ContentBank->alloc; i++) {
+            auto data = ContentBank->h[i];
+
+            if (data.DoesPoint == true && data.PointsTo == s)
+                NO_INSTRUCTION;
+                return data.Data;
+            
+        }
+        
+    }
 }
 
 template <class T>
 T& K_Vector<T>::operator  [](size_t s) {
-    
+    for (int bank = 0; bank < contentsize; bank++) {
+        auto ContentBank = &content[bank];   
+
+        for (int i = 0; i < ContentBank->alloc; i++) {
+            auto data = &ContentBank->h[i];
+
+            if (data->DoesPoint == true && data->PointsTo == s)
+                return data->Data;
+            
+        }
+        
+    }
 }
 
 template <class T>
@@ -90,7 +219,9 @@ void K_Vector<T>::operator =(K_Vector s) {
 
 template <class T>
 void K_Vector<T>::empty() {
-
+    for (int i = 0; size() != 0; i++) {
+        pop_back();
+    }
 }
 
 template <class T>

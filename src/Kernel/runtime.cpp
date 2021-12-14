@@ -124,7 +124,7 @@ void Kernel::system_init() {
     KernelTTY->setcolor(COLOR::WHITE, COLOR::BLACK);
     kfree(v1);*/
 
-    K_Vector<int> test_vector;
+    /*K_Vector<int> test_vector;
 
     for (int i = 0; i < 10; i ++) {
         test_vector.push_back(i);
@@ -135,7 +135,7 @@ void Kernel::system_init() {
     for (auto i = 0; i < test_vector.size() ; i ++) {
         kout << test_vector[i] << endl;
     }
-
+    */
 
 
     // damn code
@@ -144,6 +144,9 @@ void Kernel::system_init() {
         String str2 = "";
         String str3 = "";
     }
+    
+
+    
 
 
     console *dev_console;
@@ -151,6 +154,15 @@ void Kernel::system_init() {
     dev_console = &KernShell;
 
     dev_console->begin();
+
+    
+    //kout << str4.c_str() << endl;
+    //str4 += " 1 2 3 4";
+    //kout << str4.c_str() << endl;
+    //str4 = "";
+    //kout << str4.c_str() << endl;
+
+    
 
     while(dev_console->IsAlive()) {
         if (Keyboard::TriggerEvent() || 1) {
@@ -162,7 +174,8 @@ void Kernel::system_init() {
         
     }
 
-   
+    
+
     
         
 }
