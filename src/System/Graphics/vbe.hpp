@@ -36,15 +36,25 @@ namespace System
 
         namespace Driver 
         {
-            
+            struct GraphicsInfo {
+                u32 width;
+                u32 height;
+
+                u32 pitch;
+                u32 pixelwidth;
+
+                u8* buffer;
+            };
 
             void gxinit(void* buffer, u32 screen_x, u32 screen_y);
-            void putpixel(u32 x,u32 y, u32 color) ;
+            void putpixel(int x, int y, u32 color) ;
             void fillrect(u32 color, u32 start_x, u32 start_y, u32 width, u32 hight);
             void linecircle(u32 color, u32 center_x, u32 center_y, u32 rad);
             void fillcircle(u32 color, u32 center_x, u32 center_y, u32 rad);
             void drawchar(u32 ch, u32 x, u32 y, u32 color);
             void drawstring(const char* str, u32 x, u32 y, u32 color);
+
+            GraphicsInfo getinfo();
 
 
         }

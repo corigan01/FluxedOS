@@ -33,14 +33,16 @@ void Driver::gxinit(void* buffer, u32 screen_x, u32 screen_y)  {
     rey = screen_y;
 
     Buffer = (u8*)buffer;
-    pixelwidth = screen_x;
+    pixelwidth = 1;
     pitch = 4;
 
     //fillcircle(0xFF0000, 100, 100, 100);
 }
 
-void Driver::putpixel(u32 x,u32 y, u32 color) {
-    u32 where = (x * pixelwidth * pitch) + (y * pitch);
+void Driver::putpixel(int x, int y, u32 color) {
+    if (x < 0 || x >= rex || y < 0 || y >= rey) return;
+
+    u32 where = (x * pitch) + (y * pitch * rex);
     Buffer[where] = color & 255;              // BLUE
     Buffer[where + 1] = (color >> 8) & 255;   // GREEN
     Buffer[where + 2] = (color >> 16) & 255;  // RED
@@ -93,7 +95,7 @@ void Driver::drawchar(u32 ch, u32 x, u32 y, u32 color) {
 
         for (int i = 0; i < 8; i ++) {
             if (CHECK_BIT(byte, i)) {
-                putpixel(13 - cy + y, (8 - i) + x, color);
+                putpixel((8 - i) + x, 13 - cy + y, color);
             }
         }
     }
@@ -105,3 +107,12 @@ void Driver::drawstring(const char* str, u32 x, u32 y, u32 color) {
     }
 }
 
+Driver::GraphicsInfo Driver::getinfo() {
+    Driver::GraphicsInfo info;
+    info.width = rex;
+    info.height = rey;
+    info.pitch = pitch;
+    info.pixelwidth = pixelwidth;
+    info.buffer = (Buffer);
+    return info;
+}

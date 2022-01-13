@@ -8,45 +8,9 @@ In file included from [01m[Ksrc/lib/assert/assert.hpp:24[m[K,
 [01m[Ksrc/System/kout/kout.hpp:73:32:[m[K [01;35m[Kwarning: [m[KISO C++ forbids converting a string constant to ‘[01m[Kchar*[m[K’ [[01;35m[K-Wwrite-strings[m[K]
    73 |             char* CalledFile = [01;35m[K""[m[K;
       |                                [01;35m[K^~[m[K
-In file included from [01m[Ksrc/System/Graphics/vbe.hpp:25[m[K,
-                 from [01m[K./src/System/Graphics/vbe.cpp:22[m[K:
-[01m[Ksrc/System/Display/Display.hpp:96:26:[m[K [01;31m[Kerror: [m[K‘[01m[Kvoid System::Display::Driver::VGA::setcolor(u8, u8)[m[K’ marked ‘[01m[Koverride[m[K’, but does not override
-   96 |                     void [01;31m[Ksetcolor[m[K(u8 f, u8 b) override;
-      |                          [01;31m[K^~~~~~~~[m[K
-[01m[Ksrc/System/Display/Display.hpp:97:26:[m[K [01;31m[Kerror: [m[K‘[01m[Kvoid System::Display::Driver::VGA::print_char(char)[m[K’ marked ‘[01m[Koverride[m[K’, but does not override
-   97 |                     void [01;31m[Kprint_char[m[K(char c) override;
-      |                          [01;31m[K^~~~~~~~~~[m[K
-[01m[Ksrc/System/Display/Display.hpp:98:26:[m[K [01;31m[Kerror: [m[K‘[01m[Kvoid System::Display::Driver::VGA::print_str(const char*)[m[K’ marked ‘[01m[Koverride[m[K’, but does not override
-   98 |                     void [01;31m[Kprint_str[m[K(const char* str) override;
-      |                          [01;31m[K^~~~~~~~~[m[K
-[01m[Ksrc/System/Display/Display.hpp:99:26:[m[K [01;31m[Kerror: [m[K‘[01m[Kvoid System::Display::Driver::VGA::printf(const char*, ...)[m[K’ marked ‘[01m[Koverride[m[K’, but does not override
-   99 |            In file included from [01m[Ksrc/lib/vector/KernelVector.hpp:28[m[K,
-                 from [01m[K./src/System/memory/kmemory.cpp:28[m[K:
-src/lib/vector/k_vector/k_vector.cpp: In instantiation of ‘[01m[Kvoid K_Vector<T>::ChangePointer(void*) [with T = MemoryEntry][m[K’:
-[01m[K./src/System/memory/kmemory.cpp:50:28:[m[K   required from here
-[01m[Ksrc/lib/vector/k_vector/k_vector.cpp:55:24:[m[K [01;35m[Kwarning: [m[Kpointer of type ‘[01m[Kvoid *[m[K’ used in arithmetic [[01;35m[K-Wpointer-arith[m[K]
-   55 |     [01;35m[KFirstMemoryPointer += (sizeof(DB) * 10)[m[K;
-      |     [01;35m[K~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~[m[K
-src/lib/vector/k_vector/k_vector.cpp: In instantiation of ‘[01m[Kvoid K_Vector<T>::insert_at(size_t, T) [with T = MemoryEntry; size_t = unsigned int][m[K’:
-[01m[K./src/System/memory/kmemory.cpp:158:36:[m[K   required from here
-[01m[Ksrc/lib/vector/k_vector/k_vector.cpp:157:60:[m[K [01;35m[Kwarning: [m[Knarrowing conversion of ‘[01m[Ks[m[K’ from ‘[01m[Ksize_t[m[K’ {aka ‘[01m[Kunsigned int[m[K’} to ‘[01m[Kint[m[K’ [[01;35m[K-Wnarrowing[m[K]
-  157 |                 ContentBank->h[ContentBank->alloc++] = {d, [01;35m[Ks[m[K, true};
-      |                                                            [01;35m[K^[m[K
-[01m[Ksrc/lib/vector/k_vector/k_vector.cpp:[m[K In member function ‘[01m[KT& K_Vector<T>::operator[](size_t) [with T = MemoryEntry][m[K’:
-[01m[Ksrc/lib/vector/k_vector/k_vector.cpp:213:1:[m[K [01;35m[Kwarning: [m[Kcontrol reaches end of non-void function [[01;35m[K-Wreturn-type[m[K]
-  213 | [01;35m[K}[m[K
-      | [01;35m[K^[m[K
-[K   required from here
-[01m[Ksrc/lib/vector/k_vector/k_vector.cpp:55:24:[m[K [01;35m[Kwarning: [m[Kpointer of type ‘[01m[Kvoid *[m[K’ used in arithmetic [[01;35m[K-Wpointer-arith[m[K]
-   55 |     [01;35m[KFirstMemoryPointer += (sizeof(DB) * 10)[m[K;
-      |     [01;35m[K~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~[m[K
-src/lib/vector/k_vector/k_vector.cpp: In instantiation of ‘[01m[Kvoid K_Vector<T>::insert_at(size_t, T) [with T = char; size_t = unsigned int][m[K’:
-[01m[Ksrc/lib/vector/k_vector/k_vector.cpp:67:5:[m[K   required from ‘[01m[Kvoid K_Vector<T>::push_back(T) [with T = char][m[K’
-[01m[K./src/lib/string/string.cpp:46:18:[m[K   required from here
-[01m[Ksrc/lib/vector/k_vector/k_vector.cpp:157:60:[m[K [01;35m[Kwarning: [m[Knarrowing conversion of ‘[01m[Ks[m[K’ from ‘[01m[Ksize_t[m[K’ {aka ‘[01m[Kunsigned int[m[K’} to ‘[01m[Kint[m[K’ [[01;35m[K-Wnarrowing[m[K]
-  157 |                 ContentBank->h[ContentBank->alloc++] = {d, [01;35m[Ks[m[K, true};
-      |                                                            [01;35m[K^[m[K
-[01m[Ksrc/lib/vector/k_vector/k_vector.cpp:[m[K In member function ‘[01m[KT& K_Vector<T>::operator[](size_t) [with T = char][m[K’:
-[01m[Ksrc/lib/vector/k_vector/k_vector.cpp:213:1:[m[K [01;35m[Kwarning: [m[Kcontrol reaches end of non-void function [[01;35m[K-Wreturn-type[m[K]
-  213 | [01;35m[K}[m[K
-      | [01;35m[K^[m[K
+[01m[K./src/System/Graphics/vbe.cpp:[m[K In function ‘[01m[KSystem::Graphics::Driver::GraphicsInfo System::Graphics::Driver::getinfo()[m[K’:
+[01m[K./src/System/Graphics/vbe.cpp:116:19:[m[K [01;31m[Kerror: [m[Kinvalid conversion from ‘[01m[Ku32[m[K’ {aka ‘[01m[Kunsigned int[m[K’} to ‘[01m[Ku8*[m[K’ {aka ‘[01m[Kunsigned char*[m[K’} [[01;31m[K-fpermissive[m[K]
+  116 |     info.buffer = [01;31m[K(u32)((void*)Buffer)[m[K;
+      |                   [01;31m[K^~~~~~~~~~~~~~~~~~~~[m[K
+      |                   [01;31m[K|[m[K
+      |                   [01;31m[Ku32 {aka unsigned int}[m[K

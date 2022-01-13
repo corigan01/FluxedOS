@@ -45,6 +45,6 @@ char *  strdup      (const char * src);
 char *  strsep      (char **stringp, const char *delim);
 
 #define INT_TO_STRING(name, in)    \
-    char name[20];                 \
+    char name[40];                 \
     itoa(in, name);
 

@@ -24,6 +24,7 @@
 #include <System/CommandHandler/CommandHandler.hpp>
 #include <System/memory/kmemory.hpp>
 #include <lib/string/string.hpp>
+#include <System/Graphics/DisplayServer/ds.hpp>
 
 using namespace System;
 using namespace System::IO;
@@ -107,10 +108,35 @@ void Kernel::system_init() {
         }
     }
 
+    kout << "Initializing Display Server..." << endl;
+    Graphics::lux DisplayServer;
+    DisplayServer.init();
+
+    kout << "Initializing Window" << endl;
+    lwin window;
+    window.init();
+    window.set_window_position(10, 10);
+    window.set_window_size(100, 100);
+    window.set_window_title("Hello World!");
+
+    u8* framebuffer = window.construct_pointer();
+    kout << "Framebuffer: " << (u32)framebuffer << endl;
+
+    for (int i = 0; i < 100; i++) {
+        for (int j = 0; j < 100; j++) {
+            framebuffer[(i * 100) + j] = 0xFF;
+        }
+    }
+
+    DisplayServer.attach_window(&window);
+    DisplayServer.draw();
+    DisplayServer.update();
 
 
-    Graphics::Driver::fillcircle(0xFF0000, 600, 700, 200);    
-    Graphics::Driver::drawstring("Hello FluxedOS!", 10, 10, 0xFFFFFF);
+
+
+    Graphics::Driver::fillcircle(0xFF0000, 10, 10, 50);    
+    Graphics::Driver::drawstring("FluxedOS!", 10, 10, 0xFFFFFF);
         
     
 
