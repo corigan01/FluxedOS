@@ -22,7 +22,7 @@
 #include "assert.hpp"
 #include <System/Display/Display.hpp>
 
-void _ASSERT(bool arg, const char * Filename, const char * Func, i32 Line) {
+void _ASSERT(bool arg, const char * Filename, const char * Func, u32 Line) {
     if (arg)
         return;
 

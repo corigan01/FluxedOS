@@ -24,10 +24,14 @@
 #include <System/memory/paging/page.hpp>
 #include <System/panic/panic.hpp>
 #include <lib/vector/KernelVector.hpp>
+#include <System/FPU/fpu.hpp>
 
 void Kernel::init_kernel() {
+        
+
         KernelTTY->setcolor(COLOR::BRIGHT_MAGENTA, COLOR::BLACK);    
         KernelTTY->print_str("STARTING STAGE 1\n");
+
 
         CPU::init(mbt); KernelTTY->print_str("CPU ");
         
@@ -43,7 +47,7 @@ void Kernel::init_kernel() {
 
         
         EnableINT();
-        for (int i = 0; i < 16; i++) { PIC::SendEOI(i); }
+        for (int i = 0; i < 32; i++) { PIC::SendEOI(i); }
         KernelTTY->print_str("PIC ");
 
         
@@ -53,12 +57,13 @@ void Kernel::init_kernel() {
 
         RTC::Update(); KernelTTY->print_str("RTC ");
 
+        FPU::EnableFPU();
+
         Keyboard::installIRQ();
         KernelTTY->print_str("Keyboard ");
 
         
         kout << "Done!" << endl;
-
         KernelTTY->print_str("PMM ");
 
         //Page::init();
@@ -75,24 +80,24 @@ void Kernel::init_kernel() {
         Page_Entry * Pages;
         size_t Pages_size = 10;
 
-        for (i32 i = 0; i < Pages_size; i++) {
+        for (u32 i = 0; i < Pages_size; i++) {
                 Pages[i] = Memory::map_page({});
         }
         Memory::PagePool(Pages, Pages_size);
 
-        kout << endl << endl;
+        kout << "-" << endl;
 
 
         KernelTTY->print_str("kalloc ");
 
-        KernelTTY->BufferSet((i16*)pmm::ReservePage());
+        //KernelTTY->BufferSet((u16*)pmm::ReservePage());
 
         //map_page({PRESENT_FLAG | SUPER_USER_MEMORY | READ_WRITE_ENABLED});
+        //
 
-        
         #define BootupLogoColor COLOR::BLACK
         
-        { // Tell the user we started the kernel
+        /*{ // Tell the user we started the kernel
             RTC::time_t BootTime = RTC::now();
             KernelTTY->setcolor(COLOR::WHITE, COLOR::WHITE);
             KernelTTY->print_str(R"(
@@ -104,18 +109,21 @@ void Kernel::init_kernel() {
                   / _// / // /\ \ / / ,< / -_) __/ _ \/ -_) / 
                  /_/ /_/\___//_\_\ /_/|_|\__/_/ /_//_/\__/_/ )");
             KernelTTY->setcolor(COLOR::WHITE, BootupLogoColor);
-            KernelTTY->printf("\n                BUILD: %e%d              %d%e MB Installed!\n                Disp Addr: %d          ", COLOR::ColorVar(COLOR::GREEN, COLOR::BLACK), BUILD, pmm::RequestInitial() / (1024 * 1024), 0x0F, (i32)mbt->framebuffer_addr );
+            KernelTTY->printf("\n                BUILD: %e%d              %d%e MB Installed!\n                Disp Addr: %d          ", COLOR::ColorVar(COLOR::GREEN, COLOR::BLACK), BUILD, pmm::RequestInitial() / (1024 * 1024), 0x0F, (u32)mbt->framebuffer_addr );
             KernelTTY->printf("%d/%d/%d - %d:%d:%d \n", BootTime.Month, BootTime.Day, BootTime.Year, BootTime.Hour > 12 ? BootTime.Hour - 12 : BootTime.Hour, BootTime.Minute, BootTime.Second);
             KernelTTY->setcolor(COLOR::WHITE, COLOR::WHITE);
             KernelTTY->print_str(R"(
 ====================================================================================================)");
             KernelTTY->setcolor(COLOR::WHITE, COLOR::BLACK);
             KernelTTY->print_str("\n\n\n");
-        }
+        }*/
 
-        kout << "Boot OK" << endl;
-        
-        
+        kout << "Boot OK" << endl;      
+
+
+        String something = "idk";
+
+        this->system_init();
         
 }
  

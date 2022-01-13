@@ -29,13 +29,13 @@ namespace System
     {
         namespace Port 
         {
-            i8      byte_in         (unsigned short port);
+            u8      byte_in         (unsigned short port);
             void    byte_out        (unsigned short port, unsigned char data);
 
-            i16     word_in         (uint16_t port);
+            u16     word_in         (uint16_t port);
             void    word_out        (unsigned short port, unsigned short data);
 
-            i32     long_in         (uint32_t port);
+            u32     long_in         (uint32_t port);
             void    long_out        (uint32_t port, uint32_t value);
 
             void insl(unsigned reg, unsigned int *buffer, int quads);

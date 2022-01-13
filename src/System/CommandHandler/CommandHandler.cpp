@@ -26,22 +26,22 @@ using namespace System;
 using namespace System::VirtualConsole;
 using namespace System::Display;
 
-BuiltinShell::BuiltinShell(System::Display::tty *tty, i16 ColorF, i16 ColorB) {
+BuiltinShell::BuiltinShell(System::Display::tty *tty, u16 ColorF, u16 ColorB) {
     tty->print_str("\nWelcome to the Built-in-Shell!\nThe FluxedOS Kernel Debug Shell\n-------------------------\n");
     this->init(tty, ColorF, ColorB);
 }
 
-int BuiltinShell::HandleCommand(const char* str, i32 commandLen) {
+int BuiltinShell::HandleCommand(const char* str, u32 commandLen) {
     kout << "Command Handler recived command \'" << str << "\'" << endl;
     ParsedCommand Command = this->ParseCommand((char*)str);
    
 
-    const i8 InternalCommandLen = 1;
+    const u8 InternalCommandLen = 1;
     static const char * InternalCommands[InternalCommandLen] = {
         "exit"
     };
 
-    i8 UsedCommand = 0;
+    u8 UsedCommand = 0;
     Command.Command[Command.CommandLen] = '\0';
     Command.CommandLen++;
 
@@ -75,7 +75,7 @@ int BuiltinShell::HandleCommand(const char* str, i32 commandLen) {
 }
 
 ParsedCommand BuiltinShell::ParseCommand(char* str) {
-    i32 len = strlen(str);
+    u32 len = strlen(str);
     str[len] = ' ';
     len++;
     
@@ -83,8 +83,8 @@ ParsedCommand BuiltinShell::ParseCommand(char* str) {
         return {};
     }
 
-    i32 start = 0;
-    i32 end = len;
+    u32 start = 0;
+    u32 end = len;
 
     if (str[0] == ' ') {
         for (int i = 0; i < len; i++) {
@@ -104,7 +104,7 @@ ParsedCommand BuiltinShell::ParseCommand(char* str) {
         }
     }
 
-    i32 commandLen = 0;
+    u32 commandLen = 0;
     char *command = "";
     char **args = {};
 
@@ -113,10 +113,10 @@ ParsedCommand BuiltinShell::ParseCommand(char* str) {
         command[commandLen++] = str[i];
     }
 
-    i32 argStart = end;
-    i32 argEnd = end;
-    i32 argNum = 0;
-    i32 argCharNum = 0;
+    u32 argStart = end;
+    u32 argEnd = end;
+    u32 argNum = 0;
+    u32 argCharNum = 0;
 
 
     for (int argP = 0 ; argP < 16 ; argP ++) {

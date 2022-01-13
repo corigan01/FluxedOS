@@ -109,7 +109,7 @@ namespace System
             void IRQ_handler(register_t *r);
             void IRQ12_handler(register_t *r);
         
-            char KeycodeAsciiConverter(i8 keycode);
+            char KeycodeAsciiConverter(u8 keycode);
 
             char GetKeyCode();
             char GetKeyChar();

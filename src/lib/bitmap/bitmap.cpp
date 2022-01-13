@@ -23,26 +23,26 @@
 #include "../StanderdOperations/Operations.hpp"
 
 
-bool test_bit(bitmap_type *bitmap, i32 bit)
+bool test_bit(bitmap_type *bitmap, u32 bit)
 {
 	return (bool)((bitmap->addr[bit / 8] & (0x1 << (bit % 8))) != 0);
 }
 
-void set_bit(bitmap_type *bitmap, i32 bit)
+void set_bit(bitmap_type *bitmap, u32 bit)
 {
 	bitmap->addr[bit / 8] |= (0x1 << (bit % 8));
 }
 
-void clear_bit(bitmap_type *bitmap, i32 bit)
+void clear_bit(bitmap_type *bitmap, u32 bit)
 {
 	bitmap->addr[bit / 8] &= ~(0x1 << (bit % 8));
 }
 
-i32 find_first_set_bit(bitmap_type *bitmap)
+u32 find_first_set_bit(bitmap_type *bitmap)
 {
-	for (i32 i = 0; i < bitmap->bytes; i++) {
+	for (u32 i = 0; i < bitmap->bytes; i++) {
 		if (bitmap->addr[i] != 0x0) {
-			for (i8 j = 0; j < 8; j++) {
+			for (u8 j = 0; j < 8; j++) {
 				if ((bitmap->addr[i] & (0x1 << j))) {
 					return ((i * 8) + j);
 				}
@@ -52,11 +52,11 @@ i32 find_first_set_bit(bitmap_type *bitmap)
 	return 0;
 }
 
-i32 find_first_clear_bit(bitmap_type *bitmap)
+u32 find_first_clear_bit(bitmap_type *bitmap)
 {
-	for (i32 i = 0; i < bitmap->bytes; i++) {
+	for (u32 i = 0; i < bitmap->bytes; i++) {
 		if (bitmap->addr[i] != 0xFF) {
-			for (i8 j = 0; j < 8; j++) {
+			for (u8 j = 0; j < 8; j++) {
 				if (!(bitmap->addr[i] & (0x1 << j))) {
 					return ((i * 8) + j);
 				}
@@ -68,17 +68,17 @@ i32 find_first_clear_bit(bitmap_type *bitmap)
 
 void clear_all_bits(bitmap_type *bitmap)
 {
-	memset((i8 *) bitmap->addr, 0x0, bitmap->bytes);
+	memset((u8 *) bitmap->addr, 0x0, bitmap->bytes);
 }
 
 void set_all_bits(bitmap_type *bitmap)
 {
-	memset((i8 *) bitmap->addr, 0xFF, bitmap->bytes);
+	memset((u8 *) bitmap->addr, 0xFF, bitmap->bytes);
 }
 
 bool any_bit_clear(bitmap_type *bitmap)
 {
-	for (i32 i = 0; i < bitmap->bytes; i++) {
+	for (u32 i = 0; i < bitmap->bytes; i++) {
 		if (bitmap->addr[i] != 0xFF) {
 			return true;
 		}
@@ -88,7 +88,7 @@ bool any_bit_clear(bitmap_type *bitmap)
 
 bool any_bit_set(bitmap_type *bitmap)
 {
-	for (i32 i = 0; i < bitmap->bytes; i++) {
+	for (u32 i = 0; i < bitmap->bytes; i++) {
 		if (bitmap->addr[i] != 0x0) {
 			return true;
 		}

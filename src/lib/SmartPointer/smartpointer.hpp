@@ -36,14 +36,14 @@ class SPointer {
 
     void AppendItem(T item);
     void PopLast();
-    void SetItem(i32 index, T item);
+    void SetItem(u32 index, T item);
     void SetPointer(void* PointerLocation);
     void MoveContents(void* NewLocation);
 
     private:
 
     T* Pointer;
-    i32 Size = 0;
+    u32 Size = 0;
 
     bool IsNull = true;
     bool Locked = false;

@@ -28,18 +28,18 @@ using namespace System::Memory;
 // The raw memory map that grub gives us
 struct RawMemoryVector {
 	multiboot_memory_map_t * Addr;
-	i32 Len = 0;
+	u32 Len = 0;
 } MemoryDiscriptor;
 
 // The refined memory map with null entries removed
 struct MemoryEntry {
-	i32 MemoryAddr = 0;
-	i32 MemoryType = 0;
-	i32 Len		   = 0;
-} *MemoryArray; i32 MemoryArraySize = 0;
+	u32 MemoryAddr = 0;
+	u32 MemoryType = 0;
+	u32 Len		   = 0;
+} *MemoryArray; u32 MemoryArraySize = 0;
 
 bitmap_type* PagesAlloc;
-i32 InstalledMemory = 0;
+u32 InstalledMemory = 0;
 
 void pmm::init(multiboot_info_t *mbt) {
 	MemoryDiscriptor.Addr = (multiboot_memory_map_t*)mbt->mmap_addr; 
@@ -55,7 +55,7 @@ void pmm::init(multiboot_info_t *mbt) {
 			if (entry->type == MULTIBOOT_MEMORY_AVAILABLE && MemoryArraySize == 0) {
 
 				// We need to know the amount of memory we take, so we store the inital memory here
-				i32 Memory = entry->base_addr_low;
+				u32 Memory = entry->base_addr_low;
 
 
 				// Define the pointer for MemoryArray
@@ -64,7 +64,7 @@ void pmm::init(multiboot_info_t *mbt) {
 
 				// Define the pointer for PagesAlloc depending on the amount of memory the system has installed
 				PagesAlloc = (bitmap_type*)entry->base_addr_low;
-				PagesAlloc->addr = (i8*)(entry->base_addr_low + sizeof(bitmap_type));
+				PagesAlloc->addr = (u8*)(entry->base_addr_low + sizeof(bitmap_type));
 				PagesAlloc->bytes = ((((mbt->mem_lower + mbt->mem_upper) * 1024) / PAGE_SIZE) / 8);
 				clear_all_bits(PagesAlloc);
 				
@@ -72,7 +72,7 @@ void pmm::init(multiboot_info_t *mbt) {
 				entry->base_addr_low += sizeof(bitmap_type) * PagesAlloc->bytes; 
 
 				// Calculate the differnce 
-				i32 ReservedLen =  entry->base_addr_low - Memory;
+				u32 ReservedLen =  entry->base_addr_low - Memory;
 				entry->length_low -= ReservedLen;
 
 				// Print the result
@@ -99,13 +99,13 @@ void pmm::init(multiboot_info_t *mbt) {
 	
 }
 
-i32 pmm::RequestInitial(){
+u32 pmm::RequestInitial(){
 
 	return InstalledMemory;
 }
 
-i32 pmm::PagesAvailable() {
-	i32 Pages = NULL;
+u32 pmm::PagesAvailable() {
+	u32 Pages = NULL;
 
 	for (int i = 0; i < PagesAlloc->bytes * 8; i++) {
 		if (!test_bit(PagesAlloc, i)) {
@@ -118,11 +118,11 @@ i32 pmm::PagesAvailable() {
 	return Pages;
 }
 
-i32 pmm::ReservePage() {
-	i32 bit = find_first_clear_bit(PagesAlloc);
+u32 pmm::ReservePage() {
+	u32 bit = find_first_clear_bit(PagesAlloc);
 	set_bit(PagesAlloc, bit);
 
-	i32 ReturnAddr = 0;
+	u32 ReturnAddr = 0;
 	for (int i = 0; i < MemoryArraySize; i++) {
 		if (MemoryArray[i].MemoryType == MULTIBOOT_MEMORY_AVAILABLE && (MemoryArray[i].MemoryAddr + (PAGE_SIZE * (bit + 1))) < MemoryArray[i].Len) {
 			ReturnAddr = ((bit + 1) * PAGE_SIZE) + MemoryArray[i].MemoryAddr;
@@ -135,12 +135,12 @@ i32 pmm::ReservePage() {
 	return ReturnAddr;
 }
 
-i32 pmm::ReserveBook(i16 PagesNumber) {
+u32 pmm::ReserveBook(u16 PagesNumber) {
 	if (PagesNumber <= 0) {
 		return NULL;	
 	}
 
-	i32 FirstPage = pmm::ReservePage();
+	u32 FirstPage = pmm::ReservePage();
 	
 	for (int i = 0; i < PagesNumber - 1; i++) {
 		pmm::ReservePage();
@@ -149,7 +149,7 @@ i32 pmm::ReserveBook(i16 PagesNumber) {
 	return FirstPage;
 }
 
-void ForcePage(i32 offset) {
+void ForcePage(u32 offset) {
 	if (test_bit(PagesAlloc, offset / PAGE_SIZE)) {
 		ASSERT_NOT_REACHED("TRIED TO MAP ALREADY MAPPED ADDRESS!");
 	}
@@ -157,23 +157,23 @@ void ForcePage(i32 offset) {
 	set_bit(PagesAlloc, offset / PAGE_SIZE);
 }
 
-i32 pmm::ForceBook(i16 PagesNumber, i32 offset) {
+u32 pmm::ForceBook(u16 PagesNumber, u32 offset) {
 	for (int i = 0; i < PagesNumber; i++) {
 		ForcePage(offset + (i * PAGE_SIZE));
 	}
 }
 
-void pmm::freeBook(i32 Addr, i16 Pages) {
-	for (i32 i = 0; i < Pages; i++) {
+void pmm::freeBook(u32 Addr, u16 Pages) {
+	for (u32 i = 0; i < Pages; i++) {
 		pmm::freePage(Addr + (PAGE_SIZE * i));
 		NO_INSTRUCTION;
 	}
 }
 
-void pmm::freePage(i32 addr) {
-	i32 bit = 0xFFFFFFFF;
+void pmm::freePage(u32 addr) {
+	u32 bit = 0xFFFFFFFF;
 
-	for (i32 i = 0; i < MemoryArraySize; i++) {
+	for (u32 i = 0; i < MemoryArraySize; i++) {
 		if (MemoryArray[i].MemoryType == MULTIBOOT_MEMORY_AVAILABLE) {
 			bit = ((addr - MemoryArray[i].MemoryAddr) / PAGE_SIZE) - 1;
 			break;
@@ -200,21 +200,21 @@ void pmm::TestMemory(System::Display::tty *tty) {
 	}		
 
 
-	i32 BeforePages =  pmm::PagesAvailable();
+	u32 BeforePages =  pmm::PagesAvailable();
 	tty->printf("\nTotal Pages Available are %d, totaling %d MB \n",  BeforePages, (BeforePages * PAGE_SIZE) / (1024 * 1024) );
 
-	i32 page1 = ReservePage();
-	i32 page2 = ReservePage();
+	u32 page1 = ReservePage();
+	u32 page2 = ReservePage();
 	kout << "Made Page!" << endl;
 	freePage(page2);
 	freePage(page1);
 	kout << "Free Page!" << endl;
-	i32 page3 = ReservePage();
-	i32 page4 = ReservePage();
+	u32 page3 = ReservePage();
+	u32 page4 = ReservePage();
 
-	i32 bookaddr = ReserveBook(100);
+	u32 bookaddr = ReserveBook(100);
 
-	i32 AfterPages = pmm::PagesAvailable();
+	u32 AfterPages = pmm::PagesAvailable();
 	tty->printf("Reserved page test --> ");
 	if (page1 == page3 && page2 == page4 && BeforePages - AfterPages == 102 ) {
 		tty->printf("PASSED!\n");

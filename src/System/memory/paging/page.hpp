@@ -44,28 +44,28 @@ namespace System
         {
             
             void init();
-            void switch_page(i32* page_dir);
+            void switch_page(u32* page_dir);
             void enable_paging();
 
-            void map_addr(i32 v, i32 p, i8 perm);
-            void map_page(i32* page_dir, i32 vpage, i32 ppage);
+            void map_addr(u32 v, u32 p, u8 perm);
+            void map_page(u32* page_dir, u32 vpage, u32 ppage);
 
-            void id_map(i32 PStart, i32 VStart, i32 Offset, i8 perm);
-            void dump_page(i32* page);
+            void id_map(u32 PStart, u32 VStart, u32 Offset, u8 perm);
+            void dump_page(u32* page);
 
-            i32* mk_page();
-            i32* mk_page_dir();
+            u32* mk_page();
+            u32* mk_page_dir();
 
-            i32* RootDir();
+            u32* RootDir();
 
             typedef struct{
-                i32 present	  : 1;
-                i32 rw		  : 1;
-                i32 user	  : 1;
-                i32 accessed  : 1;
-                i32 dirty	  : 1;
-                i32 unused	  : 7;
-                i32 frame	  : 20;
+                u32 present	  : 1;
+                u32 rw		  : 1;
+                u32 user	  : 1;
+                u32 accessed  : 1;
+                u32 dirty	  : 1;
+                u32 unused	  : 7;
+                u32 frame	  : 20;
             } page_t;
 
             typedef struct{
@@ -74,8 +74,8 @@ namespace System
 
             typedef struct{
                 page_table_t* tables[1024];
-                i32 tables_physical[1024];
-                i32 physical_address;
+                u32 tables_physical[1024];
+                u32 physical_address;
             } page_directory_t;
 
 

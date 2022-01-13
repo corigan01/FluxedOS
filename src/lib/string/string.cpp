@@ -19,6 +19,7 @@
  *   
  */
 
+#include <lib/core/core.h>
 #include "string.hpp"
 
 
@@ -40,7 +41,7 @@ String::~String() {
 // Standered operations that string must support
 void String::operator= (char* str) {
     empty();
-	for (i32 i = 0; str[i] != 0; i++) {
+	for (u32 i = 0; str[i] != 0; i++) {
         auto e = str[i];
 		this->push_back(e);
 	}
@@ -48,7 +49,7 @@ void String::operator= (char* str) {
 void String::operator= (const char* str){
     empty();
     kout << "GOT INPUT OF \'" << str << "\'" << endl;
-	for (i32 i = 0; i < strlen(str); i++) {
+	for (u32 i = 0; i < strlen(str); i++) {
         char e = str[i];
         kout << e << endl;
 		this->push_back(e);
@@ -64,19 +65,19 @@ void String::operator+= (char str) {
 }
 
 void String::operator+= (char* str) {
-    for (i32 i = 0; str[i] != 0; i++) {
+    for (u32 i = 0; str[i] != 0; i++) {
         auto e = str[i];
 		this->push_back(e);
 	}
 }
 void String::operator+= (const char* str) {
-    for (i32 i = 0; str[i] != 0; i++) {
+    for (u32 i = 0; str[i] != 0; i++) {
         auto e = str[i];
 		this->push_back(e);
 	}
 }
 void String::operator+= (String str) {
-    for (i32 i = 0; str[i] != 0; i++) {
+    for (u32 i = 0; str[i] != 0; i++) {
         auto e = str[i];
 		this->push_back(e);
 	}
@@ -85,7 +86,7 @@ void String::operator+= (String str) {
 String String::operator+ (char* str) {
     String rstr = *this;
 
-    for (i32 i = 0; str[i] != 0; i++) {
+    for (u32 i = 0; str[i] != 0; i++) {
         auto e = str[i];
 		rstr += e;
 	}
@@ -95,7 +96,7 @@ String String::operator+ (char* str) {
 String String::operator+ (const char* str) {
     String rstr = *this;
 
-    for (i32 i = 0; str[i] != 0; i++) {
+    for (u32 i = 0; str[i] != 0; i++) {
         auto e = str[i];
 		rstr += e;
 	}
@@ -106,7 +107,7 @@ String String::operator+ (String str) {
     String rstr = *this;
 
     
-    for (i32 i = 0; str[i] != 0; i++) {
+    for (u32 i = 0; str[i] != 0; i++) {
         auto e = str[i];
 		rstr += e;
 	}
@@ -125,30 +126,30 @@ String String::to_string(int i) {
     String rstr = str;
     return rstr;
 }
-String String::to_string(i32 i) {
+String String::to_string(u32 i) {
     INT_TO_STRING(str, i);
     String rstr = str;
     return rstr;
 }
-String String::to_string(i16 i) {
+String String::to_string(u16 i) {
     INT_TO_STRING(str, i);
     String rstr = str;
     return rstr;
 }
-String String::to_string(i8 i) {
+String String::to_string(u8 i) {
     INT_TO_STRING(str, i);
     String rstr = str;
     return rstr;
 }
 
 // may work on a find command because it can be helpful when programming complext things with string later down the line
-i32 String::find(String str) {
+u32 String::find(String str) {
 
 }
 
 const char * String::c_str() {
     NO_INSTRUCTION;
-    char * ch;
+    char * ch = (char*)System::Memory::kmalloc(sizeof(char) * this->size());
 	int all = 0;
 
 	for (int i = 0; i < size(); i++) {

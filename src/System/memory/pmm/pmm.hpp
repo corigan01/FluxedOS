@@ -38,18 +38,18 @@ namespace System
         {
             void init(multiboot_info_t *mbt);
             void TestMemory(System::Display::tty *tty);
-            i32 PagesAvailable();
-            i32 RequestInitial();
+            u32 PagesAvailable();
+            u32 RequestInitial();
 
-            i32 ReservePage();
-            void freePage(i32 addr);
+            u32 ReservePage();
+            void freePage(u32 addr);
 
             // This is to reserve many pages at once, and pages makes a book :)
-            i32 ReserveBook(i16 PagesNumber);
-            void freeBook(i32 Addr, i16 Pages);
+            u32 ReserveBook(u16 PagesNumber);
+            void freeBook(u32 Addr, u16 Pages);
 
             // Force alloc
-            i32 ForceBook(i16 PagesNumber, i32 offset);
+            u32 ForceBook(u16 PagesNumber, u32 offset);
 
         } // namespace pmm
         

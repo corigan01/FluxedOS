@@ -44,10 +44,10 @@ class K_Vector {
             int alloc = 0;
         };
         DB *content;
-        i32 contentsize = 0;
+        u32 contentsize = 0;
 
-        i32 VectorSize = 0; // how many alive entries there are
-        i32 EndOfVector = 0; // how many total entries there are
+        u32 VectorSize = 0; // how many alive entries there are
+        u32 EndOfVector = 0; // how many total entries there are
 
     public:
 

@@ -34,16 +34,29 @@ start:
 ; Declare constants for the multiboot header.
 MBALIGN  equ  1 << 0            ; align loaded modules on page boundaries
 MEMINFO  equ  1 << 1            ; provide memory map
-FLAGS    equ  MBALIGN | MEMINFO ; this is the Multiboot 'flag' field
+USEGFX   equ  1 << 2            ; we ask for graphics mode
+FLAGS    equ  MBALIGN | MEMINFO | USEGFX  ;  this is the Multiboot 'flag' field
 MAGIC    equ  0x1BADB002        ; 'magic number' lets bootloader find the header
 CHECKSUM equ -(MAGIC + FLAGS)   ; checksum of above, to prove we are multiboot
- 
+
+
+
 
 section .multiboot
 align 4
 	dd MAGIC
-	dd FLAGS
-	dd CHECKSUM
+    dd FLAGS
+    dd CHECKSUM
+    dd 0x00000000
+    dd 0x00000000
+    dd 0x00000000
+    dd 0x00000000
+    dd 0x00000000
+    ; Frame buffer set
+    dd 0x00000000
+    dd 0
+    dd 0
+    dd 32 ; this tells grub that the mode is compatable with the Kernel
  
 global stublet
 extern kernel_entry
@@ -51,6 +64,7 @@ extern kernel_entry
 stublet:
     push eax
     push ebx
+    cli
     call kernel_entry
     jmp stublet
     

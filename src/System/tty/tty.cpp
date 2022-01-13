@@ -27,7 +27,7 @@
 using namespace System::IO;
 using namespace System::Display;
 
-static i8 ttyNumber = 0;
+static u8 ttyNumber = 0;
 
 tty::tty() { 
     ttyNumber++;
@@ -43,23 +43,23 @@ tty::~tty() {
 
 }
 
-void tty::init(void* buffer) {
+void tty::init(void* buffer, u32 screen_x, u32 screen_y) {
     // inits the virtual class def
 } 
 void tty::print_char(char c) {
-    Serial::outChar(Serial::COM_1, c);
+    ;
 }
 void tty::print_str(const char * str) {
-    Serial::outString(Serial::COM_1, (char*)str);
+    ;
 }
 void tty::printf(const char *str, ...) {
     ; // do this later when we have ints
 }
 
-void tty::setcolor(i8 f, i8 b) {
+void tty::setcolor(u8 f, u8 b) {
     ;
 }
 
-void tty::BufferSet(i16* buffer) {
+void tty::BufferSet(u16* buffer) {
     ;
 }

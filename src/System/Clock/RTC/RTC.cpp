@@ -30,24 +30,24 @@ using namespace System::Clock;
  
 int century_register = 0x00;                                // Set by ACPI table parsing code if possible
  
-i16 RTC_SECOND_HOLD;
-i16 RTC_MINUTE_HOLD;
-i16 RTC_HOUR_HOLD;
-i16 RTC_DAY_HOLD;
-i16 RTC_MONTH_HOLD;
-i32 RTC_YEAR_HOLD;
+u16 RTC_SECOND_HOLD;
+u16 RTC_MINUTE_HOLD;
+u16 RTC_HOUR_HOLD;
+u16 RTC_DAY_HOLD;
+u16 RTC_MONTH_HOLD;
+u32 RTC_YEAR_HOLD;
  
 
 void RTC::Update() {
-    i16 century;
-    i16 last_second;
-    i16 last_minute;
-    i16 last_hour;
-    i16 last_day;
-    i16 last_month;
-    i16 last_year;
-    i16 last_century;
-    i16 registerB;
+    u16 century;
+    u16 last_second;
+    u16 last_minute;
+    u16 last_hour;
+    u16 last_day;
+    u16 last_month;
+    u16 last_year;
+    u16 last_century;
+    u16 registerB;
 
     // Note: This uses the "read registers until you get the same values twice in a row" technique
     //       to avoid getting dodgy/inconsistent values due to RTC updates
@@ -135,7 +135,7 @@ void RTC::Update() {
 }
 
 
-i8 RTC::GetRegister(int reg) {
+u8 RTC::GetRegister(int reg) {
     Port::byte_out(cmos_address, reg);
     return Port::byte_in(cmos_data);
 }
@@ -145,27 +145,27 @@ int RTC::getUpdateFlag() {
 }
 
 
-i16 RTC::GetSeconds() {
+u16 RTC::GetSeconds() {
     return RTC_SECOND_HOLD;
 }
 
-i16 RTC::GetMin() {
+u16 RTC::GetMin() {
     return RTC_MINUTE_HOLD;
 }
 
-i16 RTC::GetHours() {
+u16 RTC::GetHours() {
     return RTC_HOUR_HOLD;
 }
 
-i16 RTC::GetDays() {
+u16 RTC::GetDays() {
     return RTC_DAY_HOLD;
 
 }
-i16 RTC::GetMonth() {
+u16 RTC::GetMonth() {
     return RTC_MONTH_HOLD;
 }
 
-i16 RTC::GetYear() {
+u16 RTC::GetYear() {
     return RTC_YEAR_HOLD;
 }
 

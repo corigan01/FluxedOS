@@ -20,38 +20,39 @@
  */
 
 #include "page.hpp"
+#include <lib/core/core.h>
 #include <System/kout/kout.hpp>
 #include <System/memory/pmm/pmm.hpp>
 
 using namespace System::Memory;
 
-i32* current_dir		        = 0;
-i32* process_dir		        = 0;
-i32* root_dir			        = 0;
-static i32 page_dir_location	= 0;
-static i32* last_page		    = 0;
-static i32 proc_dir		        = 0;
+u32* current_dir		        = 0;
+u32* process_dir		        = 0;
+u32* root_dir			        = 0;
+static u32 page_dir_location	= 0;
+static u32* last_page		    = 0;
+static u32 proc_dir		        = 0;
 
-i32* Page::RootDir() {
+u32* Page::RootDir() {
     return root_dir;
 }
 
 void Page::init() {
-    current_dir		    = (i32*) PAGE_S;
-	page_dir_location	= (i32) current_dir;
-	last_page		    = (i32*) (PAGE_S + 4096);
+    current_dir		    = (u32*) PAGE_S;
+	page_dir_location	= (u32) current_dir;
+	last_page		    = (u32*) (PAGE_S + 4096);
 	root_dir		    = current_dir;
 }
-void Page::switch_page(i32* page_dir) {
+void Page::switch_page(u32* page_dir) {
     current_dir = page_dir;
 	
 
     dump_page(page_dir);
-    dump_page((i32*) ((i32) ((*((i32*) page_dir))) & 0xFFFFF000));
+    dump_page((u32*) ((u32) ((*((u32*) page_dir))) & 0xFFFFF000));
 	
     kout.printf("Flushing page %d \n", page_dir);
 	asm volatile("mov %0, %%cr3":: "r"(&page_dir[0]));
-	i32 cr0;
+	u32 cr0;
 	asm volatile("mov %%cr0, %0": "=r"(cr0));
 	cr0 |= 0x80000000;
 	asm volatile("mov %0, %%cr0":: "r"(cr0));
@@ -67,7 +68,7 @@ void Page::enable_paging() {
     kout.printf("Paging enabled for dir %d! \n", page_dir_location);
 }
 
-void Page::map_addr(i32 v, i32 p, i8 perm) {
+void Page::map_addr(u32 v, u32 p, u8 perm) {
 	// 
 
 	char PermString[4] = "-RS";
@@ -88,61 +89,61 @@ void Page::map_addr(i32 v, i32 p, i8 perm) {
 	// Bit 1 (R/W) is the Read/Write flag.
 	// Bit 2 (U/S) is the User/Supervisor flag.
 
-    //i8 perm = 0b011;
+    //u8 perm = 0b011;
 
 	short id = v >> 22;
-	for(i32 i = 0; i < 1024; i++){
+	for(u32 i = 0; i < 1024; i++){
 		last_page[i] = p | perm;
 		p += 4096;
 	}
-	current_dir[id] = ((i32) last_page) | perm;
-	last_page = (i32*) (((i32) last_page) + 4096);
+	current_dir[id] = ((u32) last_page) | perm;
+	last_page = (u32*) (((u32) last_page) + 4096);
 
 	//pmm::ForceBook(1, p);
 }
-void Page::map_page(i32* page_dir, i32 vpage, i32 ppage) {
+void Page::map_page(u32* page_dir, u32 vpage, u32 ppage) {
     kout << "idk" << endl;
 
 	short id = vpage >> 22;
 	
-	i32* page = mk_page();				
+	u32* page = mk_page();				
 
-	for(i32 i = 0; i < 1024; i++){
+	for(u32 i = 0; i < 1024; i++){
 		page[i] = ppage | 2 | 1;			//User mode, RW, present
 		ppage += 4096;
 	}
 	
-	page_dir[id] = ((i32) page) | 3;	    //User mode, RW, present
+	page_dir[id] = ((u32) page) | 3;	    //User mode, RW, present
 }
 
-void Page::id_map(i32 PStart, i32 VStart, i32 Offset, i8 perm) {
+void Page::id_map(u32 PStart, u32 VStart, u32 Offset, u8 perm) {
 
-    for (i32 i = PStart; i < Offset; i += PAGE_S) {
+    for (u32 i = PStart; i < Offset; i += PAGE_S) {
         map_addr(i + VStart, i, perm);
     }
 
 }
 
-void Page::dump_page(i32* page) {
+void Page::dump_page(u32* page) {
     kout.printf("\n\nPAGE DUMP\n==================\nPage %d \n| ");
     for (int i = 0; i < 4; i++) {
-        kout.printf("%d | ", (i32)page[i]);
+        kout.printf("%d | ", (u32)page[i]);
     }
     kout.printf("\n\n");
 }
 
-i32* Page::mk_page() {
-    i32* page = (i32*) pmm::ReservePage();
-	for(i32 i = 0; i < 1024; i++)
+u32* Page::mk_page() {
+    u32* page = (u32*) pmm::ReservePage();
+	for(u32 i = 0; i < 1024; i++)
 		page[i] = 2;
 	return page;
 }
 
-i32* Page::mk_page_dir() {
-    i32* dir = (i32*) pmm::ReservePage();
+u32* Page::mk_page_dir() {
+    u32* dir = (u32*) pmm::ReservePage();
 	
-	for(i32 i = 0; i < 1024; i++){
+	for(u32 i = 0; i < 1024; i++){
 		dir[i] =  2;
 	}
-	return (i32*) dir;
+	return (u32*) dir;
 }

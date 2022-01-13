@@ -83,15 +83,15 @@ namespace System
 
         namespace PIC {
 
-            void SendEOI(i8 irq);
+            void SendEOI(u8 irq);
             void Remap(int offset, int offset2);
 
-            void SetMask(i8 irq);
-            void ClearMask(i8 irq);
+            void SetMask(u8 irq);
+            void ClearMask(u8 irq);
 
-            static i16 GetIRQreg(int ocw3);
-            i16 GetIRR();
-            i16 GetISR();
+            static u16 GetIRQreg(int ocw3);
+            u16 GetIRR();
+            u16 GetISR();
         }
     }
 }

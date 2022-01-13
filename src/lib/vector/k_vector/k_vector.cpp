@@ -197,7 +197,7 @@ T K_Vector<T>::getat(uint32 s) {
 }
 
 template <class T>
-T& K_Vector<T>::operator  [](size_t s) {
+T& K_Vector<T>::operator [](size_t s) {
     for (int bank = 0; bank < contentsize; bank++) {
         auto ContentBank = &content[bank];   
 

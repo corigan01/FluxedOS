@@ -38,7 +38,7 @@ void Power::shutdown() {
 void Power::restart() {
     kout << "Restarting!" << endl;
 
-    i8 good = 0x02;
+    u8 good = 0x02;
     while (good & 0x02)
         good = Port::byte_in(0x64);
     Port::byte_out(0x64, 0xFE);

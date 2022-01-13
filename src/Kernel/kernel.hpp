@@ -34,6 +34,7 @@
 #include <System/CommandHandler/CommandHandler.hpp>
 #include <System/Port/port.hpp>
 #include <System/PCI/pci.hpp>
+#include <System/Graphics/vbe.hpp>
 
 using namespace System; 
 using namespace System::IO;
@@ -47,13 +48,20 @@ using namespace System::Display::Driver;
 class Kernel {
     public:
 
-    Kernel(multiboot_info_t* mbt, i32 magic) {
+    Kernel(multiboot_info_t* mbt, u32 magic) {
         this->mbt = mbt;
 
         kout << "Flux Kernel Started..." << endl;                           // tell the console we started the kernel
 
-        auto VGA_DRIVER = Driver::VGA((void*)mbt->framebuffer_addr);        // tell VGA what addr the framebuffer is at
-        KernelTTY = &VGA_DRIVER;                                            // bind the tty to the display driver
+        //auto VGA_DRIVER = Driver::VGA((void*)0x8B0000);        // tell VGA what addr the framebuffer is at
+        //KernelTTY = &VGA_DRIVER;                                            // bind the tty to the display driver
+
+        
+        //KernelTTY  = &VBE_DRIVER;
+
+        kout << "Found Multiboot Header at *" << (u32)mbt << endl;
+
+        System::Graphics::Driver::gxinit((void*)mbt->framebuffer_addr, 1024, 768);        
 
     }
 
@@ -79,5 +87,7 @@ class Kernel {
 
     multiboot_info_t* mbt;
     tty* KernelTTY;
+    //Driver::vbe VBE_DRIVER; 
+
 
 };

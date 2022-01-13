@@ -20,6 +20,7 @@
  */
 
 #include "kout.hpp"
+#include <lib/core/core.h>
 #include "../Serial/serial.hpp"
 
 using namespace System;
@@ -79,7 +80,7 @@ SerialLog &SerialLog::operator<<(const int &v) {
     return *this;
 }
 
-SerialLog &SerialLog::operator<<(const i32 &v) {
+SerialLog &SerialLog::operator<<(const u32 &v) {
     INT_TO_STRING(v_str, v);
 
     OutputTraceInfo(v_str);
@@ -89,7 +90,7 @@ SerialLog &SerialLog::operator<<(const i32 &v) {
     return *this;
 }
 
-SerialLog &SerialLog::operator<<(const i16 &v) {
+SerialLog &SerialLog::operator<<(const u16 &v) {
     INT_TO_STRING(v_str, v);
 
     OutputTraceInfo(v_str);
@@ -99,7 +100,7 @@ SerialLog &SerialLog::operator<<(const i16 &v) {
     return *this;
 }
 
-SerialLog &SerialLog::operator<<(const i8 &v) {
+SerialLog &SerialLog::operator<<(const u8 &v) {
     INT_TO_STRING(v_str, v);
 
     OutputTraceInfo(v_str);
@@ -177,10 +178,10 @@ void SerialLog::fmat(const char* fmt, T emit, va_list va) {
                 break;
             }
             case 'x': {
-                const i8 v = fetchValue();
+                const u8 v = fetchValue();
 
-                i8 v4 = (i8)(v << 4) >> 4;
-                i8 v8 = (i8)v >> 4;
+                u8 v4 = (u8)(v << 4) >> 4;
+                u8 v8 = (u8)v >> 4;
 
                 char PHex_4 = hex_c[v8];
                 char PHex_8 = hex_c[v4];

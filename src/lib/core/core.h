@@ -50,9 +50,9 @@ typedef unsigned int        uint32;
 typedef unsigned long long  uint64;
 typedef uint32              uintmax_t;
 
-typedef uint8               i8;
-typedef uint16              i16;
-typedef uint32              i32;
+typedef uint8               u8;
+typedef uint16              u16;
+typedef uint32              u32;
 typedef uint32              time_t;
 
 // Check one bit

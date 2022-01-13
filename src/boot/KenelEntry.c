@@ -23,7 +23,7 @@
 
 #include "boot.h"
 
-int kernel_entry(multiboot_info_t* mbt, i32 magic) {
+int kernel_entry(multiboot_info_t* mbt, u32 magic) {
 
     kmain(mbt, magic);
 

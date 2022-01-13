@@ -45,10 +45,10 @@ namespace System
         class BuiltinShell : public console {
             public:
 
-            BuiltinShell(System::Display::tty *tty, i16 ColorF, i16 ColorB);
+            BuiltinShell(System::Display::tty *tty, u16 ColorF, u16 ColorB);
             ~BuiltinShell() {};
 
-            int HandleCommand(const char* str, i32 commandLen) override;
+            int HandleCommand(const char* str, u32 commandLen) override;
 
             private:
 

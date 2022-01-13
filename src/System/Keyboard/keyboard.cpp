@@ -32,11 +32,11 @@ using namespace System::Display;
 
 #define MAX_KEYCODE_ARR 15 // I don't know why it hangs over 15, but it does 
 
-i8 *KeycodeArr     ;
-i8 KeycodePointer   = 0;
-i8 UsedKeycode      = 0;
+u8 *KeycodeArr     ;
+u8 KeycodePointer   = 0;
+u8 UsedKeycode      = 0;
 
-i8 EventQueEmpty = true;
+u8 EventQueEmpty = true;
 
 void Keyboard::installIRQ() {    
 
@@ -51,7 +51,7 @@ constexpr const char* LetterArrayA = "asdfghjkl";
 constexpr const char* LetterArrayY = "zxcvbnm";
 constexpr const char* NumberArray  = "123456789";
 
-char Keyboard::KeycodeAsciiConverter(i8 keycode) {
+char Keyboard::KeycodeAsciiConverter(u8 keycode) {
     switch (keycode) {
         case 0x1C:
             return '\n';
@@ -91,7 +91,7 @@ char Keyboard::KeycodeAsciiConverter(i8 keycode) {
 void Keyboard::IRQ_handler(register_t *r) {
     
         if((Port::byte_in(0x64) & 1) != 0) {
-            i8 K = Port::byte_in(0x60);
+            u8 K = Port::byte_in(0x60);
 
         if (KeycodePointer > MAX_KEYCODE_ARR) {
             KeycodePointer = 0;
@@ -99,7 +99,7 @@ void Keyboard::IRQ_handler(register_t *r) {
         KeycodeArr[0] = K;
         NO_INSTRUCTION;   
 
-        i8 Output = KeycodeAsciiConverter(K);
+        u8 Output = KeycodeAsciiConverter(K);
 
         if (Output != NULL) {
 
@@ -123,7 +123,7 @@ void Keyboard::IRQ12_handler(register_t *r) {
 
 char Keyboard::GetKeyCode() {
     if (UsedKeycode > MAX_KEYCODE_ARR) UsedKeycode = 0;
-    i8 OutputKeycode = KeycodeArr[0];
+    u8 OutputKeycode = KeycodeArr[0];
     KeycodeArr[0] = NULL;
 
     return OutputKeycode;

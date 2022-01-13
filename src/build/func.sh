@@ -73,7 +73,7 @@ compilea() {
 
     if nasm -f elf $OUTPUT -o $OUTPUT.o  &> "log/A++OUTPUT.txt"; then
         local PFD=$((($(date +%s%N) - $ts)/1000000))
-        printf "%-40s%-4s\e[0;32m  $bold DONE - $PFD ms\e[0;34m\n"  "${OUTPUT:0:40}" " $normal"
+        printf "[ S ] %-40s%-4s\e[0;32m  $bold DONE - $PFD ms\e[0;34m\n"  "${OUTPUT:0:40}" " $normal"
     else
 
         #ouput the errors
@@ -100,7 +100,7 @@ compilegas() {
 
     if as --32 $OUTPUT -o $OUTPUT.o  &> "log/A++OUTPUT.txt"; then
         local PFD=$((($(date +%s%N) - $ts)/1000000))
-        printf "%-40s%-4s\e[0;32m  $bold DONE - $PFD ms\e[0;34m\n"  "${OUTPUT:0:40}" " $normal"
+        printf "[ASM] %-40s%-4s\e[0;32m  $bold DONE - $PFD ms\e[0;34m\n"  "${OUTPUT:0:40}" " $normal"
     else
 
         #ouput the errors
@@ -200,13 +200,13 @@ compilec() {
 
     if c++ -m32 -g -I src/ -elf_i386 -std=c++2a -O -fstrength-reduce -fno-use-cxa-atexit -fomit-frame-pointer -O2 -finline-functions -nostdinc -fno-builtin -c  $OUTPUT -fdiagnostics-color=always &> /dev/null; then
          local PFD=$((($(date +%s%N) - $ts)/1000000))
-         printf "[C++] %-40s%-4s\e[0;32m  $bold DONE - $PFD ms\e[0;34m\n"  "${OUTPUT:0:40}" " $normal"
+         printf "[CXX] %-40s%-4s\e[0;32m  $bold DONE - $PFD ms\e[0;34m\n"  "${OUTPUT:0:40}" " $normal"
     else
-        printf "%-40s%-4s\e[0;31mFAILED\e[0;34m\n"  "${OUTPUT:0:40}" " "
+        printf "[CXX] %-40s%-4s\e[0;31mFAILED\e[0;34m\n"  "${OUTPUT:0:40}" " "
         #ouput the errors
 
         c++ -m32 -I src/ -elf_i386 -std=c++2a -O -fstrength-reduce -fno-use-cxa-atexit -fomit-frame-pointer -O2 -finline-functions -nostdinc -fno-builtin -c  $OUTPUT -fdiagnostics-color=always  &> "log/G++OUTPUT.txt"
-        printf "[C++] %s" "$(<log/G++OUTPUT.txt)"
+        printf "[CXX] %s" "$(<log/G++OUTPUT.txt)"
         echo ""
         #rm temp.txt
 

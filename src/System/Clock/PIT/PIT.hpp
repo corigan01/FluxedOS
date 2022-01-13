@@ -31,10 +31,10 @@ namespace System
         namespace PIT
         {
             void init();
-            void TimerPhase(i16 hz);
+            void TimerPhase(u16 hz);
             void TimerHandler(register_t *r);
 
-            void Sleep(i16 ms);
+            void Sleep(u16 ms);
         }
     }
 }

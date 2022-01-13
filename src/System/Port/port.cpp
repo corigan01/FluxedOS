@@ -24,7 +24,7 @@
 
 using namespace System::IO;
 
-i8 Port::byte_in (unsigned short port) {
+u8 Port::byte_in (unsigned short port) {
     unsigned char result;
     __asm__("in %%dx, %%al" : "=a" (result) : "d" (port));
     return result;
@@ -34,7 +34,7 @@ void Port::byte_out (unsigned short port, unsigned char data) {
     __asm__("out %%al, %%dx" : : "a" (data), "d" (port));
 }
 
-i16 Port::word_in (uint16_t port) {
+u16 Port::word_in (uint16_t port) {
     uint16_t result;
     __asm__("in %%dx, %%ax" : "=a" (result) : "d" (port));
     return result;
@@ -44,7 +44,7 @@ void Port::word_out (unsigned short port, unsigned short data) {
     __asm__("out %%ax, %%dx" : : "a" (data), "d" (port));
 }
 
-i32 Port::long_in(uint32_t port) {
+u32 Port::long_in(uint32_t port) {
     uint32_t result;
     __asm__ __volatile__("inl %%dx,%%eax":"=a" (result):"d"(port));
     return result;

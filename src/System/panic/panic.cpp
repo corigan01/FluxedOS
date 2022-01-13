@@ -33,20 +33,20 @@ extern "C" void stack_dump();
 
 struct StackFrame {
     struct StackFrame* edp;
-    i32 eip;
+    u32 eip;
 };
 
 extern "C" void dump_hex(char* stack) {
     if (stack != NULL)
 
     kout << "\n\n==========================\nStack dump\n==========================" << endl;
-    //kout << (i32)stack << "\n";
+    //kout << (u32)stack << "\n";
 
     struct StackFrame *Stack;
     asm ("movl %%ebp,%0" : "=r"(Stack) ::);
 
     kout << "0x";    
-    for (i32 i = 0; Stack && i < 1024; i++) {
+    for (u32 i = 0; Stack && i < 1024; i++) {
         kout.printf("%x", Stack->eip);
         
         Stack = Stack->edp;
@@ -54,7 +54,7 @@ extern "C" void dump_hex(char* stack) {
     kout << endl;
     
     for (int i = 0; i < 0; i++) {
-        i8 number = (i8)stack[i];
+        u8 number = (u8)stack[i];
 
         if (i % 20 == 0) {
             kout << endl << "0x";
@@ -72,7 +72,7 @@ extern "C" void dump_hex(char* stack) {
         //else
             kout.printf("%x", number);
 
-        //kout << (i8)stack[i] << "\t";
+        //kout << (u8)stack[i] << "\t";
         
     }
     
@@ -88,8 +88,8 @@ void PANIC::smart_panic(multiboot_info_t* mbt, panic_structure panic) {
     
     m_tty->setcolor(Display::Driver::COLOR::WHITE, Display::Driver::COLOR::BRIGHT_RED);
     
-    auto lineDisplay = [](i32 for_len, char* ch) {
-        for (i8 i = 0; i < for_len; i++) {
+    auto lineDisplay = [](u32 for_len, char* ch) {
+        for (u8 i = 0; i < for_len; i++) {
             m_tty->print_str(ch);
         }
     };

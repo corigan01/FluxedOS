@@ -55,15 +55,15 @@ class String : public K_Vector<char> {
     // to_string's for each type of thing we want to stringify
     String to_string(char i);
     String to_string(int i);
-    String to_string(i32 i);
-    String to_string(i16 i);
-    String to_string(i8 i);
+    String to_string(u32 i);
+    String to_string(u16 i);
+    String to_string(u8 i);
 
     const char * c_str();
     char*       cc_str();
 
     // may work on a find command because it can be helpful when programming complext things with string later down the line
-    i32 find(String str);
+    u32 find(String str);
 
     
     

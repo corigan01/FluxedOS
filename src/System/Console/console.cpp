@@ -29,7 +29,7 @@ using namespace System::HID;
 using namespace System::Memory;
 using namespace System::VirtualConsole;
 
-/*console::console(System::Display::tty * tty, i16 ColorF, i16 ColorB) {
+/*console::console(System::Display::tty * tty, u16 ColorF, u16 ColorB) {
     m_tty = tty;
 
     this->ColorF = ColorF;
@@ -54,7 +54,7 @@ void console::begin() {
     this->ReturnUser();
 }
 
-void console::HandleKeyCode(i8 keycode) {
+void console::HandleKeyCode(u8 keycode) {
     this->LastChar = keycode;
 
     switch (keycode) {
@@ -80,9 +80,7 @@ void console::HandleKeyCode(i8 keycode) {
             m_tty->print_str("\n");
 
             //HandleCommand(UserCommand.c_str(), UserCommand.size());
-            
-
-
+        
             ReturnUser();
 
             kout << "handled command" << endl;
@@ -91,7 +89,7 @@ void console::HandleKeyCode(i8 keycode) {
             break;
 
         default:
-            i8 OutputChar = Keyboard::KeycodeAsciiConverter(keycode);
+            u8 OutputChar = Keyboard::KeycodeAsciiConverter(keycode);
 
             if (OutputChar != NULL) { 
                 m_tty->print_char(OutputChar); 
@@ -134,12 +132,12 @@ bool console::IsAlive() {
     return TermActive;
 }
 
-int console::HandleCommand(const char* str, i32 commandLen) {
+int console::HandleCommand(const char* str, u32 commandLen) {
     m_tty->print_str("Command Handler Not found!\n");
     return 1;
 }
 
-void console::init(System::Display::tty * tty, i16 ColorF, i16 ColorB) {
+void console::init(System::Display::tty * tty, u16 ColorF, u16 ColorB) {
     m_tty = tty;
 
     this->ColorF = ColorF;

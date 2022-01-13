@@ -24,7 +24,7 @@
 #include <lib/core/core.h>
 
 
-typedef i8 byte_t;
+typedef u8 byte_t;
 #define BIT 0b00000001
 
 #define KB ( 1024 )

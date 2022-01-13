@@ -27,7 +27,7 @@ int     strcmp      (const char *s1, const char *s2) ;
 int     strncmp     (const char *s1, const char *s2, size_t n);
 int     memcmp      (const void *b1, const void *b2, size_t n);
 int     stoi        (char* str);
-int     strcpy_     (char *dst,const char *src);
+int     strcpy_     (char *dst, const char *src);
 int     strncmp_    (const char* s1, const char* s2, int c );
 
 uint32  strlen      (const char* str);

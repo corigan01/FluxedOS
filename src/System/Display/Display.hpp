@@ -56,7 +56,7 @@ namespace System
                     WHITE,
                 };
 
-                i16 ColorVar(i8 ForgroundColor, i8 BackroundColor);
+                u16 ColorVar(u8 ForgroundColor, u8 BackroundColor);
             }
             
 
@@ -64,7 +64,7 @@ namespace System
                 public:
 
                     VGA (void* buffer) {
-                        internalBuffer = (i16*)buffer;
+                        internalBuffer = (u16*)buffer;
                         BufferSize = 0;
                         lineNumber = 0;
 
@@ -81,7 +81,7 @@ namespace System
 
                     // sets the forground and backround colors
                     void init(void* buffer) {
-                        internalBuffer = (i16*)buffer;
+                        internalBuffer = (u16*)buffer;
                         BufferSize = 0;
                         lineNumber = 0;
 
@@ -91,27 +91,27 @@ namespace System
                         print_char('\n');
                     }
 
-                    void BufferSet(i16* buffer);
+                    void BufferSet(u16* buffer);
 
-                    void setcolor(i8 f, i8 b) override;
-                    void print_char(char c) override;
-                    void print_str(const char* str) override;
-                    void printf(const char* str, ...) override; 
+                    void setcolor(u8 f, u8 b) ;
+                    void print_char(char c) ;
+                    void print_str(const char* str) ;
+                    void printf(const char* str, ...) ; 
                     void clear_screen();
-                    void clear_line(i32 linenumber);
+                    void clear_line(u32 linenumber);
 
-                    void cursor_update(i8 cs, i8 ce);
-                    void cursor_enable(i8 cursor_start, i8 cursor_end);
+                    void cursor_update(u8 cs, u8 ce);
+                    void cursor_enable(u8 cursor_start, u8 cursor_end);
 
                 private:
-                    i16* internalBuffer;
+                    u16* internalBuffer;
                     int BufferSize = 0;
                     int lineNumber = 0;
 
-                    i8 FColor = COLOR::WHITE;
-                    i8 BColor = COLOR::BLACK; 
+                    u8 FColor = COLOR::WHITE;
+                    u8 BColor = COLOR::BLACK; 
 
-                    i16 entry(char ch, i8 f, i8 b);
+                    u16 entry(char ch, u8 f, u8 b);
 
                     uint16 * VBUF;
 
@@ -177,10 +177,10 @@ namespace System
                                     break;
                                 }
                                 case 'e': {
-                                    const i16 v = fetchValue();
+                                    const u16 v = fetchValue();
                                     
-                                    i8 Fc = (i8)v;
-                                    i8 Bc = (i8)(v << 8);
+                                    u8 Fc = (u8)v;
+                                    u8 Bc = (u8)(v << 8);
 
                                     this->setcolor(Fc, Bc);
                                     break;

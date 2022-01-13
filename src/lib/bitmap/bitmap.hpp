@@ -25,17 +25,17 @@
 
 typedef struct 
 {
-	i8 *addr;
-	i32 bytes;
+	u8 *addr;
+	u32 bytes;
 } bitmap_type;
 
 
-bool test_bit(bitmap_type *bitmap, i32 bit);
-void set_bit(bitmap_type *bitmap, i32 bit);
-void clear_bit(bitmap_type *bitmap, i32 bit);
+bool test_bit(bitmap_type *bitmap, u32 bit);
+void set_bit(bitmap_type *bitmap, u32 bit);
+void clear_bit(bitmap_type *bitmap, u32 bit);
 
-i32 find_first_set_bit(bitmap_type *bitmap);
-i32 find_first_clear_bit(bitmap_type *bitmap);
+u32 find_first_set_bit(bitmap_type *bitmap);
+u32 find_first_clear_bit(bitmap_type *bitmap);
 
 void clear_all_bits(bitmap_type *bitmap);
 void set_all_bits(bitmap_type *bitmap);

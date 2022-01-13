@@ -38,8 +38,8 @@ size_t Pool_Size;
 
 struct MemoryEntry
 {
-    i32 Start;
-    i32 End;
+    u32 Start;
+    u32 End;
     bool Used;
 };
 K_Vector<MemoryEntry> MemoryMap(0);
@@ -57,48 +57,48 @@ Page_Entry Memory::map_page(Permission_Entry perm) {
     entry.perm = perm;
     entry.size = PAGE_S;
 
-    kout << "Mapped page at: " << (i32)entry.ptr << " with permission: " << perm.perm << endl;
+    //kout << "Mapped page at: " << (u32)entry.ptr << " with permission: " << perm.perm << endl;
 
     return entry;
 }
 bool Memory::unmap_page(Page_Entry page) {
-    pmm::freePage((i32)page.ptr);
+    pmm::freePage((u32)page.ptr);
 
     // TODO: Check if page is still mapped with paging
-    kout << "Unmapped page at: " << (i32)page.ptr << endl;
+    kout << "Unmapped page at: " << (u32)page.ptr << endl;
 
     return true;
 }
 
-void Memory::PagePool(Page_Entry *pool, i32 size) {
+void Memory::PagePool(Page_Entry *pool, u32 size) {
     kout << "Kernel has received new memory pool of size " << (size * PAGE_SIZE) / KB << " kbytes" << endl;
 
     Pool = pool;
     Pool_Size = size;
 
     kout << "Memory pool has been set up!" << endl;
-    for (i32 i = 0; i < size; i++) {
+    for (u32 i = 0; i < size; i++) {
         MemoryEntry Current_Page = {
-            (i32)pool[i].ptr,
-            (i32)pool[i].ptr + PAGE_SIZE,
+            (u32)pool[i].ptr,
+            (u32)pool[i].ptr + PAGE_SIZE,
             false
         };
-        if ((i32)pool[i].ptr > 0) 
+        if ((u32)pool[i].ptr > 0) 
             MemoryMap.push_back(Current_Page);
     }
 
-    for (i32 i = 0; i < MemoryMap.size(); i ++) {
+    for (u32 i = 0; i < MemoryMap.size(); i ++) {
         kout << "MEMORY BEFORE CONJOIN : " << MemoryMap[i].Start << ", " << MemoryMap[i].End << endl;
         //ConJoin(i);
     }
 
-    i32 MSize = MemoryMap.size();
-    for (i32 i = 0; i < MSize; i++) {
+    u32 MSize = MemoryMap.size();
+    for (u32 i = 0; i < MSize; i++) {
         ConJoin(0);
     }
 }
 
-void Memory::ConJoin(i32 m1) {
+void Memory::ConJoin(u32 m1) {
     if (m1 < MemoryMap.size() && m1 >= 0) {
         if (MemoryMap[m1].Used == false && MemoryMap[m1 + 1].Used == false) {
             if (MemoryMap[m1].End == MemoryMap[m1 + 1].Start || MemoryMap[m1].End == MemoryMap[m1 + 1].Start - 1) {
@@ -125,10 +125,10 @@ void* Memory::kmalloc(size_t size) {
 
    kout << "Requested size " << size << ". Searching..." << endl;
 
-    for (i32 i = 0; i < MemoryMap.size(); i++) {
+    for (u32 i = 0; i < MemoryMap.size(); i++) {
         //kout << "Finding Memory..." << endl;
-        i32 CurrentMemorySize = MemoryMap[i].End - MemoryMap[i].Start;
-        //kout << "Found Memory at loc : " << (i32)MemoryMap[i].Start << " - " << (i32)MemoryMap[i].End << " [" << ((i32)MemoryMap[i].End - (i32)MemoryMap[i].Start)  << " bytes]" << endl; 
+        u32 CurrentMemorySize = MemoryMap[i].End - MemoryMap[i].Start;
+        //kout << "Found Memory at loc : " << (u32)MemoryMap[i].Start << " - " << (u32)MemoryMap[i].End << " [" << ((u32)MemoryMap[i].End - (u32)MemoryMap[i].Start)  << " bytes]" << endl; 
         if (!MemoryMap[i].Used && CurrentMemorySize != 0) {
             
 
@@ -138,12 +138,12 @@ void* Memory::kmalloc(size_t size) {
                 //kout << "Found Exact Free Memory Size! " << endl;
 
                 memset((void*)MemoryMap[i].Start, NULL, CurrentMemorySize);
-                kout << "Returning memory addr *" << (i32)MemoryMap[i].Start << " with size of " << size << endl << endl;
+                kout << "Returning memory addr *" << (u32)MemoryMap[i].Start << " with size of " << size << endl << endl;
                 return (void*)MemoryMap[i].Start;
             }
             if (CurrentMemorySize > size) {
                 //kout << "Resizing Memory to fit : [" << CurrentMemorySize << "] --> {[" << size << "], [" << CurrentMemorySize - size << "]} " << endl;
-                i32 MemoryStart = MemoryMap[i].Start;
+                u32 MemoryStart = MemoryMap[i].Start;
                 MemoryEntry NewMemoryEntry = {
                     MemoryStart,
                     MemoryStart + size,
@@ -162,7 +162,7 @@ void* Memory::kmalloc(size_t size) {
                 //}
 
                 memset((void*)MemoryStart, NULL, size);
-                kout << "Returning memory addr *" << (i32)MemoryStart << " with size of " << size << endl << endl;
+                kout << "Returning memory addr *" << (u32)MemoryStart << " with size of " << size << endl << endl;
                 return (void*)MemoryStart;
             }
             
@@ -173,10 +173,10 @@ void* Memory::kmalloc(size_t size) {
     return (void*)NULL;
 }
 void Memory::kfree(void* ptr) {
-    for (i32 i = 0; i < MemoryMap.size(); i++) {
-        if ((i32)ptr == MemoryMap[i].Start) {
+    for (u32 i = 0; i < MemoryMap.size(); i++) {
+        if ((u32)ptr == MemoryMap[i].Start) {
             MemoryMap[i].Used = 0;
-            kout << "Freed memory at " << (i32)ptr << endl;
+            kout << "Freed memory at " << (u32)ptr << endl;
             ConJoin(i);
             for (int i = 0; i < MemoryMap.size(); i++) {
                 kout << "MEMORY : " << MemoryMap[i].Start << " --> " << MemoryMap[i].End << ", SIZE: " << MemoryMap[i].End - MemoryMap[i].Start  << "\t USED: " << (MemoryMap[i].Used ? "(USED)" : "(FREE)") << endl;

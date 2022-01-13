@@ -45,7 +45,7 @@ void SPointer<T>::PopLast() {
 }
 
 template<class T>
-void SPointer<T>::SetItem(i32 index, T item) {
+void SPointer<T>::SetItem(u32 index, T item) {
     ASSERT(index > Size);
 
     Pointer[index] = item;

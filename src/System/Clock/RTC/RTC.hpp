@@ -31,18 +31,18 @@ namespace System
         namespace RTC
         {
             struct time_t {
-                i16 Second = 0;
-                i16 Minute = 0;
-                i16 Hour   = 0;
-                i16 Day    = 0;
-                i16 Month  = 0;
-                i16 Year   = 0;
+                u16 Second = 0;
+                u16 Minute = 0;
+                u16 Hour   = 0;
+                u16 Day    = 0;
+                u16 Month  = 0;
+                u16 Year   = 0;
             };
 
             void Update();
             time_t now();
 
-            i8 GetRegister(int reg);
+            u8 GetRegister(int reg);
             int getUpdateFlag();
 
             enum {
@@ -50,12 +50,12 @@ namespace System
                 cmos_data    = 0x71
             };
 
-            i16 GetSeconds();
-            i16 GetMin();
-            i16 GetHours();
-            i16 GetDays();
-            i16 GetMonth();
-            i16 GetYear();
+            u16 GetSeconds();
+            u16 GetMin();
+            u16 GetHours();
+            u16 GetDays();
+            u16 GetMonth();
+            u16 GetYear();
 
             
         }

@@ -51,9 +51,9 @@ namespace System
             
             SerialLog &operator<<(const char* v);
             SerialLog &operator<<(const int &v);
-            SerialLog &operator<<(const i32 &v);
-            SerialLog &operator<<(const i16 &v);
-            SerialLog &operator<<(const i8 &v);
+            SerialLog &operator<<(const u32 &v);
+            SerialLog &operator<<(const u16 &v);
+            SerialLog &operator<<(const u8 &v);
             SerialLog &operator<<(const char &v);
             SerialLog &operator<<(bool &v);
 

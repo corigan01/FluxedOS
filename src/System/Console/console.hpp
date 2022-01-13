@@ -36,13 +36,13 @@ namespace System
             public:
 
             
-            //console(System::Display::tty * tty, i16 ColorF, i16 ColorB);
+            //console(System::Display::tty * tty, u16 ColorF, u16 ColorB);
             console();
             ~console();
 
             void begin();
 
-            void HandleKeyCode(i8 keycode);
+            void HandleKeyCode(u8 keycode);
             void ReturnUser();
             
             void KillTerm();
@@ -52,8 +52,8 @@ namespace System
 
             protected:
 
-            void init(System::Display::tty * tty, i16 ColorF, i16 ColorB);
-            virtual int HandleCommand(const char* str, i32 commandLen);
+            void init(System::Display::tty * tty, u16 ColorF, u16 ColorB);
+            virtual int HandleCommand(const char* str, u32 commandLen);
 
 
             protected:
@@ -62,8 +62,8 @@ namespace System
             bool HandlerInstalled = false;
             bool TermActive = true;
 
-            i16 ColorF = 1, ColorB = 0;
-            i8 LastChar = 0;
+            u16 ColorF = 1, ColorB = 0;
+            u8 LastChar = 0;
 
             String UserCommand;
 

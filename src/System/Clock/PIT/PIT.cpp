@@ -28,17 +28,17 @@ using namespace System::IO;
 using namespace System::CPU;
 using namespace System::Clock;
 
-i32 timer_ticks = 0;
-i16 timer_phase = 18;
+u32 timer_ticks = 0;
+u16 timer_phase = 18;
 
-i32 timer_seconds = 0;
+u32 timer_seconds = 0;
 
 void PIT::init() {
     IRQ::installIRQ(0, System::Clock::PIT::TimerHandler);
     kout << "PIT INIT  OK" << endl;
 }
 
-void PIT::TimerPhase(i16 hz) {
+void PIT::TimerPhase(u16 hz) {
     kout << "TimerPhase Reset to " << hz << " hz" << endl;
 
     timer_phase = hz;
@@ -61,9 +61,9 @@ void PIT::TimerHandler(register_t *r) {
     PIC::SendEOI(0);
 }
 
-void PIT::Sleep(i16 ms) {
-    i16 timerTicksNeeded = timer_ticks + (timer_phase * (ms / 1000));
-    i32 timerold = timer_ticks;
+void PIT::Sleep(u16 ms) {
+    u16 timerTicksNeeded = timer_ticks + (timer_phase * (ms / 1000));
+    u32 timerold = timer_ticks;
 
     int i = 0;
     while (i < 600) {

@@ -139,7 +139,7 @@ void Err_hanlder(struct regs *r) {
         kout << "\nINTERRUPT ERROR TYPE MISMATCH! COULD NOT FIND INFO HEADER (regs*->int_no > 32)" << endl;
     } 
     else {
-        kout.printf("\nFound Header info at %d!     \nError Type: %s\nErr code: %d\nreg info eax=%d ebx=%d ecx=%d edx=%d\n\n", (i32)r, Err[r->int_no], r->err_code, r->eax, r->ebx, r->ecx, r->edx);
+        kout.printf("\nFound Header info at %d!     \nError Type: %s\nErr code: %d\nreg info eax=%d ebx=%d ecx=%d edx=%d\n\n", (u32)r, Err[r->int_no], r->err_code, r->eax, r->ebx, r->ecx, r->edx);
 
     }
     
@@ -181,7 +181,7 @@ void System::CPU::ISR::init() {
 
 
 
-void PIC::SendEOI(i8 irq) {
+void PIC::SendEOI(u8 irq) {
     if(irq >= 8) {
             Port::byte_out(PIC2_COMMAND,PIC_EOI);
     }
@@ -190,7 +190,7 @@ void PIC::SendEOI(i8 irq) {
 }
 
 void PIC::Remap(int offset, int offset2) {
-    i8 a1, a2;
+    u8 a1, a2;
  
     auto io_wait = []() {
         for (int i = 0; i < 10000; i++) { NO_INSTRUCTION }; 
@@ -222,9 +222,9 @@ void PIC::Remap(int offset, int offset2) {
 	Port::byte_out(PIC2_DATA, a2);
 }
 
-void PIC::SetMask(i8 irq) {
-    i16 port;
-    i8 value;
+void PIC::SetMask(u8 irq) {
+    u16 port;
+    u8 value;
  
     if(irq < 8) {
         port = PIC1_DATA;
@@ -236,7 +236,7 @@ void PIC::SetMask(i8 irq) {
     Port::byte_out(port, value);   
 }
 
-void PIC::ClearMask(i8 irq) {
+void PIC::ClearMask(u8 irq) {
     uint16_t port;
     uint8_t value;
  
@@ -251,17 +251,17 @@ void PIC::ClearMask(i8 irq) {
     Port::byte_out(port, value);       
 }
 
-static i16 PIC::GetIRQreg(int ocw3) {
+static u16 PIC::GetIRQreg(int ocw3) {
     Port::byte_out(PIC1_CMD, ocw3);
     Port::byte_out(PIC2_CMD, ocw3);
     return (Port::byte_in(PIC2_CMD) << 8) | Port::byte_in(PIC1_CMD);
 }
 
-i16 PIC::GetIRR() {
+u16 PIC::GetIRR() {
     return PIC::GetIRQreg(PIC_READ_IRR);
 }
 
-i16 PIC::GetISR() {
+u16 PIC::GetISR() {
     return PIC::GetIRQreg(PIC_READ_ISR);
 }
 

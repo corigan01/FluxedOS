@@ -21,6 +21,7 @@
 
 #include "Display.hpp" 
 #include <System/Port/port.hpp>
+#include <lib/core/core.h>
 #include <System/memory/pmm/pmm.hpp>
 
 using namespace System;
@@ -28,14 +29,14 @@ using namespace System::IO;
 using namespace System::Display::Driver;
 
 
-void VGA::setcolor(i8 f, i8 b) {
+void VGA::setcolor(u8 f, u8 b) {
     FColor = f;
     BColor = b;
 }
 
-uint16_t VGA::entry(char ch, i8 f, i8 b) {
-    i16 ax = 0;
-    i8 ah = 0, al = 0;
+uint16_t VGA::entry(char ch, u8 f, u8 b) {
+    u16 ax = 0;
+    u8 ah = 0, al = 0;
 
     ah = b;
     ah <<= 4;
@@ -48,7 +49,7 @@ uint16_t VGA::entry(char ch, i8 f, i8 b) {
     return ax;
 }
 
-void VGA::cursor_enable(i8 cursor_start, i8 cursor_end) {
+void VGA::cursor_enable(u8 cursor_start, u8 cursor_end) {
     Port::byte_out(0x3D4, 0x0A);
 	Port::byte_out(0x3D5, (Port::byte_in(0x3D5) & 0xC0) | cursor_start);
  
@@ -56,8 +57,8 @@ void VGA::cursor_enable(i8 cursor_start, i8 cursor_end) {
 	Port::byte_out(0x3D5, (Port::byte_in(0x3D5) & 0xE0) | cursor_end);  
 }
 
-void VGA::cursor_update(i8 cs, i8 ce) {
-    i16 pos = ce * 80 + cs;
+void VGA::cursor_update(u8 cs, u8 ce) {
+    u16 pos = ce * 80 + cs;
 
     Port::byte_out(0x3D4, 0x0F);
 	Port::byte_out(0x3D5, (uint8_t) (pos & 0xFF));
@@ -65,9 +66,9 @@ void VGA::cursor_update(i8 cs, i8 ce) {
 	Port::byte_out(0x3D5, (uint8_t) ((pos >> 8) & 0xFF));
 }
 
-void VGA::BufferSet(i16* buffer) {
+void VGA::BufferSet(u16* buffer) {
     VBUF = buffer;
-    memset(VBUF, NULL, sizeof(i16) * 80 * 25);
+    memset(VBUF, NULL, sizeof(u16) * 80 * 25);
     
     //for (int i = 0; i < 25; i++) print_char('\n');
 }
@@ -153,7 +154,7 @@ void VGA::clear_screen() {
 
 
 }
-void VGA::clear_line(i32 linenumber) {
+void VGA::clear_line(u32 linenumber) {
     for (int i = linenumber * 80; i < 80; i ++) {
         internalBuffer[i] = entry(' ', NULL, NULL);
     }
@@ -161,7 +162,13 @@ void VGA::clear_line(i32 linenumber) {
 
 void VGA::print_str(const char* str) {
     for (int i = 0 ; i < strlen(str); i++) {
-        this->print_char(str[i]);
+        if (0x20 <= str[i] <= 0x7e || str[i] == '\n') {
+            this->print_char(str[i]);
+        }
+        else {
+            this->print_char(0xfe);
+        }
+        
     }
 }
 
@@ -172,6 +179,6 @@ void VGA::printf(const char* str, ...) {
     va_end(va);
 }
 
-i16 COLOR::ColorVar(i8 ForgroundColor, i8 BackroundColor) {
+u16 COLOR::ColorVar(u8 ForgroundColor, u8 BackroundColor) {
     return (BackroundColor << 8) | ForgroundColor;
 }

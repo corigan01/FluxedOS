@@ -87,23 +87,31 @@ const char * ClassCodeName[] = {
 };
 
 void Kernel::system_init() {
-    NO_INSTRUCTION;
+    //NO_INSTRUCTION;
+
+    kout << "Listing PCI..." << endl;
 
     for (int e = 0; e < 16; e++) {
         for (int i = 0; i < 64; i++) {
-        i16 pci = pciCheckVendor(e, i);
-        i16 device = pciConfigReadWord(e,i,0,2);
+            u16 pci = pciCheckVendor(e, i);
+            u16 device = pciConfigReadWord(e,i,0,2);
 
-        if (pci != NULL) {
-            i16 Class = pciConfigReadWord(e, i, 0, 8);
+            if (pci != NULL) {
+                u16 Class = pciConfigReadWord(e, i, 0, 8);
 
-            i16 SubClass = Class >> 8;
-            i8 ClassCode  = (i8)Class;
+                u16 SubClass = Class >> 8;
+                u8 ClassCode  = (u8)Class;
 
-            kout << "Device (" << pci << ", " << device << ")\t, Class = " << ClassCodeName[Class] << " : Subclass = " << SubClass << endl;
+                kout << "Device (" << pci << ", " << device << ")\t, Class = " << ClassCodeName[Class] << " : Subclass = " << SubClass << endl;
+            }
         }
     }
-    }
+
+
+
+    Graphics::Driver::fillcircle(0xFF0000, 600, 700, 200);    
+    Graphics::Driver::drawstring("Hello FluxedOS!", 10, 10, 0xFFFFFF);
+        
     
 
     /*
@@ -112,10 +120,10 @@ void Kernel::system_init() {
     auto v1 = kmalloc(10);
     
     KernelTTY->setcolor(COLOR::GREEN, COLOR::BLACK);
-    kout << (i32)v1 << endl;
+    kout << (u32)v1 << endl;
     if (v1 != NULL) {
         KernelTTY->print_str("Memory test passed!!");
-        KernelTTY->printf(" Got addr *%d for memory! \n", (i32)v1);
+        KernelTTY->printf(" Got addr *%d for memory! \n", (u32)v1);
     }
     else {
         KernelTTY->print_str("Memory test failed!!");
@@ -149,7 +157,7 @@ void Kernel::system_init() {
     
 
 
-    console *dev_console;
+    /*console *dev_console;
     auto KernShell = VirtualConsole::BuiltinShell(KernelTTY, COLOR::GREEN, 0);
     dev_console = &KernShell;
 
@@ -172,10 +180,10 @@ void Kernel::system_init() {
 
         }
         
-    }
+    }*/
 
     
 
-    
+    for(;;) {};
         
 }
