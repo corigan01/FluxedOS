@@ -37,22 +37,26 @@ lux::~lux() {
 void lux::init() { 
     kout << "Initializing Lux instance..." << endl;
     hardwareInfo = Driver::getinfo();
+    doubleframebuffer = (u8*)System::Memory::kmalloc(hardwareInfo.width * hardwareInfo.height * hardwareInfo.pitch);
+
     kout << "Hardware info: " << endl;
     kout << "  - Screen width       : " << hardwareInfo.width << endl;
     kout << "  - Screen height      : " << hardwareInfo.height << endl;
     kout << "  - Screen pitch       : " << hardwareInfo.pitch << endl;
     kout << "  - Screen pixelwidth  : " << hardwareInfo.pixelwidth << endl;
-    kout << "  - Memory addr        : *" << (u32)hardwareInfo.buffer << endl;
+    kout << "  - Memory addr        : *" << (u32)doubleframebuffer << endl;
 
-    doubleframebuffer = (u8*)System::Memory::kmalloc(hardwareInfo.width * hardwareInfo.height);
+    
+    
 }
-void lux::update() { 
+void lux::flip_buffer() { 
     // flip double framebuffer
     memcpy(hardwareInfo.buffer, doubleframebuffer, hardwareInfo.width * hardwareInfo.height * hardwareInfo.pitch);
 }
-void lux::draw() { 
+void lux::draw_windows() { 
+    memset(doubleframebuffer, 0x00, hardwareInfo.width * hardwareInfo.height * hardwareInfo.pitch);
     for (int i = 0; i < windows.size(); i++) {
-        windows[i]->draw(doubleframebuffer);
+        windows[i]->draw(doubleframebuffer, hardwareInfo.width);
     }
 }
 void lux::destroy() { 
@@ -75,28 +79,54 @@ lwin::~lwin() {
 }
 
 void lwin::init() { 
+    
+    //memset(this->titlebar, 0x00, 10 * this->width * pitch);
 
 }
 void lwin::update() { 
 
 }
-void lwin::draw(u8* framebuffer) { 
+void lwin::draw(u8* framebuffer, u32 ypull) { 
     // do fancy drawing here
     // otherwise just draw the framebuffer
 
     // draw the framebuffer
-    for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-            framebuffer[(y * width) + x] = this->framebuffer[y+x];
+    kout << "Drawing Window" << endl;
+    kout << "  - Pos X          : " << this->x << endl;
+    kout << "  - Pos Y          : " << this->y << endl;
+    kout << "  - Window Width   : " << this->width << endl;
+    kout << "  - Window Hight   : " << this->height << endl;
+    kout << "  - Framebuffer    : *" << (u32)this->framebuffer << "  -->  *" << (u32)framebuffer << endl;
+
+    const int titlebarsize = 15;
+
+    this->fillrect_titlebar(0x555555, 0, 0, width, titlebarsize);
+    this->drawstring_titlebar(this->title, 0, 0, 0xFFFFFF);
+
+    for (int e = 0; e < titlebarsize; e++) {
+        for (int r = 0; r < this->width * pitch; r ++) {
+            framebuffer[(e * (ypull * pitch)) + r + ((this->x * pitch) + (this->y * ypull * pitch))] = this->titlebar[e * pitch * width + r];
         }
     }
+    for (int hi = (titlebarsize * 1); hi < this->height + (titlebarsize * 1); hi++) {
+        for (int i = 0; i < this->width * this->pitch; i++) {
+            framebuffer[(hi * (ypull * pitch)) + i + ((this->x * pitch) + (this->y * ypull * pitch))] = this->framebuffer[(hi - (titlebarsize * 1)) * pitch * width + i ];       
+        }
+    }
+    kout << "done" << endl;
 }
 void lwin::destroy() { 
 
 }
 
 u8* lwin::construct_pointer() { 
-    return (u8*)System::Memory::kmalloc(this->width * this->height); 
+    this->titlebar = (u8*)System::Memory::kmalloc(15 * this->width * pitch);
+    memset(this->titlebar, 0x00, 15 * this->width * pitch);
+
+    u8* pt = (u8*)System::Memory::kmalloc(this->width * this->height * this->pitch); 
+    memset(pt, 0x00, this->width * this->height * this->pitch);
+    this->framebuffer = pt;
+    return pt;
 }
 
 void lwin::set_framebuffer(u8* buffer) {
@@ -145,4 +175,183 @@ void lwin::set_window_cursor_position(int x, int y) {
 void lwin::set_window_cursor_type(int type) { 
     this->cursor_type = type;
 }
+int lwin::get_window_width() {
+    return this->width;
+}
+int lwin::get_window_height() {
+    return this->height;
+}
+int lwin::get_window_x() {
+    return this->x;
+}
+int lwin::get_window_y() {
+    return this->y;
+}
+bool lwin::get_window_fullscreen() {
+    return this->fullscreen;
+}
+bool lwin::get_window_resizable() {
+    return this->resizable;
+}
+bool lwin::get_window_borderless() {
+    return this->borderless;
+}
+bool lwin::get_window_maximized() {
+    return this->maximized;
+}
+bool lwin::get_window_minimized() {
+    return this->minimized;
+}
+bool lwin::get_window_visible() {
+    return this->visible;
+}
+bool lwin::get_window_cursor_visible() {
+    return this->cursor_visible;
+}
+bool lwin::get_window_cursor_grabbed() {
+    return this->cursor_grabbed;
+}
+int lwin::get_window_cursor_x() {
+    return this->cursor_x;
+}
+int lwin::get_window_cursor_y() {
+    return this->cursor_y;
+}
+int lwin::get_window_cursor_type() {
+    return this->cursor_type;
+}
+
+void lwin::putpixel(int x, int y, u32 color) {
+    //if (x < 0 || x >= this->x || y < 0 || y >= this->y) return;
+    u32 where = (x * pitch) + (y * pitch * this->width);
+    this->framebuffer[where] = color & 255;              // BLUE
+    this->framebuffer[where + 1] = (color >> 8) & 255;   // GREEN
+    this->framebuffer[where + 2] = (color >> 16) & 255;  // RED
+}
+
+void lwin::putpixel_titlebar(int x, int y, u32 color) {
+    //if (x < 0 || x >= this->x || y < 0 || y >= this->y) return;
+    u32 where = (x * pitch) + (y * pitch * this->width);
+    this->titlebar[where] = color & 255;              // BLUE
+    this->titlebar[where + 1] = (color >> 8) & 255;   // GREEN
+    this->titlebar[where + 2] = (color >> 16) & 255;  // RED
+}
+
+void lwin::fillrect(u32 color, u32 start_x, u32 start_y, u32 width, u32 hight) {
+    for (u32 y = start_y; y < hight + start_y; y++) {
+        for (u32 x = start_x; x < width + start_x; x++) {
+            this->putpixel(x, y, color);
+        }
+    }
+    kout << "rec" << endl;
+}
+
+void lwin::linecircle(u32 color, u32 center_x, u32 center_y, u32 rad) {
+    double i = 0, angle = 0, x1 = 0, y1 = 0;
+
+    for(i = 0; i < 360; i += 1) {
+        angle = i;
+        
+        x1 = rad * math::cos(angle * math::PI / 180.00);
+        y1 = rad * math::sin(angle * math::PI / 180.00);
+
+        if (center_x + x1 > 0 && center_y + y1 > 0)
+            this->putpixel(center_x + x1, center_y + y1, color);
+    }   
+}
+
+void lwin::fillcircle(u32 color, u32 center_x, u32 center_y, u32 rad) {
+    for (int w = 0; w < rad * 2; w++)
+    {
+        for (int h = 0; h < rad * 2; h++)
+        {
+            int dx = rad - w; // horizontal offset
+            int dy = rad - h; // vertical offset
+
+            if ((dx*dx + dy*dy) <= (rad * rad)) {
+                this->putpixel(center_x + dx, center_y + dy, color);
+            }
+        }
+    }
+}
+
+void lwin::drawchar(u32 ch, u32 x, u32 y, u32 color) {
+    const unsigned char * gliph = built_in_font[ch - 32];
     
+    for(int cy = 0; cy < 13; cy++) {
+        u8 byte = gliph[cy];
+
+        for (int i = 0; i < 8; i ++) {
+            if (CHECK_BIT(byte, i)) {
+                this->putpixel((8 - i) + x, 13 - cy + y, color);
+                //kout << "-";
+            }
+        }
+    }
+}
+
+void lwin::drawstring(const char* str, u32 x, u32 y, u32 color) {
+    for (int i = 0; i < strlen(str); i++) {
+        this->drawchar(str[i], x + i * 12, y, color);
+    }
+}
+
+
+void lwin::linecircle_titlebar(u32 color, u32 center_x, u32 center_y, u32 rad) {
+    double i = 0, angle = 0, x1 = 0, y1 = 0;
+
+    for(i = 0; i < 360; i += 1) {
+        angle = i;
+        
+        x1 = rad * math::cos(angle * math::PI / 180.00);
+        y1 = rad * math::sin(angle * math::PI / 180.00);
+
+        if (center_x + x1 > 0 && center_y + y1 > 0)
+            this->putpixel_titlebar(center_x + x1, center_y + y1, color);
+    }   
+}
+
+void lwin::fillrect_titlebar(u32 color, u32 start_x, u32 start_y, u32 width, u32 hight) {
+    for (u32 y = start_y; y < hight + start_y; y++) {
+        for (u32 x = start_x; x < width + start_x; x++) {
+            this->putpixel_titlebar(x, y, color);
+        }
+    }
+    kout << "rec" << endl;
+}
+
+void lwin::fillcircle_titlebar(u32 color, u32 center_x, u32 center_y, u32 rad) {
+    for (int w = 0; w < rad * 2; w++)
+    {
+        for (int h = 0; h < rad * 2; h++)
+        {
+            int dx = rad - w; // horizontal offset
+            int dy = rad - h; // vertical offset
+
+            if ((dx*dx + dy*dy) <= (rad * rad)) {
+                this->putpixel_titlebar(center_x + dx, center_y + dy, color);
+            }
+        }
+    }
+}
+
+void lwin::drawchar_titlebar(u32 ch, u32 x, u32 y, u32 color) {
+    const unsigned char * gliph = built_in_font[ch - 32];
+    
+    for(int cy = 0; cy < 13; cy++) {
+        u8 byte = gliph[cy];
+
+        for (int i = 0; i < 8; i ++) {
+            if (CHECK_BIT(byte, i)) {
+                this->putpixel_titlebar((8 - i) + x, 13 - cy + y, color);
+                //kout << "-";
+            }
+        }
+    }
+}
+
+void lwin::drawstring_titlebar(const char* str, u32 x, u32 y, u32 color) {
+    for (int i = 0; i < strlen(str); i++) {
+        this->drawchar_titlebar(str[i], x + i * 12, y, color);
+    }
+}

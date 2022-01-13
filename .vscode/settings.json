@@ -18,6 +18,12 @@
         "memory_resource": "cpp",
         "istream": "cpp",
         "stop_token": "cpp",
-        "*.inc": "cpp"
+        "*.inc": "cpp",
+        "bit": "cpp",
+        "list": "cpp",
+        "random": "cpp",
+        "limits": "cpp",
+        "variant": "cpp",
+        "chrono": "cpp"
     }
 }

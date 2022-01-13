@@ -31,7 +31,7 @@ using namespace System;
 using namespace System::Memory;
 
 #define MAX_POOL_SIZE ( 8  _MB )
-#define MAX_ALLOC     ( 1 _MB )
+#define MAX_ALLOC     ( 8  _MB )
 
 Page_Entry* Pool;
 size_t Pool_Size;

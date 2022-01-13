@@ -112,30 +112,50 @@ void Kernel::system_init() {
     Graphics::lux DisplayServer;
     DisplayServer.init();
 
-    kout << "Initializing Window" << endl;
+    /*lwin BackroundWindow;
+    BackroundWindow.init();
+    BackroundWindow.set_window_position(500, 100);
+    BackroundWindow.set_window_size(200, 200);
+    BackroundWindow.set_window_title("Hello World!");
+
+    DisplayServer.attach_window(&BackroundWindow);
+    u8* bframe = BackroundWindow.construct_pointer();
+    BackroundWindow.fillrect(0xFF0000, 0, 0, BackroundWindow.get_window_width(), BackroundWindow.get_window_height());*/
+    //BackroundWindow.drawstring("Title", 10, 10, 0xFF0000);
+
+    lwin BackroundWindow2;
+    BackroundWindow2.init();
+    BackroundWindow2.set_window_position(10, 500);
+    BackroundWindow2.set_window_size(400, 200);
+    BackroundWindow2.set_window_title("Backround Window");
+
+    DisplayServer.attach_window(&BackroundWindow2);
+    u8* bframe2 = BackroundWindow2.construct_pointer();
+    BackroundWindow2.fillrect(0xFF0000, 0, 0, BackroundWindow2.get_window_width(), BackroundWindow2.get_window_height());
+    //BackroundWindow2.drawstring("Title", 10, 10, 0xFF0000);
+
     lwin window;
     window.init();
-    window.set_window_position(10, 10);
-    window.set_window_size(100, 100);
-    window.set_window_title("Hello World!");
+    window.set_window_position(100, 100);
+    window.set_window_size(200, 200);
+    window.set_window_title("Hello World");
+
+    DisplayServer.attach_window(&window);
 
     u8* framebuffer = window.construct_pointer();
     kout << "Framebuffer: " << (u32)framebuffer << endl;
 
-    for (int i = 0; i < 100; i++) {
-        for (int j = 0; j < 100; j++) {
-            framebuffer[(i * 100) + j] = 0xFF;
-        }
-    }
+    window.fillrect(0xFFFFFF, 0, 0, window.get_window_width(), window.get_window_height());
+    window.fillcircle(0xFF0000, 40, 40, 40);
+    window.drawstring("Hello World!", 10, 10, 0x00);
 
-    DisplayServer.attach_window(&window);
-    DisplayServer.draw();
-    DisplayServer.update();
+    //window.putpixel(10, 10, 0xFF00FF);
+    
+    DisplayServer.draw_windows();
+    DisplayServer.flip_buffer();
 
-
-
-
-    Graphics::Driver::fillcircle(0xFF0000, 10, 10, 50);    
+    Graphics::Driver::fillrect(0x246b70, 0, 0, Graphics::Driver::getinfo().width, 30);
+    Graphics::Driver::fillcircle(0x297a5c, 10, 10, 50);    
     Graphics::Driver::drawstring("FluxedOS!", 10, 10, 0xFFFFFF);
         
     

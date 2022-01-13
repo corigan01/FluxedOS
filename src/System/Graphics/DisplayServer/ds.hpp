@@ -39,7 +39,7 @@ namespace System
 
             void init();
             void update();
-            void draw(u8* framebuffer);
+            void draw(u8* framebuffer, u32 ypull);
             void destroy();
 
             void set_framebuffer(u8* buffer);
@@ -76,6 +76,20 @@ namespace System
             int get_window_cursor_x();
             int get_window_cursor_y();
             int get_window_cursor_type();
+
+            void putpixel(int x, int y, u32 color) ;
+            void fillrect(u32 color, u32 start_x, u32 start_y, u32 width, u32 hight);
+            void linecircle(u32 color, u32 center_x, u32 center_y, u32 rad);
+            void fillcircle(u32 color, u32 center_x, u32 center_y, u32 rad);
+            void drawchar(u32 ch, u32 x, u32 y, u32 color);
+            void drawstring(const char* str, u32 x, u32 y, u32 color);
+
+            void putpixel_titlebar(int x, int y, u32 color);
+            void fillrect_titlebar(u32 color, u32 start_x, u32 start_y, u32 width, u32 hight);
+            void linecircle_titlebar(u32 color, u32 center_x, u32 center_y, u32 rad);
+            void fillcircle_titlebar(u32 color, u32 center_x, u32 center_y, u32 rad);
+            void drawchar_titlebar(u32 ch, u32 x, u32 y, u32 color);
+            void drawstring_titlebar(const char* str, u32 x, u32 y, u32 color);
    
 
             private:
@@ -83,6 +97,7 @@ namespace System
             int height;
             int x;
             int y;
+            int pitch = 4;
             bool fullscreen;
             bool resizable;
             bool borderless;
@@ -97,6 +112,7 @@ namespace System
             char* title;
 
             u8* framebuffer;
+            u8* titlebar;
         };
 
         class lux {
@@ -106,8 +122,8 @@ namespace System
             ~lux();
 
             void init();
-            void update();
-            void draw();
+            void flip_buffer();
+            void draw_windows();
             void destroy();
 
             void attach_window(lwin* window);

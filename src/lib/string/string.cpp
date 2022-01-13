@@ -48,7 +48,6 @@ void String::operator= (char* str) {
 }
 void String::operator= (const char* str){
     empty();
-    kout << "GOT INPUT OF \'" << str << "\'" << endl;
 	for (u32 i = 0; i < strlen(str); i++) {
         char e = str[i];
         kout << e << endl;
