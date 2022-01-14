@@ -178,6 +178,7 @@ void Memory::kfree(void* ptr) {
             MemoryMap[i].Used = 0;
             kout << "Freed memory at " << (u32)ptr << endl;
             ConJoin(i);
+            ConJoin(i);
             for (int i = 0; i < MemoryMap.size(); i++) {
                 kout << "MEMORY : " << MemoryMap[i].Start << " --> " << MemoryMap[i].End << ", SIZE: " << MemoryMap[i].End - MemoryMap[i].Start  << "\t USED: " << (MemoryMap[i].Used ? "(USED)" : "(FREE)") << endl;
             }

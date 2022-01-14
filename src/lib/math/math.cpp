@@ -69,7 +69,7 @@ double math::sin(double n) {
     double result = n;
     double coefficent = 3.0; // Increment this by 2 each loop
 
-    for(int i = 0; i < 3; i++) { // Change 10 to go out to more/less terms
+    for(int i = 0; i < 10; i++) { // Change 10 to go out to more/less terms
         double pow = power(n, coefficent);
         double frac = factorial(coefficent);
 

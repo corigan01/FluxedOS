@@ -45,10 +45,12 @@ void lux::init() {
     kout << "  - Screen pitch       : " << hardwareInfo.pitch << endl;
     kout << "  - Screen pixelwidth  : " << hardwareInfo.pixelwidth << endl;
     kout << "  - Memory addr        : *" << (u32)doubleframebuffer << endl;
-
-    
-    
 }
+
+u8* lux::get_framebuffer() { 
+    return doubleframebuffer;
+}
+
 void lux::flip_buffer() { 
     // flip double framebuffer
     memcpy(hardwareInfo.buffer, doubleframebuffer, hardwareInfo.width * hardwareInfo.height * hardwareInfo.pitch);
@@ -116,7 +118,8 @@ void lwin::draw(u8* framebuffer, u32 ypull) {
     kout << "done" << endl;
 }
 void lwin::destroy() { 
-
+    System::Memory::kfree(this->framebuffer);
+    System::Memory::kfree(this->titlebar);
 }
 
 u8* lwin::construct_pointer() { 

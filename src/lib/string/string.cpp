@@ -157,11 +157,8 @@ const char * String::c_str() {
 	}
     ch[all++] = '\0';
 
-    kout << size() << "::";
     for (int i = 0; i < size(); i++) {
-        kout << operator[](i);
     }
-    kout << endl;
 
     NO_INSTRUCTION;
 	return (const char *)ch;

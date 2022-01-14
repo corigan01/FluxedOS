@@ -128,6 +128,8 @@ namespace System
 
             void attach_window(lwin* window);
 
+            u8* get_framebuffer();
+
             private:
             K_Vector<lwin*> windows;
             Driver::GraphicsInfo hardwareInfo;

@@ -112,16 +112,7 @@ void Kernel::system_init() {
     Graphics::lux DisplayServer;
     DisplayServer.init();
 
-    /*lwin BackroundWindow;
-    BackroundWindow.init();
-    BackroundWindow.set_window_position(500, 100);
-    BackroundWindow.set_window_size(200, 200);
-    BackroundWindow.set_window_title("Hello World!");
-
-    DisplayServer.attach_window(&BackroundWindow);
-    u8* bframe = BackroundWindow.construct_pointer();
-    BackroundWindow.fillrect(0xFF0000, 0, 0, BackroundWindow.get_window_width(), BackroundWindow.get_window_height());*/
-    //BackroundWindow.drawstring("Title", 10, 10, 0xFF0000);
+    
 
     lwin BackroundWindow2;
     BackroundWindow2.init();
@@ -139,6 +130,37 @@ void Kernel::system_init() {
     window.set_window_position(100, 100);
     window.set_window_size(200, 200);
     window.set_window_title("Hello World");
+
+    lwin InfomationWindow;
+    InfomationWindow.init();
+    InfomationWindow.set_window_position(500, 500);
+    InfomationWindow.set_window_size(400, 200);
+    InfomationWindow.set_window_title("Infomation Window");
+    DisplayServer.attach_window(&InfomationWindow);
+    u8* bframe = InfomationWindow.construct_pointer();
+    InfomationWindow.fillrect(0x297a5c, 0, 0, InfomationWindow.get_window_width(), InfomationWindow.get_window_height());
+    InfomationWindow.drawstring("FluxedOS", 10, 10, 0xFFFFFF);
+
+    INT_TO_STRING(BUILDb, BUILD);;
+    InfomationWindow.drawstring("Version: 0.0.1 - ", 10, 30, 0xFFFFFF);
+    InfomationWindow.drawstring(BUILDb, 220, 30, 0xFFFFFF);
+    InfomationWindow.drawstring("Author: corigan01", 10, 50, 0xFFFFFF);
+    InfomationWindow.drawstring("Copyright (C) 2022 FluxedOS", 10, 70, 0xFFFFFF);
+
+    INT_TO_STRING(MemoryLeft, pmm::RequestInitial() / (1024 * 1024));
+    INT_TO_STRING(BufferAddress, (u32)DisplayServer.get_framebuffer());
+    INT_TO_STRING(ScreenWidth, Graphics::Driver::getinfo().width);
+    INT_TO_STRING(ScreenHeight, Graphics::Driver::getinfo().height);
+
+    InfomationWindow.drawstring("Installed Memory   : ", 10, 100, 0xFFFFFF);
+    InfomationWindow.drawstring(MemoryLeft, 260, 100, 0xFFFFFF);
+    InfomationWindow.drawstring("Buffer Address     : ", 10, 120, 0xFFFFFF);
+    InfomationWindow.drawstring(BufferAddress, 260, 120, 0xFFFFFF);
+    InfomationWindow.drawstring("Screen Width       : ", 10, 140, 0xFFFFFF);
+    InfomationWindow.drawstring(ScreenWidth, 260, 140, 0xFFFFFF);
+    InfomationWindow.drawstring("Screen Height      : ", 10, 160, 0xFFFFFF);
+    InfomationWindow.drawstring(ScreenHeight, 260, 160, 0xFFFFFF);
+    InfomationWindow.drawstring("CPU PIT RTC KBD VMM PAG FPU VBE", 10, 180, 0xFF0000);
 
     DisplayServer.attach_window(&window);
 
