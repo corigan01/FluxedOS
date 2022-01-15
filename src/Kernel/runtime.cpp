@@ -91,6 +91,7 @@ void Kernel::system_init() {
     //NO_INSTRUCTION;
 
     kout << "Listing PCI..." << endl;
+    Graphics::Driver::drawstring("Listing PCI", 10, 330, 0xFF0000);
 
     for (int e = 0; e < 16; e++) {
         for (int i = 0; i < 64; i++) {
@@ -103,11 +104,25 @@ void Kernel::system_init() {
                 u16 SubClass = Class >> 8;
                 u8 ClassCode  = (u8)Class;
 
+                INT_TO_STRING(pci_s, pci);
+                INT_TO_STRING(device_s, device);
+                
+                Graphics::Driver::drawstring("PCI DEVICE: ", 10, 350 + i * 30, 0xFF0000);
+
+                Graphics::Driver::drawstring(ClassCodeName[Class], 270, 350 + i * 30, 0x00FF00);
+
+
                 kout << "Device (" << pci << ", " << device << ")\t, Class = " << ClassCodeName[Class] << " : Subclass = " << SubClass << endl;
+
             }
         }
     }
 
+
+
+
+    Graphics::Driver::drawstring("Starting Display Server!", 10, 550, 0xFF0000);
+    //while(1) {};
     kout << "Initializing Display Server..." << endl;
     Graphics::lux DisplayServer;
     DisplayServer.init();
@@ -119,11 +134,14 @@ void Kernel::system_init() {
     BackroundWindow2.set_window_position(10, 500);
     BackroundWindow2.set_window_size(400, 200);
     BackroundWindow2.set_window_title("Backround Window");
+    BackroundWindow2.set_window_fullscreen(true);
+
 
     DisplayServer.attach_window(&BackroundWindow2);
-    u8* bframe2 = BackroundWindow2.construct_pointer();
-    BackroundWindow2.fillrect(0xFF0000, 0, 0, BackroundWindow2.get_window_width(), BackroundWindow2.get_window_height());
-    //BackroundWindow2.drawstring("Title", 10, 10, 0xFF0000);
+    BackroundWindow2.construct_pointer();
+    BackroundWindow2.fillrect(0x550000, 0, 0, BackroundWindow2.get_window_width(), BackroundWindow2.get_window_height());
+    //BackroundWindow2.drawstring("Title", 10, 10, 0xFF0000); 55
+
 
     lwin window;
     window.init();
@@ -136,8 +154,9 @@ void Kernel::system_init() {
     InfomationWindow.set_window_position(500, 500);
     InfomationWindow.set_window_size(400, 200);
     InfomationWindow.set_window_title("Infomation Window");
+
     DisplayServer.attach_window(&InfomationWindow);
-    u8* bframe = InfomationWindow.construct_pointer();
+    InfomationWindow.construct_pointer();
     InfomationWindow.fillrect(0x297a5c, 0, 0, InfomationWindow.get_window_width(), InfomationWindow.get_window_height());
     InfomationWindow.drawstring("FluxedOS", 10, 10, 0xFFFFFF);
 
@@ -161,6 +180,8 @@ void Kernel::system_init() {
     InfomationWindow.drawstring("Screen Height      : ", 10, 160, 0xFFFFFF);
     InfomationWindow.drawstring(ScreenHeight, 260, 160, 0xFFFFFF);
     InfomationWindow.drawstring("CPU PIT RTC KBD VMM PAG FPU VBE", 10, 180, 0xFF0000);
+
+    
 
     DisplayServer.attach_window(&window);
 

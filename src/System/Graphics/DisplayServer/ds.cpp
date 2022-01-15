@@ -58,7 +58,7 @@ void lux::flip_buffer() {
 void lux::draw_windows() { 
     memset(doubleframebuffer, 0x00, hardwareInfo.width * hardwareInfo.height * hardwareInfo.pitch);
     for (int i = 0; i < windows.size(); i++) {
-        windows[i]->draw(doubleframebuffer, hardwareInfo.width);
+        windows[i]->draw(doubleframebuffer, hardwareInfo.width, hardwareInfo.height);
     }
 }
 void lux::destroy() { 
@@ -88,7 +88,7 @@ void lwin::init() {
 void lwin::update() { 
 
 }
-void lwin::draw(u8* framebuffer, u32 ypull) { 
+void lwin::draw(u8* framebuffer, u32 ypull, u32 xpull) { 
     // do fancy drawing here
     // otherwise just draw the framebuffer
 
@@ -100,19 +100,32 @@ void lwin::draw(u8* framebuffer, u32 ypull) {
     kout << "  - Window Hight   : " << this->height << endl;
     kout << "  - Framebuffer    : *" << (u32)this->framebuffer << "  -->  *" << (u32)framebuffer << endl;
 
-    const int titlebarsize = 15;
+    const int titlebarsize = this->fullscreen ? 0 : 15;
 
-    this->fillrect_titlebar(0x555555, 0, 0, width, titlebarsize);
-    this->drawstring_titlebar(this->title, 0, 0, 0xFFFFFF);
+    
 
-    for (int e = 0; e < titlebarsize; e++) {
-        for (int r = 0; r < this->width * pitch; r ++) {
-            framebuffer[(e * (ypull * pitch)) + r + ((this->x * pitch) + (this->y * ypull * pitch))] = this->titlebar[e * pitch * width + r];
+    int screenwidth = this->width;
+    int screenhight = this->height;
+    int startingx = this->x;
+    int startingy = this->y;
+
+    if (!this->fullscreen) {
+        this->fillrect_titlebar(0x555555, 0, 0, width, titlebarsize);
+        this->drawstring_titlebar(this->title, 0, 0, 0xFFFFFF);
+        for (int e = 0; e < titlebarsize; e++) {
+            for (int r = 0; r < this->width * pitch; r ++) {
+                framebuffer[(e * (ypull * pitch)) + r + ((startingx * pitch) + (startingy * ypull * pitch))] = this->titlebar[e * pitch * width + r];
+            }
         }
     }
-    for (int hi = (titlebarsize * 1); hi < this->height + (titlebarsize * 1); hi++) {
-        for (int i = 0; i < this->width * this->pitch; i++) {
-            framebuffer[(hi * (ypull * pitch)) + i + ((this->x * pitch) + (this->y * ypull * pitch))] = this->framebuffer[(hi - (titlebarsize * 1)) * pitch * width + i ];       
+    
+    
+    for (int hi = (titlebarsize * 1); hi < screenhight + (titlebarsize * 1); hi++) {
+        for (int i = 0; i < screenwidth * this->pitch; i++) {
+            if (hi < this->height * pitch && i < this->width * this->pitch)
+                framebuffer[(hi * (ypull * pitch)) + i + ((startingx * pitch) + (startingy * ypull * pitch))] = this->framebuffer[(hi - (titlebarsize * 1)) * pitch * width + i ];      
+            //else
+                 //framebuffer[(hi * (ypull * pitch)) + i + ((startingx * pitch) + (startingy * ypull * pitch))] = 0x22;
         }
     }
     kout << "done" << endl;
@@ -123,11 +136,13 @@ void lwin::destroy() {
 }
 
 u8* lwin::construct_pointer() { 
-    this->titlebar = (u8*)System::Memory::kmalloc(15 * this->width * pitch);
-    memset(this->titlebar, 0x00, 15 * this->width * pitch);
+    Driver::GraphicsInfo info = Driver::getinfo();
 
-    u8* pt = (u8*)System::Memory::kmalloc(this->width * this->height * this->pitch); 
-    memset(pt, 0x00, this->width * this->height * this->pitch);
+    this->titlebar = (u8*)System::Memory::kmalloc(15 * info.width * pitch);
+    memset(this->titlebar, 0x00, 15 * info.width * pitch);
+
+    u8* pt = (u8*)System::Memory::kmalloc(info.pitch * info.width * info.height); 
+    memset(pt, 0x00, info.pitch * info.width * info.height);
     this->framebuffer = pt;
     return pt;
 }
@@ -148,6 +163,17 @@ void lwin::set_window_position(int x, int y) {
     this->y = y;
 }
 void lwin::set_window_fullscreen(bool fullscreen) { 
+    this->x_F = this->x;
+    this->y_F = this->y_F;
+    this->width_F = this->width;
+    this->height_F = this->height;
+
+    this->x = 0;
+    this->y = 0;
+
+    this->width = Driver::getinfo().width;
+    this->height = Driver::getinfo().height;
+    
     this->fullscreen = fullscreen;
 }
 void lwin::set_window_resizable(bool resizable) { 

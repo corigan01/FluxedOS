@@ -1,0 +1,1 @@
+#define BUILD_VER @FluxedOS_VERSION_MINOR@

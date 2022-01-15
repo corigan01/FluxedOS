@@ -22,14 +22,15 @@ displayWelcome() {
 # Check the files for changes
 #
 md5sum_check() {
+    OUTPUT="$1"
     mkdir Checksum &> /dev/null
-    md5sum $(find ./ -type f -iregex '.*/.*\.\(c\|cpp\|h\|s\|S\|hpp\)$' ) &> Checksum/sum_new.check
+    md5sum $OUTPUT &> "Checksum/$OUTPUT .check"
 
-    if cmp  $"Checksum/sum_new.check" $"Checksum/sum_old.check"; then
-        cp Checksum/sum_new.check Checksum/sum_old.check 
+    if cmp  $"Checksum/$OUTPUT .check" $"Checksum/$OUTPUT _old.check"; then
+        cp "Checksum/$OUTPUT .check" "Checksum/$OUTPUT _old.check" 
         return 0
     else
-        cp Checksum/sum_new.check Checksum/sum_old.check
+        cp "Checksum/$OUTPUT .check" "Checksum/$OUTPUT _old.check"
         return 1
     fi
 }
@@ -200,9 +201,9 @@ compilec() {
 
     if c++ -m32 -g -I src/ -elf_i386 -std=c++2a -O -fstrength-reduce -fno-use-cxa-atexit -fomit-frame-pointer -O2 -finline-functions -nostdinc -fno-builtin -c  $OUTPUT -fdiagnostics-color=always &> /dev/null; then
          local PFD=$((($(date +%s%N) - $ts)/1000000))
-         printf "[CXX] %-40s%-4s\e[0;32m  $bold DONE - $PFD ms\e[0;34m\n"  "${OUTPUT:0:40}" " $normal"
+         printf "[C++] %-40s%-4s\e[0;32m  $bold DONE - $PFD ms\e[0;34m\n"  "${OUTPUT:0:40}" " $normal"
     else
-        printf "[CXX] %-40s%-4s\e[0;31mFAILED\e[0;34m\n"  "${OUTPUT:0:40}" " "
+        printf "[C++] %-40s%-4s\e[0;31mFAILED\e[0;34m\n"  "${OUTPUT:0:40}" " "
         #ouput the errors
 
         c++ -m32 -I src/ -elf_i386 -std=c++2a -O -fstrength-reduce -fno-use-cxa-atexit -fomit-frame-pointer -O2 -finline-functions -nostdinc -fno-builtin -c  $OUTPUT -fdiagnostics-color=always  &> "log/G++OUTPUT.txt"
@@ -219,6 +220,7 @@ compilec() {
 
 compilestuff() {
     OUTPUT="$1"
+
     if [[ $OUTPUT == *"Proc"* ]]; then
         printf "[PRG] %-40s%-4s\e[0;33mSKIP\e[0;34m\n"  "${OUTPUT:0:40}" " "
     elif [[ $OUTPUT == *".cpp"* ]]; then
@@ -294,7 +296,6 @@ run_build() {
         -cpu max                                \
         -smp 1,sockets=1,cores=1,threads=1      \
         -display gtk                            \
-        -drive file=disk.img,if=ide,format=raw  \
         -m 500m                                 \
         -k en-us                                \
         -serial stdio                           \
@@ -311,7 +312,6 @@ run_build_backup() {
         -cpu max                                \
         -smp 1,sockets=1,cores=1,threads=1      \
         -display gtk                            \
-        -drive file=disk.img,if=ide,format=raw  \
         -m 500m                                 \
         -k en-us                                \
         -serial stdio                           \

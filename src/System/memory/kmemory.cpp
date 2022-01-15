@@ -157,9 +157,22 @@ void* Memory::kmalloc(size_t size) {
                 MemoryMap[i] = CurrentMemoryEntry;
                 MemoryMap.insert_at(i, NewMemoryEntry);
 
-                //for (int i = 0; i < MemoryMap.size(); i++) {
-                //    kout << "MEMORY : " << MemoryMap[i].Start << " --> " << MemoryMap[i].End << ", SIZE: " << MemoryMap[i].End - MemoryMap[i].Start  << "\t USED: " << (MemoryMap[i].Used ? "(USED)" : "(FREE)") << endl;
-                //}
+                for (int i = 0; i < MemoryMap.size(); i++) {
+                    u32 MemorySize = (MemoryMap[i].End - MemoryMap[i].Start);
+                    char* SubScript = " bytes";
+
+                    if (MemorySize > 1 _MB) { 
+                        SubScript = " MB";
+                        MemorySize /= MB;
+                    }
+                    if (MemorySize > 1 _KB) {
+                        SubScript = " KB";
+                        MemorySize /= KB;
+                    }
+                    
+
+                    kout << "MEMORY : " << MemoryMap[i].Start << " --> " << MemoryMap[i].End << ", SIZE: " << MemorySize << SubScript << "\t USED: " << (MemoryMap[i].Used ? "(USED)" : "(FREE)") << endl;
+                }
 
                 memset((void*)MemoryStart, NULL, size);
                 kout << "Returning memory addr *" << (u32)MemoryStart << " with size of " << size << endl << endl;
@@ -180,7 +193,20 @@ void Memory::kfree(void* ptr) {
             ConJoin(i);
             ConJoin(i);
             for (int i = 0; i < MemoryMap.size(); i++) {
-                kout << "MEMORY : " << MemoryMap[i].Start << " --> " << MemoryMap[i].End << ", SIZE: " << MemoryMap[i].End - MemoryMap[i].Start  << "\t USED: " << (MemoryMap[i].Used ? "(USED)" : "(FREE)") << endl;
+                u32 MemorySize = (MemoryMap[i].End - MemoryMap[i].Start);
+                char* SubScript = " bytes";
+
+                if (MemorySize > 1 _MB) { 
+                    SubScript = " MB";
+                    MemorySize /= MB;
+                }
+                if (MemorySize > 1 _KB) {
+                    SubScript = " KB";
+                    MemorySize /= KB;
+                }
+                
+
+                kout << "MEMORY : " << MemoryMap[i].Start << " --> " << MemoryMap[i].End << ", SIZE: " << MemorySize << SubScript << "\t USED: " << (MemoryMap[i].Used ? "(USED)" : "(FREE)") << endl;
             }
             return;
         }

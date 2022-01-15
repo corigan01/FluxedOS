@@ -20,6 +20,7 @@
  */
 
 #include <System/Graphics/vbe.hpp>
+#include <System/Clock/PIT/PIT.hpp>
 
 using namespace System::Graphics;
             

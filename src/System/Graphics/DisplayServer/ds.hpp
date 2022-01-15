@@ -39,7 +39,7 @@ namespace System
 
             void init();
             void update();
-            void draw(u8* framebuffer, u32 ypull);
+            void draw(u8* framebuffer, u32 ypull, u32 xpull);
             void destroy();
 
             void set_framebuffer(u8* buffer);
@@ -97,15 +97,22 @@ namespace System
             int height;
             int x;
             int y;
+
+            int width_F;
+            int height_F;
+            int x_F;
+            int y_F;
+
+
             int pitch = 4;
-            bool fullscreen;
-            bool resizable;
-            bool borderless;
-            bool maximized;
-            bool minimized;
-            bool visible;
-            bool cursor_visible;
-            bool cursor_grabbed;
+            bool fullscreen = false;
+            bool resizable = false;
+            bool borderless = false;
+            bool maximized = false;
+            bool minimized = false;
+            bool visible = true;
+            bool cursor_visible = false;
+            bool cursor_grabbed = false;
             int cursor_type;
             int cursor_x;
             int cursor_y;
