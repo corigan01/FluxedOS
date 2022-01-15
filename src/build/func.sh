@@ -126,10 +126,10 @@ compilegas() {
 compileasm() {
     OUTPUT="$1"
     
-    if [[ $OUTPUT == *".S"* ]]; then
+    if [[ $OUTPUT == *".asm"* ]]; then
         BUILDCOUNT=$(( 1 + BUILDCOUNT))
         compilea $OUTPUT 
-    elif [[ $OUTPUT == *".asm"* ]]; then
+    elif [[ $OUTPUT == *".S"* ]]; then
         BUILDCOUNT=$(( 1 + BUILDCOUNT))
         compilegas $OUTPUT 
     else
