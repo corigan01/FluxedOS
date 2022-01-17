@@ -33,7 +33,7 @@ namespace System
     {
         // General output, this is so you can use any output mode and keep the basic output functions
 
-        #define kout System::Display::SerialLog(__FUNCTION__, __FILE__, __LINE__)
+        #define kout System::Display::SerialLog()
     
         
         
@@ -47,7 +47,7 @@ namespace System
         
         class SerialLog {
             public:        
-            SerialLog(const char * function, const char * file, int line);
+            SerialLog() {};
             
             SerialLog &operator<<(const char* v);
             SerialLog &operator<<(const int &v);
@@ -59,24 +59,15 @@ namespace System
 
             void printf(const char* str, ...);
 
-            
-
             private:
 
             
-            void OutputTraceInfo(const char * v) const { System::IO::Serial::outString(System::IO::Serial::COM_1, "\e[0;33m"); };
+            static void OutputTraceInfo(const char * v) { System::IO::Serial::outString(System::IO::Serial::COM_1, "\e[0;33m"); };
 
             template <typename T>
             void fmat(const char* fmt, T emit, va_list va);
 
-            char* CalledFunc = "";
-            char* CalledFile = "";
-            int CalledLine = 0;
-
-            
-            bool already_displayed = false;
-
-            char hex_c[17] = "0123456789ABCDEF";
+            const char hex_c[17] = "0123456789ABCDEF";
         };
     }
 }

@@ -26,6 +26,7 @@
 #include <lib/vector/KernelVector.hpp>
 #include <System/FPU/fpu.hpp>
 #include <System/Graphics/vbe.hpp>
+#include <System/memory/vmm/vmm.hpp>
 
 void Kernel::init_kernel() {
         

@@ -19,7 +19,7 @@
  *   
  */
 
-#include "BUILD.b"
+
 #include <boot/boot.h>
 #include <System/tty/tty.hpp>
 #include <System/cpu/cpu.hpp>
@@ -51,9 +51,9 @@ class Kernel {
     Kernel(multiboot_info_t* mbt, u32 magic) {
         this->mbt = mbt;
 
-        kout << "Flux Kernel Started..." << endl;                           // tell the console we started the kernel
+        kout << "Flux Kernel Started..." << endl;                             // tell the console we started the kernel
 
-        //auto VGA_DRIVER = Driver::VGA((void*)0x8B0000);        // tell VGA what addr the framebuffer is at
+        //auto VGA_DRIVER = Driver::VGA((void*)0x8B0000);                     // tell VGA what addr the framebuffer is at
         //KernelTTY = &VGA_DRIVER;                                            // bind the tty to the display driver
 
         

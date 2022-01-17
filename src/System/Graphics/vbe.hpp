@@ -30,10 +30,8 @@
 
 namespace System 
 {
-
     namespace Graphics 
     {
-
         namespace Driver 
         {
             struct GraphicsInfo {

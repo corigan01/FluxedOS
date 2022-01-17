@@ -28,28 +28,23 @@ using namespace System::Display;
 
 
     
-SerialLog::SerialLog(const char * function, const char * file, int line) {
+/*SerialLog::SerialLog() {
     System::IO::Serial::init(System::IO::Serial::COM_1);
 
+}*/
 
-    this->CalledFile = (char*)file;
-    this->CalledFunc = (char*)function;
-    this->CalledLine = line;
 
-}
-
-bool endline = false;
 
 bool Check::DidEndLine() {
-    return endline;
+    return false;
 }
 
 void Check::EndLine() {
-    endline = true;
+    //endline = true;
 }
 
 void Check::StartLine() {
-    endline = false;
+    //endline = false;
 }
 
 void SerialLog::printf(const char* str, ...) {
@@ -65,7 +60,7 @@ SerialLog &SerialLog::operator<<(const char* v){
                 
     OutputTraceInfo((const char*)v);
 
-    System::IO::Serial::outString(System::IO::Serial::COM_1, (char*)v );
+    System::IO::Serial::outString(System::IO::Serial::COM_1, v );
 
     return *this;
 }

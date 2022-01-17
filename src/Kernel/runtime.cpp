@@ -25,6 +25,7 @@
 #include <System/memory/kmemory.hpp>
 #include <lib/string/string.hpp>
 #include <System/Graphics/DisplayServer/ds.hpp>
+#include "BUILD.h"
 
 using namespace System;
 using namespace System::IO;

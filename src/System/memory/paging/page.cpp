@@ -102,7 +102,7 @@ void Page::map_addr(u32 v, u32 p, u8 perm) {
 	//pmm::ForceBook(1, p);
 }
 void Page::map_page(u32* page_dir, u32 vpage, u32 ppage) {
-    kout << "idk" << endl;
+    
 
 	short id = vpage >> 22;
 	

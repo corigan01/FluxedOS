@@ -41,21 +41,21 @@ void System::CPU::init(multiboot_info_t* mbt) {
 }
 
 void System::CPU::IDT::init() {
-    kout << "IDT INIT ";
+    //kout << "IDT INIT ";
     idt_install();
-    kout << " OK" << endl;
+    //kout << " OK" << endl;
 }
 
 void System::CPU::GDT::init() {
-    kout << "GDT INIT ";
+    //kout << "GDT INIT ";
     gdt_install();
-    kout << " OK" << endl;
+    //kout << " OK" << endl;
 }
 
 void System::CPU::IRQ::init() {
-    kout << "IRQ INIT ";
+    //kout << "IRQ INIT ";
     irq_install();
-    kout << " OK" << endl;
+    //kout << " OK" << endl;
 }
 
 /*
@@ -173,10 +173,10 @@ void Err_hanlder(struct regs *r) {
 }
 
 void System::CPU::ISR::init() {
-    kout << "ISR INIT ";
+    //kout << "ISR INIT ";
     isr_install();
     register_fault_handler(Err_hanlder);
-    kout << " OK" << endl;
+    //kout << " OK" << endl;
 }
 
 

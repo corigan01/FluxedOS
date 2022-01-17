@@ -103,6 +103,4 @@ typedef __builtin_va_list va_list;
 #define NO_INSTRUCTION Vasm("nop");
 #define HALT Vasm("hlt");
 
-
-
 #endif // !KERNEL__H___CORE

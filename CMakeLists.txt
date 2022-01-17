@@ -2,43 +2,31 @@ cmake_minimum_required(VERSION 3.7)
 
 enable_language(ASM_NASM)
 
-project(FluxedOS VERSION 0.0.1 LANGUAGES CXX C ASM_NASM) 
-
-configure_file(src/Kernel/BUILD.h.in src/Kernel/BUILD.h)
-
-MACRO(HEADER_DIRECTORY return_list file)
-    FILE(GLOB_RECURSE new_list ${file})
-    SET(dir_list "")
-    FOREACH(file_path ${new_list})
-        GET_FILENAME_COMPONENT(dir_path ${file_path} PATH)
-        SET(dir_list ${dir_list} ${dir_path})
-    ENDFOREACH()
-    LIST(REMOVE_DUPLICATES dir_list)
-    SET(${return_list} ${dir_list})
-ENDMACRO()
-
-HEADER_DIRECTORY(header_dir_list *.h)
-HEADER_DIRECTORY(headerpp_dir_list *.hpp)
-
-list(LENGTH header_dir_list header_dir_list_count)
-message(STATUS "[INFO] FOUND ${header_dir_list_count} header .h directories!")
-list(LENGTH headerpp_dir_list headerpp_dir_list_count)
-message(STATUS "[INFO] FOUND ${headerpp_dir_list_count} header .hpp directories!")
-
+project(FluxedOS VERSION 0.0.1 LANGUAGES CXX C ASM_NASM ASM) 
 
 set(CMAKE_NASM_LINK_EXECUTABLE "ld   -o  ")
 set(CAN_USE_ASSEMBLER TRUE)
 set(CMAKE_ASM_NASM_FLAGS "")
 set(CMAKE_ASM_NASM_OBJECT_FORMAT elf)
+set(CMAKE_ASM_FLAGS "-m32")
 set(CMAKE_ASM_NASM_COMPILE_OBJECT "<CMAKE_ASM_NASM_COMPILER> <INCLUDES> <FLAGS> -f ${CMAKE_ASM_NASM_OBJECT_FORMAT} -o <OBJECT> <SOURCE>")
 
+
+add_custom_target(buildver
+    COMMAND python3 ../tools/argpass.py
+)
+
 set ( ASM
-    src/boot/boot.asm
+    #src/boot/boot.asm
     src/CPU/cpu.asm 
     src/CPU/gdt.asm 
     src/CPU/irq.asm 
     src/CPU/isr.asm 
     src/System/panic/stack_dump.asm
+)
+
+set ( GAS 
+    src/boot/boot.S
 )
 
 set ( C 
@@ -84,17 +72,24 @@ set (CXX
     src/System/FPU/fpu.cpp
     src/System/Graphics/DisplayServer/ds.cpp
     src/System/Graphics/vbe.cpp
+    src/System/memory/vmm/vmm.cpp
+    src/boot/cppentry.cpp
 )
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+set_source_files_properties(${ASM} PROPERTIES LANGUAGE ASM_NASM)
+set_source_files_properties(${GAS} PROPERTIES LANGUAGE ASM)
+
 set(CMAKE_C_COMPILE_FEATURES -m32 -g -elf_i386 -O -O2 -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-stack-protector -fpic -fshort-wchar -mno-red-zone -fno-builtin -c)
-set(CMAKE_CXX_COMPILE_FEATURES -m32 -g -I ../src/ -elf_i386 -std=c++2a -O -Wno-write-strings -fstrength-reduce -fno-use-cxa-atexit -fomit-frame-pointer -O2 -finline-functions -nostdinc -fno-builtin -fdiagnostics-color=always)
+set(CMAKE_CXX_COMPILE_FEATURES -m32 -g -elf_i386 -std=c++2a -O -Wno-write-strings -fstrength-reduce -fno-use-cxa-atexit -fomit-frame-pointer -O2 -finline-functions -nostdinc -fno-builtin -fdiagnostics-color=always)
 add_link_options(-m32 -g -O2 -lstdc++ -nostartfiles -Wno-undef -nostdinc -T ../src/linker.ld )
 
-add_executable(FluxedOS.bin ${ASM} ${C} ${CXX})
-target_include_directories(FluxedOS.bin PUBLIC ${header_dir_list}/* ${headerpp_dir_list}/*)
+add_executable(FluxedOS.bin ${GAS} ${ASM} ${C} ${CXX})
+add_dependencies(FluxedOS.bin buildver)
+
+target_include_directories(FluxedOS.bin PUBLIC src)
 
 target_compile_options(FluxedOS.bin PUBLIC $<$<COMPILE_LANG_AND_ID:CXX,GNU>:
     ${CMAKE_CXX_COMPILE_FEATURES}
@@ -104,4 +99,12 @@ target_compile_options(FluxedOS.bin PUBLIC $<$<COMPILE_LANG_AND_ID:C,GNU>:
 >)
 
 
+add_custom_target(FluxedOS.iso
+    COMMAND mkdir -p isodir/boot/grub && cp FluxedOS.bin isodir/boot/FluxedOS.bin && cp ../src/grub.cfg isodir/boot/grub/grub.cfg && grub-mkrescue -o FluxedOS.iso isodir && cp FluxedOS.iso ../ISO
+    DEPENDS FluxedOS.bin
+)
 
+add_custom_target(run USES_TERMINAL
+    COMMAND  qemu-system-x86_64 -cdrom FluxedOS.iso -boot strict=on -cpu max -smp 1,sockets=1,cores=1,threads=1 -display gtk -m 500m -k en-us -serial stdio &
+    DEPENDS FluxedOS.iso
+)
