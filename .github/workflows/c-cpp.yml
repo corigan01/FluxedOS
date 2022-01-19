@@ -30,7 +30,6 @@ jobs:
     - name: Build
       run: |
         # make file runnable, might not be necessary
-        chmod +x "${GITHUB_WORKSPACE}/BuildHeadless.sh"
-        
-        # run script
-        "${GITHUB_WORKSPACE}/BuildHeadless.sh"
+        mkdir build && cd build
+        cmake ..
+        make
