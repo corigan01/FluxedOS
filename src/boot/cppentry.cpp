@@ -22,29 +22,31 @@
 #include "boot.h"
 #include <System/cpu/cpu.hpp>
 #include <CPU/cpu.h>
+#include <System/kout/kout.hpp>
 
 
-void klmain() {
+
+EXTNC_ void klmain() {
 
     //System::CPU::init(0);
     //System::CPU::GDT::init();
     //System::CPU::IDT::init();
 
+
     System::CPU::IDT::init();
     System::CPU::GDT::init();
     System::CPU::ISR::init();
     System::CPU::IRQ::init();
-
     System::CPU::EnableINT();
+
     for (int i = 0; i < 32; i++) { System::CPU::PIC::SendEOI(i); }
 
-    System::IO::Serial::init(System::IO::Serial::COM_1);
-    System::IO::Serial::outString(System::IO::Serial::COM_1, "example");
+     System::IO::Serial::init(System::IO::Serial::COM_1);
+     System::IO::Serial::outString(System::IO::Serial::COM_1, "FluxedOS............\n");
 
-    System::Display::SerialLog log;
-    log << "text";
+    example() << "why?" << endl;
 
-    //log.printf("Hello World!\n");
-
-    
+    example why;
+    why.test();
 }
+

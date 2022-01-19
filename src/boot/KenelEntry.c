@@ -25,8 +25,8 @@
 
 void kernel_entry(multiboot_info_t* mbt) {
 
+    
     klmain();
     //kmain((multiboot_info_t*)0x00, 0);
 
-    while(1);
 }

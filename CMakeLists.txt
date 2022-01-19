@@ -74,6 +74,8 @@ set (CXX
     src/System/Graphics/vbe.cpp
     src/System/memory/vmm/vmm.cpp
     src/boot/cppentry.cpp
+    src/System/CompilerFixes/cxa.cpp
+    src/System/CompilerFixes/icxxabi.cpp
 )
 
 set(CMAKE_CXX_STANDARD 20)
@@ -83,7 +85,8 @@ set_source_files_properties(${ASM} PROPERTIES LANGUAGE ASM_NASM)
 set_source_files_properties(${GAS} PROPERTIES LANGUAGE ASM)
 
 set(CMAKE_C_COMPILE_FEATURES -m32 -g -elf_i386 -O -O2 -fstrength-reduce -fomit-frame-pointer -finline-functions -nostdinc -fno-stack-protector -fpic -fshort-wchar -mno-red-zone -fno-builtin -c)
-set(CMAKE_CXX_COMPILE_FEATURES -m32 -g -elf_i386 -std=c++2a -O -Wno-write-strings -fstrength-reduce -fno-use-cxa-atexit -fomit-frame-pointer -O2 -finline-functions -nostdinc -fno-builtin -fdiagnostics-color=always)
+set(CMAKE_CXX_COMPILE_FEATURES -m32 -g -elf_i386 -std=c++2a -O2 -fno-rtti  -fno-exceptions -Wno-write-strings -fstrength-reduce -fno-use-cxa-atexit -fomit-frame-pointer -finline-functions -nostdinc -fno-builtin -fdiagnostics-color=always)
+#set(CMAKE_CXX_COMPILE_FEATURES -m32 -g -elf_i386 -std=c++2a -O -fno-rtti  -fno-exceptions -Wno-write-strings -fstrength-reduce -fno-use-cxa-atexit -fomit-frame-pointer -finline-functions -nostdinc -fno-builtin -fdiagnostics-color=always)
 add_link_options(-m32 -g -O2 -lstdc++ -nostartfiles -Wno-undef -nostdinc -T ../src/linker.ld )
 
 add_executable(FluxedOS.bin ${GAS} ${ASM} ${C} ${CXX})

@@ -21,7 +21,7 @@
 
 #include "kout.hpp"
 #include <lib/core/core.h>
-#include "../Serial/serial.hpp"
+#include <System/Serial/serial.hpp>
 
 using namespace System;
 using namespace System::Display;
@@ -32,7 +32,6 @@ using namespace System::Display;
     System::IO::Serial::init(System::IO::Serial::COM_1);
 
 }*/
-
 
 
 bool Check::DidEndLine() {
@@ -240,4 +239,16 @@ SerialLog &SerialLog::operator<<(const T &v) {
             }
 
 */
-        
+
+/*example &example::operator<<(const char* i) {
+    System::IO::Serial::outString(System::IO::Serial::COM_1, i);
+    return *this;
+}
+
+void whyno() {
+
+}*/
+
+void example::test() {
+    
+}

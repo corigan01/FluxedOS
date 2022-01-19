@@ -25,5 +25,6 @@
         "limits": "cpp",
         "variant": "cpp",
         "chrono": "cpp"
-    }
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
 }

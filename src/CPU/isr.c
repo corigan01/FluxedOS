@@ -144,6 +144,9 @@ isr_t Fault_handler = 0;
 
 void fault_handler(struct regs *r)
 {
+    u16* vadd = (u16*)0xC03FF000;
+    vadd[0] = 0xFF00;
+    vadd[1] = 0x00FF;
 
      //blank function pointer
     void (*handler)(struct regs *r);

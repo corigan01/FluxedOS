@@ -1,5 +1,2 @@
-/usr/bin/ld: obj/boot.asm.o: warning: relocation in read-only section `.text'
-/usr/bin/ld: obj/cpu.asm.o: in function `load':
-./CPU/cpu.asm:(.text+0x29): undefined reference to `stublet'
+/usr/bin/ld: obj/boot.asm.o: warning: relocation in read-only section `.multiboot'
 /usr/bin/ld: warning: creating DT_TEXTREL in a PIE
-collect2: error: ld returned 1 exit status

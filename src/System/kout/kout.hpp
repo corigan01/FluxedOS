@@ -25,7 +25,7 @@
 #include "../Serial/serial.hpp"
 #include "../../lib/StanderdOperations/Operations.hpp"
 
-constexpr const char* endl = "\n\0";
+#define endl "\n\0"
 
 namespace System
 {
@@ -35,7 +35,6 @@ namespace System
 
         #define kout System::Display::SerialLog()
     
-        
         
         namespace Check 
         {
@@ -47,7 +46,8 @@ namespace System
         
         class SerialLog {
             public:        
-            SerialLog() {};
+            SerialLog() { System::IO::Serial::init(System::IO::Serial::COM_1); };
+            ~SerialLog() {};
             
             SerialLog &operator<<(const char* v);
             SerialLog &operator<<(const int &v);
@@ -61,8 +61,7 @@ namespace System
 
             private:
 
-            
-            static void OutputTraceInfo(const char * v) { System::IO::Serial::outString(System::IO::Serial::COM_1, "\e[0;33m"); };
+            void OutputTraceInfo(const char * v) { System::IO::Serial::outString(System::IO::Serial::COM_1, "\e[0;33m"); };
 
             template <typename T>
             void fmat(const char* fmt, T emit, va_list va);
@@ -72,3 +71,17 @@ namespace System
     }
 }
 
+
+
+class example {
+    public:
+
+    example() { System::IO::Serial::init(System::IO::Serial::COM_1); }
+    ~example() { };
+    example &operator<<(const char* i) {
+        System::IO::Serial::outString(System::IO::Serial::COM_1, i);
+        return *this;
+    }
+    void test();
+    
+};

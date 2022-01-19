@@ -143,15 +143,13 @@ _start:
 	movl %cr3, %ecx
 	movl %ecx, %cr3
 
-    
-
 	# Set up the stack.
 	mov $stack_top, %esp
 
     push %ebx
 
 	# Enter the high-level kernel.
-	call kernel_entry
+	call klmain
 
 	# Infinite loop if the system has nothing more to do.
 	cli
