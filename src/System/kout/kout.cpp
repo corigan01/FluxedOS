@@ -250,5 +250,10 @@ void whyno() {
 }*/
 
 void example::test() {
-    
+    //while(1) {};
 }
+
+example &example::operator<<(const char* i) {
+        System::IO::Serial::outString(System::IO::Serial::COM_1, i);
+        return *this;
+    }

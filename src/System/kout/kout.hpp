@@ -46,7 +46,7 @@ namespace System
         
         class SerialLog {
             public:        
-            SerialLog() { System::IO::Serial::init(System::IO::Serial::COM_1); };
+            SerialLog() { /*System::IO::Serial::init(System::IO::Serial::COM_1);*/ };
             ~SerialLog() {};
             
             SerialLog &operator<<(const char* v);
@@ -78,10 +78,7 @@ class example {
 
     example() { System::IO::Serial::init(System::IO::Serial::COM_1); }
     ~example() { };
-    example &operator<<(const char* i) {
-        System::IO::Serial::outString(System::IO::Serial::COM_1, i);
-        return *this;
-    }
+    example &operator<<(const char* i);
     void test();
     
 };

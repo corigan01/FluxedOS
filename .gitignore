@@ -5,3 +5,6 @@
 /.vs
 /build
 /log
+/tools/*
+!/tools/cross-build.sh
+!/tools/argpass.py

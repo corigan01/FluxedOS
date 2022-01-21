@@ -149,7 +149,15 @@ _start:
     push %ebx
 
 	# Enter the high-level kernel.
-	call klmain
+	call kernel_entry
+
+	# call cxa
+	# subl $4, %esp 
+	# movl $0x0, %esp
+	
+	# call __cxa_finalize
+	
+	# addl $4, %esp
 
 	# Infinite loop if the system has nothing more to do.
 	cli

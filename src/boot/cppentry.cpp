@@ -26,17 +26,18 @@
 
 
 
-EXTNC_ void klmain() {
-
+void klmain() {
+    
     //System::CPU::init(0);
     //System::CPU::GDT::init();
     //System::CPU::IDT::init();
-
 
     System::CPU::IDT::init();
     System::CPU::GDT::init();
     System::CPU::ISR::init();
     System::CPU::IRQ::init();
+
+
     System::CPU::EnableINT();
 
     for (int i = 0; i < 32; i++) { System::CPU::PIC::SendEOI(i); }
@@ -44,9 +45,20 @@ EXTNC_ void klmain() {
      System::IO::Serial::init(System::IO::Serial::COM_1);
      System::IO::Serial::outString(System::IO::Serial::COM_1, "FluxedOS............\n");
 
-    example() << "why?" << endl;
+    //example() << "why?" << endl;
 
-    example why;
-    why.test();
+    //example why;
+    //why.test();
+
+    //example() << "Lets try kout!" << endl;
+    //kout << "Hello From Kout!" << endl;
+    
+
+
+    //System::Display::SerialLog() << "test";
+
+    //kout << "test" << endl;
+
+
 }
 
