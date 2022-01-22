@@ -57,7 +57,7 @@ void Kernel::init_kernel() {
 
         Graphics::Driver::drawstring("IRQ", 10, 110, 0xFF0000);
 
-        ///Vasm("int $0x0");
+        //Vasm("int $0x0");
 
         
         EnableINT();
@@ -70,6 +70,7 @@ void Kernel::init_kernel() {
         PIT::TimerPhase(1000);
         PIT::init();
         KernelTTY->print_str("PIT ");
+
 
         Graphics::Driver::drawstring("PIT", 10, 150, 0xFF0000);
 
@@ -102,7 +103,7 @@ void Kernel::init_kernel() {
 
 
         kout << endl << endl;
-        init_memory(mbt);
+        /*init_memory(mbt);
         
         Page_Entry * Pages;
         size_t Pages_size = 10;
@@ -114,7 +115,7 @@ void Kernel::init_kernel() {
         kout << "Giving Memory to kmalloc..." << endl;
         Memory::PagePool(Pages, Pages_size);
 
-        kout << "-" << endl;
+        kout << "-" << endl;*/
 
 
         KernelTTY->print_str("kalloc ");

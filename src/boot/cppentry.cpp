@@ -42,22 +42,10 @@ void klmain() {
 
     for (int i = 0; i < 32; i++) { System::CPU::PIC::SendEOI(i); }
 
-     System::IO::Serial::init(System::IO::Serial::COM_1);
-     System::IO::Serial::outString(System::IO::Serial::COM_1, "FluxedOS............\n");
 
-    //example() << "why?" << endl;
+    kout << "FluxedOS............\n";
 
-    //example why;
-    //why.test();
-
-    //example() << "Lets try kout!" << endl;
-    //kout << "Hello From Kout!" << endl;
     
-
-
-    //System::Display::SerialLog() << "test";
-
-    //kout << "test" << endl;
 
 
 }

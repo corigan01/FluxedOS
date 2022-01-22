@@ -23,9 +23,9 @@
 
 
 int kmain(multiboot_info_t* mbt, u32 magic) {
-    //kout << "Hello, kernel World!\n" << endl;
-    //Kernel krnl(mbt, magic);
-    //krnl.init_kernel();
-    //krnl.system_init();
+    kout << "Hello, kernel World!\n" << endl;
+    Kernel krnl(mbt, magic);
+    krnl.init_kernel();
+    krnl.system_init();
 
 }

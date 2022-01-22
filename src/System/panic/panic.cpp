@@ -37,95 +37,11 @@ struct StackFrame {
 };
 
 extern "C" void dump_hex(char* stack) {
-    if (stack != NULL)
-
-    kout << "\n\n==========================\nStack dump\n==========================" << endl;
-    //kout << (u32)stack << "\n";
-
-    struct StackFrame *Stack;
-    asm ("movl %%ebp,%0" : "=r"(Stack) ::);
-
-    kout << "0x";    
-    for (u32 i = 0; Stack && i < 1024; i++) {
-        kout.printf("%x", Stack->eip);
-        
-        Stack = Stack->edp;
-    }
-    kout << endl;
-    
-    for (int i = 0; i < 0; i++) {
-        u8 number = (u8)stack[i];
-
-        if (i % 20 == 0) {
-            kout << endl << "0x";
-        }
-        else if (i % 4 == 0) {
-            kout << "\t" << "0x";
-        }
-
-        if (number == 0x9A || number == 0xE8 || number == 0xFF / 2) {
-            //kout << ":PUSH:";
-        }
-        else if (number == 0xC2 || number == 0xC3 || number == 0xCA || number == 0xCD) {
-            //kout << ":RETN:";
-        }
-        //else
-            kout.printf("%x", number);
-
-        //kout << (u8)stack[i] << "\t";
-        
-    }
-    
-    //kout << "\'" << endl;
-    kout << endl;
+   
 }
 
 void PANIC::smart_panic(multiboot_info_t* mbt, panic_structure panic) {
-    {
-    auto VGA_DRIVER = Display::Driver::VGA((void*)mbt->framebuffer_addr);        // tell VGA what addr the framebuffer is at
-    m_tty = &VGA_DRIVER;   
-    }
     
-    m_tty->setcolor(Display::Driver::COLOR::WHITE, Display::Driver::COLOR::BRIGHT_RED);
-    
-    auto lineDisplay = [](u32 for_len, char* ch) {
-        for (u8 i = 0; i < for_len; i++) {
-            m_tty->print_str(ch);
-        }
-    };
-
-    lineDisplay(25, "\n");
-    lineDisplay(80, "#");
-    m_tty->print_str("\n");
-
-    m_tty->print_str(panic.title);
-    
-    lineDisplay(80 - (strlen(panic.title) + 20), " ");
-
-    m_tty->print_str("TYPE: ");
-
-    switch (panic.type)
-    {
-    case PANIC::type::FAULT:
-        m_tty->print_str("GENERAL FAULT!");
-        break;
-
-    case PANIC::type::UNKNOWN_ERROR:
-        m_tty->print_str("UNKNOWN ERROR!");
-        break;
-    
-    default:
-        break;
-    }
-
-    m_tty->print_str("\n");
-    lineDisplay(80, "#");
-    m_tty->print_str("\n");
-
-
-    //stack_dump();
-
-    while(1);
 
 }
 

@@ -61,7 +61,7 @@ class Kernel {
 
         kout << "Found Multiboot Header at *" << (u32)mbt << endl;
 
-        System::Graphics::Driver::gxinit((void*)mbt->framebuffer_addr, 1024, 768);        
+        //System::Graphics::Driver::gxinit((void*)mbt->framebuffer_addr, 1024, 768);        
 
     }
 

@@ -15,13 +15,9 @@ set(CMAKE_ASM_FLAGS "-m32")
 set(CMAKE_ASM_NASM_COMPILE_OBJECT "<CMAKE_ASM_NASM_COMPILER> <INCLUDES> <FLAGS> -f ${CMAKE_ASM_NASM_OBJECT_FORMAT} -o <OBJECT> <SOURCE>")
 set(CMAKE_CROSSCOMPILING 1)
 
-set(REVPATH /home/corigan01/Desktop/Programming/FluxedOS/tools/cross-compiler/gcc-i386/bin)
+set(CMAKE_C_COMPILER /home/corigan01/src/toolchains/build-gcc-11.2.0-i386-Linux-x86_64/gcc/gcc-cross)
+set(CMAKE_CXX_COMPILER /home/corigan01/src/toolchains/build-gcc-11.2.0-i386-Linux-x86_64/gcc/g++-cross)
 
-
-set(CC ${REVPATH}/i386-elf-gcc)
-set(CXX ${REVPATH}/i386-elf-g++)
-set(CMAKE_C_COMPILER ${REVPATH}/i386-elf-gcc)
-set(CMAKE_CXX_COMPILER ${REVPATH}/i386-elf-g++)
 
 add_custom_target(buildver
     COMMAND python3 ../tools/argpass.py
@@ -92,17 +88,17 @@ set (CXX
 set_source_files_properties(${ASM} PROPERTIES LANGUAGE ASM_NASM)
 set_source_files_properties(${GAS} PROPERTIES LANGUAGE ASM)
 
-set(CMAKE_C_COMPILE_FEATURES  -g  -nostdinc 
+set(CMAKE_C_COMPILE_FEATURES  -g -m32 -nostdinc -B/home/corigan01/src/toolchains/build-gcc-11.2.0-i386-Linux-x86_64/gcc/
  -fstrength-reduce -fPIE -fomit-frame-pointer
  -finline-functions -fno-stack-protector
  -fpic -fshort-wchar -mno-red-zone -fno-builtin)
-set(CMAKE_CXX_COMPILE_FEATURES  -g  -nostdinc -B/home/corigan01/FluxedOS/tools/cross-compiler/gcc-i386/
+set(CMAKE_CXX_COMPILE_FEATURES -g -m32 -nostdinc -B/home/corigan01/src/toolchains/build-gcc-11.2.0-i386-Linux-x86_64/gcc/
  -fno-rtti -fPIE -fno-exceptions -Wno-write-strings 
  -fno-stack-protector -fstrength-reduce 
  -fomit-frame-pointer -finline-functions -fno-builtin 
  -fdiagnostics-color=always)
 #set(CMAKE_CXX_COMPILE_FEATURES -m32 -g -elf_i386 -std=c++2a -O -fno-rtti  -fno-exceptions -Wno-write-strings -fstrength-reduce -fno-use-cxa-atexit -fomit-frame-pointer -finline-functions -nostdinc -fno-builtin -fdiagnostics-color=always)
-add_link_options(-m32 -g -O0 -Wall -Werror -Wextra -ffreestanding -fno-rtti -fPIE -fno-stack-protector -fno-exceptions -lgcc -nostdinc -nostartfiles -Wno-undef -nostdinc -T ../src/linker.ld )
+add_link_options(-m32 -B/home/corigan01/src/toolchains/build-gcc-11.2.0-i386-Linux-x86_64/gcc/ -g -O0 -Wall -Werror -Wextra -ffreestanding -fno-rtti -fPIE  -fno-stack-protector -fno-exceptions -nostartfiles -Wno-undef -nostdlib -nostdinc -T ../src/linker.ld  )
 
 add_executable(FluxedOS.bin ${GAS} ${ASM} ${C} ${CXX})
 add_dependencies(FluxedOS.bin buildver)

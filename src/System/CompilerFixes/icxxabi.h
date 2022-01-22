@@ -21,7 +21,7 @@
 
 #pragma once
 
-#if 0
+#if 1
 #ifndef _ICXXABI_H
 	#define _ICXXABI_H
  
