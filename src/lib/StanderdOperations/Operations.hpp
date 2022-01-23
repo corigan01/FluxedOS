@@ -33,7 +33,7 @@ int     strncmp_    (const char* s1, const char* s2, int c );
 uint32  strlen      (const char* str);
 uint32  digit_count (int num);
 
-void    itoa        (int num, char *number);
+void    itoa        (u32 num, char *number);
 void    strcat      (void *dest,const void *src);
 void    memcpy      (void *dest, void *src, size_t n);
 

@@ -41,6 +41,7 @@ void Driver::gxinit(void* buffer, u32 screen_x, u32 screen_y)  {
 }
 
 void Driver::putpixel(int x, int y, u32 color) {
+    if ((u32)Buffer == 0xFFFFFF) return;
     if (x < 0 || x >= rex || y < 0 || y >= rey) return;
 
     u32 where = (x * pitch) + (y * pitch * rex);

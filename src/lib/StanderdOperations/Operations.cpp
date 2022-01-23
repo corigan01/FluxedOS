@@ -69,7 +69,7 @@ uint32 strlen(const char* str)
   return length;
 }
 
-uint32 digit_count(int num)
+uint32 digit_count(u32 num)
 {
   uint32 count = 0;
   if(num == 0)
@@ -81,10 +81,10 @@ uint32 digit_count(int num)
   return count;
 }
 
-void itoa(int num, char *number)
+void itoa(u32 num, char *number)
 {
-  int dgcount = digit_count(num);
-  int index = dgcount - 1;
+  u32 dgcount = digit_count(num);
+  u32 index = dgcount - 1;
   char x;
   if(num == 0 && dgcount == 1){
     number[0] = '0';

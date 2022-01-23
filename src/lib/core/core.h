@@ -85,7 +85,14 @@ struct reg_packed {
 #define EXTNC_
 #endif
 
-#define EXTNC_START {
+#ifdef __cplusplus
+#define EXTNC_START extern "C" {
+#define ECTNC_END }
+#else
+#define EXTNC_START
+#define ECTNC_END 
+#endif
+
 #define ECTNC_END }
 
 

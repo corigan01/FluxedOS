@@ -101,8 +101,9 @@ _start:
 	loop 1b
 
 3:
+	
 	# Map VGA video memory to 0xC03FF000 as "present, writable".
-	movl $(0x000B8000 | 0x003), boot_page_table1 - 0xC0000000 + 1023 * 4
+	movl $(0x10000 | 0x003), boot_page_table1 - 0xC0000000 + 1023 * 4
     # Map the eax and ebx to virtal addresses.
 
 

@@ -183,6 +183,7 @@ void* Memory::kmalloc(size_t size) {
     }
 
     kout << "COULD NOT FIND MEMORY, OR IS OUT OF MEMORY!" << endl;
+    Vasm("int $0x13"); // Cause fault because we are just going to page fault anyway
     return (void*)NULL;
 }
 void Memory::kfree(void* ptr) {

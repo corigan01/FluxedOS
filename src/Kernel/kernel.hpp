@@ -48,8 +48,8 @@ using namespace System::Display::Driver;
 class Kernel {
     public:
 
-    Kernel(multiboot_info_t* mbt, u32 magic) {
-        this->mbt = mbt;
+    Kernel(multiboot_info_t* multboot, u32 magic) {
+        mbt = (multiboot_info_t*)0xC03FF000;
 
         kout << "Flux Kernel Started..." << endl;                             // tell the console we started the kernel
 
@@ -60,6 +60,7 @@ class Kernel {
         //KernelTTY  = &VBE_DRIVER;
 
         kout << "Found Multiboot Header at *" << (u32)mbt << endl;
+        kout << "Found Framebuffer addr at *" << (u32)mbt->framebuffer_addr << endl;
 
         //System::Graphics::Driver::gxinit((void*)mbt->framebuffer_addr, 1024, 768);        
 
