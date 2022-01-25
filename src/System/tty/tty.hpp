@@ -33,12 +33,12 @@ namespace System
             tty();
             ~tty();
 
-             void BufferSet(u16* buffer);
-             void init(void* buffer, u32 screen_x, u32 screen_y); 
-             void print_char(char c);
-             void print_str(const char * str);
-             void printf(const char *str, ...);
-             void setcolor(u8 f, u8 b);
+            void BufferSet(u16* buffer);
+            void init(void* buffer, u32 screen_x, u32 screen_y); 
+            void print_char(char c);
+            void print_str(const char * str);
+            void printf(const char *str, ...);
+            void setcolor(u8 f, u8 b);
 
 
         };

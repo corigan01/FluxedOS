@@ -15,7 +15,7 @@ set(CMAKE_ASM_FLAGS "-m32")
 set(CMAKE_ASM_NASM_COMPILE_OBJECT "<CMAKE_ASM_NASM_COMPILER> <INCLUDES> <FLAGS> -f ${CMAKE_ASM_NASM_OBJECT_FORMAT} -o <OBJECT> <SOURCE>")
 set(CMAKE_CROSSCOMPILING 1)
 
-set(CROSS_PATH ../tools/toolchains)
+set(CROSS_PATH ../build/toolchains)
 
 set(CMAKE_C_COMPILER ${CROSS_PATH}/build-gcc-11.2.0-i386-Linux-x86_64/gcc/gcc-cross)
 set(CMAKE_CXX_COMPILER ${CROSS_PATH}/build-gcc-11.2.0-i386-Linux-x86_64/gcc/g++-cross)
@@ -96,7 +96,7 @@ set(CMAKE_C_COMPILE_FEATURES  -g -m32 -nostdinc -B${CROSS_PATH}/build-gcc-11.2.0
  -fpic -fshort-wchar -mno-red-zone -fno-builtin)
 set(CMAKE_CXX_COMPILE_FEATURES -g -m32 -nostdinc -B${CROSS_PATH}/build-gcc-11.2.0-i386-Linux-x86_64/gcc
  -fno-rtti -fPIE -fno-exceptions -Wno-write-strings 
- -fno-stack-protector -fstrength-reduce 
+ -fno-stack-protector 
  -fomit-frame-pointer -finline-functions -fno-builtin 
  -fdiagnostics-color=always)
 #set(CMAKE_CXX_COMPILE_FEATURES -m32 -g -elf_i386 -std=c++2a -O -fno-rtti  -fno-exceptions -Wno-write-strings -fstrength-reduce -fno-use-cxa-atexit -fomit-frame-pointer -finline-functions -nostdinc -fno-builtin -fdiagnostics-color=always)

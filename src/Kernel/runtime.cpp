@@ -113,12 +113,12 @@ void Kernel::system_init() {
                 Graphics::Driver::drawstring(ClassCodeName[Class], 270, 350 + i * 30, 0x00FF00);
 
 
-                kout << "Device (" << pci << ", " << device << ")\t, Class = " << ClassCodeName[Class] << " : Subclass = " << SubClass << endl;
+                kout << "\tVender: " << pci << "\t Device: " << device << "\t Class: " << ClassCodeName[Class] << "\t Subclass: " << SubClass << endl;
 
             }
         }
     }
-
+    kout << endl;
 
 
 
@@ -209,17 +209,17 @@ void Kernel::system_init() {
     kout << "Memory Test ------------" << endl;
     auto v1 = kmalloc(10);
     
-    KernelTTY->setcolor(COLOR::GREEN, COLOR::BLACK);
+    KernelTTY.setcolor(COLOR::GREEN, COLOR::BLACK);
     kout << (u32)v1 << endl;
     if (v1 != NULL) {
-        KernelTTY->print_str("Memory test passed!!");
-        KernelTTY->printf(" Got addr *%d for memory! \n", (u32)v1);
+        KernelTTY.print_str("Memory test passed!!");
+        KernelTTY.printf(" Got addr *%d for memory! \n", (u32)v1);
     }
     else {
-        KernelTTY->print_str("Memory test failed!!");
+        KernelTTY.print_str("Memory test failed!!");
     }
     kout << "System Done!" << endl;
-    KernelTTY->setcolor(COLOR::WHITE, COLOR::BLACK);
+    KernelTTY.setcolor(COLOR::WHITE, COLOR::BLACK);
     kfree(v1);*/
 
     /*K_Vector<int> test_vector;

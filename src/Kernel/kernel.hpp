@@ -49,33 +49,116 @@ class Kernel {
     public:
 
     Kernel(multiboot_info_t* multboot, u32 magic) {
-        mbt = (multiboot_info_t*)0xC03FF000;
+        mbt = multboot;
 
         kout << "Flux Kernel Started..." << endl;                             // tell the console we started the kernel
 
-        //auto VGA_DRIVER = Driver::VGA((void*)0x8B0000);                     // tell VGA what addr the framebuffer is at
-        //KernelTTY = &VGA_DRIVER;                                            // bind the tty to the display driver
+        if (mbt->framebuffer_type == 3) { // This is GFX mode
+            System::Graphics::Driver::gxinit((void*)mbt->framebuffer_addr, 1024, 768);        
+        }
+        else { // This is text mode
+            KernelTTY.init(0xC03FF000 - (4 _KB));;                 // tell VGA what addr the framebuffer is at
+                                                                  // bind the tty to the display driver
+        }   
+
+        
+        kout << "Initializing CPU" << endl;                              // tell the console we are initializing the system
+
+        CPU::init(mbt); KernelTTY.print_str("CPU ");
+        kout << "\tCPU" << kout.BOLD_GREEN << "     OK" << kout.YELLOW << endl;
+        GDT::init(); KernelTTY.print_str("GDT ");
+        kout << "\tGDT" << kout.BOLD_GREEN << "     OK" << kout.YELLOW << endl;
+        IDT::init(); KernelTTY.print_str("IDT ");
+        kout << "\tIDT" << kout.BOLD_GREEN << "     OK" << kout.YELLOW << endl;
+        ISR::init(); KernelTTY.print_str("ISR ");
+        kout << "\tISR" << kout.BOLD_GREEN << "     OK" << kout.YELLOW << endl;
+        IRQ::init(); KernelTTY.print_str("IRQ ");
+        kout << "\tIRQ" << kout.BOLD_GREEN << "     OK" << kout.YELLOW << endl;
+        EnableINT();
+        kout << "\tINT" << kout.BOLD_GREEN << "     OK" << kout.YELLOW << endl;
+
+        kout << "\tPIC ";
+        for (int i = 0; i < 32; i++) {
+            PIC::SendEOI(i);
+            if (i % 11 == 0) {
+                kout << ".";
+            }
+             
+        }
+        kout << kout.BOLD_GREEN << " OK" << kout.YELLOW << endl << endl;
+
+        KernelTTY.print_str("PIC ");
+
+        kout << "Initializing Memory" << endl;                              // tell the console we are initializing the system
+        kout << "\tDumb Memory Allocation Area --> 0x" << kout.ToHex(magic) << " to 0x" << kout.ToHex(magic + (4 _KB * 2)) << " - 8KB" << endl;
+
+        //init_memory(mbt);
+        
+        Page_Entry * Pages;
+        size_t Pages_size = 2;
+
+        for (u32 i = 0; i < Pages_size; i++) {
+                kout << "Mapping page: " << i << endl;
+                Pages[i] = {0, (magic + (i * (4 _KB))), 0};
+        }
+        kout << "Giving Memory to kmalloc..." << endl;
+        Memory::PagePool(Pages, Pages_size);
+
+        kout << endl << endl;
+
 
         
         //KernelTTY  = &VBE_DRIVER;
 
-        kout << "Found Multiboot Header at *" << (u32)mbt << endl;
-        kout << "Found Framebuffer addr at *" << (u32)mbt->framebuffer_addr << endl;
+        kout << "Multiboot info (*" << (u32)mbt << ")" << endl;
+        kout << "\tflags                : " << mbt->flags << endl;
+        kout << "\tmem_lower            : " << mbt->mem_lower << endl;
+        kout << "\tmem_upper            : " << mbt->mem_upper << endl;
+        kout << "\tboot_device          : " << mbt->boot_device << endl;
+        kout << "\tcmdline              : " << mbt->cmdline << endl;
+        kout << "\tmods_count           : " << mbt->mods_count << endl;
+        kout << "\tmods_addr            : " << mbt->mods_addr << endl;
+        kout << "\tmmap_length          : " << mbt->mmap_length << endl;
+        kout << "\tmmap_addr            : " << mbt->mmap_addr << endl;
+        kout << "\tdrives_length        : " << mbt->drives_length << endl;
+        kout << "\tdrives_addr          : " << mbt->drives_addr << endl;
+        kout << "\tconfig_table         : " << mbt->config_table << endl;
+        kout << "\tboot_loader_name     : " << mbt->boot_loader_name << endl;
+        kout << "\tapm_table            : " << mbt->apm_table << endl;
+        kout << "\tvbe_control_info     : " << mbt->vbe_control_info << endl;
+        kout << "\tvbe_mode_info        : " << mbt->vbe_mode_info << endl;
+        kout << "\tvbe_mode             : " << mbt->vbe_mode << endl;
+        kout << "\tvbe_interface_seg    : " << mbt->vbe_interface_seg << endl;
+        kout << "\tvbe_interface_off    : " << mbt->vbe_interface_off << endl;
+        kout << "\tvbe_interface_len    : " << mbt->vbe_interface_len << endl;
+        kout << "\tframebuffer_addr     : " << mbt->framebuffer_addr << endl;
+        kout << "\tframebuffer_pitch    : " << mbt->framebuffer_pitch << endl;
+        kout << "\tframebuffer_width    : " << mbt->framebuffer_width << " bytes" << endl;
+        kout << "\tframebuffer_height   : " << mbt->framebuffer_height << " bytes" << endl;
+        kout << "\tframebuffer dims     : " << mbt->framebuffer_width / 4 << "x" << (int)(mbt->framebuffer_height * 0.75) << endl;
+        kout << "\tframebuffer_bpp      : " << mbt->framebuffer_bpp << endl;
+        kout << "\tframebuffer_type     : " << mbt->framebuffer_type << endl;
+        kout << endl;
 
-        //System::Graphics::Driver::gxinit((void*)mbt->framebuffer_addr, 1024, 768);        
+        
+
+
+        
+
+
 
     }
 
     ~Kernel() {
         /* Kernel Finish */
-        KernelTTY->setcolor(COLOR::WHITE, COLOR::BLACK);
+        KernelTTY.setcolor(COLOR::WHITE, COLOR::BLACK);
         PIT::Sleep(1000);
-        KernelTTY->print_str("\n\n--------------------------------------------------------------------------------------\nKernel Eneded");
+        KernelTTY.print_str("\n\n--------------------------------------------------------------------------------------\nKernel Eneded");
         for (int i = 0; i < 10; i++) {
             PIT::Sleep(1000);
-            KernelTTY->print_str(".");
+            KernelTTY.print_str(".");
         }
-        KernelTTY->print_str("\nPowerHold!\n");
+        KernelTTY.print_str("\nPowerHold!\n");
 
         
         
@@ -87,7 +170,7 @@ class Kernel {
     void system_init();
 
     multiboot_info_t* mbt;
-    tty* KernelTTY;
+    Driver::VGA KernelTTY;
     //Driver::vbe VBE_DRIVER; 
 
 

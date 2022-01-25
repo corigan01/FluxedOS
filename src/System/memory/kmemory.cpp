@@ -123,7 +123,7 @@ void* Memory::kmalloc(size_t size) {
         return NULL;
     }
 
-   kout << "Requested size " << size << ". Searching..." << endl;
+   kout << "Requested size " << kout.BOLD_CYAN << size << kout.YELLOW << ". Searching..." << endl;
 
     for (u32 i = 0; i < MemoryMap.size(); i++) {
         //kout << "Finding Memory..." << endl;
@@ -182,7 +182,7 @@ void* Memory::kmalloc(size_t size) {
         }
     }
 
-    kout << "COULD NOT FIND MEMORY, OR IS OUT OF MEMORY!" << endl;
+    kout << kout.BOLD_RED << "COULD NOT FIND MEMORY, OR IS OUT OF MEMORY!" << kout.YELLOW << endl;
     Vasm("int $0x13"); // Cause fault because we are just going to page fault anyway
     return (void*)NULL;
 }

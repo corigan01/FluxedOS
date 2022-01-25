@@ -43,7 +43,7 @@ void klmain() {
     for (int i = 0; i < 32; i++) { System::CPU::PIC::SendEOI(i); }
 
 
-    kout << "FluxedOS............\n";
+    kout << kout.YELLOW << "FluxedOS............\n";
 
     
 

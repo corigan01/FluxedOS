@@ -30,6 +30,11 @@ u32 rex = 0, rey = 0;
 u32 pixelwidth = 1, pitch = 1;
 
 void Driver::gxinit(void* buffer, u32 screen_x, u32 screen_y)  {
+
+    kout << "\nStarting Graphics Kernel Driver:" <<
+        "\n\tScreen Resolution: " << screen_x << "x" << screen_y <<
+        "\n\tBuffer Address: " << (u32)buffer << endl << endl;
+
     rex = screen_x;
     rey = screen_y;
 

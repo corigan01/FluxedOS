@@ -134,42 +134,57 @@ void System::CPU::IRQ::uninstallIRQ(int irq) {
 
 void Err_hanlder(struct regs *r) {
     kout << "\0\0\0\0\n" << endl;
-    kout << "\n\nCRITICAL FAULT ENCOUNTERED\n========================================";
+    kout << kout.BOLD << kout.BLINK_RED << "\n\nFAULT HANDLER" << kout.YELLOW;
+    kout << "\tHeader Address " << kout.BOLD_GREEN << "0x" << kout.ToHex((u32)r) << kout.YELLOW << "\n========================================" << endl;
     if (r->int_no > 32) {
         kout << "\nINTERRUPT ERROR TYPE MISMATCH! COULD NOT FIND INFO HEADER (regs*->int_no > 32)" << endl;
     } 
     else {
-        kout.printf("\nFound Header info at %d!     \nError Type: %s\nErr code: %d\nreg info eax=%d ebx=%d ecx=%d edx=%d\n\n", (u32)r, Err[r->int_no], r->err_code, r->eax, r->ebx, r->ecx, r->edx);
-
-    }
-    
-    
-
-    NO_INSTRUCTION;
-    NO_INSTRUCTION;
-
-    CPU::DisableINT();
-
-    if (mb_set) {
         
+        kout << "\tInterrupt Number: " << r->int_no << endl;
+        kout << "\tError Code: " << r->err_code << endl;
+        kout << "\tDescription: " << kout.BOLD_CYAN << Err[r->int_no] << kout.YELLOW << endl;
+        kout << "\tREGISTERS: " << endl;
+        kout << "\t\t| REG |    DATA    |" << endl;
+        kout << "\t\t|-----|------------|" << endl;
+        kout << "\t\t| EAX | 0x" << kout.ToHex(r->eax)    << " | " << endl;
+        kout << "\t\t| EBX | 0x" << kout.ToHex(r->ebx)    << " | " << endl;
+        kout << "\t\t| ECX | 0x" << kout.ToHex(r->ecx)    << " | " << endl;
+        kout << "\t\t| EDX | 0x" << kout.ToHex(r->edx)    << " | " << endl;
+        kout << "\t\t| ESI | 0x" << kout.ToHex(r->esi)    << " | " << endl;
+        kout << "\t\t| EDI | 0x" << kout.ToHex(r->edi)    << " | " << endl;
+        kout << "\t\t| EBP | 0x" << kout.ToHex(r->ebp)    << " | " << endl;
+        kout << "\t\t| ESP | 0x" << kout.ToHex(r->esp)    << " | " << endl;
+        kout << "\t\t| EIP | 0x" << kout.ToHex(r->eip)    << " | " << endl;
+        kout << "\t\t| EFG | 0x" << kout.ToHex(r->eflags) << " | " << endl;
+        kout << "\t\t|-----|------------|" << endl;
+        
+        kout << "\tStack Trace: " << endl;
+        kout << "\t\t|    ADDR    |    DATA    |   SYMBOL   " << endl;
+        kout << "\t\t|------------|------------|------------" << endl;
+        kout << "\t\t|     ...    |     ...    |    ...    " << endl;
+        u32 *stack = (u32*)r->esp;
+        for (int i = 0; i < 10; i++) {
+            kout << "\t\t| 0x" << kout.ToHex(u32(stack + i)) << " | 0x" << kout.ToHex(stack[i]) << " | " << (stack[i] > 0x0C0000 ? "(NO SYMBOLS) -- > (CAN NOT FIND FUNCTION CALL)" : "N/A") << endl;
+        }
+        kout << "\t\t|     ...    |     ...    |    ...    " << endl;
+        kout << "\t\t|------------|------------|------------" << endl;
 
-        const PANIC::panic_structure panic = {
-            Err[r->int_no],
-            PANIC::type::FAULT,
-            "info",
-            "A FAULT IS NOT RECOVERABLE, SYSTEM MUST RESTART!"
-        };
 
-        PANIC::smart_panic(m_mbt, panic);
     }
     
+    if (1) {
+        kout << kout.BOLD << kout.BOLD_RED << "\n\nNOT ATTACHED FAULT HANDLER!" << kout.YELLOW << endl;
+        kout << "========================================" << endl;
+        kout << "ERROR TYPE: " << kout.BOLD_RED << "NON RECOVERABLE" << kout.YELLOW << endl;
+        kout << "Disabling CPU Int..." << endl;
+        CPU::DisableINT();
+        kout << "SYSTEM HALTED!" << endl;
+        kout << "======\n+HALT+\n======\n";
+        HALT;
+    }
 
-    NO_INSTRUCTION;
-    NO_INSTRUCTION;
-
-    kout.printf("======\n+HALT+\n======\n");
-
-    HALT;
+    
 }
 
 void System::CPU::ISR::init() {

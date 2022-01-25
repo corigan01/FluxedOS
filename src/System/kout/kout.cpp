@@ -55,6 +55,16 @@ void SerialLog::printf(const char* str, ...) {
     va_end(va);
 }
 
+const char* SerialLog::ToHex(u32 v) {
+    static char buf[9];
+    buf[8] = 0;
+    for (int i = 7; i >= 0; i--) {
+        buf[i] = "0123456789ABCDEF"[v & 0xF];
+        v >>= 4;
+    }
+    return buf;
+}
+
 SerialLog &SerialLog::operator<<(const char* v){
                 
     OutputTraceInfo((const char*)v);

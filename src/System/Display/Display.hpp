@@ -63,32 +63,35 @@ namespace System
             class VGA : public tty {
                 public:
 
-                    VGA (void* buffer) {
-                        internalBuffer = (u16*)buffer;
-                        BufferSize = 0;
-                        lineNumber = 0;
+                    VGA() {
+                        kout << "NO INIT INFO ON VGA!" << endl;
+                    }
 
-                        //clear_screen();
-
-                        print_char('*');
-                        print_char('\n');
-
-                        cursor_enable(1, 10);
+                    VGA (u32 buffer) {
+                        init(buffer);
 
                     }
 
-                    VGA() {};
+                    ~VGA() {
+                        kout << "NO DEINIT INFO ON VGA!" << endl;
+                    }
 
                     // sets the forground and backround colors
-                    void init(void* buffer) {
+                    void init(u32 buffer) {
+                        kout << "Starting VGA Kernel Driver" << endl;
+                        kout << "\tbuffer : " << (u32)buffer << endl;
+                        kout << "\tScreen : " << "80x25" << endl;
+                        kout << endl;
+
                         internalBuffer = (u16*)buffer;
+                        
                         BufferSize = 0;
                         lineNumber = 0;
 
-                        //clear_screen();
 
-                        print_char('*');
-                        print_char('\n');
+                        clear_screen();
+
+                        cursor_enable(1, 10);
                     }
 
                     void BufferSet(u16* buffer);

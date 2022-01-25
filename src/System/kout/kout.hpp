@@ -59,9 +59,47 @@ namespace System
 
             void printf(const char* str, ...);
 
+            const char* ToHex(u32 v);
+
+            
+            const char*    BLACK = "\e[0;30m";
+            const char*    RED = "\e[0;31m";
+            const char*    GREEN = "\e[0;32m";
+            const char*    YELLOW = "\e[0;33m";
+            const char*    BLUE = "\e[0;34m";
+            const char*    MAGENTA = "\e[0;35m";
+            const char*    CYAN = "\e[0;36m";
+            const char*    WHITE = "\e[0;37m";
+            const char*    RESET = "\e[0m";
+
+            const char*    BOLD = "\e[01m";
+            const char*    UNDERLINE = "\e[04m";
+            const char*    BLINK = "\e[05m";
+            const char*    REVERSE = "\e[07m";
+            const char*    HIDDEN = "\e[08m";
+
+            const char*    BOLD_BLACK = "\e[01;30m";
+            const char*    BOLD_RED = "\e[01;31m";
+            const char*    BOLD_GREEN = "\e[01;32m";
+            const char*    BOLD_YELLOW = "\e[01;33m";
+            const char*    BOLD_BLUE = "\e[01;34m";
+            const char*    BOLD_MAGENTA = "\e[01;35m";
+            const char*    BOLD_CYAN = "\e[01;36m";
+            const char*    BOLD_WHITE = "\e[01;37m";
+
+            const char*    BLINK_BLACK = "\e[05;30m";
+            const char*    BLINK_RED = "\e[05;31m";
+            const char*    BLINK_GREEN = "\e[05;32m";
+            const char*    BLINK_YELLOW = "\e[05;33m";
+            const char*    BLINK_BLUE = "\e[05;34m";
+            const char*    BLINK_MAGENTA = "\e[05;35m";
+            const char*    BLINK_CYAN = "\e[05;36m";
+            const char*    BLINK_WHITE = "\e[05;37m";
+            
+
             private:
 
-            void OutputTraceInfo(const char * v) { System::IO::Serial::outString(System::IO::Serial::COM_1, "\e[0;33m"); };
+            void OutputTraceInfo(const char * v) { /*System::IO::Serial::outString(System::IO::Serial::COM_1, "\e[0;33m");*/ };
 
             template <typename T>
             void fmat(const char* fmt, T emit, va_list va);

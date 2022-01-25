@@ -58,6 +58,9 @@ boot_page_directory:
 	.skip 4096
 boot_page_table1:
 	.skip 4096
+TepKmalloc:
+	.skip 4096 * 2
+
 # Further page tables may be required if the kernel grows beyond 3 MiB.
 
 # The kernel entry point.
@@ -76,8 +79,8 @@ _start:
 	#       1 MiB as it can be generally useful, and there's no need to
 	#       specially map the VGA buffer.
 	movl $0, %esi
-	# Map 1023 pages. The 1024th will be the VGA text buffer.
-	movl $1023, %ecx
+	# Map 1022 pages. The 1023th will be the VGA text buffer.
+	movl $1020, %ecx
 
 1:
 	# Only map the kernel.
@@ -101,10 +104,23 @@ _start:
 	loop 1b
 
 3:
-	
-	# Map VGA video memory to 0xC03FF000 as "present, writable".
-	movl $(0x10000 | 0x003), boot_page_table1 - 0xC0000000 + 1023 * 4
-    # Map the eax and ebx to virtal addresses.
+	movl %ebx, %eax
+	orl $0x003, %eax
+
+	# Map the (DUMB) Virtual Memory Kmalloc area. (4kb) 0xC03FF000 - (2 * 4kb) 
+	movl $(TepKmalloc 			   + 0x003), boot_page_table1 - 0xC0000000 + 1020 * 4
+	movl $(TepKmalloc + (1024 * 4) + 0x003), boot_page_table1 - 0xC0000000 + 1021 * 4
+
+	# Map VGA video memory to 0xC03FF000 - 4kb as "present, writable".
+	movl $(0x000B8000 | 0x003), boot_page_table1 - 0xC0000000 + 1022 * 4
+
+    # Map the eax and ebx to virtal addresses (0xC03FF000).
+	movl %eax, boot_page_table1 - 0xC0000000 + 1023 * 4
+
+	# Push the new Vaddress into ebx
+	movl $(0xC03FF000), %ebx
+	movl $(0xC03FF000), %eax
+	subl $(1024 * 8), %eax
 
 
 	# The page table is used at both page directory entry 0 (virtually from 0x0
@@ -147,18 +163,20 @@ _start:
 	# Set up the stack.
 	mov $stack_top, %esp
 
+	push %eax
     push %ebx
+	
 
 	# Enter the high-level kernel.
 	call kernel_entry
 
-	# call cxa
-	# subl $4, %esp 
-	# movl $0x0, %esp
+	# call cxa is a C++ exception-handling function.
+	subl $4, %esp 
+	movl $0x0, %esp
 	
-	# call __cxa_finalize
+	call __cxa_finalize
 	
-	# addl $4, %esp
+	addl $4, %esp
 
 	# Infinite loop if the system has nothing more to do.
 	cli

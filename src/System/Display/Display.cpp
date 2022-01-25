@@ -77,32 +77,12 @@ void VGA::print_char(char c) {
     switch (c)
     {
     case '\n':
-            if (lineNumber > 24 || true) {
-                
-                
-                int bufS = 80*80;
-                memcpy(VBUF, internalBuffer, bufS);
-
-                int VGA_INT = 0;
-                for (int i = 80 ; i < bufS - 80*2 ; i++) {
-                    internalBuffer[VGA_INT++] = VBUF[i];
-                }
-
-                memset(VBUF, 0x0, bufS);
-
-                lineNumber = 24;
-                BufferSize = 80*24;
-
-                for (int i = 0; i < 80; i++) {
-                    internalBuffer[BufferSize + i] = entry(' ', FColor, BColor);
-                }
-            }
+            if (lineNumber < 25) BufferSize = 80 * lineNumber++;
             else {
-                BufferSize = 80 * lineNumber;
-                lineNumber++;
+                for (int i = 0; i < (80 * 24); i++) internalBuffer[i] = internalBuffer[i + 80];
+                for (int i = 0; i < 80; i++) internalBuffer[80 * 24 + i] = 0;
+                BufferSize = 80 * 24;
             }
-
-            
         break;
 
     case '\r':
@@ -122,18 +102,15 @@ void VGA::print_char(char c) {
         break;
 
     default:
-        internalBuffer[BufferSize] = this->entry(c, FColor, BColor);
-        BufferSize++;
-        
-
-        
+        if (BufferSize < (80 * 25)) internalBuffer[BufferSize++] = this->entry(c, FColor, BColor);
+        break;
     }
 
-    cursor_update(BufferSize - (lineNumber * 80), lineNumber + 0);
+    cursor_update(BufferSize % 80, lineNumber - 1);
 }
 void VGA::clear_screen() {
     auto reset = [this]() {
-        uint16 MaxSize = 80 * 25; // TODO: CHANGE THIS!!
+        uint16 MaxSize = 80 * 24; // TODO: CHANGE THIS!!
         for(int i = 0; i < MaxSize; i++){
             internalBuffer[i] = entry(NULL, FColor, BColor);
         }

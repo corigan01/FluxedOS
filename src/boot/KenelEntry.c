@@ -23,11 +23,11 @@
 
 #include "boot.h"
 
-void kernel_entry(multiboot_info_t* mbt) {
+void kernel_entry(multiboot_info_t* mbt, u32 DumbAlloc) {
     //while(0) {};
     //while(1) {};
     //klmain();
-    kmain(mbt, 0);
+    kmain(mbt, DumbAlloc);
     //kmain((multiboot_info_t*)0x00, 0);
 
 }

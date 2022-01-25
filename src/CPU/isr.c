@@ -125,7 +125,7 @@ char *exception_messages[] =
     "Alignment Check",
     "Machine Check",
     "Out of Memory", // 19
-    "Reserved",
+    "ASSERT NOT REACHED",
     "Reserved",
     "Reserved",
     "Reserved",
