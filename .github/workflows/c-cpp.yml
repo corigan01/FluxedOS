@@ -25,6 +25,27 @@ jobs:
       run: sudo apt-get install xorriso             -y
     - name: Install nasm
       run: sudo apt-get install nasm                -y
+    - name: Install Ninja
+      run: sudo apt-get install ninja-build
+    - name: Install build-essential
+      run: sudo apt-get install build-essential
+    - name: Install bison
+      run: sudo apt-get install bison
+    - name: Install flex
+      run: sudo apt-get install flex
+    - name: Install libgmp3-dev
+      run: sudo apt-get install libgmp3-dev
+    - name: Install libmpc-dev
+      run: sudo apt-get install libmpc-dev
+    - name: Install libmpfr-dev
+      run: sudo apt-get install libmpfr-dev
+    - name: Install texinfo
+      run: sudo apt-get install texinfo
+    - name: Install libcloog-isl-dev	
+      run: sudo apt-get install libcloog-isl-dev	
+    - name: Install libisl-dev	
+      run: sudo apt-get install libisl-dev	
+      
       
       # Build using BuildHeadless
     - name: Setup Env
