@@ -51,6 +51,10 @@ jobs:
         # make file runnable, might not be necessary
         mkdir build && cd build
         cmake -GNinja ..
+    - name: Output Env
+      run: |
+        # Something idk
+        echo *
     - name: Build Tools
       run: |
         ninja build_tools
