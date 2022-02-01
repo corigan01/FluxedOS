@@ -85,17 +85,18 @@ set (CXX
     src/boot/cppentry.cpp
     src/System/CompilerFixes/cxa.cpp
     src/System/CompilerFixes/icxxabi.cpp
+    src/System/memory/staticalloc/skmalloc.cpp
 )
 
 set_source_files_properties(${ASM} PROPERTIES LANGUAGE ASM_NASM)
 set_source_files_properties(${GAS} PROPERTIES LANGUAGE ASM)
 
 set(CMAKE_C_COMPILE_FEATURES  -g -m32 -nostdinc -B${CROSS_PATH}/build-gcc-11.2.0-i386-Linux-x86_64/gcc
- -fstrength-reduce -fPIE -fomit-frame-pointer
+ -fstrength-reduce -fPIE -fomit-frame-pointer -Wall
  -finline-functions -fno-stack-protector
  -fpic -fshort-wchar -mno-red-zone -fno-builtin)
 set(CMAKE_CXX_COMPILE_FEATURES -g -m32 -nostdinc -B${CROSS_PATH}/build-gcc-11.2.0-i386-Linux-x86_64/gcc
- -fno-rtti -fPIE -fno-exceptions -Wno-write-strings 
+ -fno-rtti -fPIE -fno-exceptions -Wno-write-strings -Wall
  -fno-stack-protector 
  -fomit-frame-pointer -finline-functions -fno-builtin 
  -fdiagnostics-color=always)
@@ -115,15 +116,16 @@ target_compile_options(FluxedOS.bin PUBLIC $<$<COMPILE_LANG_AND_ID:C,GNU>:
 >)
 
 
-add_custom_target(FluxedOS.iso
+add_custom_target(iso
     COMMAND mkdir -p isodir/boot/grub && cp FluxedOS.bin isodir/boot/FluxedOS.bin && cp ../src/grub.cfg isodir/boot/grub/grub.cfg && grub-mkrescue -o FluxedOS.iso isodir && cp FluxedOS.iso ../ISO
-    DEPENDS FluxedOS.bin
+    BYPRODUCTS FluxedOS.iso
 )
+add_dependencies(iso FluxedOS.bin)
 
 add_custom_target(run USES_TERMINAL
     COMMAND  qemu-system-x86_64 -cdrom FluxedOS.iso -boot strict=on -cpu max -smp 1,sockets=1,cores=1,threads=1 -display gtk -m 500m -k en-us -serial stdio &
-    DEPENDS FluxedOS.iso
 )
+
 
 add_custom_target(debug USES_TERMINAL
     COMMAND  qemu-system-x86_64 -s -S FluxedOS.bin -cdrom FluxedOS.iso -boot strict=on -cpu max -smp 1,sockets=1,cores=1,threads=1 -display gtk -m 500m -k en-us -serial stdio &

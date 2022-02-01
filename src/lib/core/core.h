@@ -19,6 +19,7 @@
  *   
  */
 
+#pragma once
 
 #ifndef KERNEL__H___CORE
 #define KERNEL__H___CORE

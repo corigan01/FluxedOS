@@ -90,21 +90,11 @@ class Kernel {
         KernelTTY.print_str("PIC ");
 
         kout << "Initializing Memory" << endl;                              // tell the console we are initializing the system
-        kout << "\tDumb Memory Allocation Area --> 0x" << kout.ToHex(magic) << " to 0x" << kout.ToHex(magic + (4 _KB * 2)) << " - 8KB" << endl;
+        kout << "\tDumb Memory Allocation Area --> 0x" << kout.ToHex(magic) << " to 0x" << kout.ToHex(magic + (4 _KB * 2)) << " - 8KB" << endl << endl;
 
         //init_memory(mbt);
         
-        Page_Entry * Pages;
-        size_t Pages_size = 2;
-
-        for (u32 i = 0; i < Pages_size; i++) {
-                kout << "Mapping page: " << i << endl;
-                Pages[i] = {0, (magic + (i * (4 _KB))), 0};
-        }
-        kout << "Giving Memory to kmalloc..." << endl;
-        Memory::PagePool(Pages, Pages_size);
-
-        kout << endl << endl;
+    
 
 
         

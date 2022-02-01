@@ -28,6 +28,7 @@
 // Bit 1 (R/W) is the Read/Write flag.
 // Bit 2 (U/S) is the User/Supervisor flag.
 
+// TODO: Define Fault stuff
 
 #define PRESENT_FLAG        0b001
 #define READ_WRITE_ENABLED  0b010
