@@ -124,12 +124,13 @@ add_dependencies(iso FluxedOS.bin)
 
 add_custom_target(run USES_TERMINAL
     COMMAND  qemu-system-x86_64 -cdrom FluxedOS.iso -boot strict=on -cpu max -smp 1,sockets=1,cores=1,threads=1 -display gtk -m 500m -k en-us -serial stdio &
+    DEPENDS iso
 )
 
 
 add_custom_target(debug USES_TERMINAL
     COMMAND  qemu-system-x86_64 -s -S FluxedOS.bin -cdrom FluxedOS.iso -boot strict=on -cpu max -smp 1,sockets=1,cores=1,threads=1 -display gtk -m 500m -k en-us -serial stdio &
-    DEPENDS FluxedOS.iso
+    DEPENDS iso
 )
 
 add_custom_target(build_tools USES_TERMINAL

@@ -94,9 +94,6 @@ class Kernel {
 
         //init_memory(mbt);
         
-    
-
-
         
         //KernelTTY  = &VBE_DRIVER;
 

@@ -21,3 +21,22 @@
 
 #include "skmalloc.hpp"
 
+using namespace System;
+using namespace System::Memory;
+
+static u32* MemoryAddr;
+static u32 Offset;
+
+
+void Static::init(void* startloc, u32 offset) {
+    MemoryAddr = (u32*)startloc;
+    Offset = offset;
+}
+
+void* Static::skmalloc(size_t size) {
+    Offset -= size;
+
+    kout << "Return Addr: " << kout.ToHex((u32)(MemoryAddr + Offset));
+
+    return (void*)(MemoryAddr + Offset);
+}
