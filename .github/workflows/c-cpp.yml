@@ -13,36 +13,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    
-      # Install needed packages
-    - name: Install g++ / gcc
-      run: sudo apt-get install g++ gcc             -y
-    - name: Install gcc-multilib
-      run: sudo apt-get install gcc-multilib        -y
-    - name: Install g++-multilib
-      run: sudo apt-get install g++-multilib        -y
-    - name: Install xorriso
-      run: sudo apt-get install xorriso             -y
-    - name: Install nasm
-      run: sudo apt-get install nasm                -y
-    - name: Install Ninja
-      run: sudo apt-get install ninja-build  -y
-    - name: Install build-essential 
-      run: sudo apt-get install build-essential   -y
-    - name: Install bison
-      run: sudo apt-get install bison  -y
-    - name: Install flex
-      run: sudo apt-get install flex  -y
-    - name: Install libgmp3-dev
-      run: sudo apt-get install libgmp3-dev -y
-    - name: Install libmpc-dev
-      run: sudo apt-get install libmpc-dev  -y
-    - name: Install libmpfr-dev
-      run: sudo apt-get install libmpfr-dev  -y
-    - name: Install texinfo
-      run: sudo apt-get install texinfo  -y
-    - name: Install libisl-dev	
-      run: sudo apt-get install libisl-dev	  -y
       
       
       # Build using BuildHeadless
