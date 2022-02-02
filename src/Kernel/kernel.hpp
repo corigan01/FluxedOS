@@ -51,18 +51,18 @@ class Kernel {
     Kernel(multiboot_info_t* multboot, u32 magic) {
         mbt = multboot;
 
-        kout << "Flux Kernel Started..." << endl;                             // tell the console we started the kernel
+        kout << "Flux Kernel Started..." << endl;                               // tell the console we started the kernel
 
-        if (mbt->framebuffer_type == 3) { // This is GFX mode
+        if (mbt->framebuffer_type == 3) {                                       // This is GFX mode
             System::Graphics::Driver::gxinit((void*)mbt->framebuffer_addr, 1024, 768);        
         }
         else { // This is text mode
-            KernelTTY.init(0xC03FF000 - (4 _KB));;                 // tell VGA what addr the framebuffer is at
-                                                                  // bind the tty to the display driver
+            KernelTTY.init(0xC03FF000 - (4 _KB));;                              // tell VGA what addr the framebuffer is at
+                                                                                // bind the tty to the display driver
         }   
 
         
-        kout << "Initializing CPU" << endl;                              // tell the console we are initializing the system
+        kout << "Initializing CPU" << endl;                                     // tell the console we are initializing the system
 
         CPU::init(mbt); KernelTTY.print_str("CPU ");
         kout << "\tCPU" << kout.BOLD_GREEN << "     OK" << kout.YELLOW << endl;
@@ -94,6 +94,9 @@ class Kernel {
 
         //init_memory(mbt);
         
+    
+
+
         
         //KernelTTY  = &VBE_DRIVER;
 

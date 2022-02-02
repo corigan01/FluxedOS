@@ -65,6 +65,13 @@ const char* SerialLog::ToHex(u32 v) {
     return buf;
 }
 
+SerialLog &SerialLog::operator<<(const TraceInfo &v) {
+    kout << "[" << v.Func << ":" << v.line << "]: ";
+
+
+    return *this;
+}
+
 SerialLog &SerialLog::operator<<(const char* v){
                 
     OutputTraceInfo((const char*)v);

@@ -106,6 +106,9 @@ void Kernel::init_kernel() {
         kout << "-" << endl;*/
 
 
+        
+
+
         KernelTTY.print_str("kalloc ");
         Graphics::Driver::drawstring("Kalloc", 10, 270, 0xFF0000);
 

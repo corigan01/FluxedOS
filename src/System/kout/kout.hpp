@@ -34,13 +34,13 @@ namespace System
         // General output, this is so you can use any output mode and keep the basic output functions
 
         #define kout System::Display::SerialLog()
-        #define TRACE_INFO {__FUNCTION__, __LINE__, __FILE__}
+        #define TRACE_INFO TraceInfo{__FUNCTION__, __LINE__, __FILE__}
         
         struct TraceInfo {
             const char* Func;
             u32 line;
             const char* file;
-        }
+        };
         namespace Check 
         {
             bool DidEndLine();
@@ -61,7 +61,7 @@ namespace System
             SerialLog &operator<<(const u8 &v);
             SerialLog &operator<<(const char &v);
             SerialLog &operator<<(bool &v);
-            SerialLog &operator<<()
+            SerialLog &operator<<(const TraceInfo &v);
 
             void printf(const char* str, ...);
 

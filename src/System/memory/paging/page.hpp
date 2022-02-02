@@ -43,21 +43,6 @@ namespace System
     {
         namespace Page
         {
-            
-            void init();
-            void switch_page(u32* page_dir);
-            void enable_paging();
-
-            void map_addr(u32 v, u32 p, u8 perm);
-            void map_page(u32* page_dir, u32 vpage, u32 ppage);
-
-            void id_map(u32 PStart, u32 VStart, u32 Offset, u8 perm);
-            void dump_page(u32* page);
-
-            u32* mk_page();
-            u32* mk_page_dir();
-
-            u32* RootDir();
 
             typedef struct{
                 u32 present	  : 1;
@@ -78,6 +63,24 @@ namespace System
                 u32 tables_physical[1024];
                 u32 physical_address;
             } page_directory_t;
+
+
+            
+            void init();
+
+            page_directory_t construct_page_directory();
+            page_table_t construct_page_table();
+            
+            void map_page(page_directory_t* dir, u32 virtual_address, u32 physical_address, u32 flags);
+            void map_page_table(page_directory_t* dir, u32 virtual_address, page_table_t* table, u32 flags);
+            void map_page_directory(page_directory_t* dir, u32 virtual_address, page_directory_t* table, u32 flags);
+
+            void unmap_page(page_directory_t* dir, u32 virtual_address);
+            void unmap_page_table(page_directory_t* dir, u32 virtual_address);
+            void unmap_page_directory(page_directory_t* dir, u32 virtual_address);
+
+            void enable_paging(page_directory_t* page_directory);
+
 
 
         } // namespace Page
