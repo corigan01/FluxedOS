@@ -99,6 +99,7 @@ void Page::unmap_page(page_directory_t* dir, u32 virtual_address) {
 	table[page_table_index] = 0;
 }	
 
+
 void Page::unmap_page_table(page_directory_t* dir, u32 virtual_address) {
 	u32 page_directory_index = virtual_address >> 22;
 	u32 page_table_index = (virtual_address >> 12) & 0x3FF;
