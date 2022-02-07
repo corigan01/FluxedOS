@@ -62,7 +62,7 @@ Page_Entry Memory::map_page(Permission_Entry perm) {
     return entry;
 }
 bool Memory::unmap_page(Page_Entry page) {
-    pmm::freePage((u32)page.ptr);
+    pmm::freeBlock((u32)page.ptr);
 
     // TODO: Check if page is still mapped with paging
     kout << "Unmapped page at: " << (u32)page.ptr << endl;

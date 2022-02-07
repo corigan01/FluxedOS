@@ -88,3 +88,7 @@ double math::sin(double n) {
 double math::cos(double n) {
     return math::sin(((1.f / 2) * PI) - n);
 }
+
+int math::abs(int n) {
+    return n < 0 ? -n : n;
+}

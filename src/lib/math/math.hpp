@@ -34,5 +34,7 @@ namespace math {
 
     static double fmod(double a, double b);
 
+    int abs(int n);
+
 
 }

@@ -35,6 +35,7 @@
 #include <System/Port/port.hpp>
 #include <System/PCI/pci.hpp>
 #include <System/Graphics/vbe.hpp>
+#include <System/memory/staticalloc/skmalloc.hpp>
 
 using namespace System; 
 using namespace System::IO;
@@ -45,11 +46,14 @@ using namespace System::Memory;
 using namespace System::Display;
 using namespace System::Display::Driver;
 
+
 class Kernel {
     public:
 
-    Kernel(multiboot_info_t* multboot, u32 magic) {
+    Kernel(multiboot_info_t* multboot, u32 magic, u32 boot_page_dir) {
         mbt = multboot;
+
+        magic = ((u32)mbt) - (24 _KB);
 
         kout << "Flux Kernel Started..." << endl;                               // tell the console we started the kernel
 
@@ -57,7 +61,7 @@ class Kernel {
             System::Graphics::Driver::gxinit((void*)mbt->framebuffer_addr, 1024, 768);        
         }
         else { // This is text mode
-            KernelTTY.init(0xC03FF000 - (4 _KB));;                              // tell VGA what addr the framebuffer is at
+            KernelTTY.init(mbt->framebuffer_addr + 0xC0000000);;                              // tell VGA what addr the framebuffer is at
                                                                                 // bind the tty to the display driver
         }   
 
@@ -89,17 +93,6 @@ class Kernel {
 
         KernelTTY.print_str("PIC ");
 
-        kout << "Initializing Memory" << endl;                              // tell the console we are initializing the system
-        kout << "\tDumb Memory Allocation Area --> 0x" << kout.ToHex(magic) << " to 0x" << kout.ToHex(magic + (4 _KB * 2)) << " - 8KB" << endl << endl;
-
-        //init_memory(mbt);
-        
-    
-
-
-        
-        //KernelTTY  = &VBE_DRIVER;
-
         kout << "Multiboot info (*" << (u32)mbt << ")" << endl;
         kout << "\tflags                : " << mbt->flags << endl;
         kout << "\tmem_lower            : " << mbt->mem_lower << endl;
@@ -130,8 +123,33 @@ class Kernel {
         kout << "\tframebuffer_type     : " << mbt->framebuffer_type << endl;
         kout << endl;
 
+
+        kout << "Initializing Memory" << endl;                              // tell the console we are initializing the system
+         kout << "\tDumb Memory Allocation Area --> 0x" << kout.ToHex(magic) << " to 0x" << kout.ToHex((u32)mbt) << " - " << ((u32)mbt - magic) / KB << "KB" << endl << endl;
+
+
+        //init_memory(mbt);
+        kout << "\tPhysical Memory Manager" << endl;
+        pmm::init(mbt);
         
 
+
+        kout << "Starting Paging" << endl;                                   
+        System::Memory::Static::init((void*)magic, 24 _KB - 1);
+        
+    
+
+
+        
+        //KernelTTY  = &VBE_DRIVER;
+
+        
+
+        
+
+        kout << "Initializing Paging" << endl;                               // tell the console we are initializing the system
+        Page::paging_init((u32*)magic, 24 _KB, boot_page_dir);
+        kout << "\tPaging" << kout.BOLD_GREEN << "     OK" << kout.YELLOW << endl;
 
         
 

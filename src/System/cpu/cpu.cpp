@@ -132,6 +132,23 @@ void System::CPU::IRQ::uninstallIRQ(int irq) {
     irq_uninstall_handler(irq);
 }
 
+// ISR is the interrupt service routine.
+// This is where we handle the interrupts.
+// But we can install custom handlers for each interrupt.
+
+void *ISR_HANDLERS[16] = {
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0
+};
+
+void System::CPU::ISR::installISR(int irq, void(*handler)(register_t *r)) {
+    ISR_HANDLERS[irq] = (void*)handler;
+}
+
+void System::CPU::ISR::uninstallISR(int irq) {
+    ISR_HANDLERS[irq] = 0;
+}
+
 void Err_hanlder(struct regs *r) {
     kout << "\0\0\0\0\n" << endl;
     kout << kout.BOLD << kout.BLINK_RED << "\n\nFAULT HANDLER" << kout.YELLOW;
@@ -165,15 +182,30 @@ void Err_hanlder(struct regs *r) {
         kout << "\t\t|     ...    |     ...    |    ...    " << endl;
         u32 *stack = (u32*)r->esp;
         for (int i = 0; i < 10; i++) {
-            kout << "\t\t| 0x" << kout.ToHex(u32(stack + i)) << " | 0x" << kout.ToHex(stack[i]) << " | " << (stack[i] > 0x0C0000 ? "(NO SYMBOLS) -- > (CAN NOT FIND FUNCTION CALL)" : "N/A") << endl;
+            kout << (i == 2 ? kout.GREEN : kout.YELLOW) << "\t\t| 0x" << kout.ToHex(u32(stack + i)) << " | 0x" << kout.ToHex(stack[i]) << " | " << (stack[i] > 0x0C0000 ? "(NO SYMBOLS) -- > (CAN NOT FIND FUNCTION CALL)" : "N/A") << endl;
         }
         kout << "\t\t|     ...    |     ...    |    ...    " << endl;
         kout << "\t\t|------------|------------|------------" << endl;
 
 
     }
+
+    if (r->int_no == 14) {
+        kout << "\tPage Fault Infomation: " << endl;
+        kout << "\t\t| U | W | P |     User   |" << endl;
+        kout << "\t\t|---|---|---|------------|-----------" << endl;
+        kout << "\t\t" << (r->err_code == 0 ? kout.GREEN : kout.YELLOW ) << "| 0 | 0 | 0 | Supervisor | tried to read a non-present page entry" << endl;
+        kout << "\t\t" << (r->err_code == 1 ? kout.GREEN : kout.YELLOW ) << "| 0 | 0 | 1 | Supervisor | tried to read a page and caused a protection fault" << endl;
+        kout << "\t\t" << (r->err_code == 2 ? kout.GREEN : kout.YELLOW ) << "| 0 | 1 | 0 | Supervisor | tried to write to a non-present page entry" << endl;
+        kout << "\t\t" << (r->err_code == 3 ? kout.GREEN : kout.YELLOW ) << "| 0 | 1 | 1 | Supervisor | tried to write a page and caused a protection fault" << endl;
+        kout << "\t\t" << (r->err_code == 4 ? kout.GREEN : kout.YELLOW ) << "| 1 | 0 | 0 | User       | tried to read a non-present page entry" << endl;
+        kout << "\t\t" << (r->err_code == 5 ? kout.GREEN : kout.YELLOW ) << "| 1 | 0 | 1 | User       | tried to read a page and caused a protection fault"  << endl;
+        kout << "\t\t" << (r->err_code == 6 ? kout.GREEN : kout.YELLOW ) << "| 1 | 1 | 0 | User       | tried to write to a non-present page entry" << endl;
+        kout << "\t\t" << (r->err_code == 7 ? kout.GREEN : kout.YELLOW ) << "| 1 | 1 | 1 | User       | tried to write a page and caused a protection fault" << endl;
+        kout << "\t\t" << kout.YELLOW << "|---|---|---|------------|-----------" << endl;
+    }
     
-    if (1) {
+    if (ISR_HANDLERS[r->int_no] == 0) {
         kout << kout.BOLD << kout.BOLD_RED << "\n\nNOT ATTACHED FAULT HANDLER!" << kout.YELLOW << endl;
         kout << "========================================" << endl;
         kout << "ERROR TYPE: " << kout.BOLD_RED << "NON RECOVERABLE" << kout.YELLOW << endl;
@@ -182,6 +214,24 @@ void Err_hanlder(struct regs *r) {
         kout << "SYSTEM HALTED!" << endl;
         kout << "======\n+HALT+\n======\n";
         HALT;
+    }
+    else {
+        kout << kout.BOLD << kout.GREEN << "\n\nATTACHED FAULT HANDLER!" << kout.YELLOW << endl;
+        kout << "========================================" << endl;
+
+        kout << "Passing to custom handler..." << endl;
+HALT;
+
+        void (*handler)(struct regs *r);
+
+        //check whether we have a custom handler to run the ISR and execute it
+        handler = (void (*)(regs*))ISR_HANDLERS[r->int_no];
+
+        if(handler){
+            handler(r);
+        }
+
+        
     }
 
     

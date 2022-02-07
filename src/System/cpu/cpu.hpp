@@ -79,6 +79,9 @@ namespace System
 
         namespace ISR  {
             void init();
+
+            void installISR(int irq, void(*handler)(register_t *r));
+            void uninstallISR(int irq);
         }
 
         namespace PIC {

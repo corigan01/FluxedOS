@@ -33,15 +33,15 @@
 .long MAGIC
 .long FLAGS
 .long CHECKSUM
-.long  0x00000000
-.long  0x00000000
-.long  0x00000000
-.long  0x00000000
-.long  0x00000000
-.long  0x00000000
-.long  0
-.long  0
-.long  32 # this tells grub that the mode is compatable with the Kernel
+.long 0x00000000
+.long 0x00000000
+.long 0x00000000
+.long 0x00000000
+.long 0x00000000
+.long 0x00000000
+.long 0
+.long 0
+.long 32 # this tells grub that the mode is compatable with the Kernel
 
 # Allocate the initial stack.
 .section .bootstrap_stack, "aw", @nobits
@@ -52,6 +52,7 @@ stack_top:
 # Preallocate pages used for paging. Don't hard-code addresses and assume they
 # are available, as the bootloader might have loaded its multiboot structures or
 # modules there. This lets the bootloader know it must avoid the addresses.
+
 .section .bss, "aw", @nobits
 	.align 4096
 boot_page_directory:
@@ -60,6 +61,7 @@ boot_page_table1:
 	.skip 4096
 TepKmalloc:
 	.skip 4096 * 2
+
 
 # Further page tables may be required if the kernel grows beyond 3 MiB.
 
@@ -80,11 +82,11 @@ _start:
 	#       specially map the VGA buffer.
 	movl $0, %esi
 	# Map 1022 pages. The 1023th will be the VGA text buffer.
-	movl $1020, %ecx
+	movl $1015, %ecx
 
 1:
 	# Only map the kernel.
-	cmpl $_kernel_start, %esi
+	cmpl $0, %esi
 	jl 2f
 	cmpl $(_kernel_end - 0xC0000000), %esi
 	jge 3f
@@ -108,18 +110,22 @@ _start:
 	orl $0x003, %eax
 
 	# Map the (DUMB) Virtual Memory Kmalloc area. (4kb) 0xC03FF000 - (2 * 4kb) 
-	movl $(TepKmalloc 			   + 0x003), boot_page_table1 - 0xC0000000 + 1020 * 4
-	movl $(TepKmalloc + (1024 * 4) + 0x003), boot_page_table1 - 0xC0000000 + 1021 * 4
+	movl $(TepKmalloc 			    + 0x003), boot_page_table1 - 0xC0000000 + 1016 * 4
+	movl $(TepKmalloc + (1024 * 4 ) + 0x003), boot_page_table1 - 0xC0000000 + 1017 * 4
+	movl $(TepKmalloc + (1024 * 8 ) + 0x003), boot_page_table1 - 0xC0000000 + 1018 * 4
+	movl $(TepKmalloc + (1024 * 12) + 0x003), boot_page_table1 - 0xC0000000 + 1019 * 4
+	movl $(TepKmalloc + (1024 * 16) + 0x003), boot_page_table1 - 0xC0000000 + 1020 * 4
+	movl $(TepKmalloc + (1024 * 20) + 0x003), boot_page_table1 - 0xC0000000 + 1021 * 4
 
 	# Map VGA video memory to 0xC03FF000 - 4kb as "present, writable".
-	movl $(0x000B8000 | 0x003), boot_page_table1 - 0xC0000000 + 1022 * 4
+	# movl $(0x000B8000 | 0x003), boot_page_table1 - 0xC0000000 + 1022 * 4
 
     # Map the eax and ebx to virtal addresses (0xC03FF000).
 	movl %eax, boot_page_table1 - 0xC0000000 + 1023 * 4
 
 	# Push the new Vaddress into ebx
-	movl $(0xC03FF000), %ebx
-	movl $(0xC03FF000), %eax
+	movl $(0xC03FF000 ), %ebx
+	movl $(0xC03FF000 ), %eax
 	subl $(1024 * 8), %eax
 
 
@@ -163,6 +169,7 @@ _start:
 	# Set up the stack.
 	mov $stack_top, %esp
 
+	push boot_page_directory
 	push %eax
     push %ebx
 	

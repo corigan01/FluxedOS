@@ -24,19 +24,26 @@
 using namespace System;
 using namespace System::Memory;
 
-static u32* MemoryAddr;
-static u32 Offset;
+u32* MemoryAddr;
+u32 Offset;
+u32 Alloc;
 
 
 void Static::init(void* startloc, u32 offset) {
     MemoryAddr = (u32*)startloc;
     Offset = offset;
+    Alloc = 0;
 }
 
 void* Static::skmalloc(size_t size) {
-    Offset -= size;
+    if (Alloc + size > Offset) {
+        kout << "skmalloc: out of memory" << endl;
+        return nullptr;
+    }
 
-    kout << "Return Addr: " << kout.ToHex((u32)(MemoryAddr + Offset));
+    void* ret = (void*)MemoryAddr + Alloc;
+    Alloc += size + 1;
 
-    return (void*)(MemoryAddr + Offset);
+
+    return ret;
 }

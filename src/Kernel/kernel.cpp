@@ -22,9 +22,9 @@
 #include "kernel.hpp"
 
 
-int kmain(multiboot_info_t* mbt, u32 magic) {
+int kmain(multiboot_info_t* mbt, u32 magic, u32 boot_page_dir) {
     kout << kout.YELLOW << "Hello," << kout.RED << " Darling" << kout.BOLD << " Shun!\n" << kout.YELLOW << endl;
-    Kernel krnl(mbt, magic);
+    Kernel krnl(mbt, magic, boot_page_dir);
     krnl.init_kernel();
     krnl.system_init();
 

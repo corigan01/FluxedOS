@@ -21,6 +21,7 @@ set(CMAKE_C_COMPILER ${CROSS_PATH}/build-gcc-11.2.0-i386-Linux-x86_64/gcc/gcc-cr
 set(CMAKE_CXX_COMPILER ${CROSS_PATH}/build-gcc-11.2.0-i386-Linux-x86_64/gcc/g++-cross)
 
 
+
 add_custom_target(buildver
     COMMAND python3 ../tools/argpass.py
 )
@@ -100,6 +101,8 @@ set(CMAKE_CXX_COMPILE_FEATURES -g -m32 -nostdinc -B${CROSS_PATH}/build-gcc-11.2.
  -fno-stack-protector 
  -fomit-frame-pointer -finline-functions -fno-builtin 
  -fdiagnostics-color=always)
+
+set(CMAKE_ASM_COMPILE_FEATURES -shared )
 #set(CMAKE_CXX_COMPILE_FEATURES -m32 -g -elf_i386 -std=c++2a -O -fno-rtti  -fno-exceptions -Wno-write-strings -fstrength-reduce -fno-use-cxa-atexit -fomit-frame-pointer -finline-functions -nostdinc -fno-builtin -fdiagnostics-color=always)
 add_link_options(-m32 -B${CROSS_PATH}/build-gcc-11.2.0-i386-Linux-x86_64/gcc -g -O0 -Wall -Werror -Wextra -ffreestanding -fno-rtti -fPIE  -fno-stack-protector -fno-exceptions -nostartfiles -Wno-undef -nostdlib -nostdinc -T ../src/linker.ld  )
 

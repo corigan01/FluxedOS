@@ -41,15 +41,20 @@ struct MemoryEntry {
 bitmap_type* PagesAlloc;
 u32 InstalledMemory = 0;
 
+#define KERNEL_START_ADDRESS 0xC0000000 // Plus Kernel Start Address
+
 void pmm::init(multiboot_info_t *mbt) {
-	MemoryDiscriptor.Addr = (multiboot_memory_map_t*)mbt->mmap_addr; 
+	MemoryDiscriptor.Addr = (multiboot_memory_map_t*)(mbt->mmap_addr + KERNEL_START_ADDRESS); 
 	MemoryDiscriptor.Len = mbt->mmap_length;
 
 	for (multiboot_memory_map_t* entry = MemoryDiscriptor.Addr; entry < MemoryDiscriptor.Addr + MemoryDiscriptor.Len;) {
 		
 		entry = (multiboot_memory_map_t*) ((unsigned int) entry + entry->size + sizeof(entry->size));
+
+		entry->base_addr_low += KERNEL_START_ADDRESS;
+		entry->base_addr_high += KERNEL_START_ADDRESS;
 		
-		if (entry->base_addr_low > 0 && (entry->length_low / (1024 * 1024)) > 0) {
+		if (entry->base_addr_low  > 0 && (entry->length_low / (1024 * 1024)) > 0) {
 			
 			// Check if we alloc memory for array yet
 			if (entry->type == MULTIBOOT_MEMORY_AVAILABLE && MemoryArraySize == 0) {
@@ -81,16 +86,18 @@ void pmm::init(multiboot_info_t *mbt) {
 
 			MemoryArray[MemoryArraySize++] = {.MemoryAddr = entry->base_addr_low, .MemoryType = entry->type, .Len = entry->length_low};
 			
-			INT_TO_STRING(Addr, MemoryArray[MemoryArraySize - 1].MemoryAddr);
-			INT_TO_STRING(AddE, MemoryArray[MemoryArraySize - 1].MemoryAddr + MemoryArray[MemoryArraySize - 1].Len);
-			INT_TO_STRING(LenS, MemoryArray[MemoryArraySize - 1].Len / (1024 * 1024));
+			u32 Addr = MemoryArray[MemoryArraySize - 1].MemoryAddr;
+			u32 AddE = MemoryArray[MemoryArraySize - 1].MemoryAddr + MemoryArray[MemoryArraySize - 1].Len;
+			u32 LenS = MemoryArray[MemoryArraySize - 1].Len / (1024 * 1024);
 
 			kout << "Found \'" << (MemoryArray[MemoryArraySize - 1].MemoryType == MULTIBOOT_MEMORY_AVAILABLE ? "FREE" : "RESERVED")
-			  	 << "\' Memory: *" << Addr << " "
-				 << LenS << " MB [" << Addr << ", "
-				 << AddE << "]" << endl;
+			  	 << "\' Memory: *" << kout.ToHex(Addr) << " "
+				 << LenS << " MB [" << kout.ToHex(Addr) << ", "
+				 << kout.ToHex(AddE) << "]" << endl;
 
 			InstalledMemory += (MemoryArray[MemoryArraySize - 1].MemoryType == MULTIBOOT_MEMORY_AVAILABLE ? 1 : 0) * MemoryArray[MemoryArraySize - 1].Len;
+
+			return;
 
 		}
 	}	
@@ -165,12 +172,12 @@ u32 pmm::ForceBook(u16 PagesNumber, u32 offset) {
 
 void pmm::freeBook(u32 Addr, u16 Pages) {
 	for (u32 i = 0; i < Pages; i++) {
-		pmm::freePage(Addr + (PAGE_SIZE * i));
+		pmm::freeBlock(Addr + (PAGE_SIZE * i));
 		NO_INSTRUCTION;
 	}
 }
 
-void pmm::freePage(u32 addr) {
+void pmm::freeBlock(u32 addr) {
 	u32 bit = 0xFFFFFFFF;
 
 	for (u32 i = 0; i < MemoryArraySize; i++) {
@@ -206,8 +213,8 @@ void pmm::TestMemory(System::Display::tty *tty) {
 	u32 page1 = ReservePage();
 	u32 page2 = ReservePage();
 	kout << "Made Page!" << endl;
-	freePage(page2);
-	freePage(page1);
+	freeBlock(page2);
+	freeBlock(page1);
 	kout << "Free Page!" << endl;
 	u32 page3 = ReservePage();
 	u32 page4 = ReservePage();
@@ -225,8 +232,8 @@ void pmm::TestMemory(System::Display::tty *tty) {
 	}
 
 	// Give back the memory !
-	freePage(page3);
-	freePage(page4);
+	freeBlock(page3);
+	freeBlock(page4);
 	freeBook(bookaddr, 10);
 
 	

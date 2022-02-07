@@ -34,7 +34,7 @@ namespace System
         // General output, this is so you can use any output mode and keep the basic output functions
 
         #define kout System::Display::SerialLog()
-        #define TRACE_INFO TraceInfo{__FUNCTION__, __LINE__, __FILE__}
+        #define TRACE_INFO System::Display::TraceInfo{__FUNCTION__, __LINE__, __FILE__}
         
         struct TraceInfo {
             const char* Func;

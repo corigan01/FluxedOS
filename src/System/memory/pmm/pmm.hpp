@@ -42,7 +42,7 @@ namespace System
             u32 RequestInitial();
 
             u32 ReservePage();
-            void freePage(u32 addr);
+            void freeBlock(u32 addr);
 
             // This is to reserve many pages at once, and pages makes a book :)
             u32 ReserveBook(u16 PagesNumber);
