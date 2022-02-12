@@ -90,7 +90,7 @@ void Kernel::init_kernel() {
         //init_kmalloc(0xC000001);
 
 
-        kout << endl << endl;
+        
         /*init_memory(mbt);
         
         Page_Entry * Pages;

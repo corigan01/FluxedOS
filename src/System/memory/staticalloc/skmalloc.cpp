@@ -41,6 +41,8 @@ void* Static::skmalloc(size_t size) {
         return nullptr;
     }
 
+    kout << "skmalloc: " << (u32)(MemoryAddr + Alloc) << " --> Size: " << size << endl;
+
     void* ret = (void*)MemoryAddr + Alloc;
     Alloc += size + 1;
 

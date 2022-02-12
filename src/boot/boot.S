@@ -60,7 +60,7 @@ boot_page_directory:
 boot_page_table1:
 	.skip 4096
 TepKmalloc:
-	.skip 4096 * 2
+	.skip 1024 * 24 
 
 
 # Further page tables may be required if the kernel grows beyond 3 MiB.
@@ -169,7 +169,7 @@ _start:
 	# Set up the stack.
 	mov $stack_top, %esp
 
-	push boot_page_directory
+	push $(boot_page_directory)
 	push %eax
     push %ebx
 	

@@ -25,7 +25,11 @@
         "limits": "cpp",
         "variant": "cpp",
         "chrono": "cpp",
-        "complex": "cpp"
+        "complex": "cpp",
+        "*.ipp": "cpp",
+        "atomic": "cpp",
+        "cstdint": "cpp",
+        "bitset": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled"
 }

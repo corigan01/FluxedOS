@@ -47,30 +47,20 @@ namespace System
 
             #define PAGE_SIZE 4096
 
-            #define KHEAP_START         (void*)0xC0400000
-            #define KHEAP_INITIAL_SIZE  48 _MB
-            #define KHEAP_MAX_ADDRESS   (void*)0xCFFFFFFF
-            #define HEAP_MIN_SIZE       4  _MB
-
             // Alignment related macro
-            #define IS_ALIGN(addr) ((((uint32_t)(addr)) | 0xFFFFF000) == 0)
-            #define PAGE_ALIGN(addr) ((((uint32_t)(addr)) & 0xFFFFF000) + 0x1000)
+            #define IS_ALIGN(addr) ((((u32)(addr)) | 0xFFFFF000) == 0)
+            #define PAGE_ALIGN(addr) ((((u32)(addr)) & 0xFFFFF000) + 0x1000)
 
             // Defone some address calculation macro
-            #define PAGEDIR_INDEX(vaddr) (((uint32_t)vaddr) >> 22)
-            #define PAGETBL_INDEX(vaddr) ((((uint32_t)vaddr) >>12) & 0x3ff)
-            #define PAGEFRAME_INDEX(vaddr) (((uint32_t)vaddr) & 0xfff)
+            #define PAGEDIR_INDEX(vaddr) (((u32)vaddr) >> 22)
+            #define PAGETBL_INDEX(vaddr) ((((u32)vaddr) >>12) & 0x3ff)
+            #define PAGEFRAME_INDEX(vaddr) (((u32)vaddr) & 0xfff)
 
             // Paging register manipulation macro
             #define SET_PGBIT(cr0) (cr0 = cr0 | 0x80000000)
             #define CLEAR_PSEBIT(cr4) (cr4 = cr4 & 0xffffffef)
 
-            // Err code interpretation
-            #define ERR_PRESENT     0x1
-            #define ERR_RW          0x2
-            #define ERR_USER        0x4
-            #define ERR_RESERVED    0x8
-            #define ERR_INST        0x10
+            
 
             #define LOAD_MEMORY_ADDRESS 0xC0000000
 
@@ -110,41 +100,19 @@ namespace System
             typedef struct page_directory
             {
                 // The actual page directory entries(note that the frame number it stores is physical address)
-                page_dir_entry_t tables[1024];
-                // We need a table that contains virtual address, so that we can actually get to the tables
-                page_table_t * ref_tables[1024];
+                page_dir_entry_t dir_entry[1024];
+                // We need a table that contains virtual address, so that we can actually get to the dir_entry
+                page_table_t * table[1024];
             } page_directory_t;
 
             // Defined in entry.asm
             
 
-
             void * virtual2phys(page_directory_t * dir, void * virtual_addr);
 
-            void * dumb_kmalloc(uint32_t size, int align);
-
-            void allocate_region(page_directory_t * dir, uint32_t start_va, uint32_t end_va, int iden_map, int is_kernel, int is_writable);
-
-            void allocate_page(page_directory_t * dir, uint32_t virtual_addr, uint32_t frame, int is_kernel, int is_writable);
-
-            void free_region(page_directory_t * dir, uint32_t start_va, uint32_t end_va, int free);
-
-            void free_page(page_directory_t * dir, uint32_t virtual_addr, int free);
-
-            void paging_init(u32* bitmap, u32 bitmap_size, u32 boot_page_dir);
-
-            void switch_page_directory(page_directory_t * page_dir, uint32_t phys);
-
-            void enable_paging();
-
-            void * ksbrk(int size);
-
-            void copy_page_directory(page_directory_t * dst, page_directory_t * src);
-
-            page_table_t * copy_page_table(page_directory_t * src_page_dir, page_directory_t * dst_page_dir, uint32_t page_dir_idx, page_table_t * src);
-
-            void page_fault_handler(register_t * reg);
-
+            void allocate_page(page_directory_t * dir, uint32_t virtual_addr, uint32_t frame);
+            
+            void init(u32 bpg);
 
 
         } // namespace Page

@@ -19,6 +19,7 @@
  *   
  */
 
+#pragma once
 
 #include <boot/boot.h>
 #include <System/tty/tty.hpp>
@@ -45,6 +46,7 @@ using namespace System::Clock;
 using namespace System::Memory;
 using namespace System::Display;
 using namespace System::Display::Driver;
+
 
 
 class Kernel {
@@ -130,7 +132,7 @@ class Kernel {
 
         //init_memory(mbt);
         kout << "\tPhysical Memory Manager" << endl;
-        pmm::init(mbt);
+        //pmm::init(mbt);
         
 
 
@@ -143,13 +145,24 @@ class Kernel {
         
         //KernelTTY  = &VBE_DRIVER;
 
+        Page::init(boot_page_dir);
         
 
         
 
-        kout << "Initializing Paging" << endl;                               // tell the console we are initializing the system
-        Page::paging_init((u32*)magic, 24 _KB, boot_page_dir);
-        kout << "\tPaging" << kout.BOLD_GREEN << "     OK" << kout.YELLOW << endl;
+        kout << "Initializing Paging : BOOT PAGE DIR: 0x" << kout.ToHex(boot_page_dir) << endl;                               // tell the console we are initializing the system
+        
+
+        
+
+        
+
+        //Page::paging_init((u32*)magic, 24 _KB, boot_page_dir);
+
+
+
+        kout << endl << endl;
+        
 
         
 

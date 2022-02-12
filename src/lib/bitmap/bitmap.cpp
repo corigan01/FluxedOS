@@ -50,7 +50,10 @@ u32 find_first_set_bit(bitmap_type *bitmap)
 		}
 	}
 	return 0;
+
+	
 }
+
 
 u32 find_first_clear_bit(bitmap_type *bitmap)
 {

@@ -11,7 +11,7 @@ set(CMAKE_NASM_LINK_EXECUTABLE "ld   -o  ")
 set(CAN_USE_ASSEMBLER TRUE)
 set(CMAKE_ASM_NASM_FLAGS "")
 set(CMAKE_ASM_NASM_OBJECT_FORMAT elf)
-set(CMAKE_ASM_FLAGS "-m32")
+set(CMAKE_ASM_FLAGS "-m32 -c")
 set(CMAKE_ASM_NASM_COMPILE_OBJECT "<CMAKE_ASM_NASM_COMPILER> <INCLUDES> <FLAGS> -f ${CMAKE_ASM_NASM_OBJECT_FORMAT} -o <OBJECT> <SOURCE>")
 set(CMAKE_CROSSCOMPILING 1)
 
@@ -37,6 +37,7 @@ set ( ASM
 
 set ( GAS 
     src/boot/boot.S
+    src/System/memory/paging/Paging.S
 )
 
 set ( C 
