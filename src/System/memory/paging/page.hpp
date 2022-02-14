@@ -65,52 +65,6 @@ namespace System
             #define LOAD_MEMORY_ADDRESS 0xC0000000
 
 
-            typedef struct page_dir_entry {
-                unsigned int present    : 1;
-                unsigned int rw         : 1;
-                unsigned int user       : 1;
-                unsigned int w_through  : 1;
-                unsigned int cache      : 1;
-                unsigned int access     : 1;
-                unsigned int reserved   : 1;
-                unsigned int page_size  : 1;
-                unsigned int global     : 1;
-                unsigned int available  : 3;
-                unsigned int frame      : 20;
-            }page_dir_entry_t;
-
-            typedef struct page_table_entry {
-                unsigned int present    : 1;
-                unsigned int rw         : 1;
-                unsigned int user       : 1;
-                unsigned int reserved   : 2;
-                unsigned int accessed   : 1;
-                unsigned int dirty      : 1;
-                unsigned int reserved2  : 2;
-                unsigned int available  : 3;
-                unsigned int frame      : 20;
-            }page_table_entry_t;
-
-
-            typedef struct page_table
-            {
-                page_table_entry_t pages[1024];
-            } page_table_t;
-
-            typedef struct page_directory
-            {
-                // The actual page directory entries(note that the frame number it stores is physical address)
-                page_dir_entry_t dir_entry[1024];
-                // We need a table that contains virtual address, so that we can actually get to the dir_entry
-                page_table_t * table[1024];
-            } page_directory_t;
-
-            // Defined in entry.asm
-            
-
-            void * virtual2phys(page_directory_t * dir, void * virtual_addr);
-
-            void allocate_page(page_directory_t * dir, uint32_t virtual_addr, uint32_t frame);
             
             void init(u32 bpg);
 

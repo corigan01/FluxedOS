@@ -60,7 +60,7 @@ class Kernel {
         kout << "Flux Kernel Started..." << endl;                               // tell the console we started the kernel
 
         if (mbt->framebuffer_type == 3) {                                       // This is GFX mode
-            System::Graphics::Driver::gxinit((void*)mbt->framebuffer_addr, 1024, 768);        
+            System::Graphics::Driver::gxinit((void*)(mbt->framebuffer_addr + 0xC0000000), 1024, 768);        
         }
         else { // This is text mode
             KernelTTY.init(mbt->framebuffer_addr + 0xC0000000);;                              // tell VGA what addr the framebuffer is at
@@ -132,7 +132,7 @@ class Kernel {
 
         //init_memory(mbt);
         kout << "\tPhysical Memory Manager" << endl;
-        //pmm::init(mbt);
+        pmm::init(mbt);
         
         //for(;;);
 

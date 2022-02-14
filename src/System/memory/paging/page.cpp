@@ -173,45 +173,75 @@ void PrintPageDir(u32 bpg) {
 
 }
 
+u32 VirtToPhy(u32 PageDir, u32 addr) {
+    // Dir index 0-1024, this points to which table we are looking at
+    u32 DirEntryIdx = ((u32)addr / (4 _MB));
+
+    // Table index 0-1024, this points to which entry we are looking for
+    u32 TableIdx = ((u32)addr - (DirEntryIdx * 4 _MB)) / (4 _KB); 
+
+    // This is the actual page table addr
+    u32 Table = (u32)((u32*)((u32)PageDir & 0xFFFFF000))[DirEntryIdx] + LOAD_MEMORY_ADDRESS;
+
+    // This is the phys addr
+    u32 Paddr = ((u32*)(Table & 0xFFFFF000))[TableIdx] & 0xFFFFF000;
+
+    return Paddr;
+}
+
+void CopyBootDirectory(u32 bootdir, u32 newdir, u32 loadmem) {
+    u32 DirEntryIdx = ((u32)loadmem / (4 _MB));
+    u32 bpt = (u32)((u32*)(bootdir & 0xFFFFF000))[DirEntryIdx] + loadmem;
+
+
+    ((u32*)newdir)[DirEntryIdx] = bpt - loadmem;
+}
+
+void SendTableToDirectory(u32 dir, u32 table, u32 index) {
+    ((u32*)dir)[index] = table;
+}
+
+void ClearAllEntries(u32 dir) {
+    memset((void*)dir, NULL, 1024);
+}
+
+void MemMap(u32 table, u32 perm, u32 offset) {
+    u32* tbl = (u32*)table;
+
+    for (int i = 0; i < offset; i++) {
+        tbl[i] = ((pmm::ReservePage() - LOAD_MEMORY_ADDRESS) & 0xFFFFF000) | perm;
+    }
+}
+
 void Page::init(u32 bpg) {
-	u32 *PageDir = (u32*)Memory::Static::skmalloc(1024 * sizeof(u32)); // __attribute__((aligned(4096)));
-	u32 *PageTbl = (u32*)Memory::Static::skmalloc(1024 * sizeof(u32)); //[1024] __attribute__((aligned(4096)));
-
-    kout << "NEW PAGE DIR AT 0x" << kout.ToHex((u32)PageDir - LOAD_MEMORY_ADDRESS) << endl;
-    kout << "NEW PAGE TBL AT 0x" << kout.ToHex((u32)PageTbl) << endl;
-
-    u32 bpt = (u32)((u32*)(bpg & 0xFFFFF000))[768] + LOAD_MEMORY_ADDRESS;
-    PrintPageDir(bpg - LOAD_MEMORY_ADDRESS);
-
-    for (int i = 0; i < 1024; i++) {
-    	PageDir[i] = 0x0 | 0x0;
-	}
-
-
-    // 0x003F9000
-    // 0x0011B003
-    // 2DDFFD₁₆
-    // 0xC0000000
-
-    // The Virtual Addr of the page that skmalloc gives (this is calculated from the table its self because we know that the page dir is stored at page 1016)
-    u32 TableIndx = ((u32)PageDir - LOAD_MEMORY_ADDRESS) / (4 _KB);
-
-    // Get the phys addr that it points to (we need to give the MMU the phys addr)
-    u32 addr = ((u32*)(bpt & 0xFFFFF000))[TableIndx] & 0xFFFFF000;
-
-    kout << "0x0011C000 --> 0x" << kout.ToHex((u32)PageDir) << " 0x" << kout.ToHex(addr) << endl;
-	
-    // map page table 768 which points to 0xC0000000 
-	PageDir[768] = bpt - LOAD_MEMORY_ADDRESS;
     
-    // Print the Page Dir
-    PrintPageDir((u32)addr);
+    // In the boot loader we reserve 20KB of memory for this new page dir / table
+    // This is reserved to us in the virtual memory range, so we need to figure out
+    // where this memory points to later on
+    u32 PageDir = (u32)Memory::Static::skmalloc(1024 * sizeof(u32)); 
 
-	// Tell the MMU to use this new Page Dir
-	loadPageDirectory((u32*)((u32)addr));
-	
+    // This will be a new addr for the heap (WIP)
+    u32 PageTbl = (u32)Memory::Static::skmalloc(1024 * sizeof(u32)); 
+
+
+    // Make sure we clear the PageDir
+    ClearAllEntries(PageDir);
+    ClearAllEntries(PageTbl);
+
+
+
+    CopyBootDirectory(bpg, PageDir, LOAD_MEMORY_ADDRESS);
+
+    MemMap(PageTbl, SUPER_USER_MEMORY | PRESENT_FLAG | READ_WRITE_ENABLED, 1024);
+    SendTableToDirectory(PageDir, PageTbl, 769);
+    
+    
+
+    // Tell the MMU to use this new Page Dir
+    loadPageDirectory((u32*)(VirtToPhy(PageDir, PageDir)));
+    
     // Make sure Paging is enabled
-	enablePaging();
+    enablePaging();
 
     // AND DIE BECAUSE THIS TOOK SO LONG
 }

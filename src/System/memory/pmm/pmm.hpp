@@ -27,7 +27,7 @@
 #include <System/Display/Display.hpp>
 #include <System/memory/paging/page.hpp>
 
-#define PAGE_SIZE PAGE_S
+#define PAGE_SIZE 4096
 #define MAX_MEMORY_ENTRY 64
 
 namespace System

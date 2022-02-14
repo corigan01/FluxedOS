@@ -20,12 +20,12 @@
 ; */
 
 # Declare constants for the multiboot header.
-.set ALIGN,    1<<0             # align loaded modules on page boundaries
-.set MEMINFO,  1<<1             # provide memory map
-.set GFXMODE,  1<<2             # set graphics mode
-.set FLAGS,    ALIGN | MEMINFO | GFXMODE  # this is the Multiboot 'flag' field
-.set MAGIC,    0x1BADB002       # 'magic number' lets bootloader find the header
-.set CHECKSUM, -(MAGIC + FLAGS) # checksum of above, to prove we are multiboot
+.set ALIGN,    1<<0             				# align loaded modules on page boundaries
+.set MEMINFO,  1<<1             				# provide memory map
+.set GFXMODE,  1<<2             				# set graphics mode
+.set FLAGS,    ALIGN | MEMINFO | GFXMODE  		# this is the Multiboot 'flag' field
+.set MAGIC,    0x1BADB002       				# 'magic number' lets bootloader find the header
+.set CHECKSUM, -(MAGIC + FLAGS) 				# checksum of above, to prove we are multiboot
 
 # Declare a multiboot header that marks the program as a kernel.
 .section .multiboot.data, "aw"
@@ -41,7 +41,7 @@
 .long 0x00000000
 .long 0
 .long 0
-.long 32 # this tells grub that the mode is compatable with the Kernel
+.long 32 										# this tells grub that the vid mode is compatable with the Kernel
 
 # Allocate the initial stack.
 .section .bootstrap_stack, "aw", @nobits
@@ -72,16 +72,11 @@ TepKmalloc:
 _start:
 
 	# Physical address of boot_page_table1.
-	# TODO: I recall seeing some assembly that used a macro to do the
-	#       conversions to and from physical. Maybe this should be done in this
-	#       code as well?
 	movl $(boot_page_table1 - 0xC0000000), %edi
+
 	# First address to map is address 0.
-	# TODO: Start at the first kernel page instead. Alternatively map the first
-	#       1 MiB as it can be generally useful, and there's no need to
-	#       specially map the VGA buffer.
 	movl $0, %esi
-	# Map 1022 pages. The 1023th will be the VGA text buffer.
+	# Map 1015 pages for the kernel. (the kernel only uses 256 or so )
 	movl $1015, %ecx
 
 1:
@@ -98,10 +93,12 @@ _start:
 	movl %edx, (%edi)
 
 2:
-	# Size of page is 4096 bytes.
+	# Size of page is 4kb. 
 	addl $4096, %esi
+
 	# Size of entries in boot_page_table1 is 4 bytes.
 	addl $4, %edi
+
 	# Loop to the next entry if we haven't finished.
 	loop 1b
 
@@ -118,12 +115,13 @@ _start:
 	movl $(TepKmalloc - 0xC0000000 + (1024 * 20) + 0x003), boot_page_table1 - 0xC0000000 + 1021 * 4
 
 	# Map VGA video memory to 0xC03FF000 - 4kb as "present, writable".
+	# NO NEED, THIS IS IN PAGE 256 NOW
 	# movl $(0x000B8000 | 0x003), boot_page_table1 - 0xC0000000 + 1022 * 4
 
     # Map the eax and ebx to virtal addresses (0xC03FF000).
 	movl %eax, boot_page_table1 - 0xC0000000 + 1023 * 4
 
-	# Push the new Vaddress into ebx
+	# Push the new Vaddress into the Regsiters
 	movl $(0xC03FF000 ), %ebx
 	movl $(0xC03FF000 ), %eax
 	subl $(1024 * 8), %eax
@@ -137,6 +135,9 @@ _start:
 	# would instead page fault if there was no identity mapping.
 
 	# Map the page table to both virtual addresses 0x00000000 and 0xC0000000.
+
+	# identity mapping is when you map the phys addr of the kernel to both
+	# (+0) and you map it to (+0xC0000000). So we can continue as if nothing changed 
 	movl $(boot_page_table1 - 0xC0000000 + 0x003), boot_page_directory - 0xC0000000 + 0
 	movl $(boot_page_table1 - 0xC0000000 + 0x003), boot_page_directory - 0xC0000000 + 768 * 4
 
@@ -149,15 +150,19 @@ _start:
 	orl $0x80010000, %ecx
 	movl %ecx, %cr0
 
+	# Paging is enabled, but we are still in the lower-half
+	# so we need to jump into (+0xC0000000), but its ok
+	# because we have the phys addrs mapped there as well. 
 
 	# Jump to higher half with an absolute jump. 
 	lea 4f, %ecx
 	jmp *%ecx
 
 .section .text
-
 4:
-	# At this point, paging is fully set up and enabled.
+	# At this point, paging is fully set up and enabled. 
+	# We are also in higher half, but we left behind the
+	# one to one map, so lets remove it. 
 
 	# Unmap the identity mapping as it is now unnecessary. 
 	movl $0, boot_page_directory + 0
@@ -172,7 +177,6 @@ _start:
 	push $(boot_page_directory)
 	push %eax
     push %ebx
-	
 
 	# Enter the high-level kernel.
 	call kernel_entry

@@ -51,53 +51,12 @@ void pmm::init(multiboot_info_t *mbt) {
 		
 		entry = (multiboot_memory_map_t*) ((unsigned int) entry + entry->size + sizeof(entry->size));
 
-		entry->base_addr_low += KERNEL_START_ADDRESS;
-		entry->base_addr_high += KERNEL_START_ADDRESS;
 		
-		if (entry->base_addr_low  > 0 && (entry->length_low / (1024 * 1024)) > 0) {
+		if (entry->base_addr_low  > 0) {
 			
-			// Check if we alloc memory for array yet
-			if (entry->type == MULTIBOOT_MEMORY_AVAILABLE && MemoryArraySize == 0) {
-
-				// We need to know the amount of memory we take, so we store the inital memory here
-				u32 Memory = entry->base_addr_low;
-
-
-				// Define the pointer for MemoryArray
-				MemoryArray = (MemoryEntry*)entry->base_addr_low;
-				entry->base_addr_low += sizeof(MemoryEntry) * MAX_MEMORY_ENTRY;
-
-				// Define the pointer for PagesAlloc depending on the amount of memory the system has installed
-				PagesAlloc = (bitmap_type*)entry->base_addr_low;
-				PagesAlloc->addr = (u8*)(entry->base_addr_low + sizeof(bitmap_type));
-				PagesAlloc->bytes = ((((mbt->mem_lower + mbt->mem_upper) * 1024) / PAGE_SIZE) / 8);
-				clear_all_bits(PagesAlloc);
-				
-				
-				entry->base_addr_low += sizeof(bitmap_type) * PagesAlloc->bytes; 
-
-				// Calculate the differnce 
-				u32 ReservedLen =  entry->base_addr_low - Memory;
-				entry->length_low -= ReservedLen;
-
-				// Print the result
-				kout << "Memory Taken by Array is " << ReservedLen << "!" << endl;
-			}
-
-			MemoryArray[MemoryArraySize++] = {.MemoryAddr = entry->base_addr_low, .MemoryType = entry->type, .Len = entry->length_low};
-			
-			u32 Addr = MemoryArray[MemoryArraySize - 1].MemoryAddr;
-			u32 AddE = MemoryArray[MemoryArraySize - 1].MemoryAddr + MemoryArray[MemoryArraySize - 1].Len;
-			u32 LenS = MemoryArray[MemoryArraySize - 1].Len / (1024 * 1024);
-
-			kout << "Found \'" << (MemoryArray[MemoryArraySize - 1].MemoryType == MULTIBOOT_MEMORY_AVAILABLE ? "FREE" : "RESERVED")
-			  	 << "\' Memory: *" << kout.ToHex(Addr) << " "
-				 << LenS << " MB [" << kout.ToHex(Addr) << ", "
-				 << kout.ToHex(AddE) << "]" << endl;
-
-			InstalledMemory += (MemoryArray[MemoryArraySize - 1].MemoryType == MULTIBOOT_MEMORY_AVAILABLE ? 1 : 0) * MemoryArray[MemoryArraySize - 1].Len;
-
-			return;
+			kout << "MEMORY ENTRY: \t0x" << kout.ToHex(entry->base_addr_low) << 
+			"\t : [" << kout.ToHex(entry->length_low) << "]\t --> \t" << entry->length_low / (1 _MB) << "MB\t"
+			" -- " << entry->type << endl; 
 
 		}
 	}	
@@ -138,7 +97,7 @@ u32 pmm::ReservePage() {
 		}
 	}
 
-	memset((void*)ReturnAddr, NULL, PAGE_SIZE);
+	//memset((void*)ReturnAddr, NULL, PAGE_SIZE);
 
 	return ReturnAddr;
 }
