@@ -48,7 +48,7 @@ namespace System
             #define PAGE_SIZE 4096
 
             // Alignment related macro
-            #define IS_ALIGN(addr) ((((u32)(addr)) | 0xFFFFF000) == 0)
+            #define IS_ALIGN(addr) ((((u32)(addr)) & 0x00000FFF) == 0)
             #define PAGE_ALIGN(addr) ((((u32)(addr)) & 0xFFFFF000) + 0x1000)
 
             // Defone some address calculation macro

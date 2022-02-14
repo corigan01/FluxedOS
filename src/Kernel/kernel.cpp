@@ -28,4 +28,6 @@ int kmain(multiboot_info_t* mbt, u32 magic, u32 boot_page_dir) {
     krnl.init_kernel();
     krnl.system_init();
 
+
+    return 0;
 }

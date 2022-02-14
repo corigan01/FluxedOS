@@ -15,12 +15,12 @@ set(CMAKE_ASM_FLAGS "-m32 -c")
 set(CMAKE_ASM_NASM_COMPILE_OBJECT "<CMAKE_ASM_NASM_COMPILER> <INCLUDES> <FLAGS> -f ${CMAKE_ASM_NASM_OBJECT_FORMAT} -o <OBJECT> <SOURCE>")
 set(CMAKE_CROSSCOMPILING 1)
 
-set(CROSS_PATH ../build/toolchains)
+set(CROSS_PATH ${PROJECT_SOURCE_DIR}/build/toolchains)
 
 set(CMAKE_C_COMPILER ${CROSS_PATH}/build-gcc-11.2.0-i386-Linux-x86_64/gcc/gcc-cross)
 set(CMAKE_CXX_COMPILER ${CROSS_PATH}/build-gcc-11.2.0-i386-Linux-x86_64/gcc/g++-cross)
 
-
+set(CMAKE_BUILD_TYPE Debug)
 
 add_custom_target(buildver
     COMMAND python3 ../tools/argpass.py
@@ -110,6 +110,7 @@ add_link_options(-m32 -B${CROSS_PATH}/build-gcc-11.2.0-i386-Linux-x86_64/gcc -g 
 add_executable(FluxedOS.bin ${GAS} ${ASM} ${C} ${CXX})
 add_dependencies(FluxedOS.bin buildver)
 
+
 target_include_directories(FluxedOS.bin PUBLIC src)
 
 target_compile_options(FluxedOS.bin PUBLIC $<$<COMPILE_LANG_AND_ID:CXX,GNU>:
@@ -133,7 +134,7 @@ add_custom_target(run USES_TERMINAL
 
 
 add_custom_target(debug USES_TERMINAL
-    COMMAND  qemu-system-x86_64 -s -S FluxedOS.bin -cdrom FluxedOS.iso -boot strict=on -cpu max -smp 1,sockets=1,cores=1,threads=1 -display gtk -m 500m -k en-us -serial stdio &
+    COMMAND  objcopy --only-keep-debug FluxedOS.bin FluxedOS.elf && strip --strip-debug --strip-unneeded FluxedOS.bin && qemu-system-x86_64 -s -S FluxedOS.bin -cdrom FluxedOS.iso -boot strict=on -cpu max -smp 1,sockets=1,cores=1,threads=1 -display gtk -m 500m -k en-us -serial stdio &
     DEPENDS iso
 )
 

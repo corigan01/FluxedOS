@@ -134,7 +134,7 @@ class Kernel {
         kout << "\tPhysical Memory Manager" << endl;
         //pmm::init(mbt);
         
-
+        //for(;;);
 
         kout << "Starting Paging" << endl;                                   
         System::Memory::Static::init((void*)magic, 24 _KB - 1);
@@ -142,6 +142,7 @@ class Kernel {
     
 
 
+        kout << "Initializing Paging : BOOT PAGE DIR: 0x" << kout.ToHex(boot_page_dir) << endl;                               // tell the console we are initializing the system
         
         //KernelTTY  = &VBE_DRIVER;
 
@@ -150,7 +151,6 @@ class Kernel {
 
         
 
-        kout << "Initializing Paging : BOOT PAGE DIR: 0x" << kout.ToHex(boot_page_dir) << endl;                               // tell the console we are initializing the system
         
 
         

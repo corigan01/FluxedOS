@@ -129,29 +129,89 @@ void Page::allocate_page(page_directory_t * dir, uint32_t virtual_addr, uint32_t
 EXTNC_ void loadPageDirectory(unsigned int*);
 EXTNC_ void enablePaging();
 
+void PrintPageDir(u32 bpg) {
+    bpg += LOAD_MEMORY_ADDRESS;
+    kout << "PGD: " << kout.ToHex(bpg) << endl;
+    
+
+    kout << endl <<
+    "Reading Paging Dir: \n" <<
+    "\tDIR ADDR     *0x" << kout.ToHex(bpg) << endl;
+    
+    u32 DetectedAddr = 0;
+
+    for (int i = 0; i < 64; i ++) {
+        kout << "\t";
+        for (int e = 0; e < 16; e++) {
+
+            u32 OutAdd = ((u32*)(bpg & 0xFFFFF000))[i + (e * 64)];
+
+            kout << (OutAdd > 0 ? kout.GREEN : kout.YELLOW) << "[" << i + (e * 64) << "]:" << ((i + (e * 64)) >= 10 ? ((i + (e * 64)) >= 100 ? " " : "  ") : "   ") << "0x" << kout.ToHex(OutAdd) << " " << kout.YELLOW;
+
+            DetectedAddr = (OutAdd > 1) ? (i + (e * 64)) : DetectedAddr;
+        }
+        kout << endl;
+    }
+
+    if (DetectedAddr == 0) return;
+
+    u32 bpt = (u32)((u32*)(bpg & 0xFFFFF000))[DetectedAddr] + LOAD_MEMORY_ADDRESS;
+
+    kout << "Reading Paging Table; \n\tTBL ADDR:   *0x" << kout.ToHex(bpt) << endl;
+
+    for (int i = 0; i < 64; i ++) {
+        kout << "\t";
+        for (int e = 0; e < 16; e++) {
+
+            u32 OutAdd = ((u32*)(bpt & 0xFFFFF000))[i + (e * 64)];
+
+            kout << (OutAdd > 0 ? kout.GREEN : kout.YELLOW) << "[" << i + (e * 64) << "]:" << ((i + (e * 64)) >= 10 ? ((i + (e * 64)) >= 100 ? " " : "  ") : "   ") << "0x" << kout.ToHex(OutAdd) << " " << kout.YELLOW;
+
+        }
+        kout << endl;
+    } 
+
+}
+
 void Page::init(u32 bpg) {
-	uint32_t PageDir[1024] __attribute__((aligned(4096)));
-	uint32_t PageTbl[1024] __attribute__((aligned(4096)));
+	u32 *PageDir = (u32*)Memory::Static::skmalloc(1024 * sizeof(u32)); // __attribute__((aligned(4096)));
+	u32 *PageTbl = (u32*)Memory::Static::skmalloc(1024 * sizeof(u32)); //[1024] __attribute__((aligned(4096)));
 
-	kout << "PageDir: " << kout.ToHex((u32)PageDir) << endl;
+    kout << "NEW PAGE DIR AT 0x" << kout.ToHex((u32)PageDir - LOAD_MEMORY_ADDRESS) << endl;
+    kout << "NEW PAGE TBL AT 0x" << kout.ToHex((u32)PageTbl) << endl;
 
-	for (int i = 0; i < 1024; i++) {
-		PageDir[i] = 0x00000000 | 0x2;
+    u32 bpt = (u32)((u32*)(bpg & 0xFFFFF000))[768] + LOAD_MEMORY_ADDRESS;
+    PrintPageDir(bpg - LOAD_MEMORY_ADDRESS);
+
+    for (int i = 0; i < 1024; i++) {
+    	PageDir[i] = 0x0 | 0x0;
 	}
 
-	for (int i = 0; i < 1015; i++) {
-		PageTbl[i] = (i * PAGE_SIZE) | 0x3;
-	}
 
+    // 0x003F9000
+    // 0x0011B003
+    // 2DDFFD₁₆
+    // 0xC0000000
 
+    // The Virtual Addr of the page that skmalloc gives (this is calculated from the table its self because we know that the page dir is stored at page 1016)
+    u32 TableIndx = ((u32)PageDir - LOAD_MEMORY_ADDRESS) / (4 _KB);
 
-	PageDir[0] = (u32)PageTbl | 0x3;
+    // Get the phys addr that it points to (we need to give the MMU the phys addr)
+    u32 addr = ((u32*)(bpt & 0xFFFFF000))[TableIndx] & 0xFFFFF000;
 
-	kout << "COOL!" << endl;
-	loadPageDirectory(PageDir);
+    kout << "0x0011C000 --> 0x" << kout.ToHex((u32)PageDir) << " 0x" << kout.ToHex(addr) << endl;
 	
-	kout << "COOL" << endl;
+    // map page table 768 which points to 0xC0000000 
+	PageDir[768] = bpt - LOAD_MEMORY_ADDRESS;
+    
+    // Print the Page Dir
+    PrintPageDir((u32)addr);
+
+	// Tell the MMU to use this new Page Dir
+	loadPageDirectory((u32*)((u32)addr));
+	
+    // Make sure Paging is enabled
 	enablePaging();
 
-	kout << "COO" << endl;
+    // AND DIE BECAUSE THIS TOOK SO LONG
 }

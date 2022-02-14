@@ -134,11 +134,7 @@ SerialLog &SerialLog::operator<<(const char &v) {
 }
 
 SerialLog &SerialLog::operator<<(bool &v) {
-    char* v_str = "FALSE";
-    
-    if (v) {
-        v_str = "TRUE";
-    }
+    const char* v_str = v ? "TRUE" : "FALSE";
 
     OutputTraceInfo(v_str);
 

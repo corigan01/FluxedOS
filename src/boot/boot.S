@@ -110,12 +110,12 @@ _start:
 	orl $0x003, %eax
 
 	# Map the (DUMB) Virtual Memory Kmalloc area. (4kb) 0xC03FF000 - (2 * 4kb) 
-	movl $(TepKmalloc 			    + 0x003), boot_page_table1 - 0xC0000000 + 1016 * 4
-	movl $(TepKmalloc + (1024 * 4 ) + 0x003), boot_page_table1 - 0xC0000000 + 1017 * 4
-	movl $(TepKmalloc + (1024 * 8 ) + 0x003), boot_page_table1 - 0xC0000000 + 1018 * 4
-	movl $(TepKmalloc + (1024 * 12) + 0x003), boot_page_table1 - 0xC0000000 + 1019 * 4
-	movl $(TepKmalloc + (1024 * 16) + 0x003), boot_page_table1 - 0xC0000000 + 1020 * 4
-	movl $(TepKmalloc + (1024 * 20) + 0x003), boot_page_table1 - 0xC0000000 + 1021 * 4
+	movl $(TepKmalloc - 0xC0000000 			     + 0x003), boot_page_table1 - 0xC0000000 + 1016 * 4
+	movl $(TepKmalloc - 0xC0000000 + (1024 * 4 ) + 0x003), boot_page_table1 - 0xC0000000 + 1017 * 4
+	movl $(TepKmalloc - 0xC0000000 + (1024 * 8 ) + 0x003), boot_page_table1 - 0xC0000000 + 1018 * 4
+	movl $(TepKmalloc - 0xC0000000 + (1024 * 12) + 0x003), boot_page_table1 - 0xC0000000 + 1019 * 4
+	movl $(TepKmalloc - 0xC0000000 + (1024 * 16) + 0x003), boot_page_table1 - 0xC0000000 + 1020 * 4
+	movl $(TepKmalloc - 0xC0000000 + (1024 * 20) + 0x003), boot_page_table1 - 0xC0000000 + 1021 * 4
 
 	# Map VGA video memory to 0xC03FF000 - 4kb as "present, writable".
 	# movl $(0x000B8000 | 0x003), boot_page_table1 - 0xC0000000 + 1022 * 4

@@ -164,7 +164,7 @@ void lwin::set_window_position(int x, int y) {
 }
 void lwin::set_window_fullscreen(bool fullscreen) { 
     this->x_F = this->x;
-    this->y_F = this->y_F;
+    this->y_F = this->y;
     this->width_F = this->width;
     this->height_F = this->height;
 

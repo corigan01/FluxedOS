@@ -56,7 +56,10 @@ void Kernel::init_kernel() {
 
         
         PIT::TimerPhase(1000);
+        kout << "Timer setup!" << endl;
         PIT::init();
+
+        
         KernelTTY.print_str("PIT ");
 
 
@@ -88,8 +91,6 @@ void Kernel::init_kernel() {
         Graphics::Driver::drawstring("Alloc Kernel RAM", 10, 250, 0xFF0000);
 
         //init_kmalloc(0xC000001);
-
-
         
         /*init_memory(mbt);
         

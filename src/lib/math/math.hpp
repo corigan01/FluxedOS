@@ -23,6 +23,7 @@
 
 #include <lib/core/core.h>
 
+
 namespace math {
 
     const double PI = 3.14159265358979323846;
@@ -38,3 +39,4 @@ namespace math {
 
 
 }
+

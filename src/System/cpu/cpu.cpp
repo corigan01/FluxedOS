@@ -85,7 +85,7 @@ IRQ	        Description
 
 */
 
-char *Err[] =
+const char *Err[] =
 {
     "Division By Zero",
     "Debug",

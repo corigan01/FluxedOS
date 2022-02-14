@@ -106,6 +106,7 @@ void pmm::init(multiboot_info_t *mbt) {
 	
 }
 
+
 u32 pmm::RequestInitial(){
 
 	return InstalledMemory;
