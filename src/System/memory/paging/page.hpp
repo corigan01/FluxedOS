@@ -56,17 +56,44 @@ namespace System
             #define PAGETBL_INDEX(vaddr) ((((u32)vaddr) >>12) & 0x3ff)
             #define PAGEFRAME_INDEX(vaddr) (((u32)vaddr) & 0xfff)
 
+            #define PAGEDIR_ADDRESS(index) (((u32)index) * (4 _MB))
+
             // Paging register manipulation macro
             #define SET_PGBIT(cr0) (cr0 = cr0 | 0x80000000)
             #define CLEAR_PSEBIT(cr4) (cr4 = cr4 & 0xffffffef)
 
             
-
             #define LOAD_MEMORY_ADDRESS 0xC0000000
 
+            typedef u32 page_dir_t;
+            typedef u32 page_tbl_t;
 
+            void PrintPageDir(u32 bpg);
+
+            // Converts a Virt addr to a Phys one
+            u32 VirtToPhy(page_dir_t PageDir, u32 addr);
+
+            // This will move the boot page dir into a new page dir
+            void CopyBootDirectory(page_dir_t bootdir, page_dir_t newdir, u32 loadmem);
+
+            // This will just move a table into the dir
+            void SendTableToDirectory(page_dir_t dir, page_tbl_t table, u32 index, u32 perms);
+
+            // Makes sure all entries are clear
+            void ClearAllEntries(page_dir_t dir);
+
+            // Maps a region of a table using the pmm
+            void MapTableRegion(page_tbl_t table, u32 perm, u32 offset);
+
+            // Maps a dir region
+            // start is the index of the dir, and offset is how many 4MB sections we define
+            void MapDirRegion(page_dir_t dir, u32 perm, u32 start, u32 offset);
+
+            void MapPhysRegion(page_dir_t dir, u32 perm, u32 phys, u32 dirindex, u32 addr_offset);
             
             void init(u32 bpg);
+
+            page_dir_t GetPageDir();
 
 
         } // namespace Page

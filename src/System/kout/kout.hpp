@@ -55,12 +55,12 @@ namespace System
             ~SerialLog() {};
             
             SerialLog &operator<<(const char* v);
-            SerialLog &operator<<(const int &v);
-            SerialLog &operator<<(const u32 &v);
-            SerialLog &operator<<(const u16 &v);
-            SerialLog &operator<<(const u8 &v);
+            SerialLog &operator<<(const int  &v);
+            SerialLog &operator<<(const u32  &v);
+            SerialLog &operator<<(const u16  &v);
+            SerialLog &operator<<(const u8   &v);
             SerialLog &operator<<(const char &v);
-            SerialLog &operator<<(bool &v);
+            SerialLog &operator<<(bool       &v);
             SerialLog &operator<<(const TraceInfo &v);
 
             void printf(const char* str, ...);

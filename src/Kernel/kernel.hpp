@@ -55,12 +55,12 @@ class Kernel {
     Kernel(multiboot_info_t* multboot, u32 magic, u32 boot_page_dir) {
         mbt = multboot;
 
-        magic = ((u32)mbt) - (24 _KB);
+        //magic = ((u32)mbt) - (24 _KB);
 
         kout << "Flux Kernel Started..." << endl;                               // tell the console we started the kernel
 
         if (mbt->framebuffer_type == 3) {                                       // This is GFX mode
-            System::Graphics::Driver::gxinit((void*)(mbt->framebuffer_addr + 0xC0000000), 1024, 768);        
+            //System::Graphics::Driver::gxinit((void*)(mbt->framebuffer_addr + 0xC0000000), 1024, 768);        
         }
         else { // This is text mode
             KernelTTY.init(mbt->framebuffer_addr + 0xC0000000);;                              // tell VGA what addr the framebuffer is at
@@ -116,7 +116,7 @@ class Kernel {
         kout << "\tvbe_interface_seg    : " << mbt->vbe_interface_seg << endl;
         kout << "\tvbe_interface_off    : " << mbt->vbe_interface_off << endl;
         kout << "\tvbe_interface_len    : " << mbt->vbe_interface_len << endl;
-        kout << "\tframebuffer_addr     : " << mbt->framebuffer_addr << endl;
+        kout << "\tframebuffer_addr     : 0x" << kout.ToHex(mbt->framebuffer_addr) << endl;
         kout << "\tframebuffer_pitch    : " << mbt->framebuffer_pitch << endl;
         kout << "\tframebuffer_width    : " << mbt->framebuffer_width << " bytes" << endl;
         kout << "\tframebuffer_height   : " << mbt->framebuffer_height << " bytes" << endl;
@@ -125,10 +125,15 @@ class Kernel {
         kout << "\tframebuffer_type     : " << mbt->framebuffer_type << endl;
         kout << endl;
 
+        kout << "FRAMEBUFFER DIR ADDRESS: 0x" << (PAGEDIR_INDEX(mbt->framebuffer_addr)) << endl;
+        
 
         kout << "Initializing Memory" << endl;                              // tell the console we are initializing the system
          kout << "\tDumb Memory Allocation Area --> 0x" << kout.ToHex(magic) << " to 0x" << kout.ToHex((u32)mbt) << " - " << ((u32)mbt - magic) / KB << "KB" << endl << endl;
 
+
+        kout << "Starting Paging" << endl;                                   
+        System::Memory::Static::init((void*)magic, ((u32)mbt - magic) - 4 _KB);
 
         //init_memory(mbt);
         kout << "\tPhysical Memory Manager" << endl;
@@ -136,19 +141,27 @@ class Kernel {
         
         //for(;;);
 
-        kout << "Starting Paging" << endl;                                   
-        System::Memory::Static::init((void*)magic, 24 _KB - 1);
-        
-    
-
 
         kout << "Initializing Paging : BOOT PAGE DIR: 0x" << kout.ToHex(boot_page_dir) << endl;                               // tell the console we are initializing the system
         
         //KernelTTY  = &VBE_DRIVER;
 
         Page::init(boot_page_dir);
-        
 
+
+
+        Memory::init_memory(mbt);
+        
+        //Page::MapPhysRegion(Page::GetPageDir(), SUPER_USER_MEMORY | PRESENT_FLAG | READ_WRITE_ENABLED, mbt->framebuffer_addr, PAGEDIR_INDEX(mbt->framebuffer_addr), 4 _MB);
+
+        u32 address = PAGEDIR_ADDRESS(PAGEDIR_INDEX(mbt->framebuffer_addr));
+
+        Page::PrintPageDir(Page::GetPageDir());
+
+        memset((void*)address, NULL, 4 _MB);
+
+
+        System::Graphics::Driver::gxinit((void*)(mbt->framebuffer_addr), 1024, 768);
         
 
         

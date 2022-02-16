@@ -51,6 +51,7 @@ void K_Vector<T>::ChangePointer(void* p) {
     void* FirstMemoryPointer = (void*)p;
     content = (DB*)FirstMemoryPointer;
     contentsize = 0;
+    kout << "First Memory Pointer: " << kout.ToHex((u32)FirstMemoryPointer) << endl;
     
     FirstMemoryPointer += (sizeof(DB) * 10);
 

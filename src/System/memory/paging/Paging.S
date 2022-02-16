@@ -43,3 +43,11 @@ mov %eax, %cr0
 mov %ebp, %esp
 pop %ebp
 ret
+
+.section .text
+.globl flushPages
+.type flushPages, @function
+flushPages:
+movl %cr3, %ecx
+movl %ecx, %cr3
+ret

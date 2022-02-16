@@ -59,9 +59,11 @@ boot_page_directory:
 	.skip 4096
 boot_page_table1:
 	.skip 4096
-TepKmalloc:
-	.skip 1024 * 24 
 
+# Reserve 40 MB for the kernel preallocated heap.
+# This heap is to get things started before the kernel is loaded.
+TepKmalloc:
+	.skip 1024 * 40 
 
 # Further page tables may be required if the kernel grows beyond 3 MiB.
 
@@ -77,7 +79,7 @@ _start:
 	# First address to map is address 0.
 	movl $0, %esi
 	# Map 1015 pages for the kernel. (the kernel only uses 256 or so )
-	movl $1015, %ecx
+	movl $1010, %ecx
 
 1:
 	# Only map the kernel.
@@ -107,12 +109,17 @@ _start:
 	orl $0x003, %eax
 
 	# Map the (DUMB) Virtual Memory Kmalloc area. (4kb) 0xC03FF000 - (2 * 4kb) 
-	movl $(TepKmalloc - 0xC0000000 			     + 0x003), boot_page_table1 - 0xC0000000 + 1016 * 4
-	movl $(TepKmalloc - 0xC0000000 + (1024 * 4 ) + 0x003), boot_page_table1 - 0xC0000000 + 1017 * 4
-	movl $(TepKmalloc - 0xC0000000 + (1024 * 8 ) + 0x003), boot_page_table1 - 0xC0000000 + 1018 * 4
-	movl $(TepKmalloc - 0xC0000000 + (1024 * 12) + 0x003), boot_page_table1 - 0xC0000000 + 1019 * 4
-	movl $(TepKmalloc - 0xC0000000 + (1024 * 16) + 0x003), boot_page_table1 - 0xC0000000 + 1020 * 4
-	movl $(TepKmalloc - 0xC0000000 + (1024 * 20) + 0x003), boot_page_table1 - 0xC0000000 + 1021 * 4
+	movl $(TepKmalloc - 0xC0000000 			     + 0x003), boot_page_table1 - 0xC0000000 + 1011 * 4
+	movl $(TepKmalloc - 0xC0000000 + (1024 * 4 ) + 0x003), boot_page_table1 - 0xC0000000 + 1012 * 4
+	movl $(TepKmalloc - 0xC0000000 + (1024 * 8 ) + 0x003), boot_page_table1 - 0xC0000000 + 1013 * 4
+	movl $(TepKmalloc - 0xC0000000 + (1024 * 12) + 0x003), boot_page_table1 - 0xC0000000 + 1014 * 4
+	movl $(TepKmalloc - 0xC0000000 + (1024 * 16) + 0x003), boot_page_table1 - 0xC0000000 + 1015 * 4
+	movl $(TepKmalloc - 0xC0000000 + (1024 * 20) + 0x003), boot_page_table1 - 0xC0000000 + 1016 * 4
+	movl $(TepKmalloc - 0xC0000000 + (1024 * 24) + 0x003), boot_page_table1 - 0xC0000000 + 1017 * 4
+	movl $(TepKmalloc - 0xC0000000 + (1024 * 28) + 0x003), boot_page_table1 - 0xC0000000 + 1018 * 4
+	movl $(TepKmalloc - 0xC0000000 + (1024 * 32) + 0x003), boot_page_table1 - 0xC0000000 + 1019 * 4
+	movl $(TepKmalloc - 0xC0000000 + (1024 * 36) + 0x003), boot_page_table1 - 0xC0000000 + 1020 * 4
+	movl $(TepKmalloc - 0xC0000000 + (1024 * 40) + 0x003), boot_page_table1 - 0xC0000000 + 1021 * 4
 
 	# Map VGA video memory to 0xC03FF000 - 4kb as "present, writable".
 	# NO NEED, THIS IS IN PAGE 256 NOW
@@ -122,9 +129,8 @@ _start:
 	movl %eax, boot_page_table1 - 0xC0000000 + 1023 * 4
 
 	# Push the new Vaddress into the Regsiters
-	movl $(0xC03FF000 ), %ebx
-	movl $(0xC03FF000 ), %eax
-	subl $(1024 * 8), %eax
+	movl $(0xC03FF000 				 ), %ebx
+	movl $(0xC0000000 + (4096 * 1011)), %eax
 
 
 	# The page table is used at both page directory entry 0 (virtually from 0x0

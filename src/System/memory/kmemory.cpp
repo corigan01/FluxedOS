@@ -26,6 +26,8 @@
 #include <System/Clock/PIT/PIT.hpp>
 #include <System/memory/paging/page.hpp>
 #include <lib/vector/KernelVector.hpp>
+#include <System/memory/staticalloc/skmalloc.hpp>
+#include <lib/StanderdOperations/Operations.hpp>
 
 using namespace System;
 using namespace System::Memory;
@@ -44,31 +46,76 @@ struct MemoryEntry
 };
 K_Vector<MemoryEntry> MemoryMap(0);
 
+void PrintMemoryMap() {
+    for (int i = 0; i < MemoryMap.size(); i++) {
+        u32 MemorySize = (MemoryMap[i].End - MemoryMap[i].Start);
+        const char* SubScript = (MemorySize > (1 _MB) ? " MB" : (MemorySize > (1 _KB) ? " KB" : " Bytes"));
+        
+        if (MemorySize > (1 _MB)) MemorySize /= 1 _MB;
+        if (MemorySize > (1 _KB)) MemorySize /= 1 _KB;
+
+        kout << "MEMORY : " << kout.ToHex(MemoryMap[i].Start) << " --> " << kout.ToHex(MemoryMap[i].End) << ", SIZE: " << MemorySize << SubScript << "\t USED: " << (MemoryMap[i].Used ? "(USED)" : "(FREE)") << endl;
+    }
+}
 
 void Memory::init_memory(multiboot_info_t *mbt) {
-    pmm::init(mbt);
-    MemoryMap.ChangePointer((void*)pmm::ReservePage());
+    
+    // We are going to have to do some boot strapping here, so bare with me
+
+    // First we need to get the page dir
+    Page::page_dir_t PageDir = Page::GetPageDir();
+
+    // Then we need to map a little bit with the rest of skmalloc
+    // This will be enough for our little buffer
+    Page::MapDirRegion(PageDir, SUPER_USER_MEMORY | PRESENT_FLAG | READ_WRITE_ENABLED, 769, 771);
+
+    // This is the new address that we will give to MemoryMap ~4MB
+    kout << "PAGEDIR_ADDRESS(768) = " << kout.ToHex(PAGEDIR_ADDRESS(768)) << endl;
+    kout << "PAGEDIR_ADDRESS(769) = " << kout.ToHex(PAGEDIR_ADDRESS(769)) << endl;
+
+    kout << "TEST";
+    memset((void*)PAGEDIR_ADDRESS(769), NULL, 2 _MB);
+    kout << "END" << endl;
+
+    MemoryMap.ChangePointer((void*)PAGEDIR_ADDRESS(769));
+
+    // Now we have 4MB free to give to skmalloc
+    Memory::Static::init((void*)PAGEDIR_ADDRESS(770), 4 _MB);
+
+    // Now that skmalloc has enough storage, we can start initing the
+    // kernel heap, this will be about 40MB
+    Page::MapDirRegion(PageDir, SUPER_USER_MEMORY | PRESENT_FLAG | READ_WRITE_ENABLED, 771, 781);
+
+
+    // Now we need to give this memory area to MemoryMap
+    // But we need to do it in a way that MemoryMap can read
+    for (int i = 771; i < 781; i++) {
+        u32 Addr = PAGEDIR_ADDRESS(i);
+
+        MemoryEntry entry = {
+            .Start = Addr,
+            .End = Addr + (4 _MB),
+            .Used = 0
+        };
+
+        MemoryMap.push_back(entry);
+    }
+
+    // Now we need to conjoin memory if its the same
+    // This helps us map bigger maps because we know the memory map
+    // is liner
+    u32 MSize = MemoryMap.size();
+    for (u32 i = 0; i < MSize; i++) {
+        ConJoin(0);
+    }
+
+    // Now lets print out the memory buffer
+    PrintMemoryMap();
+
+    // Ok we should be done
     kout << "Starting memory manger: " << pmm::PagesAvailable() << " pages available!" << endl;
 }
 
-Page_Entry Memory::map_page(Permission_Entry perm) {
-    Page_Entry entry;
-    entry.ptr = (void*)pmm::ReservePage();
-    entry.perm = perm;
-    entry.size = PAGE_S;
-
-    //kout << "Mapped page at: " << (u32)entry.ptr << " with permission: " << perm.perm << endl;
-
-    return entry;
-}
-bool Memory::unmap_page(Page_Entry page) {
-    pmm::freeBlock((u32)page.ptr);
-
-    // TODO: Check if page is still mapped with paging
-    kout << "Unmapped page at: " << (u32)page.ptr << endl;
-
-    return true;
-}
 
 void Memory::PagePool(Page_Entry *pool, u32 size) {
     kout << "Kernel has received new memory pool of size " << (size * PAGE_SIZE) / KB << " kbytes" << endl;
@@ -99,16 +146,17 @@ void Memory::PagePool(Page_Entry *pool, u32 size) {
 }
 
 void Memory::ConJoin(u32 m1) {
-    if (m1 < MemoryMap.size() && m1 >= 0) {
-        if (MemoryMap[m1].Used == false && MemoryMap[m1 + 1].Used == false) {
-            if (MemoryMap[m1].End == MemoryMap[m1 + 1].Start || MemoryMap[m1].End == MemoryMap[m1 + 1].Start - 1) {
-                kout << "Joined Memory index " << m1 << " with " << m1 + 1 << " | (" << MemoryMap[m1].Start << ", " << MemoryMap[m1].End << ") --> (" << MemoryMap[m1].Start << ", " << MemoryMap[m1 + 1].End << ")" << endl;
-                MemoryMap[m1].End = MemoryMap[m1 + 1].End;
-                MemoryMap.pop_at(m1 + 1);
-                return;
-            }
+    if (m1 >= MemoryMap.size() && m1 < 0 || MemoryMap.size() <= 1) return;
+
+    if (MemoryMap[m1].Used == false && MemoryMap[m1 + 1].Used == false) {
+        if (MemoryMap[m1].End == MemoryMap[m1 + 1].Start || MemoryMap[m1].End == MemoryMap[m1 + 1].Start - 1) {
+            kout << "Joined Memory index " << m1 << " with " << m1 + 1 << " | (" << MemoryMap[m1].Start << ", " << MemoryMap[m1].End << ") --> (" << MemoryMap[m1].Start << ", " << MemoryMap[m1 + 1].End << ")" << endl;
+            MemoryMap[m1].End = MemoryMap[m1 + 1].End;
+            MemoryMap.pop_at(m1 + 1);
+            return;
         }
     }
+    
     kout << "ERROR JOINING MEMORY (ERROR CODE): " << (m1 < MemoryMap.size() && m1 >= 0) << (MemoryMap[m1].Used == false) << (MemoryMap[m1].End == MemoryMap[m1 + 1].Start || MemoryMap[m1].End == MemoryMap[m1].Start + 1) << endl;
 }
 
@@ -157,22 +205,7 @@ void* Memory::kmalloc(size_t size) {
                 MemoryMap[i] = CurrentMemoryEntry;
                 MemoryMap.insert_at(i, NewMemoryEntry);
 
-                for (int i = 0; i < MemoryMap.size(); i++) {
-                    u32 MemorySize = (MemoryMap[i].End - MemoryMap[i].Start);
-                    char* SubScript = " bytes";
-
-                    if (MemorySize > 1 _MB) { 
-                        SubScript = " MB";
-                        MemorySize /= MB;
-                    }
-                    if (MemorySize > 1 _KB) {
-                        SubScript = " KB";
-                        MemorySize /= KB;
-                    }
-                    
-
-                    kout << "MEMORY : " << MemoryMap[i].Start << " --> " << MemoryMap[i].End << ", SIZE: " << MemorySize << SubScript << "\t USED: " << (MemoryMap[i].Used ? "(USED)" : "(FREE)") << endl;
-                }
+                PrintMemoryMap();
 
                 memset((void*)MemoryStart, NULL, size);
                 kout << "Returning memory addr *" << (u32)MemoryStart << " with size of " << size << endl << endl;
@@ -193,24 +226,23 @@ void Memory::kfree(void* ptr) {
             kout << "Freed memory at " << (u32)ptr << endl;
             ConJoin(i);
             ConJoin(i);
-            for (int i = 0; i < MemoryMap.size(); i++) {
-                u32 MemorySize = (MemoryMap[i].End - MemoryMap[i].Start);
-                char* SubScript = " bytes";
+            
+            PrintMemoryMap();
 
-                if (MemorySize > 1 _MB) { 
-                    SubScript = " MB";
-                    MemorySize /= MB;
-                }
-                if (MemorySize > 1 _KB) {
-                    SubScript = " KB";
-                    MemorySize /= KB;
-                }
-                
-
-                kout << "MEMORY : " << MemoryMap[i].Start << " --> " << MemoryMap[i].End << ", SIZE: " << MemorySize << SubScript << "\t USED: " << (MemoryMap[i].Used ? "(USED)" : "(FREE)") << endl;
-            }
             return;
         }
     }
     kout << "Could not find memory to free!" << endl;
+}
+
+u32 Memory::MemRemaining() {
+    u32 total_mem = 0;
+
+    for (int i = 0; i < MemoryMap.size(); i++) {
+        if (MemoryMap[i].Used) continue;
+
+        total_mem += MemoryMap[i].End - MemoryMap[i].Start;
+    }
+
+    return total_mem;
 }

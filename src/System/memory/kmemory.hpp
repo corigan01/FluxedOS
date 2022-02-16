@@ -55,5 +55,7 @@ namespace System
 
         void ConJoin(u32 m1);
 
+        u32 MemRemaining();
+
     }
 }

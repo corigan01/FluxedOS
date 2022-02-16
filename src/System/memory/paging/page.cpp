@@ -128,9 +128,9 @@ void Page::allocate_page(page_directory_t * dir, uint32_t virtual_addr, uint32_t
 
 EXTNC_ void loadPageDirectory(unsigned int*);
 EXTNC_ void enablePaging();
+EXTNC_ void flushPages();
 
-void PrintPageDir(u32 bpg) {
-    bpg += LOAD_MEMORY_ADDRESS;
+void Page::PrintPageDir(u32 bpg) {
     kout << "PGD: " << kout.ToHex(bpg) << endl;
     
 
@@ -138,7 +138,8 @@ void PrintPageDir(u32 bpg) {
     "Reading Paging Dir: \n" <<
     "\tDIR ADDR     *0x" << kout.ToHex(bpg) << endl;
     
-    u32 DetectedAddr = 0;
+    u32 DetectedAddr[10] = {};
+    u32 DetectedSize = 0;
 
     for (int i = 0; i < 64; i ++) {
         kout << "\t";
@@ -148,32 +149,41 @@ void PrintPageDir(u32 bpg) {
 
             kout << (OutAdd > 0 ? kout.GREEN : kout.YELLOW) << "[" << i + (e * 64) << "]:" << ((i + (e * 64)) >= 10 ? ((i + (e * 64)) >= 100 ? " " : "  ") : "   ") << "0x" << kout.ToHex(OutAdd) << " " << kout.YELLOW;
 
-            DetectedAddr = (OutAdd > 1) ? (i + (e * 64)) : DetectedAddr;
+            if (OutAdd > 1) DetectedAddr[DetectedSize++] = (i + (e * 64));
         }
         kout << endl;
     }
 
-    if (DetectedAddr == 0) return;
+    if (DetectedAddr[0] == 0) return;
 
-    u32 bpt = (u32)((u32*)(bpg & 0xFFFFF000))[DetectedAddr] + LOAD_MEMORY_ADDRESS;
+    for (int e = 0; e < DetectedSize; e++) {
+        u32 bpt = (u32)((u32*)(bpg & 0xFFFFF000))[DetectedAddr[e]] + LOAD_MEMORY_ADDRESS;
 
-    kout << "Reading Paging Table; \n\tTBL ADDR:   *0x" << kout.ToHex(bpt) << endl;
+        kout << "Reading Paging Table; \n\tTBL ADDR:   *0x" << kout.ToHex(bpt) << endl;
 
-    for (int i = 0; i < 64; i ++) {
-        kout << "\t";
-        for (int e = 0; e < 16; e++) {
+        for (int i = 0; i < 64; i ++) {
+            kout << "\t";
+            for (int e = 0; e < 16; e++) {
 
-            u32 OutAdd = ((u32*)(bpt & 0xFFFFF000))[i + (e * 64)];
+                u32 OutAdd = ((u32*)(bpt & 0xFFFFF000))[i + (e * 64)];
 
-            kout << (OutAdd > 0 ? kout.GREEN : kout.YELLOW) << "[" << i + (e * 64) << "]:" << ((i + (e * 64)) >= 10 ? ((i + (e * 64)) >= 100 ? " " : "  ") : "   ") << "0x" << kout.ToHex(OutAdd) << " " << kout.YELLOW;
+                kout << (OutAdd > 0 ? kout.BLUE : kout.YELLOW) << "[" << i + (e * 64) << "]:" << ((i + (e * 64)) >= 10 ? ((i + (e * 64)) >= 100 ? " " : "  ") : "   ") << "0x" << kout.ToHex(OutAdd) << " " << kout.YELLOW;
 
-        }
-        kout << endl;
-    } 
+            }
+            kout << endl;
+        } 
+    }
+
+    
 
 }
 
-u32 VirtToPhy(u32 PageDir, u32 addr) {
+typedef u32 page_dir_t;
+typedef u32 page_tbl_t;
+
+
+// Converts a Virt addr to a Phys one
+u32 Page::VirtToPhy(page_dir_t PageDir, u32 addr) {
     // Dir index 0-1024, this points to which table we are looking at
     u32 DirEntryIdx = ((u32)addr / (4 _MB));
 
@@ -181,7 +191,7 @@ u32 VirtToPhy(u32 PageDir, u32 addr) {
     u32 TableIdx = ((u32)addr - (DirEntryIdx * 4 _MB)) / (4 _KB); 
 
     // This is the actual page table addr
-    u32 Table = (u32)((u32*)((u32)PageDir & 0xFFFFF000))[DirEntryIdx] + LOAD_MEMORY_ADDRESS;
+    u32 Table = (u32)((u32*)((u32)PageDir & 0xFFFFF000))[DirEntryIdx] + PAGEDIR_ADDRESS(DirEntryIdx);
 
     // This is the phys addr
     u32 Paddr = ((u32*)(Table & 0xFFFFF000))[TableIdx] & 0xFFFFF000;
@@ -189,7 +199,8 @@ u32 VirtToPhy(u32 PageDir, u32 addr) {
     return Paddr;
 }
 
-void CopyBootDirectory(u32 bootdir, u32 newdir, u32 loadmem) {
+// This will move the boot page dir into a new page dir
+void Page::CopyBootDirectory(page_dir_t bootdir, page_dir_t newdir, u32 loadmem) {
     u32 DirEntryIdx = ((u32)loadmem / (4 _MB));
     u32 bpt = (u32)((u32*)(bootdir & 0xFFFFF000))[DirEntryIdx] + loadmem;
 
@@ -197,51 +208,109 @@ void CopyBootDirectory(u32 bootdir, u32 newdir, u32 loadmem) {
     ((u32*)newdir)[DirEntryIdx] = bpt - loadmem;
 }
 
-void SendTableToDirectory(u32 dir, u32 table, u32 index) {
-    ((u32*)dir)[index] = table;
+// This will just move a table into the dir
+void Page::SendTableToDirectory(page_dir_t dir, page_tbl_t table, u32 index, u32 perms) {
+    ((u32*)dir)[index] = VirtToPhy(dir, table) | perms;
+
+    flushPages();
 }
 
-void ClearAllEntries(u32 dir) {
+// Makes sure all entries are clear
+void Page::ClearAllEntries(page_dir_t dir) {
     memset((void*)dir, NULL, 1024);
 }
 
-void MemMap(u32 table, u32 perm, u32 offset) {
+// Maps a region of a table using the pmm
+void Page::MapTableRegion(page_tbl_t table, u32 perm, u32 offset) {
     u32* tbl = (u32*)table;
 
     for (int i = 0; i < offset; i++) {
-        tbl[i] = ((pmm::ReservePage() - LOAD_MEMORY_ADDRESS) & 0xFFFFF000) | perm;
+        tbl[i] = ((pmm::ReservePage()) & 0xFFFFF000) | perm;
     }
 }
 
-void Page::init(u32 bpg) {
+// Maps a dir region
+// start is the index of the dir, and offset is how many 4MB sections we define
+void Page::MapDirRegion(page_dir_t dir, u32 perm, u32 start, u32 offset) {
+    for (int i = start; i < offset; i++) {
+        page_tbl_t tlb = 0;
     
-    // In the boot loader we reserve 20KB of memory for this new page dir / table
+        if (System::Memory::MemRemaining())  tlb = PAGE_ALIGN((page_tbl_t)kmalloc(8 _KB));
+        else tlb = PAGE_ALIGN(System::Memory::Static::skmalloc(8 _KB));
+
+        ASSERT(tlb);
+
+        MapTableRegion(tlb, perm, 1024);
+        SendTableToDirectory(dir, tlb, i, perm);
+    }
+}
+
+// Map a Phys address to a virtual one
+void Page::MapPhysRegion(page_dir_t dir, u32 perm, u32 phys, u32 dirindex, u32 addr_offset) {
+    u32 AmountMapped = 0;
+
+    for (int i = dirindex; i < PAGEDIR_INDEX(addr_offset) + dirindex; i++) {
+        page_tbl_t tlb = 0;
+    
+        if (System::Memory::MemRemaining())  tlb = PAGE_ALIGN((page_tbl_t)kmalloc(8 _KB));
+        else tlb = PAGE_ALIGN(System::Memory::Static::skmalloc(8 _KB));
+
+        ASSERT(tlb);
+
+        for (int i = 0; i < 1024 && AmountMapped < addr_offset; i ++) {
+            ((u32*)tlb)[i] = ((phys + AmountMapped) & 0xFFFFF000) | perm;
+
+            AmountMapped += addr_offset;
+        }
+
+        SendTableToDirectory(dir, tlb, i, perm);
+
+        if (AmountMapped < addr_offset) return;
+    }
+}
+
+page_dir_t PageDir;
+
+extern u32 _kernel_end;
+
+void Page::init(u32 bpg) {
+    // In the boot loader we reserve 40KB of memory for this new page dir / table
     // This is reserved to us in the virtual memory range, so we need to figure out
     // where this memory points to later on
-    u32 PageDir = (u32)Memory::Static::skmalloc(1024 * sizeof(u32)); 
-
-    // This will be a new addr for the heap (WIP)
-    u32 PageTbl = (u32)Memory::Static::skmalloc(1024 * sizeof(u32)); 
-
+    PageDir = PAGE_ALIGN((u32)Memory::Static::skmalloc(1024 * sizeof(u32) * 2)); 
 
     // Make sure we clear the PageDir
     ClearAllEntries(PageDir);
-    ClearAllEntries(PageTbl);
 
-
-
+    // This will copy the important infomation from the boot page table into
+    // a new page table that we can work with. This new page table then can
+    // alloc new regions. 
     CopyBootDirectory(bpg, PageDir, LOAD_MEMORY_ADDRESS);
 
-    MemMap(PageTbl, SUPER_USER_MEMORY | PRESENT_FLAG | READ_WRITE_ENABLED, 1024);
-    SendTableToDirectory(PageDir, PageTbl, 769);
-    
-    
+    // Now we need to move the pmm past where the kernel is stored
+    // This finds where the last addresss of the kernel is, and stores it here
+    page_tbl_t bpt = (u32)((u32*)(PageDir & 0xFFFFF000))[768] + LOAD_MEMORY_ADDRESS;
+    u32 StartPMMAddress = pmm::ReservePage();    
+    u32 HighReservedAddress = 0;
+    for (int i = 0; i < 1024; i ++) {
+        u32 AtTableAddress = (u32)((u32*)(bpt & 0xFFFFF000))[i];
 
+        HighReservedAddress = (AtTableAddress > HighReservedAddress) ? AtTableAddress : HighReservedAddress;
+    }
+
+    // Now we get rid of those pesky pages
+    for (int i = StartPMMAddress; i < HighReservedAddress; i += PAGE_SIZE) {
+        pmm::ReservePage(); 
+    }
+    
     // Tell the MMU to use this new Page Dir
     loadPageDirectory((u32*)(VirtToPhy(PageDir, PageDir)));
     
     // Make sure Paging is enabled
     enablePaging();
 
-    // AND DIE BECAUSE THIS TOOK SO LONG
+}
+
+page_dir_t Page::GetPageDir() {
+    return PageDir;
 }

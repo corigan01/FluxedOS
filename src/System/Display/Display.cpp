@@ -74,6 +74,8 @@ void VGA::BufferSet(u16* buffer) {
 }
 
 void VGA::print_char(char c) {
+    if ((u32)internalBuffer <= 0) return;
+    
     switch (c)
     {
     case '\n':

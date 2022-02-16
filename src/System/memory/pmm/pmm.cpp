@@ -21,6 +21,7 @@
 
 #include "pmm.hpp"
 #include <lib/bitmap/bitmap.hpp>
+#include <System/memory/staticalloc/skmalloc.hpp>
 
 using namespace System;
 using namespace System::Memory;
@@ -47,57 +48,112 @@ void pmm::init(multiboot_info_t *mbt) {
 	MemoryDiscriptor.Addr = (multiboot_memory_map_t*)(mbt->mmap_addr + KERNEL_START_ADDRESS); 
 	MemoryDiscriptor.Len = mbt->mmap_length;
 
+	u32 MemoryEntries = 0;
+	
+	// First we need to calc how many entries we have, so then we can ask
+	// skmalloc nicely how much we need to store!
 	for (multiboot_memory_map_t* entry = MemoryDiscriptor.Addr; entry < MemoryDiscriptor.Addr + MemoryDiscriptor.Len;) {
-		
 		entry = (multiboot_memory_map_t*) ((unsigned int) entry + entry->size + sizeof(entry->size));
+		if (entry->base_addr_low <= 0) continue;
 
-		
-		if (entry->base_addr_low  > 0) {
-			
+		MemoryEntries++;
+	}	
+
+	// Now we know how many entries we have, so we can acually store them
+	MemoryArray = (MemoryEntry*)Static::skmalloc(MemoryEntries * sizeof(MemoryEntry));
+
+	// As we now have a place for MemoryArray to live, We can iterate over 
+	// the Memory again and acually store it this time :) 
+	{
+		// This makes sure `i` goes out of scope
+		u32 i = 0;
+		for (multiboot_memory_map_t* entry = MemoryDiscriptor.Addr; entry < MemoryDiscriptor.Addr + MemoryDiscriptor.Len; i++) {
+				
+			entry = (multiboot_memory_map_t*) ((unsigned int) entry + entry->size + sizeof(entry->size));
+			if (entry->base_addr_low <= 0) continue;
+				
 			kout << "MEMORY ENTRY: \t0x" << kout.ToHex(entry->base_addr_low) << 
 			"\t : [" << kout.ToHex(entry->length_low) << "]\t --> \t" << entry->length_low / (1 _MB) << "MB\t"
 			" -- " << entry->type << endl; 
 
+			MemoryArray[i].MemoryType = entry->type;
+			MemoryArray[i].MemoryAddr = entry->base_addr_low;
+			MemoryArray[i].Len        = entry->length_low;
+			MemoryArraySize++;
 		}
-	}	
+	}
+
+	// Now we need to calc the total size of the memory we have
+	// This is important because we need to know how much to
+	// store in our bitmap
+	for (int i = 0; i < MemoryArraySize; i++) {
+		if (MemoryArray[i].MemoryType != MULTIBOOT_MEMORY_AVAILABLE) continue;
+
+		InstalledMemory += MemoryArray[i].Len;
+	}
+
+	kout << "Total Installed Memory: " << InstalledMemory / (1 _MB) << "MB" << endl;
+
+	// This is how many bytes we have to store 
+	u32 PagesAllocSize = (InstalledMemory / (4 _KB)) / 8;
+
+	// Now lets alloc this
+	PagesAlloc = (bitmap_type*)Static::skmalloc(sizeof(bitmap_type));
+	PagesAlloc->addr = (u8*)Static::skmalloc(PagesAllocSize);
+	PagesAlloc->bytes = PagesAllocSize;
+
+	// Make sure all bytes are 0 because its a bit map and we need to make sure its clear
+	memset((void*)PagesAlloc->addr, 0x0, PagesAllocSize);
+
 
 	kout << "Memory map complete!" << endl;
 	
 }
 
-
+// This is how much memory we had at the start (installed ram)
 u32 pmm::RequestInitial(){
 
 	return InstalledMemory;
 }
 
+// This is how many pages we currently have that are not mapped
 u32 pmm::PagesAvailable() {
-	u32 Pages = NULL;
+	u32 Pages = 0;
 
+	// Locate all clear bits and add to Pages
 	for (int i = 0; i < PagesAlloc->bytes * 8; i++) {
 		if (!test_bit(PagesAlloc, i)) {
 			Pages++;
 		}
 	}
-
-	
 	
 	return Pages;
 }
 
+// This will give you one page alined region of memory
 u32 pmm::ReservePage() {
+	// Finds a bit that is clear
 	u32 bit = find_first_clear_bit(PagesAlloc);
+
+	// Sets that bit because its now in use
 	set_bit(PagesAlloc, bit);
 
-	u32 ReturnAddr = 0;
+	// Now we need to know where that bit points to
+	// So we begin by finding the raw addr, this will be
+	// added to the start of the memory region we have
+	u32 CalculatedBitAddr = bit * PAGE_SIZE;
+	u32 OffsetAddress = 0;
+
+	// Find the clear memory buffer and set offset to it
 	for (int i = 0; i < MemoryArraySize; i++) {
-		if (MemoryArray[i].MemoryType == MULTIBOOT_MEMORY_AVAILABLE && (MemoryArray[i].MemoryAddr + (PAGE_SIZE * (bit + 1))) < MemoryArray[i].Len) {
-			ReturnAddr = ((bit + 1) * PAGE_SIZE) + MemoryArray[i].MemoryAddr;
-			break;
+		if (MemoryArray[i].MemoryType == MULTIBOOT_MEMORY_AVAILABLE) {
+			OffsetAddress = MemoryArray[i].MemoryAddr;
 		}
 	}
 
-	//memset((void*)ReturnAddr, NULL, PAGE_SIZE);
+	// Finally add the two together so we have our addr
+	u32 ReturnAddr = CalculatedBitAddr + OffsetAddress;
+
 
 	return ReturnAddr;
 }
@@ -128,6 +184,8 @@ u32 pmm::ForceBook(u16 PagesNumber, u32 offset) {
 	for (int i = 0; i < PagesNumber; i++) {
 		ForcePage(offset + (i * PAGE_SIZE));
 	}
+
+	return 0;
 }
 
 void pmm::freeBook(u32 Addr, u16 Pages) {

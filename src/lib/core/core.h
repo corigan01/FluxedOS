@@ -94,8 +94,6 @@ struct reg_packed {
 #define ECTNC_END 
 #endif
 
-#define ECTNC_END }
-
 
 // Making c++ into a string
 #define MacroStrCon(x) #x

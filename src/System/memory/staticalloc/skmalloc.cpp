@@ -33,6 +33,8 @@ void Static::init(void* startloc, u32 offset) {
     MemoryAddr = (u32*)startloc;
     Offset = offset;
     Alloc = 0;
+
+    //memset(startloc, NULL, offset);
 }
 
 void* Static::skmalloc(size_t size) {
@@ -43,9 +45,9 @@ void* Static::skmalloc(size_t size) {
 
     kout << "skmalloc: " << kout.ToHex((u32)(MemoryAddr + Alloc)) << " --> Size: " << size << endl;
 
-    void* ret = (void*)MemoryAddr + Alloc;
+    u8* ret = (u8*)MemoryAddr + Alloc;
     Alloc += size + 1;
 
 
-    return ret;
+    return (void*)ret;
 }
