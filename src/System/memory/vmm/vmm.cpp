@@ -69,17 +69,23 @@ void vmm::pmm_table_fill(vmm::page_directory_t dir, u32 index, u32 perms) {
 }
 
 // This will map phy to the table
-// BE CAREFULE BECAUSE THIS MAPS 4MB of WHATEVER PHYS YOU GIVE IT 
-void vmm::manual_table_fill(vmm::page_directory_t dir, u32 index, u32 phy, u32 perms) {
+// BE CAREFULE BECAUSE THE MEMORY NEEDS TO EXIST
+void vmm::manual_table_fill(vmm::page_directory_t dir, u32 index, u32 phy, u32 size, u32 perms) {
     // Make sure we have a table
     if (dir.vtable[index] <= 0) new_page_table(dir, index, perms);
+
+    kout << "PHY: " << kout.ToHex(phy) << "  --> " << size << endl;
 
     // Get the table so we can use it
     vmm::page_table_t table = TO_POINTER( ERASE_PERMS (dir.vtable[index]) ); 
 
     // loop through the entries and map whatever pmm gives us as a phys address
-    for (int i = 0; i < 1024; i ++) {    
+    for (int i = 0; i < (size / 4096); i ++) {    
         table[i] = ((phy & 0xFFFFF000) + (i * (4 _KB))) | perms;
+    }
+
+    for (int i = (size / 4096); i < 1024; i ++) {    
+        table[i] = NULL;
     }
 
     // finally make sure we flush the pages so they take affect
@@ -87,7 +93,7 @@ void vmm::manual_table_fill(vmm::page_directory_t dir, u32 index, u32 phy, u32 p
 }
 
 // Grab the SystemDirectory
-vmm::page_directory_t GetSystemDirectory() {
+vmm::page_directory_t vmm::GetSystemDirectory() {
     return SystemDirectory;
 }
 

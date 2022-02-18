@@ -91,7 +91,7 @@ const char * ClassCodeName[] = {
 void Kernel::system_init() {
     //NO_INSTRUCTION;
 
-    kout << "Listing PCI..." << endl;
+    /*kout << "Listing PCI..." << endl;
     Graphics::Driver::drawstring("Listing PCI", 10, 330, 0xFF0000);
 
     for (int e = 0; e < 16; e++) {
@@ -118,7 +118,7 @@ void Kernel::system_init() {
             }
         }
     }
-    kout << endl;
+    kout << endl;*/
 
 
 

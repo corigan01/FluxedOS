@@ -135,15 +135,11 @@ class Kernel {
         
         //Page::MapPhysRegion(Page::GetPageDir(), SUPER_USER_MEMORY | PRESENT_FLAG | READ_WRITE_ENABLED, mbt->framebuffer_addr, PAGEDIR_INDEX(mbt->framebuffer_addr), 4 _MB);
 
-        
+        vmm::manual_table_fill(vmm::GetSystemDirectory(), PAGEDIR_INDEX(mbt->framebuffer_addr), mbt->framebuffer_addr, (1024 * 768 * 4), USER | PRESENT | R_W );        
+
+        //Page::PrintPageDir((u32)vmm::GetSystemDirectory().table, (u32)vmm::GetSystemDirectory().vtable);
 
         System::Graphics::Driver::gxinit((void*)(mbt->framebuffer_addr), 1024, 768);
-        
-
-        
-
-        
-
         
 
         //Page::paging_init((u32*)magic, 24 _KB, boot_page_dir);

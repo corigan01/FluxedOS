@@ -62,7 +62,7 @@ namespace System {
 
             // This will map phy to the table
             // BE CAREFULE BECAUSE THIS MAPS 4MB of WHATEVER PHYS YOU GIVE IT 
-            void manual_table_fill(vmm::page_directory_t dir, u32 index, u32 phy, u32 perms);
+            void manual_table_fill(vmm::page_directory_t dir, u32 index, u32 phy, u32 size, u32 perms);
 
             // Grab the SystemDirectory
             vmm::page_directory_t GetSystemDirectory();

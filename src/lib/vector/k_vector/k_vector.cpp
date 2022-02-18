@@ -211,6 +211,8 @@ T& K_Vector<T>::operator [](size_t s) {
         }
         
     }
+
+    ASSERT_NOT_REACHED("OUT OF BOUNDS!");
 }
 
 template <class T>
