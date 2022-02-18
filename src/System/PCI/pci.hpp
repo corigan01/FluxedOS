@@ -68,33 +68,7 @@ namespace System
 {
     namespace PCI
     {
-        typedef union pci_dev {
-            u32 bits;
-            struct {
-                u32 always_zero    : 2;
-                u32 field_num      : 6;
-                u32 function_num   : 3;
-                u32 device_num     : 5;
-                u32 bus_num        : 8;
-                u32 reserved       : 7;
-                u32 enable         : 1;
-            };
-        } PICdev_T;
-
-        u32 read(PICdev_T dev, u32 field);
-        void write(PICdev_T dev, u32 field, u32 value);
-
-        u32 get_device_type(PICdev_T dev);
-        u32 get_secondary_bus(PICdev_T dev);
-        u32 reach_end(PICdev_T dev);
-
-        PICdev_T scan_function(u16 vendor_id, u16 device_id, u32 bus, u32 device, u32 function, int device_type);
-        PICdev_T scan_device(u16 vendor_id, u16 device_id, u32 bus, u32 device, int device_type);
-        PICdev_T scan_bus(u16 vendor_id, u16 device_id, u32 bus, int device_type);
-
-        PICdev_T get_device(u16 vendor_id, u16 device_id, int device_type);
-
-        void pci_init();
+        
 
 
 

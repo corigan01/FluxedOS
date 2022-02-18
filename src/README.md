@@ -112,7 +112,7 @@ Please see https://github.com/corigan01/FluxedOS/blob/main/src/build/README.md
 │   │   │   └── multiboot.h
 │   │   ├── StanderdOperations
 │   │   │   ├── Operations.cpp
-│   │   │   └── Operations.hpp
+│   │   │   └── Operations.h
 │   │   ├── string
 │   │   │   ├── string.cpp
 │   │   │   └── string.hpp

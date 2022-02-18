@@ -48,7 +48,7 @@ K_Vector<T>::K_Vector() {
         
 template <class T>
 void K_Vector<T>::ChangePointer(void* p) {
-    void* FirstMemoryPointer = (void*)p;
+    u32* FirstMemoryPointer = (u32*)p;
     content = (DB*)FirstMemoryPointer;
     contentsize = 0;
     kout << "First Memory Pointer: " << kout.ToHex((u32)FirstMemoryPointer) << endl;

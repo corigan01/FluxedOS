@@ -1,11 +1,15 @@
-cmake_minimum_required(VERSION 3.7)
-include(CMakeForceCompiler)
+cmake_minimum_required(VERSION 2.9)
+set(CMAKE_SYSTEM_NAME Generic)
+set(CMAKE_SYSTEM_PROCESSOR i386)
 
-enable_language(ASM_NASM)
+set(triple i386)
 
-project(FluxedOS VERSION 0.0.1 LANGUAGES CXX C ASM_NASM ASM) 
+set(CMAKE_C_COMPILER clang)
+set(CMAKE_C_COMPILER_TARGET ${triple})
+set(CMAKE_CXX_COMPILER clang++)
+set(CMAKE_CXX_COMPILER_TARGET ${triple})
 
-set(CMAKE_SYSTEM_NAME "FluxedOS")
+project(FluxedOS LANGUAGES CXX C ASM_NASM ASM) 
 
 set(CMAKE_NASM_LINK_EXECUTABLE "ld   -o  ")
 set(CAN_USE_ASSEMBLER TRUE)
@@ -13,14 +17,6 @@ set(CMAKE_ASM_NASM_FLAGS "")
 set(CMAKE_ASM_NASM_OBJECT_FORMAT elf)
 set(CMAKE_ASM_FLAGS "-m32 -c")
 set(CMAKE_ASM_NASM_COMPILE_OBJECT "<CMAKE_ASM_NASM_COMPILER> <INCLUDES> <FLAGS> -f ${CMAKE_ASM_NASM_OBJECT_FORMAT} -o <OBJECT> <SOURCE>")
-set(CMAKE_CROSSCOMPILING 1)
-
-set(CROSS_PATH ${PROJECT_SOURCE_DIR}/build/toolchains)
-
-set(CMAKE_C_COMPILER ${CROSS_PATH}/build-gcc-11.2.0-i386-Linux-x86_64/gcc/gcc-cross)
-set(CMAKE_CXX_COMPILER ${CROSS_PATH}/build-gcc-11.2.0-i386-Linux-x86_64/gcc/g++-cross)
-
-set(CMAKE_BUILD_TYPE Debug)
 
 add_custom_target(buildver
     COMMAND python3 ../tools/argpass.py
@@ -28,10 +24,10 @@ add_custom_target(buildver
 
 set ( ASM
     #src/boot/boot.asm
-    src/CPU/cpu.asm 
-    src/CPU/gdt.asm 
-    src/CPU/irq.asm 
-    src/CPU/isr.asm 
+    src/CPU/cpua.asm 
+    src/CPU/gdta.asm 
+    src/CPU/irqa.asm 
+    src/CPU/isra.asm 
     src/System/panic/stack_dump.asm
 )
 
@@ -47,12 +43,13 @@ set ( C
     src/CPU/idt.c
     src/CPU/irq.c
     src/CPU/isr.c
+    src/lib/StanderdOperations/Operations.c
+
 )
 
 set (CXX
     src/lib/BundledContext/BundledContext.cpp
     src/lib/SmartPointer/smartpointer.cpp
-    src/lib/StanderdOperations/Operations.cpp
     src/lib/bitmap/bitmap.cpp
     src/lib/string/string.cpp
     src/lib/assert/assert.cpp
@@ -74,7 +71,6 @@ set (CXX
     src/System/cpu/cpu.cpp
     src/System/kout/kernelout/kernelout.cpp
     src/System/kout/kout.cpp
-    src/System/memory/vmm.cpp
     src/System/memory/paging/page.cpp
     src/System/memory/pmm/pmm.cpp
     src/System/memory/kmemory.cpp
@@ -93,30 +89,28 @@ set (CXX
 set_source_files_properties(${ASM} PROPERTIES LANGUAGE ASM_NASM)
 set_source_files_properties(${GAS} PROPERTIES LANGUAGE ASM)
 
-set(CMAKE_C_COMPILE_FEATURES  -g -m32 -nostdinc -B${CROSS_PATH}/build-gcc-11.2.0-i386-Linux-x86_64/gcc
- -fstrength-reduce -fPIE -fomit-frame-pointer -Wall
+set(CMAKE_C_COMPILE_FEATURES  -g -m32 -nostdinc  -nostdlib
+-fPIE -fomit-frame-pointer -Wall
  -finline-functions -fno-stack-protector
  -fpic -fshort-wchar -mno-red-zone -fno-builtin)
-set(CMAKE_CXX_COMPILE_FEATURES -g -m32 -nostdinc -B${CROSS_PATH}/build-gcc-11.2.0-i386-Linux-x86_64/gcc
+set(CMAKE_CXX_COMPILE_FEATURES -g -m32 -nostdinc  -nostdlib
  -fno-rtti -fPIE -fno-exceptions -Wno-write-strings -Wall
  -fno-stack-protector 
  -fomit-frame-pointer -finline-functions -fno-builtin 
  -fdiagnostics-color=always)
-
 set(CMAKE_ASM_COMPILE_FEATURES -shared )
-#set(CMAKE_CXX_COMPILE_FEATURES -m32 -g -elf_i386 -std=c++2a -O -fno-rtti  -fno-exceptions -Wno-write-strings -fstrength-reduce -fno-use-cxa-atexit -fomit-frame-pointer -finline-functions -nostdinc -fno-builtin -fdiagnostics-color=always)
-add_link_options(-m32 -B${CROSS_PATH}/build-gcc-11.2.0-i386-Linux-x86_64/gcc -g -O0 -Wall -Werror -Wextra -ffreestanding -fno-rtti -fPIE  -fno-stack-protector -fno-exceptions -nostartfiles -Wno-undef -nostdlib -nostdinc -T ../src/linker.ld  )
+
+add_link_options(-m32 -g -Wall -Werror -Wextra -ffreestanding -fno-rtti -fPIE -nodefaultlibs -fno-stack-protector -fno-exceptions -nostartfiles -Wno-undef -nostdlib  -T ../src/linker.ld  )
 
 add_executable(FluxedOS.bin ${GAS} ${ASM} ${C} ${CXX})
 add_dependencies(FluxedOS.bin buildver)
 
-
 target_include_directories(FluxedOS.bin PUBLIC src)
 
-target_compile_options(FluxedOS.bin PUBLIC $<$<COMPILE_LANG_AND_ID:CXX,GNU>:
+target_compile_options(FluxedOS.bin PUBLIC $<$<COMPILE_LANG_AND_ID:CXX,Clang>:
     ${CMAKE_CXX_COMPILE_FEATURES}
 >)
-target_compile_options(FluxedOS.bin PUBLIC $<$<COMPILE_LANG_AND_ID:C,GNU>:
+target_compile_options(FluxedOS.bin PUBLIC $<$<COMPILE_LANG_AND_ID:C,Clang>:
     ${CMAKE_C_COMPILE_FEATURES}
 >)
 
@@ -136,8 +130,4 @@ add_custom_target(run USES_TERMINAL
 add_custom_target(debug USES_TERMINAL
     COMMAND  objcopy --only-keep-debug FluxedOS.bin FluxedOS.elf && strip --strip-debug --strip-unneeded FluxedOS.bin && qemu-system-x86_64 -s -S FluxedOS.bin -cdrom FluxedOS.iso -boot strict=on -cpu max -smp 1,sockets=1,cores=1,threads=1 -display gtk -m 500m -k en-us -serial stdio &
     DEPENDS iso
-)
-
-add_custom_target(build_tools USES_TERMINAL
-    COMMAND bash "../tools/cross-build.sh"
 )

@@ -35,13 +35,13 @@ class K_Vector {
     protected:
         struct D { // This is the main data storage for the vector, it contains the accual content
             T Data; // Data Storage
-            int PointsTo = 0; // The index this unit will point to 
+            u32 PointsTo = 0; // The index this unit will point to 
             bool DoesPoint = 0; // This tells if this data has been popped 
         };
         struct DB { // This is the data vector which stores banks of content for allocating more memory when the vector fills up
             D *h;
-            int MemoryBank = 0;
-            int alloc = 0;
+            u32 MemoryBank = 0;
+            u32 alloc = 0;
         };
         DB *content;
         u32 contentsize = 0;

@@ -24,12 +24,24 @@
 #include <lib/core/core.h>
 #include <System/memory/pmm/pmm.hpp>
 #include <System/memory/paging/page.hpp>
+#include <lib/multiboot/multiboot.h>
+
+
 
 namespace System {
     namespace Memory {
         namespace vmm {
-
+ 
+            typedef u32* page_table_t;
             
+            typedef struct {
+                page_table_t *table;
+                page_table_t *vtable;
+            } page_dir_t;
+
+            void init(multiboot_info_t* mbt, u32 boot_page_dir);
+
+
             
             
 

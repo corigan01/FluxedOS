@@ -25,13 +25,9 @@
 #include <System/kout/kout.hpp>
 #include <lib/multiboot/multiboot.h>
 
-struct Permission_Entry {
-    uint32_t perm;
-};
 struct Page_Entry {
-    void *ptr;
-    uint32_t size;
-    Permission_Entry perm;
+    u32 *ptr;
+    u32 size;
 };
 
 
@@ -41,14 +37,9 @@ namespace System
     namespace Memory
     {
 
-        void init_memory(multiboot_info_t *mbt);
+        void init_memory(multiboot_info_t *mbt, u32 page_start, u32 page_end);
 
-        Page_Entry map_page(Permission_Entry perm);
-        bool unmap_page(Page_Entry page);
-
-        void PagePool(Page_Entry *pool, u32 size);
-        //void map_page_pool(Page_Entry * page_pool, uint32_t count);
-        //void unmap_page_pool(Page_Entry * page_pool, uint32_t count);
+        void SetPages(Page_Entry *pool, u32 size);
 
         void* kmalloc(size_t size);
         void kfree(void* ptr);

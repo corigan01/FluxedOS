@@ -102,7 +102,7 @@ void Kernel::init_kernel() {
                 Pages[i] = Memory::map_page({});
         }
         kout << "Giving Memory to kmalloc..." << endl;
-        Memory::PagePool(Pages, Pages_size);
+        Memory::SetPages(Pages, Pages_size);
 
         kout << "-" << endl;*/
 

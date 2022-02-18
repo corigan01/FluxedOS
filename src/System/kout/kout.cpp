@@ -23,6 +23,7 @@
 #include <lib/core/core.h>
 #include <System/Serial/serial.hpp>
 
+
 using namespace System;
 using namespace System::Display;
 
@@ -185,16 +186,7 @@ void SerialLog::fmat(const char* fmt, T emit, va_list va) {
                 break;
             }
             case 'x': {
-                const u8 v = fetchValue();
-
-                u8 v4 = (u8)(v << 4) >> 4;
-                u8 v8 = (u8)v >> 4;
-
-                char PHex_4 = hex_c[v8];
-                char PHex_8 = hex_c[v4];
-
-                System::IO::Serial::outChar(System::IO::Serial::COM_1, PHex_4 );
-                System::IO::Serial::outChar(System::IO::Serial::COM_1, PHex_8 );
+                
 
                 break;
             }

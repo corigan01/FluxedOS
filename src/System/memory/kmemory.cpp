@@ -27,13 +27,13 @@
 #include <System/memory/paging/page.hpp>
 #include <lib/vector/KernelVector.hpp>
 #include <System/memory/staticalloc/skmalloc.hpp>
-#include <lib/StanderdOperations/Operations.hpp>
+#include <lib/StanderdOperations/Operations.h>
+#include <System/memory/vmm/vmm.hpp>
 
 using namespace System;
 using namespace System::Memory;
 
-#define MAX_POOL_SIZE ( 8  _MB )
-#define MAX_ALLOC     ( 8  _MB )
+
 
 Page_Entry* Pool;
 size_t Pool_Size;
@@ -58,44 +58,18 @@ void PrintMemoryMap() {
     }
 }
 
-void Memory::init_memory(multiboot_info_t *mbt) {
+void Memory::init_memory(multiboot_info_t *mbt, u32 page_start, u32 page_end) {
     
-    // We are going to have to do some boot strapping here, so bare with me
-
-    // First we need to get the page dir
-    Page::page_dir_t PageDir = Page::GetPageDir();
-
-    // Then we need to map a little bit with the rest of skmalloc
-    // This will be enough for our little buffer
-    Page::MapDirRegion(PageDir, SUPER_USER_MEMORY | PRESENT_FLAG | READ_WRITE_ENABLED, 769, 771);
-
-    // This is the new address that we will give to MemoryMap ~4MB
-    kout << "PAGEDIR_ADDRESS(768) = " << kout.ToHex(PAGEDIR_ADDRESS(768)) << endl;
-    kout << "PAGEDIR_ADDRESS(769) = " << kout.ToHex(PAGEDIR_ADDRESS(769)) << endl;
-
-    kout << "TEST";
-    memset((void*)PAGEDIR_ADDRESS(769), NULL, 2 _MB);
-    kout << "END" << endl;
-
-    MemoryMap.ChangePointer((void*)PAGEDIR_ADDRESS(769));
-
-    // Now we have 4MB free to give to skmalloc
-    Memory::Static::init((void*)PAGEDIR_ADDRESS(770), 4 _MB);
-
-    // Now that skmalloc has enough storage, we can start initing the
-    // kernel heap, this will be about 40MB
-    Page::MapDirRegion(PageDir, SUPER_USER_MEMORY | PRESENT_FLAG | READ_WRITE_ENABLED, 771, 781);
-
-
+    MemoryMap.ChangePointer((void*)(PAGEDIR_ADDRESS(page_start) + 1));
     // Now we need to give this memory area to MemoryMap
     // But we need to do it in a way that MemoryMap can read
-    for (int i = 771; i < 781; i++) {
+    for (int i = page_start + 1; i < page_end; i++) {
         u32 Addr = PAGEDIR_ADDRESS(i);
 
         MemoryEntry entry = {
-            .Start = Addr,
-            .End = Addr + (4 _MB),
-            .Used = 0
+            Addr,
+            Addr + (4 _MB),
+            0
         };
 
         MemoryMap.push_back(entry);
@@ -113,11 +87,11 @@ void Memory::init_memory(multiboot_info_t *mbt) {
     PrintMemoryMap();
 
     // Ok we should be done
-    kout << "Starting memory manger: " << pmm::PagesAvailable() << " pages available!" << endl;
+    kout << "Starting memory manger: " << (page_end - (page_start + 1)) * 1024 << " pages available!" << endl;
 }
 
 
-void Memory::PagePool(Page_Entry *pool, u32 size) {
+void Memory::SetPages(Page_Entry *pool, u32 size) {
     kout << "Kernel has received new memory pool of size " << (size * PAGE_SIZE) / KB << " kbytes" << endl;
 
     Pool = pool;
@@ -162,7 +136,7 @@ void Memory::ConJoin(u32 m1) {
 
 
 void* Memory::kmalloc(size_t size) {
-    if (size > MAX_ALLOC) {
+    if (size > KHEAP_MAX_ALLOC) {
         kout << "Requested allocation is too large!" << endl;
         return NULL;
     }

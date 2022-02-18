@@ -24,6 +24,7 @@
 #include "../../../lib/core/core.h"
 #include "../../Serial/serial.hpp"
 #include <System/memory/MemorySizes.hpp>
+#include <lib/StanderdOperations/Operations.h>
 
 // Bit 0 (P) is the Present flag.
 // Bit 1 (R/W) is the Read/Write flag.
@@ -45,8 +46,7 @@ namespace System
         namespace Page
         {
 
-            #define PAGE_SIZE 4096
-
+            
             // Alignment related macro
             #define IS_ALIGN(addr) ((((u32)(addr)) & 0x00000FFF) == 0)
             #define PAGE_ALIGN(addr) ((((u32)(addr)) & 0xFFFFF000) + 0x1000)
@@ -57,6 +57,7 @@ namespace System
             #define PAGEFRAME_INDEX(vaddr) (((u32)vaddr) & 0xfff)
 
             #define PAGEDIR_ADDRESS(index) (((u32)index) * (4 _MB))
+            #define PAGETBL_ADDRESS(index) (((u32)index) * (4 _KB))
 
             // Paging register manipulation macro
             #define SET_PGBIT(cr0) (cr0 = cr0 | 0x80000000)
@@ -68,16 +69,16 @@ namespace System
             typedef u32 page_dir_t;
             typedef u32 page_tbl_t;
 
-            void PrintPageDir(u32 bpg);
+            void PrintPageDir(u32 bpg, u32 vtable);
 
             // Converts a Virt addr to a Phys one
-            u32 VirtToPhy(page_dir_t PageDir, u32 addr);
+            u32 VirtToPhy(page_dir_t PageDir, page_dir_t vpageDir, u32 addr);
 
             // This will move the boot page dir into a new page dir
             void CopyBootDirectory(page_dir_t bootdir, page_dir_t newdir, u32 loadmem);
 
             // This will just move a table into the dir
-            void SendTableToDirectory(page_dir_t dir, page_tbl_t table, u32 index, u32 perms);
+            void SendTableToDirectory(page_dir_t dir, page_dir_t vdir, page_tbl_t table, u32 index, u32 perms);
 
             // Makes sure all entries are clear
             void ClearAllEntries(page_dir_t dir);
@@ -85,13 +86,11 @@ namespace System
             // Maps a region of a table using the pmm
             void MapTableRegion(page_tbl_t table, u32 perm, u32 offset);
 
-            // Maps a dir region
-            // start is the index of the dir, and offset is how many 4MB sections we define
-            void MapDirRegion(page_dir_t dir, u32 perm, u32 start, u32 offset);
-
-            void MapPhysRegion(page_dir_t dir, u32 perm, u32 phys, u32 dirindex, u32 addr_offset);
+            void FlushPages();
             
             void init(u32 bpg);
+
+            u32 BOOT_VirtToPhy(page_dir_t PageDir, u32 addr);
 
             page_dir_t GetPageDir();
 

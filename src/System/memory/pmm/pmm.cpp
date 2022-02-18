@@ -65,22 +65,28 @@ void pmm::init(multiboot_info_t *mbt) {
 	// As we now have a place for MemoryArray to live, We can iterate over 
 	// the Memory again and acually store it this time :) 
 	{
+		kout << "\nPhysical Memory Space:" << endl;
+		kout << "\t|    ADDR    |    BYTES   |    SIZE     |  TYPE |" << endl;
+		kout << "\t|------------|------------|-------------|-------|" << endl;
+
 		// This makes sure `i` goes out of scope
 		u32 i = 0;
 		for (multiboot_memory_map_t* entry = MemoryDiscriptor.Addr; entry < MemoryDiscriptor.Addr + MemoryDiscriptor.Len; i++) {
 				
 			entry = (multiboot_memory_map_t*) ((unsigned int) entry + entry->size + sizeof(entry->size));
 			if (entry->base_addr_low <= 0) continue;
-				
-			kout << "MEMORY ENTRY: \t0x" << kout.ToHex(entry->base_addr_low) << 
-			"\t : [" << kout.ToHex(entry->length_low) << "]\t --> \t" << entry->length_low / (1 _MB) << "MB\t"
-			" -- " << entry->type << endl; 
+			
+			kout << ((entry->type == MULTIBOOT_MEMORY_AVAILABLE) ? kout.GREEN : kout.YELLOW) << "\t| 0x" << kout.ToHex(entry->base_addr_low) << 
+			" | 0x" << kout.ToHex(entry->length_low) << " | " << entry->length_low / (1 _MB) << "MB  \t| "
+			<< entry->type << "\t|" << kout.YELLOW << endl; 
 
 			MemoryArray[i].MemoryType = entry->type;
 			MemoryArray[i].MemoryAddr = entry->base_addr_low;
 			MemoryArray[i].Len        = entry->length_low;
 			MemoryArraySize++;
 		}
+
+		kout << "\t|------------|------------|-------------|-------|" << endl << endl;
 	}
 
 	// Now we need to calc the total size of the memory we have
@@ -92,8 +98,6 @@ void pmm::init(multiboot_info_t *mbt) {
 		InstalledMemory += MemoryArray[i].Len;
 	}
 
-	kout << "Total Installed Memory: " << InstalledMemory / (1 _MB) << "MB" << endl;
-
 	// This is how many bytes we have to store 
 	u32 PagesAllocSize = (InstalledMemory / (4 _KB)) / 8;
 
@@ -104,9 +108,6 @@ void pmm::init(multiboot_info_t *mbt) {
 
 	// Make sure all bytes are 0 because its a bit map and we need to make sure its clear
 	memset((void*)PagesAlloc->addr, 0x0, PagesAllocSize);
-
-
-	kout << "Memory map complete!" << endl;
 	
 }
 

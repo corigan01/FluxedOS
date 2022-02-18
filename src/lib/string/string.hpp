@@ -25,7 +25,7 @@
 #include <lib/core/core.h>
 #include <lib/assert/assert.hpp>
 #include <System/kout/kout.hpp>
-#include <lib/StanderdOperations/Operations.hpp>
+#include <lib/StanderdOperations/Operations.h>
 
 // String is just a vector with type "const char*" with additional helpfulness regarding strings
 class String : public K_Vector<char> {

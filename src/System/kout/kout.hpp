@@ -21,9 +21,9 @@
 
 #pragma once
 
-#include "../../lib/core/core.h"
-#include "../Serial/serial.hpp"
-#include "../../lib/StanderdOperations/Operations.hpp"
+#include <lib/core/core.h>
+#include <System/Serial/serial.hpp>
+#include <lib/StanderdOperations/Operations.h>
 
 #define endl "\n\0"
 
@@ -110,7 +110,6 @@ namespace System
             template <typename T>
             void fmat(const char* fmt, T emit, va_list va);
 
-            const char hex_c[17] = "0123456789ABCDEF";
         };
     }
 }

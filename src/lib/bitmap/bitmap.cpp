@@ -20,7 +20,7 @@
  */
 
 #include "bitmap.hpp"
-#include "../StanderdOperations/Operations.hpp"
+#include "../StanderdOperations/Operations.h"
 
 
 bool test_bit(bitmap_type *bitmap, u32 bit)

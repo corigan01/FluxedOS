@@ -37,6 +37,8 @@
 #include <System/PCI/pci.hpp>
 #include <System/Graphics/vbe.hpp>
 #include <System/memory/staticalloc/skmalloc.hpp>
+#include <System/memory/vmm/vmm.hpp>
+
 
 using namespace System; 
 using namespace System::IO;
@@ -120,46 +122,20 @@ class Kernel {
         kout << "\tframebuffer_pitch    : " << mbt->framebuffer_pitch << endl;
         kout << "\tframebuffer_width    : " << mbt->framebuffer_width << " bytes" << endl;
         kout << "\tframebuffer_height   : " << mbt->framebuffer_height << " bytes" << endl;
-        kout << "\tframebuffer dims     : " << mbt->framebuffer_width / 4 << "x" << (int)(mbt->framebuffer_height * 0.75) << endl;
+        kout << "\tframebuffer dims     : " << mbt->framebuffer_width / 4 << "x" << (u32)(mbt->framebuffer_height) << endl;
         kout << "\tframebuffer_bpp      : " << mbt->framebuffer_bpp << endl;
         kout << "\tframebuffer_type     : " << mbt->framebuffer_type << endl;
         kout << endl;
 
         kout << "FRAMEBUFFER DIR ADDRESS: 0x" << (PAGEDIR_INDEX(mbt->framebuffer_addr)) << endl;
-        
+      
 
-        kout << "Initializing Memory" << endl;                              // tell the console we are initializing the system
-         kout << "\tDumb Memory Allocation Area --> 0x" << kout.ToHex(magic) << " to 0x" << kout.ToHex((u32)mbt) << " - " << ((u32)mbt - magic) / KB << "KB" << endl << endl;
-
-
-        kout << "Starting Paging" << endl;                                   
-        System::Memory::Static::init((void*)magic, ((u32)mbt - magic) - 4 _KB);
-
-        //init_memory(mbt);
-        kout << "\tPhysical Memory Manager" << endl;
-        pmm::init(mbt);
-        
-        //for(;;);
-
-
-        kout << "Initializing Paging : BOOT PAGE DIR: 0x" << kout.ToHex(boot_page_dir) << endl;                               // tell the console we are initializing the system
-        
-        //KernelTTY  = &VBE_DRIVER;
-
-        Page::init(boot_page_dir);
-
-
-
-        Memory::init_memory(mbt);
+        vmm::init(mbt, boot_page_dir);
+       
         
         //Page::MapPhysRegion(Page::GetPageDir(), SUPER_USER_MEMORY | PRESENT_FLAG | READ_WRITE_ENABLED, mbt->framebuffer_addr, PAGEDIR_INDEX(mbt->framebuffer_addr), 4 _MB);
 
-        u32 address = PAGEDIR_ADDRESS(PAGEDIR_INDEX(mbt->framebuffer_addr));
-
-        Page::PrintPageDir(Page::GetPageDir());
-
-        memset((void*)address, NULL, 4 _MB);
-
+        
 
         System::Graphics::Driver::gxinit((void*)(mbt->framebuffer_addr), 1024, 768);
         
