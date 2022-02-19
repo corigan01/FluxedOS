@@ -30,6 +30,9 @@ u32 Alloc;
 
 
 void Static::init(void* startloc, u32 offset) {
+    kout << "NEW SKMALLOC: " <<
+            "\n\tSIZE  : " << (offset / 1024) << "KB" <<  
+            "\n\tSTART : " << kout.ToHex((u32)startloc) << endl;
     MemoryAddr = (u32*)startloc;
     Offset = offset;
     Alloc = 0;

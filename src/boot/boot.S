@@ -63,7 +63,7 @@ boot_page_table1:
 # Reserve 40 MB for the kernel preallocated heap.
 # This heap is to get things started before the kernel is loaded.
 TepKmalloc:
-	.skip 1024 * 40 
+	.skip 1024 * 80 
 
 # Further page tables may be required if the kernel grows beyond 3 MiB.
 
@@ -79,7 +79,7 @@ _start:
 	# First address to map is address 0.
 	movl $0, %esi
 	# Map 1015 pages for the kernel. (the kernel only uses 256 or so )
-	movl $1010, %ecx
+	movl $1000, %ecx
 
 1:
 	# Only map the kernel.
@@ -108,18 +108,29 @@ _start:
 	movl %ebx, %eax
 	orl $0x003, %eax
 
-	# Map the (DUMB) Virtual Memory Kmalloc area. (4kb) 0xC03FF000 - (2 * 4kb) 
-	movl $(TepKmalloc - 0xC0000000 			     + 0x003), boot_page_table1 - 0xC0000000 + 1011 * 4
-	movl $(TepKmalloc - 0xC0000000 + (1024 * 4 ) + 0x003), boot_page_table1 - 0xC0000000 + 1012 * 4
-	movl $(TepKmalloc - 0xC0000000 + (1024 * 8 ) + 0x003), boot_page_table1 - 0xC0000000 + 1013 * 4
-	movl $(TepKmalloc - 0xC0000000 + (1024 * 12) + 0x003), boot_page_table1 - 0xC0000000 + 1014 * 4
-	movl $(TepKmalloc - 0xC0000000 + (1024 * 16) + 0x003), boot_page_table1 - 0xC0000000 + 1015 * 4
-	movl $(TepKmalloc - 0xC0000000 + (1024 * 20) + 0x003), boot_page_table1 - 0xC0000000 + 1016 * 4
-	movl $(TepKmalloc - 0xC0000000 + (1024 * 24) + 0x003), boot_page_table1 - 0xC0000000 + 1017 * 4
-	movl $(TepKmalloc - 0xC0000000 + (1024 * 28) + 0x003), boot_page_table1 - 0xC0000000 + 1018 * 4
-	movl $(TepKmalloc - 0xC0000000 + (1024 * 32) + 0x003), boot_page_table1 - 0xC0000000 + 1019 * 4
-	movl $(TepKmalloc - 0xC0000000 + (1024 * 36) + 0x003), boot_page_table1 - 0xC0000000 + 1020 * 4
-	movl $(TepKmalloc - 0xC0000000 + (1024 * 40) + 0x003), boot_page_table1 - 0xC0000000 + 1021 * 4
+	# Map the (DUMB) Virtual Memory Kmalloc area. 80KB is enough for now.
+	movl $(TepKmalloc - 0xC0000000 			     + 0x003), boot_page_table1 - 0xC0000000 + 1000 * 4
+	movl $(TepKmalloc - 0xC0000000 + (1024 * 4 ) + 0x003), boot_page_table1 - 0xC0000000 + 1001 * 4
+	movl $(TepKmalloc - 0xC0000000 + (1024 * 8 ) + 0x003), boot_page_table1 - 0xC0000000 + 1002 * 4
+	movl $(TepKmalloc - 0xC0000000 + (1024 * 12) + 0x003), boot_page_table1 - 0xC0000000 + 1003 * 4
+	movl $(TepKmalloc - 0xC0000000 + (1024 * 16) + 0x003), boot_page_table1 - 0xC0000000 + 1004 * 4
+	movl $(TepKmalloc - 0xC0000000 + (1024 * 20) + 0x003), boot_page_table1 - 0xC0000000 + 1005 * 4
+	movl $(TepKmalloc - 0xC0000000 + (1024 * 24) + 0x003), boot_page_table1 - 0xC0000000 + 1006 * 4
+	movl $(TepKmalloc - 0xC0000000 + (1024 * 28) + 0x003), boot_page_table1 - 0xC0000000 + 1007 * 4
+	movl $(TepKmalloc - 0xC0000000 + (1024 * 32) + 0x003), boot_page_table1 - 0xC0000000 + 1008 * 4
+	movl $(TepKmalloc - 0xC0000000 + (1024 * 36) + 0x003), boot_page_table1 - 0xC0000000 + 1009 * 4
+	movl $(TepKmalloc - 0xC0000000 + (1024 * 40) + 0x003), boot_page_table1 - 0xC0000000 + 1010 * 4
+	movl $(TepKmalloc - 0xC0000000 + (1024 * 44) + 0x003), boot_page_table1 - 0xC0000000 + 1011 * 4
+	movl $(TepKmalloc - 0xC0000000 + (1024 * 48) + 0x003), boot_page_table1 - 0xC0000000 + 1012 * 4
+	movl $(TepKmalloc - 0xC0000000 + (1024 * 52) + 0x003), boot_page_table1 - 0xC0000000 + 1013 * 4
+	movl $(TepKmalloc - 0xC0000000 + (1024 * 56) + 0x003), boot_page_table1 - 0xC0000000 + 1014 * 4
+	movl $(TepKmalloc - 0xC0000000 + (1024 * 60) + 0x003), boot_page_table1 - 0xC0000000 + 1015 * 4
+	movl $(TepKmalloc - 0xC0000000 + (1024 * 64) + 0x003), boot_page_table1 - 0xC0000000 + 1016 * 4
+	movl $(TepKmalloc - 0xC0000000 + (1024 * 68) + 0x003), boot_page_table1 - 0xC0000000 + 1017 * 4
+	movl $(TepKmalloc - 0xC0000000 + (1024 * 72) + 0x003), boot_page_table1 - 0xC0000000 + 1018 * 4
+	movl $(TepKmalloc - 0xC0000000 + (1024 * 76) + 0x003), boot_page_table1 - 0xC0000000 + 1019 * 4
+	movl $(TepKmalloc - 0xC0000000 + (1024 * 78) + 0x003), boot_page_table1 - 0xC0000000 + 1020 * 4
+	movl $(TepKmalloc - 0xC0000000 + (1024 * 80) + 0x003), boot_page_table1 - 0xC0000000 + 1021 * 4
 
 	# Map VGA video memory to 0xC03FF000 - 4kb as "present, writable".
 	# NO NEED, THIS IS IN PAGE 256 NOW
