@@ -1,4 +1,4 @@
-# Build
+# THIS IS OUT OF DATE, DO NOT USE ANY OF THIS
 > The main files to build the OS
 
 ## How to install dependencies? 
