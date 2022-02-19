@@ -1,6 +1,6 @@
 # FluxedOS
 ### VM
-![image](https://user-images.githubusercontent.com/33582457/117326816-a5ae8d80-ae57-11eb-83e8-0f14b95ec5ec.png)
+![image](https://user-images.githubusercontent.com/33582457/154788745-8efef18f-b7c3-4f31-af9c-09347888ad65.png)
 
 ### Real
 ![image](https://user-images.githubusercontent.com/33582457/117327467-3e450d80-ae58-11eb-910c-dcb276328cd3.png)
@@ -20,12 +20,16 @@ A hobbyist OS project!
 - [ ] Read and Write
 - [ ] Install to Drive
 - [ ] Boot from Drive
-- [ ] Heap / Memory management 
+- [X] Heap / Memory management 
 - [ ] Threading
 - [ ] Running External Programs 
-- [ ] VGA GRAPHICS MODE
-- [ ] Basic VGA commands like Draw , DrawLine , DrawBox
-- [ ] Really Basic UI for running Programs
+- [X] VGA GRAPHICS MODE
+- [X] Basic VGA commands like Draw , DrawLine , DrawBox
+- [X] Really Basic UI for running Programs
+- [X] Higher Half Kernel
+- [X] Paging Support
+- [X] Windowing System
+- [ ] UserSpace (SOON.tm)
 - [ ] Add more to the list after all of these are done! :)
 
 # What is this project?
