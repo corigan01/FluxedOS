@@ -37,7 +37,7 @@ To create an OS in C/C++ that is fast, and is built for modern computers from th
 
 
 
-# How to I compile?
+# How to compile?
 All of these commands are in src!
 See [HERE](https://github.com/corigan01/FluxedOS/blob/main/src/build/README.md) for build instructions. 
 
