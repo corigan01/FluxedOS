@@ -56,6 +56,8 @@ git clone https://github.com/corigan01/FluxedOS
 cd FluxedOS
 
 mkdir build
+cd build
+
 cmake -GNinja .. # If you want to use make then use "cmake .." instead
 ninja run
 ```
