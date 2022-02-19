@@ -41,7 +41,24 @@ To create an OS in C/C++ that is fast, and is built for modern computers from th
 All of these commands are in src!
 See [HERE](https://github.com/corigan01/FluxedOS/blob/main/src/build/README.md) for build instructions. 
 
-![image](https://user-images.githubusercontent.com/33582457/117326479-4cdef500-ae57-11eb-8bd4-f7b556496f18.png)
+### Needed Packages:
+* Cmake
+* Ninja
+* clang
+* qemu
+* nasm
+* gcc / g++
+* grub
+
+### Basic Build Instructions
+```bash
+git clone https://github.com/corigan01/FluxedOS
+cd FluxedOS
+
+mkdir build
+cmake -GNinja .. # If you want to use make then use "cmake .." instead
+ninja run
+```
 
 
 # How do I contribute?
