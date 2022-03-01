@@ -91,7 +91,7 @@ const char * ClassCodeName[] = {
 void Kernel::system_init() {
     //NO_INSTRUCTION;
 
-    /*kout << "Listing PCI..." << endl;
+    kout << "Listing PCI..." << endl;
     Graphics::Driver::drawstring("Listing PCI", 10, 330, 0xFF0000);
 
     for (int e = 0; e < 16; e++) {
@@ -118,8 +118,9 @@ void Kernel::system_init() {
             }
         }
     }
-    kout << endl;*/
+    kout << endl;
 
+    //for(;;) {};
 
 
     Graphics::Driver::drawstring("Starting Display Server!", 10, 550, 0xFF0000);
@@ -141,14 +142,10 @@ void Kernel::system_init() {
     DisplayServer.attach_window(&BackroundWindow2);
     BackroundWindow2.construct_pointer();
     BackroundWindow2.fillrect(0x550000, 0, 0, BackroundWindow2.get_window_width(), BackroundWindow2.get_window_height());
-    //BackroundWindow2.drawstring("Title", 10, 10, 0xFF0000); 55
+    //BackroundWindow2.drawstring("Title", 10, 100, 0xFF0000);
 
 
-    lwin window;
-    window.init();
-    window.set_window_position(100, 100);
-    window.set_window_size(200, 200);
-    window.set_window_title("Hello World");
+    
 
     lwin InfomationWindow;
     InfomationWindow.init();
@@ -183,16 +180,6 @@ void Kernel::system_init() {
     InfomationWindow.drawstring("CPU PIT RTC KBD VMM PAG FPU VBE", 10, 180, 0xFF0000);
 
     
-
-    DisplayServer.attach_window(&window);
-
-    u8* framebuffer = window.construct_pointer();
-    kout << "Framebuffer: " << (u32)framebuffer << endl;
-
-    window.fillrect(0xFFFFFF, 0, 0, window.get_window_width(), window.get_window_height());
-    window.fillcircle(0xFF0000, 40, 40, 40);
-    window.drawstring("Hello World!", 10, 10, 0x00);
-
     //window.putpixel(10, 10, 0xFF00FF);
     
     DisplayServer.draw_windows();
@@ -202,7 +189,57 @@ void Kernel::system_init() {
     Graphics::Driver::fillcircle(0x297a5c, 10, 10, 50);    
     Graphics::Driver::drawstring("FluxedOS!", 10, 10, 0xFFFFFF);
         
-    
+
+
+    lwin window;
+
+    // Basic commands
+    window.init();
+    window.set_window_position(100, 100);
+    window.set_window_size(200, 200);
+    window.set_window_title("Hello World");
+
+    // This allows us to draw shapes to the window
+    window.construct_pointer();
+
+    // Tell the DisplayServer that we would like 
+    // to display this window to the screen.
+    DisplayServer.attach_window(&window);
+
+    // this is a shitty while loop for lol
+    for (int Iter = 0;;Iter++) {
+        for (char i = 'a'; i < 'z'; i++) {
+            // Fill the backround white 0x FF   FF   FF
+            //                            RED GREEN BLUE
+            window.fillrect(0xFFFFFF, 0, 0, window.get_window_width(), window.get_window_height());
+
+            // Draw the red circle
+            window.fillcircle(0xFF0000, 40, 40, 40);
+
+            // A little "Hello World"
+            window.drawstring("Hello World!", 10, 10, 0x00);
+
+            // Draw the 'a'-'z' chars 10 times
+            window.drawchar(i, 10, 20, 0x00);
+            window.drawchar(i, 20, 20, 0x00);      
+            window.drawchar(i, 30, 20, 0x00);      
+            window.drawchar(i, 40, 20, 0x00);
+            window.drawchar(i, 50, 20, 0x00);
+            window.drawchar(i, 60, 20, 0x00);
+            window.drawchar(i, 70, 20, 0x00);
+            window.drawchar(i, 80, 20, 0x00);
+            window.drawchar(i, 90, 20, 0x00);
+            window.drawchar(i,100, 20, 0x00);        
+
+
+            // Draw how many times we have done this entire process
+            INT_TO_STRING(StringIter, Iter);
+            window.drawstring(StringIter, 10, 40, 0x00);      
+
+            // Now redraw the window
+            window.redraw_window();
+        }
+    }
 
     /*
     kout << endl << endl << endl;
@@ -236,12 +273,7 @@ void Kernel::system_init() {
     */
 
 
-    // damn code
-    {
-        String str = "";
-        String str2 = "";
-        String str3 = "";
-    }
+    kout << "Done!" << endl;
     
 
     
@@ -274,6 +306,6 @@ void Kernel::system_init() {
 
     
 
-    for(;;) {};
+    //for(;;) {};
         
 }

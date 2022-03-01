@@ -23,6 +23,7 @@
 #include "../cpu/cpu.hpp"
 #include "../Port/port.hpp"
 #include "../kout/kout.hpp"
+#include <System/memory/kmemory.hpp>
 
 using namespace System;
 using namespace System::IO;
@@ -38,7 +39,9 @@ u8 UsedKeycode      = 0;
 
 u8 EventQueEmpty = true;
 
-void Keyboard::installIRQ() {    
+void Keyboard::installIRQ() {
+
+    KeycodeArr = (u8*)  Memory::kmalloc(MAX_KEYCODE_ARR);
 
     IRQ::installIRQ(1, System::HID::Keyboard::IRQ_handler);
     PIC::SendEOI(1);

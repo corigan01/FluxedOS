@@ -31,6 +31,10 @@ namespace System
 {
     namespace Graphics 
     {
+
+        class lux;
+        class lwin;
+
         class lwin
         {
         public:
@@ -90,6 +94,9 @@ namespace System
             void fillcircle_titlebar(u32 color, u32 center_x, u32 center_y, u32 rad);
             void drawchar_titlebar(u32 ch, u32 x, u32 y, u32 color);
             void drawstring_titlebar(const char* str, u32 x, u32 y, u32 color);
+
+            void attach_windowServer(System::Graphics::lux * lux_instance);
+            void redraw_window();
    
 
             private:
@@ -120,6 +127,8 @@ namespace System
 
             u8* framebuffer;
             u8* titlebar;
+
+            System::Graphics::lux* WindowServerPointer;
         };
 
         class lux {
@@ -134,8 +143,11 @@ namespace System
             void destroy();
 
             void attach_window(lwin* window);
+            void destroy_window(lwin* window);
 
             u8* get_framebuffer();
+
+            void redraw_one_window(lwin* windowpointer);
 
             private:
             K_Vector<lwin*> windows;

@@ -56,7 +56,7 @@ void lux::flip_buffer() {
     memcpy(hardwareInfo.buffer, doubleframebuffer, hardwareInfo.width * hardwareInfo.height * hardwareInfo.pitch);
 }
 void lux::draw_windows() { 
-    memset(doubleframebuffer, 0x00, hardwareInfo.width * hardwareInfo.height * hardwareInfo.pitch);
+    //memset(doubleframebuffer, 0x00, hardwareInfo.width * hardwareInfo.height * hardwareInfo.pitch);
     for (int i = 0; i < windows.size(); i++) {
         windows[i]->draw(doubleframebuffer, hardwareInfo.width, hardwareInfo.height);
     }
@@ -64,20 +64,42 @@ void lux::draw_windows() {
 void lux::destroy() { 
     kout << "Destroying Lux instance..." << endl;
     for (int i = 0; i < windows.size(); i++) {
-        windows[i]->destroy();
+        windows[i]->destroy();  
     }
     System::Memory::kfree(doubleframebuffer);
 }
 
 void lux::attach_window(lwin* window) {
+    window->attach_windowServer(this);
+
     this->windows.push_back(window);
 }
+
+void lux::destroy_window(lwin* window) {
+    kout << "Destoried window : " << kout.ToHex((u32)window) << endl;
+    for (int i = 0; i < this->windows.size(); i++) {
+        if (this->windows[i] == window) this->windows.pop_at(i);
+    }
+
+    this->draw_windows();
+    this->flip_buffer();
+}
+
+void lux::redraw_one_window(lwin* windowpointer) {
+    for (int i = 0; i < this->windows.size(); i++) {
+        if (this->windows[i] == windowpointer) windows[i]->draw(hardwareInfo.buffer, hardwareInfo.width, hardwareInfo.height);
+    }
+}
+
 
 lwin::lwin() { 
 
 }
 lwin::~lwin() { 
 
+    this->WindowServerPointer->destroy_window(this);
+
+    this->destroy();
 }
 
 void lwin::init() { 
@@ -88,17 +110,22 @@ void lwin::init() {
 void lwin::update() { 
 
 }
+
+void lwin::attach_windowServer(System::Graphics::lux * lux_instance) {
+    this->WindowServerPointer = lux_instance;
+}
+
 void lwin::draw(u8* framebuffer, u32 ypull, u32 xpull) { 
     // do fancy drawing here
     // otherwise just draw the framebuffer
 
     // draw the framebuffer
-    kout << "Drawing Window" << endl;
+    /*kout << "Drawing Window" << endl;
     kout << "  - Pos X          : " << this->x << endl;
     kout << "  - Pos Y          : " << this->y << endl;
     kout << "  - Window Width   : " << this->width << endl;
     kout << "  - Window Hight   : " << this->height << endl;
-    kout << "  - Framebuffer    : *" << (u32)this->framebuffer << "  -->  *" << (u32)framebuffer << endl;
+    kout << "  - Framebuffer    : *" << (u32)this->framebuffer << "  -->  *" << (u32)framebuffer << endl;*/
 
     const int titlebarsize = this->fullscreen ? 0 : 15;
 
@@ -128,7 +155,6 @@ void lwin::draw(u8* framebuffer, u32 ypull, u32 xpull) {
                  //framebuffer[(hi * (ypull * pitch)) + i + ((startingx * pitch) + (startingy * ypull * pitch))] = 0x22;
         }
     }
-    kout << "done" << endl;
 }
 void lwin::destroy() { 
     System::Memory::kfree(this->framebuffer);
@@ -145,6 +171,10 @@ u8* lwin::construct_pointer() {
     memset(pt, 0x00, info.pitch * info.width * info.height);
     this->framebuffer = pt;
     return pt;
+}
+
+void lwin::redraw_window() {
+    this->WindowServerPointer->redraw_one_window(this);
 }
 
 void lwin::set_framebuffer(u8* buffer) {
@@ -272,7 +302,6 @@ void lwin::fillrect(u32 color, u32 start_x, u32 start_y, u32 width, u32 hight) {
             this->putpixel(x, y, color);
         }
     }
-    kout << "rec" << endl;
 }
 
 void lwin::linecircle(u32 color, u32 center_x, u32 center_y, u32 rad) {
@@ -346,7 +375,6 @@ void lwin::fillrect_titlebar(u32 color, u32 start_x, u32 start_y, u32 width, u32
             this->putpixel_titlebar(x, y, color);
         }
     }
-    kout << "rec" << endl;
 }
 
 void lwin::fillcircle_titlebar(u32 color, u32 center_x, u32 center_y, u32 rad) {
