@@ -12,9 +12,11 @@
 # qemu-system-x86
 # xorriso
 # nasm
+# cmake
+# ninja / make
 
-# On deban Systems you can use the install.sh script to install everything
-&> sudo bash install.sh
+# On deban Systems you can use apt to install everything
+&> sudo apt install [package]
 
 # On other systems you will need to install the dependencies manually 
 ```
@@ -28,22 +30,20 @@
 
 ## How to build?
 ```bash
-# This file is inside the main folder FluxedOS/
-&> bash Build.sh
+&> mkdir build
+&> cd build
+&> cmake -GNinja ..
+&> ninja run
+...
 ```
 
-## What the build output should look like
-```bash
-# This might be a older version of the build script, but it should look close to what you see. 
-```
 
-![image](https://user-images.githubusercontent.com/33582457/117325213-1f457c00-ae56-11eb-9cfb-dcd36231134f.png)
 
 ## Issues with the build
 ```bash
 # ERROR
 cp: target 'isodir/programs' is not a directory
-# Can be solved by re-running the build 
+# Can be solved by re-running the build and using ninja clean
 # ----------------------------------------------
 # Other errors will be added with their fixes soon
 ```

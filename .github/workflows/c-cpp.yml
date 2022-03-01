@@ -21,10 +21,6 @@ jobs:
         # make file runnable, might not be necessary
         mkdir build && cd build
         cmake -GNinja ..
-    - name: Build Tools
-      run: |
-        cd build
-        ninja build_tools
     - name: Build
       run: |
         cd build
