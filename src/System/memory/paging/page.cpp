@@ -92,7 +92,7 @@ void Page::allocate_page(page_directory_t * dir, uint32_t virtual_addr, uint32_t
     // If the coressponding page table does not exist, malloc!
     table = dir->table[page_dir_idx];
     if(!table) {  
-        table = (page_table_t*)Memory::Static::skmalloc(sizeof(page_table_t));
+        table = (page_table_t*)Memory::StaticHeap::skmalloc(sizeof(page_table_t));
         
 
         memset(table, 0, sizeof(page_table_t));
@@ -269,7 +269,7 @@ void Page::init(u32 bpg) {
     // In the boot loader we reserve 40KB of memory for this new page dir / table
     // This is reserved to us in the virtual memory range, so we need to figure out
     // where this memory points to later on
-    PageDir = PAGE_ALIGN((u32)Memory::Static::skmalloc(1024 * sizeof(u32) * 2)); 
+    PageDir = PAGE_ALIGN((u32)Memory::StaticHeap::skmalloc(1024 * sizeof(u32) * 2)); 
 
     // Make sure we clear the PageDir
     ClearAllEntries(PageDir);

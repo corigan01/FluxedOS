@@ -30,7 +30,8 @@
         "atomic": "cpp",
         "cstdint": "cpp",
         "bitset": "cpp",
-        "*.def": "cpp"
+        "*.def": "cpp",
+        "*.rh": "cpp"
     },
     "C_Cpp.errorSquiggles": "Enabled",
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"

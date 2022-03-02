@@ -34,6 +34,8 @@ namespace System
             void TimerPhase(u16 hz);
             void TimerHandler(register_t *r);
 
+            u32 GetCurrentClock();
+
             void Sleep(u16 ms);
         }
     }

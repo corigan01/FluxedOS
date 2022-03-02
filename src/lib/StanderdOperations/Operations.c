@@ -156,11 +156,10 @@ int strncmp_( const char* s1, const char* s2, int c ) {
 }
 
 char * strdup(const char * src) {
-    // been removed because it needs memcpy
-    //int len = strlen(src) + 1;
-    //char * dst = (char*)malloc(len);
-    //memcpy(dst, (void*)src, len);
-    //return dst;
+    /*int len = strlen(src) + 1;
+    char * dst = (char*)kmalloc(len);
+    memcpy(dst, (void*)src, len);
+    return dst;*/
 }
 
 char *strsep(char **stringp, const char *delim) {

@@ -30,7 +30,7 @@ namespace System
 {
     namespace Memory 
     {
-        namespace Static 
+        namespace StaticHeap 
         {
 
             void init(void* startloc, u32 offset);

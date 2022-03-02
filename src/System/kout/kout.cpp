@@ -22,17 +22,18 @@
 #include "kout.hpp"
 #include <lib/core/core.h>
 #include <System/Serial/serial.hpp>
-
+#include <System/Serial/serial.hpp>
+#include <lib/StanderdOperations/Operations.h>
 
 using namespace System;
 using namespace System::Display;
 
 
     
-/*SerialLog::SerialLog() {
-    System::IO::Serial::init(System::IO::Serial::COM_1);
+//SerialLog::SerialLog() {
+    //System::IO::Serial::init(System::IO::Serial::COM_1);
 
-}*/
+//}
 
 
 bool Check::DidEndLine() {
@@ -66,7 +67,7 @@ const char* SerialLog::ToHex(u32 v) {
     return buf;
 }
 
-SerialLog &SerialLog::operator<<(const TraceInfo &v) {
+SerialLog &SerialLog::operator<<(const TraceInfo v) {
     kout << "[" << v.Func << ":" << v.line << "]: ";
 
 
@@ -82,7 +83,7 @@ SerialLog &SerialLog::operator<<(const char* v){
     return *this;
 }
 
-SerialLog &SerialLog::operator<<(const int &v) {
+SerialLog &SerialLog::operator<<(const int v) {
     INT_TO_STRING(v_str, v);
 
     OutputTraceInfo(v_str);
@@ -92,7 +93,7 @@ SerialLog &SerialLog::operator<<(const int &v) {
     return *this;
 }
 
-SerialLog &SerialLog::operator<<(const u32 &v) {
+SerialLog &SerialLog::operator<<(const u32 v) {
     INT_TO_STRING(v_str, v);
 
     OutputTraceInfo(v_str);
@@ -102,7 +103,7 @@ SerialLog &SerialLog::operator<<(const u32 &v) {
     return *this;
 }
 
-SerialLog &SerialLog::operator<<(const u16 &v) {
+SerialLog &SerialLog::operator<<(const u16 v) {
     INT_TO_STRING(v_str, v);
 
     OutputTraceInfo(v_str);
@@ -112,7 +113,7 @@ SerialLog &SerialLog::operator<<(const u16 &v) {
     return *this;
 }
 
-SerialLog &SerialLog::operator<<(const u8 &v) {
+SerialLog &SerialLog::operator<<(const u8 v) {
     INT_TO_STRING(v_str, v);
 
     OutputTraceInfo(v_str);
@@ -122,10 +123,8 @@ SerialLog &SerialLog::operator<<(const u8 &v) {
     return *this;
 }
 
-SerialLog &SerialLog::operator<<(const char &v) {
-    char* v_str = "";
-    v_str[0] = v;
-    v_str[1] = '\0';
+SerialLog &SerialLog::operator<<(const char v) {
+    char v_str[2] = {v, '\0'};
 
     OutputTraceInfo(v_str);
 
@@ -134,7 +133,7 @@ SerialLog &SerialLog::operator<<(const char &v) {
     return *this;
 }
 
-SerialLog &SerialLog::operator<<(bool &v) {
+SerialLog &SerialLog::operator<<(bool v) {
     const char* v_str = v ? "TRUE" : "FALSE";
 
     OutputTraceInfo(v_str);
@@ -211,6 +210,12 @@ void SerialLog::fmat(const char* fmt, T emit, va_list va) {
     }
 }
 
+const char* SerialLog::ToString(u32 value) {
+    static char rvalue[10] = {};
+    itoa(value, rvalue);
+    return rvalue;
+}
+
 /*template <class T> 
 SerialLog &SerialLog::operator<<(const T &v) {
     
@@ -253,12 +258,3 @@ SerialLog &SerialLog::operator<<(const T &v) {
 void whyno() {
 
 }*/
-
-void example::test() {
-    //while(1) {};
-}
-
-example &example::operator<<(const char* i) {
-        System::IO::Serial::outString(System::IO::Serial::COM_1, i);
-        return *this;
-    }

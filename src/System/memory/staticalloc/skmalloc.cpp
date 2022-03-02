@@ -29,7 +29,7 @@ u32 Offset;
 u32 Alloc;
 
 
-void Static::init(void* startloc, u32 offset) {
+void StaticHeap::init(void* startloc, u32 offset) {
     kout << "NEW SKMALLOC: " <<
             "\n\tSIZE  : " << (offset / 1024) << "KB" <<  
             "\n\tSTART : " << kout.ToHex((u32)startloc) << endl;
@@ -40,7 +40,7 @@ void Static::init(void* startloc, u32 offset) {
     //memset(startloc, NULL, offset);
 }
 
-void* Static::skmalloc(size_t size) {
+void* StaticHeap::skmalloc(size_t size) {
     if (Alloc + size > Offset) {
         kout << "skmalloc: out of memory" << endl;
         return nullptr;

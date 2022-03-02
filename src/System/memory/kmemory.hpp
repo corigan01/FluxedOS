@@ -30,8 +30,6 @@ struct Page_Entry {
     u32 size;
 };
 
-
-
 namespace System 
 {
     namespace Memory

@@ -35,7 +35,7 @@ String::String(const char* str) {
 
 String::~String() {
     // vector should handle this
-    //this->free_pointer();
+    this->free_pointer();
 }
 
 // Standered operations that string must support

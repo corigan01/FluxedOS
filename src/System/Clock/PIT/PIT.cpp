@@ -54,12 +54,16 @@ void PIT::TimerHandler(register_t *r) {
     timer_ticks++;
 
     if (timer_ticks % timer_phase == 0) {
-        NO_INSTRUCTION;
         timer_seconds++;
     }
 
     PIC::SendEOI(0);
 }
+
+u32 PIT::GetCurrentClock() {
+    return timer_ticks;
+}
+
 
 void PIT::Sleep(u16 ms) {
     u16 timerTicksNeeded = timer_ticks + (timer_phase * (ms / 1000));
@@ -67,14 +71,12 @@ void PIT::Sleep(u16 ms) {
 
     int i = 0;
     while (i < 600) {
-        NO_INSTRUCTION;
 
         if (timer_ticks == timerTicksNeeded) {
             return;
         }
         else {
             if (timer_ticks % timer_phase == 0 && timerold != timer_ticks) {
-                NO_INSTRUCTION;
 
                 i++;
                 timerold = timer_ticks;

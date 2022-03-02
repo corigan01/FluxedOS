@@ -27,6 +27,7 @@
 #include <System/Graphics/DisplayServer/ds.hpp>
 #include "BUILD.h"
 
+
 using namespace System;
 using namespace System::IO;
 using namespace System::VirtualConsole;
@@ -94,7 +95,7 @@ void Kernel::system_init() {
     kout << "Listing PCI..." << endl;
     Graphics::Driver::drawstring("Listing PCI", 10, 330, 0xFF0000);
 
-    for (int e = 0; e < 16; e++) {
+    /*for (int e = 0; e < 16; e++) {
         for (int i = 0; i < 64; i++) {
             u16 pci = pciCheckVendor(e, i);
             u16 device = pciConfigReadWord(e,i,0,2);
@@ -118,9 +119,12 @@ void Kernel::system_init() {
             }
         }
     }
-    kout << endl;
+    kout << endl;*/
 
     //for(;;) {};
+
+    
+
 
 
     Graphics::Driver::drawstring("Starting Display Server!", 10, 550, 0xFF0000);
@@ -158,7 +162,8 @@ void Kernel::system_init() {
     InfomationWindow.fillrect(0x297a5c, 0, 0, InfomationWindow.get_window_width(), InfomationWindow.get_window_height());
     InfomationWindow.drawstring("FluxedOS", 10, 10, 0xFFFFFF);
 
-    INT_TO_STRING(BUILDb, BUILD);;
+    INT_TO_STRING(BUILDb, BUILD);
+
     InfomationWindow.drawstring("Version: 0.0.1 - ", 10, 30, 0xFFFFFF);
     InfomationWindow.drawstring(BUILDb, 220, 30, 0xFFFFFF);
     InfomationWindow.drawstring("Author: corigan01", 10, 50, 0xFFFFFF);
@@ -206,9 +211,13 @@ void Kernel::system_init() {
     // to display this window to the screen.
     DisplayServer.attach_window(&window);
 
+    u32 TimeAfter = PIT::GetCurrentClock();
+
     // this is a shitty while loop for lol
     for (int Iter = 0;;Iter++) {
-        for (char i = 'a'; i < 'z'; i++) {
+        u32 TimeBefore = PIT::GetCurrentClock();
+
+        for (char i = 0; i < 60; i++) {
             // Fill the backround white 0x FF   FF   FF
             //                            RED GREEN BLUE
             window.fillrect(0xFFFFFF, 0, 0, window.get_window_width(), window.get_window_height());
@@ -220,25 +229,31 @@ void Kernel::system_init() {
             window.drawstring("Hello World!", 10, 10, 0x00);
 
             // Draw the 'a'-'z' chars 10 times
-            window.drawchar(i, 10, 20, 0x00);
-            window.drawchar(i, 20, 20, 0x00);      
-            window.drawchar(i, 30, 20, 0x00);      
-            window.drawchar(i, 40, 20, 0x00);
-            window.drawchar(i, 50, 20, 0x00);
-            window.drawchar(i, 60, 20, 0x00);
-            window.drawchar(i, 70, 20, 0x00);
-            window.drawchar(i, 80, 20, 0x00);
-            window.drawchar(i, 90, 20, 0x00);
-            window.drawchar(i,100, 20, 0x00);        
-
+            window.drawstring(kout.ToString(i), 10, 30, 0x00);
+                
 
             // Draw how many times we have done this entire process
-            INT_TO_STRING(StringIter, Iter);
-            window.drawstring(StringIter, 10, 40, 0x00);      
+            window.drawstring(kout.ToString(Iter), 10, 50, 0x00);     
+            window.drawstring(kout.ToString(Iter * 60), 10, 70, 0x00); 
+            window.drawstring(kout.ToString(PIT::GetCurrentClock()), 10, 90, 0x00);
+            
+            window.drawstring(kout.ToString(
+                TimeAfter
+            ), 10, 110, 0x00);
+
 
             // Now redraw the window
             window.redraw_window();
+
+            //DisplayServer.draw_windows();
+            //DisplayServer.flip_buffer();
         }
+
+
+
+
+        TimeAfter = PIT::GetCurrentClock() - TimeBefore;
+        
     }
 
     /*

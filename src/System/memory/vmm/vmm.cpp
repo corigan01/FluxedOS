@@ -45,7 +45,7 @@ vmm::page_directory_t SystemDirectory;
 // this will construct a new entry into our directory
 void vmm::new_page_table(vmm::page_directory_t dir, u32 index, u32 perms) {
     // Ask skmalloc for a space to store the table
-    vmm::page_table_t new_table = (vmm::page_table_t)PAGE_ALIGN(Static::skmalloc(8 _KB));
+    vmm::page_table_t new_table = (vmm::page_table_t)PAGE_ALIGN(StaticHeap::skmalloc(8 _KB));
 
     // Then tell Page that we would like to make a new table
     Page::SendTableToDirectory((u32)dir.table, (u32)dir.vtable, (u32)new_table, index, perms);
@@ -137,7 +137,7 @@ void vmm::init(multiboot_info_t* mbt, u32 boot_page_dir) {
     }
 
     // Now we have all the needed information to give skmalloc some memory
-    Static::init((void*)SKMallocStart, (SKMallocEnd - SKMallocStart));
+    StaticHeap::init((void*)SKMallocStart, (SKMallocEnd - SKMallocStart));
 
     // After we get Skmalloc setup, its time to get the physical memory map
     // the multiboot header provides a detailed map of which memory maps we can
@@ -162,7 +162,7 @@ void vmm::init(multiboot_info_t* mbt, u32 boot_page_dir) {
     SystemDirectory.table = (u32*)Page::GetPageDir();
 
     // Now we need to setup virtual table
-    SystemDirectory.vtable = (page_table_t)PAGE_ALIGN(Static::skmalloc(8 _KB));
+    SystemDirectory.vtable = (page_table_t)PAGE_ALIGN(StaticHeap::skmalloc(8 _KB));
     SystemDirectory.vtable[PAGEDIR_INDEX(LOAD_MEMORY_ADDRESS)] = SystemDirectory.table[PAGEDIR_INDEX(LOAD_MEMORY_ADDRESS)] + LOAD_MEMORY_ADDRESS;
 
     // Now we need to get some more memory before our ~40KB runs out
@@ -170,7 +170,7 @@ void vmm::init(multiboot_info_t* mbt, u32 boot_page_dir) {
     pmm_table_fill(SystemDirectory, 769, SUPERVISOR | PRESENT | R_W);
     
     // Now give that memory to skmalloc
-    Static::init((void*)PAGEDIR_ADDRESS(769), 4 _MB);
+    StaticHeap::init((void*)PAGEDIR_ADDRESS(769), 4 _MB);
 
     // So now that we have around ~4MB of memory in skmalloc we can begin kheap
     for (int i = 0; i < ((KHEAP_MAX_POOL_SIZE) / (4 _MB)); i++) {

@@ -22,10 +22,8 @@
 #pragma once
 
 #include <lib/core/core.h>
-#include <System/Serial/serial.hpp>
-#include <lib/StanderdOperations/Operations.h>
 
-#define endl "\n\0"
+
 
 namespace System
 {
@@ -34,6 +32,8 @@ namespace System
         // General output, this is so you can use any output mode and keep the basic output functions
 
         #define kout System::Display::SerialLog()
+        #define endl "\n\0"
+
         #define TRACE_INFO System::Display::TraceInfo{__FUNCTION__, __LINE__, __FILE__}
         
         struct TraceInfo {
@@ -51,21 +51,22 @@ namespace System
         
         class SerialLog {
             public:        
-            SerialLog() { /*System::IO::Serial::init(System::IO::Serial::COM_1);*/ };
+            SerialLog()  {};
             ~SerialLog() {};
             
-            SerialLog &operator<<(const char* v);
-            SerialLog &operator<<(const int  &v);
-            SerialLog &operator<<(const u32  &v);
-            SerialLog &operator<<(const u16  &v);
-            SerialLog &operator<<(const u8   &v);
-            SerialLog &operator<<(const char &v);
-            SerialLog &operator<<(bool       &v);
-            SerialLog &operator<<(const TraceInfo &v);
+            SerialLog &operator<<(const char        *v);
+            SerialLog &operator<<(const int          v);
+            SerialLog &operator<<(const u32          v);
+            SerialLog &operator<<(const u16          v);
+            SerialLog &operator<<(const u8           v);
+            SerialLog &operator<<(const char         v);
+            SerialLog &operator<<(bool               v);
+            SerialLog &operator<<(const TraceInfo    v);
 
             void printf(const char* str, ...);
 
-            const char* ToHex(u32 v);
+            static const char* ToHex(u32 v);
+            static const char* ToString(u32 value);
 
             
             const char*    BLACK = "\e[0;30m";
@@ -116,12 +117,3 @@ namespace System
 
 
 
-class example {
-    public:
-
-    example() { System::IO::Serial::init(System::IO::Serial::COM_1); }
-    ~example() { };
-    example &operator<<(const char* i);
-    void test();
-    
-};

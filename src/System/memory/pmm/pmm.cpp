@@ -60,7 +60,7 @@ void pmm::init(multiboot_info_t *mbt) {
 	}	
 
 	// Now we know how many entries we have, so we can acually store them
-	MemoryArray = (MemoryEntry*)Static::skmalloc(MemoryEntries * sizeof(MemoryEntry));
+	MemoryArray = (MemoryEntry*)StaticHeap::skmalloc(MemoryEntries * sizeof(MemoryEntry));
 
 	// As we now have a place for MemoryArray to live, We can iterate over 
 	// the Memory again and acually store it this time :) 
@@ -102,8 +102,8 @@ void pmm::init(multiboot_info_t *mbt) {
 	u32 PagesAllocSize = (InstalledMemory / (4 _KB)) / 8;
 
 	// Now lets alloc this
-	PagesAlloc = (bitmap_type*)Static::skmalloc(sizeof(bitmap_type));
-	PagesAlloc->addr = (u8*)Static::skmalloc(PagesAllocSize);
+	PagesAlloc = (bitmap_type*)StaticHeap::skmalloc(sizeof(bitmap_type));
+	PagesAlloc->addr = (u8*)StaticHeap::skmalloc(PagesAllocSize);
 	PagesAlloc->bytes = PagesAllocSize;
 
 	// Make sure all bytes are 0 because its a bit map and we need to make sure its clear
