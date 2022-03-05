@@ -78,7 +78,7 @@ void pmm::init(multiboot_info_t *mbt) {
 			
 			kout << ((entry->type == MULTIBOOT_MEMORY_AVAILABLE) ? kout.GREEN : kout.YELLOW) << "\t| 0x" << kout.ToHex(entry->base_addr_low) << 
 			" | 0x" << kout.ToHex(entry->length_low) << " | " << entry->length_low / (1 _MB) << "MB  \t| "
-			<< entry->type << "\t|" << kout.YELLOW << endl; 
+			<< (entry->type == 1 ? kout.GREEN : kout.RED) << (entry->type == 1 ? "FREE" : "RESV") << kout.YELLOW << "\t|" << kout.YELLOW << endl; 
 
 			MemoryArray[i].MemoryType = entry->type;
 			MemoryArray[i].MemoryAddr = entry->base_addr_low;
@@ -113,7 +113,6 @@ void pmm::init(multiboot_info_t *mbt) {
 
 // This is how much memory we had at the start (installed ram)
 u32 pmm::RequestInitial(){
-
 	return InstalledMemory;
 }
 
@@ -139,7 +138,7 @@ u32 pmm::ReservePage() {
 	// Sets that bit because its now in use
 	set_bit(PagesAlloc, bit);
 
-	// Now we need to know where that bit points to
+	// Now we need to know where that bit points to.
 	// So we begin by finding the raw addr, this will be
 	// added to the start of the memory region we have
 	u32 CalculatedBitAddr = bit * PAGE_SIZE;
@@ -154,7 +153,6 @@ u32 pmm::ReservePage() {
 
 	// Finally add the two together so we have our addr
 	u32 ReturnAddr = CalculatedBitAddr + OffsetAddress;
-
 
 	return ReturnAddr;
 }
@@ -192,7 +190,7 @@ u32 pmm::ForceBook(u16 PagesNumber, u32 offset) {
 void pmm::freeBook(u32 Addr, u16 Pages) {
 	for (u32 i = 0; i < Pages; i++) {
 		pmm::freeBlock(Addr + (PAGE_SIZE * i));
-		NO_INSTRUCTION;
+		//NO_INSTRUCTION;
 	}
 }
 
@@ -210,7 +208,7 @@ void pmm::freeBlock(u32 addr) {
 		kout << "Memory Free ERROR!! " << endl;
 	else {
 		clear_bit(PagesAlloc, bit);
-		NO_INSTRUCTION;
+		//NO_INSTRUCTION;
 	}
 
 }

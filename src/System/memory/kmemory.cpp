@@ -46,7 +46,11 @@ struct MemoryEntry
 };
 K_Vector<MemoryEntry> MemoryMap(0);
 
-void PrintMemoryMap() {
+void PrintMemoryMap(int addr = -1) {
+    kout << endl;
+    kout << "Kernel Memory Map: " << endl;
+    kout << "\t|    BEGIN   |     END    |     SIZE     | USED |" << endl;
+    kout << "\t|------------|------------|--------------|------|" << endl;
     for (int i = 0; i < MemoryMap.size(); i++) {
         u32 MemorySize = (MemoryMap[i].End - MemoryMap[i].Start);
         const char* SubScript = (MemorySize > (1 _MB) ? " MB" : (MemorySize > (1 _KB) ? " KB" : " Bytes"));
@@ -54,8 +58,15 @@ void PrintMemoryMap() {
         if (MemorySize > (1 _MB)) MemorySize /= 1 _MB;
         if (MemorySize > (1 _KB)) MemorySize /= 1 _KB;
 
-        kout << "MEMORY : " << kout.ToHex(MemoryMap[i].Start) << " --> " << kout.ToHex(MemoryMap[i].End) << ", SIZE: " << MemorySize << SubScript << "\t USED: " << (MemoryMap[i].Used ? "(USED)" : "(FREE)") << endl;
+        kout << "\t| 0x" << kout.ToHex(MemoryMap[i].Start) << " | 0x" << kout.ToHex(MemoryMap[i].End) 
+             << " | " << MemorySize << " \t" << SubScript <<  "\t | " << (MemoryMap[i].Used ? kout.RED : kout.GREEN) 
+             << (MemoryMap[i].Used ? "USED" : "FREE") << kout.YELLOW << " |" 
+             << (addr == i ? " <-- ALLOC" : "") << endl;
+
+        //kout << "MEMORY : " << kout.ToHex(MemoryMap[i].Start) << " --> " << kout.ToHex(MemoryMap[i].End) << ", SIZE: " << MemorySize << SubScript << "\t USED: " << (MemoryMap[i].Used ? "(USED)" : "(FREE)") << endl;
     }
+    kout << "\t|------------|------------|--------------|------|" << endl << endl;
+
 }
 
 void Memory::init_memory(multiboot_info_t *mbt, u32 page_start, u32 page_end) {
@@ -145,7 +156,7 @@ void* Memory::kmalloc(size_t size) {
         return NULL;
     }
 
-   kout << "Requested size " << kout.BOLD_CYAN << size << kout.YELLOW << ". Searching..." << endl;
+   //kout << "Requested size " << kout.BOLD_CYAN << size << kout.YELLOW << ". Searching..." << endl;
 
     for (u32 i = 0; i < MemoryMap.size(); i++) {
         //kout << "Finding Memory..." << endl;
@@ -160,7 +171,7 @@ void* Memory::kmalloc(size_t size) {
                 //kout << "Found Exact Free Memory Size! " << endl;
 
                 memset((void*)MemoryMap[i].Start, NULL, CurrentMemorySize);
-                kout << "Returning memory addr *" << (u32)MemoryMap[i].Start << " with size of " << size << endl << endl;
+                //kout << "Returning memory addr *" << (u32)MemoryMap[i].Start << " with size of " << size << endl << endl;
                 return (void*)MemoryMap[i].Start;
             }
             if (CurrentMemorySize > size) {
@@ -179,10 +190,10 @@ void* Memory::kmalloc(size_t size) {
                 MemoryMap[i] = CurrentMemoryEntry;
                 MemoryMap.insert_at(i, NewMemoryEntry);
 
-                PrintMemoryMap();
+                PrintMemoryMap(i);
 
                 memset((void*)MemoryStart, NULL, size);
-                kout << "Returning memory addr *" << (u32)MemoryStart << " with size of " << size << endl << endl;
+                //kout << "Returning memory addr *" << (u32)MemoryStart << " with size of " << size << endl << endl;
                 return (void*)MemoryStart;
             }
             

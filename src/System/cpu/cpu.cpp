@@ -107,6 +107,7 @@ const char *Err[] =
     "Alignment Check",
     "Machine Check",
     "Out of Memory", // 19
+    "ASSERT",
     "Reserved",
     "Reserved",
     "Reserved",
@@ -117,8 +118,7 @@ const char *Err[] =
     "Reserved",
     "Reserved",
     "Reserved",
-    "Reserved",
-    "Reserved"
+    "SYSCALL"
 };
 
 

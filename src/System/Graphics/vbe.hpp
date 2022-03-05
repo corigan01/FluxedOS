@@ -44,6 +44,16 @@ namespace System
                 u8* buffer;
             };
 
+            typedef struct FrameBuffer {
+                u8* frame;
+
+                u32 height;
+                u32 width;
+
+                u32 size;
+
+            } framebuffer_t;
+
             void gxinit(void* buffer, u32 screen_x, u32 screen_y);
             void putpixel(int x, int y, u32 color) ;
             void fillrect(u32 color, u32 start_x, u32 start_y, u32 width, u32 hight);

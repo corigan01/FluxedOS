@@ -145,9 +145,12 @@ void Kernel::system_init() {
 
     DisplayServer.attach_window(&BackroundWindow2);
     BackroundWindow2.construct_pointer();
-    BackroundWindow2.fillrect(0x550000, 0, 0, BackroundWindow2.get_window_width(), BackroundWindow2.get_window_height());
+    BackroundWindow2.fillrect(0xFF63F7 - 0x222222, 0, 0, BackroundWindow2.get_window_width(), BackroundWindow2.get_window_height());
     //BackroundWindow2.drawstring("Title", 10, 100, 0xFF0000);
 
+    // 255 99 247
+    //0xFF 63 F7
+    // 
 
     
 
@@ -159,7 +162,7 @@ void Kernel::system_init() {
 
     DisplayServer.attach_window(&InfomationWindow);
     InfomationWindow.construct_pointer();
-    InfomationWindow.fillrect(0x297a5c, 0, 0, InfomationWindow.get_window_width(), InfomationWindow.get_window_height());
+    InfomationWindow.fillrect(0x297A5C, 0, 0, InfomationWindow.get_window_width(), InfomationWindow.get_window_height());
     InfomationWindow.drawstring("FluxedOS", 10, 10, 0xFFFFFF);
 
     INT_TO_STRING(BUILDb, BUILD);
@@ -194,6 +197,8 @@ void Kernel::system_init() {
     Graphics::Driver::fillcircle(0x297a5c, 10, 10, 50);    
     Graphics::Driver::drawstring("FluxedOS!", 10, 10, 0xFFFFFF);
         
+
+    
 
 
     lwin window;

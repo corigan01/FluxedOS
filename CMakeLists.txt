@@ -84,6 +84,7 @@ set (CXX
     src/System/CompilerFixes/cxa.cpp
     src/System/CompilerFixes/icxxabi.cpp
     src/System/memory/staticalloc/skmalloc.cpp
+    src/System/Disk/ata.cpp
 )
 
 set_source_files_properties(${ASM} PROPERTIES LANGUAGE ASM_NASM)
