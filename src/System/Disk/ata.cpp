@@ -24,6 +24,7 @@
 #include <System/Port/port.hpp>
 #include <System/cpu/cpu.hpp>
 #include <System/memory/kmemory.hpp>
+#include <System/memory/MemorySizes.hpp>
 
 
 using namespace System;
@@ -114,6 +115,95 @@ u8 Disk::ide_check_device(u8 bus, u8 drive) {
     return 1;
 }
 
+void Disk::ide_400ns_delay(u16 io)
+{
+    for(int i = 0;i < 4; i++)
+        Port::byte_in(io + ATA_REG_ALTSTATUS);
+}
+
+void Disk::ide_poll(u16 io) {
+    for(int i=0; i< 4; i++) {
+        Port::byte_in(io + ATA_REG_ALTSTATUS);
+    }
+
+    u8 status = 0;
+
+    do {
+        status = Port::byte_in(io + ATA_REG_STATUS);
+    } while (status & ATA_SR_BSY);
+
+    do {
+        status = Port::byte_in(io + ATA_REG_STATUS);
+
+        if(status & ATA_SR_ERR) {
+            kout.printf("ERR set, device failure!\n");
+        }
+
+    } while (!(status & ATA_SR_DRQ));
+}
+
+u8 Disk::ata_read_one(u8 *buf, u32 lba, u8 drive) {
+
+    u16 io = 0;
+    switch(drive)
+    {
+        case (ATA_PRIMARY << 1 | ATA_MASTER):
+            io = ATA_PRIMARY_IO;
+            drive = ATA_MASTER;
+            kout << "Drive Primary and master" << endl;
+            break;
+        case (ATA_PRIMARY << 1 | ATA_SLAVE):
+            io = ATA_PRIMARY_IO;
+            drive = ATA_SLAVE;
+            break;
+        case (ATA_SECONDARY << 1 | ATA_MASTER):
+            io = ATA_SECONDARY_IO;
+            drive = ATA_MASTER;
+            break;
+        case (ATA_SECONDARY << 1 | ATA_SLAVE):
+            io = ATA_SECONDARY_IO;
+            drive = ATA_SLAVE;
+            break;
+        default:
+            kout.printf("FATAL: unknown drive!\n");
+            return 0;
+    }
+
+    u8 cmd = (drive==ATA_MASTER?0xE0:0xF0);
+    u8 slavebit = (drive == ATA_MASTER?0x00:0x01);
+    kout.printf("LBA = 0x%x\n", lba);
+    kout.printf("LBA>>24 & 0x0f = %d\n", (lba >> 24)&0x0f);
+    kout.printf("(u8)lba = %d\n", (u8)lba);
+    kout.printf("(u8)(lba >> 8) = %d\n", (u8)(lba >> 8));
+    kout.printf("(u8)(lba >> 16) = %d\n", (u8)(lba >> 16));
+
+    Port::byte_out(io + ATA_REG_HDDEVSEL, (cmd | (u8)((lba >> 24 & 0x0F))));
+
+    Port::byte_out(io + 1, 0x00);
+
+    Port::byte_out(io + ATA_REG_SECCOUNT0, 1);
+
+    Port::byte_out(io + ATA_REG_LBA0, (u8)((lba)));
+
+    Port::byte_out(io + ATA_REG_LBA1, (u8)((lba) >> 8));
+
+    Port::byte_out(io + ATA_REG_LBA2, (u8)((lba) >> 16));
+
+    Port::byte_out(io + ATA_REG_COMMAND, ATA_CMD_READ_PIO);
+
+    ide_poll(io);
+
+    for(int i = 0; i < 256; i++)
+    {
+        u16 data = Port::word_in(io + ATA_REG_DATA);
+        *(u16 *)(buf + i * 2) = data;
+    }
+
+    ide_400ns_delay(io);
+
+    return 1;
+}
+
 void Disk::init_driver() {
     kout << "Setting IRQ" << endl;
     CPU::IRQ::installIRQ(ATA_PRIMARY_IRQ, System::Disk::ata_primary_irq);
@@ -121,7 +211,7 @@ void Disk::init_driver() {
 
     kout << "Looking for all Disks.." << endl;
 
-    ide_buf = (u8 *)(Memory::kmalloc(sizeof(u8) * 512));
+    ide_buf = (u8 *)(Memory::kmalloc(512));
 
     kout << (ide_check_device(ATA_PRIMARY, ATA_MASTER) > 0 ? "Found ATA Primary Master!" : "NO PRIMARY MASTER DISK") << endl;
     kout << (ide_check_device(ATA_PRIMARY, ATA_SLAVE) > 0 ? "Found ATA Primary Slave!" : "NO PRIMARY SLAVE DISK") << endl;
@@ -135,6 +225,32 @@ void Disk::init_driver() {
     }
 
     kout << "Drive: " << str << endl;
+
+    u8 *buf = (u8*)Memory::kmalloc(512);
+
+    /*for (int i = 0 ; i < 10; i ++) {
+        Disk::ata_read_one(buf, i, ATA_PRIMARY);
+
+        bool does_secotor_have_info = false;
+
+        for (int i = 0; i < 512; i ++) {
+            if (buf[i]) does_secotor_have_info = true;
+        }
+
+        if (does_secotor_have_info) {
+            for (int i = 0; i < 512; i ++) {
+                kout << buf[i] << " ";
+
+                if (i % 20 == 0) kout << endl;
+            }
+        }
+
+    }*/
+
+
+
+
+
 }
 
 

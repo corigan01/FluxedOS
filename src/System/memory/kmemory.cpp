@@ -52,8 +52,8 @@ void PrintMemoryMap(int addr = -1) {
         u32 MemorySize = (MemoryMap[i].End - MemoryMap[i].Start);
         const char* SubScript = (MemorySize > (1 _MB) ? " MB" : (MemorySize > (1 _KB) ? " KB" : "  B"));
         
-        if (MemorySize > (1 _MB)) MemorySize /= 1 _MB;
-        if (MemorySize > (1 _KB)) MemorySize /= 1 _KB;
+        if (MemorySize >= (1 _MB)) MemorySize /= 1 _MB;
+        if (MemorySize >= (1 _KB)) MemorySize /= 1 _KB;
 
         kout << "\t| 0x" << kout.ToHex(MemoryMap[i].Start) << " | 0x" << kout.ToHex(MemoryMap[i].End) 
              << " | " << MemorySize << (MemorySize > 9 ? (MemorySize > 99 ? " " : "  " ) : "   ") << SubScript <<  " | " << (MemoryMap[i].Used ? kout.RED : kout.GREEN)

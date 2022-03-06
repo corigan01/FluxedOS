@@ -4,9 +4,9 @@ set(CMAKE_SYSTEM_PROCESSOR i386)
 
 set(triple i386)
 
-set(CMAKE_C_COMPILER clang)
+set(CMAKE_C_COMPILER /usr/bin/clang)
 set(CMAKE_C_COMPILER_TARGET ${triple})
-set(CMAKE_CXX_COMPILER clang++)
+set(CMAKE_CXX_COMPILER /usr/bin/clang++)
 set(CMAKE_CXX_COMPILER_TARGET ${triple})
 
 project(FluxedOS LANGUAGES CXX C ASM_NASM ASM) 

@@ -118,5 +118,11 @@ namespace System{
         void ide_select_drive(u8 Bus, u8 Device);
 
         u8 ide_check_device(u8 bus, u8 drive);
+
+        void ide_400ns_delay(u16 io);
+
+        void ide_poll(u16 io);
+
+        u8 ata_read_one(u8 *buf, u32 lba, u8 drive);
     }
 }
