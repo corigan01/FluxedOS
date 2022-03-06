@@ -36,7 +36,7 @@ lux::~lux() {
 
 void lux::init() { 
     kout << "Initializing Lux instance..." << endl;
-    hardwareInfo = Driver::getinfo();
+    hardwareInfo = GXDriver::getinfo();
     doubleframebuffer = (u8*)System::Memory::kmalloc(hardwareInfo.width * hardwareInfo.height * hardwareInfo.pitch);
 
     kout << "Hardware info: " << endl;
@@ -76,7 +76,7 @@ void lux::attach_window(lwin* window) {
 }
 
 void lux::destroy_window(lwin* window) {
-    kout << "Destoried window : " << kout.ToHex((u32)window) << endl;
+    kout << "Destroyed window : " << kout.ToHex((u32)window) << endl;
     for (int i = 0; i < this->windows.size(); i++) {
         if (this->windows[i] == window) this->windows.pop_at(i);
     }
@@ -85,9 +85,9 @@ void lux::destroy_window(lwin* window) {
     this->flip_buffer();
 }
 
-void lux::redraw_one_window(lwin* windowpointer) {
+void lux::redraw_one_window(lwin* window_pointer) {
     for (int i = 0; i < this->windows.size(); i++) {
-        if (this->windows[i] == windowpointer) windows[i]->draw(hardwareInfo.buffer, hardwareInfo.width, hardwareInfo.height);
+        if (this->windows[i] == window_pointer) windows[i]->draw(hardwareInfo.buffer, hardwareInfo.width, hardwareInfo.height);
     }
 }
 
@@ -129,8 +129,6 @@ void lwin::draw(u8* framebuffer, u32 ypull, u32 xpull) {
 
     const int titlebarsize = this->fullscreen ? 0 : 15;
 
-    
-
     int screenwidth = this->width;
     int screenhight = this->height;
     int startingx = this->x;
@@ -162,7 +160,7 @@ void lwin::destroy() {
 }
 
 u8* lwin::construct_pointer() { 
-    Driver::GraphicsInfo info = Driver::getinfo();
+    GXDriver::GraphicsInfo info = GXDriver::getinfo();
 
     this->titlebar = (u8*)System::Memory::kmalloc(15 * info.width * pitch);
     memset(this->titlebar, 0x00, 15 * info.width * pitch);
@@ -201,8 +199,8 @@ void lwin::set_window_fullscreen(bool fullscreen) {
     this->x = 0;
     this->y = 0;
 
-    this->width = Driver::getinfo().width;
-    this->height = Driver::getinfo().height;
+    this->width = GXDriver::getinfo().width;
+    this->height = GXDriver::getinfo().height;
     
     this->fullscreen = fullscreen;
 }

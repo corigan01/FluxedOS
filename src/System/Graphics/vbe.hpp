@@ -32,7 +32,7 @@ namespace System
 {
     namespace Graphics 
     {
-        namespace Driver 
+        namespace GXDriver
         {
             struct GraphicsInfo {
                 u32 width;

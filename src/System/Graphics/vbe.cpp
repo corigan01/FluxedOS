@@ -29,9 +29,9 @@ u32 rex = 0, rey = 0;
 
 u32 pixelwidth = 1, pitch = 1;
 
-void Driver::gxinit(void* buffer, u32 screen_x, u32 screen_y)  {
+void GXDriver::gxinit(void* buffer, u32 screen_x, u32 screen_y)  {
 
-    kout << "\nStarting Graphics Kernel Driver:" <<
+    kout << "\nStarting Graphics Kernel GXDriver:" <<
         "\n\tScreen Resolution: " << screen_x << "x" << screen_y <<
         "\n\tBuffer Address: 0x" << kout.ToHex((u32)buffer) << endl << endl;
 
@@ -45,7 +45,7 @@ void Driver::gxinit(void* buffer, u32 screen_x, u32 screen_y)  {
     //fillcircle(0xFF0000, 100, 100, 100);
 }
 
-void Driver::putpixel(int x, int y, u32 color) {
+void GXDriver::putpixel(int x, int y, u32 color) {
     if ((u32)Buffer == 0xFFFFFF) return;
     if (x < 0 || x >= rex || y < 0 || y >= rey) return;
 
@@ -57,7 +57,7 @@ void Driver::putpixel(int x, int y, u32 color) {
 
 
 
-void Driver::fillrect(u32 color, u32 start_x, u32 start_y, u32 width, u32 hight) {
+void GXDriver::fillrect(u32 color, u32 start_x, u32 start_y, u32 width, u32 hight) {
     for (u32 y = start_y; y < hight + start_y; y++) {
         for (u32 x = start_x; x < width + start_x; x++) {
             putpixel(x, y, color);
@@ -65,7 +65,7 @@ void Driver::fillrect(u32 color, u32 start_x, u32 start_y, u32 width, u32 hight)
     }
 }
 
-void Driver::linecircle(u32 color, u32 center_x, u32 center_y, u32 rad) {
+void GXDriver::linecircle(u32 color, u32 center_x, u32 center_y, u32 rad) {
     double i = 0, angle = 0, x1 = 0, y1 = 0;
 
     for(i = 0; i < 360; i += 1) {
@@ -79,7 +79,7 @@ void Driver::linecircle(u32 color, u32 center_x, u32 center_y, u32 rad) {
     }   
 }
 
-void Driver::fillcircle(u32 color, u32 center_x, u32 center_y, u32 rad) {
+void GXDriver::fillcircle(u32 color, u32 center_x, u32 center_y, u32 rad) {
     for (int w = 0; w < rad * 2; w++)
     {
         for (int h = 0; h < rad * 2; h++)
@@ -94,7 +94,7 @@ void Driver::fillcircle(u32 color, u32 center_x, u32 center_y, u32 rad) {
     }
 }
 
-void Driver::drawchar(u32 ch, u32 x, u32 y, u32 color) {
+void GXDriver::drawchar(u32 ch, u32 x, u32 y, u32 color) {
     const unsigned char * gliph = built_in_font[ch - 32];
 
     for(int cy = 0; cy < 13; cy++) {
@@ -108,14 +108,14 @@ void Driver::drawchar(u32 ch, u32 x, u32 y, u32 color) {
     }
 }
 
-void Driver::drawstring(const char* str, u32 x, u32 y, u32 color) {
+void GXDriver::drawstring(const char* str, u32 x, u32 y, u32 color) {
     for (int i = 0; i < strlen(str); i++) {
         drawchar(str[i], x + i * 12, y, color);
     }
 }
 
-Driver::GraphicsInfo Driver::getinfo() {
-    Driver::GraphicsInfo info;
+GXDriver::GraphicsInfo GXDriver::getinfo() {
+    GXDriver::GraphicsInfo info;
     info.width = rex;
     info.height = rey;
     info.pitch = pitch;

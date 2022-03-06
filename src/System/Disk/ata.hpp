@@ -107,4 +107,16 @@ typedef struct {
 	uint8_t drive;
 } ide_private_data;
 
-extern void ata_init();
+namespace System{
+    namespace Disk {
+
+        void ata_secondary_irq(register_t *r);
+        void ata_primary_irq(register_t *r);
+
+        void init_driver();
+
+        void ide_select_drive(u8 Bus, u8 Device);
+
+        u8 ide_check_device(u8 bus, u8 drive);
+    }
+}

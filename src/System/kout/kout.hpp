@@ -32,7 +32,7 @@ namespace System
         // General output, this is so you can use any output mode and keep the basic output functions
 
         #define kout System::Display::SerialLog()
-        #define endl "\n\0"
+        #define endl "\n"
 
         #define TRACE_INFO System::Display::TraceInfo{__FUNCTION__, __LINE__, __FILE__}
         

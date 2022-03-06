@@ -78,7 +78,7 @@ namespace System
 
                     // sets the forground and backround colors
                     void init(u32 buffer) {
-                        kout << "Starting VGA Kernel Driver" << endl;
+                        kout << "Starting VGA Kernel GXDriver" << endl;
                         kout << "\tbuffer : " << (u32)buffer << endl;
                         kout << "\tScreen : " << "80x25" << endl;
                         kout << endl;

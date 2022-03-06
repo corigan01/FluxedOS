@@ -38,49 +38,54 @@
 #include <System/Graphics/vbe.hpp>
 #include <System/memory/staticalloc/skmalloc.hpp>
 #include <System/memory/vmm/vmm.hpp>
+#include <System/Disk/ata.hpp>
 
 
-using namespace System; 
+using namespace System;
 using namespace System::IO;
 using namespace System::HID;
 using namespace System::CPU;
 using namespace System::Clock;
 using namespace System::Memory;
+using namespace System::Graphics;
 using namespace System::Display;
 using namespace System::Display::Driver;
 
 
-
 class Kernel {
-    public:
+public:
 
-    Kernel(multiboot_info_t* multboot, u32 magic, u32 boot_page_dir) {
+    Kernel(multiboot_info_t *multboot, u32 magic, u32 boot_page_dir) {
         mbt = multboot;
 
-        //magic = ((u32)mbt) - (24 _KB);
-
-        kout << "Flux Kernel Started..." << endl;                               // tell the console we started the kernel
+        kout << "Flux Kernel Started..."
+             << endl;                               // tell the console we started the kernel
 
         if (mbt->framebuffer_type == 3) {                                       // This is GFX mode
-            //System::Graphics::Driver::gxinit((void*)(mbt->framebuffer_addr + 0xC0000000), 1024, 768);        
+            //System::Graphics::GXDriver::gxinit((void*)(mbt->framebuffer_addr + 0xC0000000), 1024, 768);
+        } else { // This is text mode
+            KernelTTY.init(mbt->framebuffer_addr + 0xC0000000);           // tell VGA what addr the framebuffer is at
+            // bind the tty to the display driver
         }
-        else { // This is text mode
-            KernelTTY.init(mbt->framebuffer_addr + 0xC0000000);;                              // tell VGA what addr the framebuffer is at
-                                                                                // bind the tty to the display driver
-        }   
 
-        
-        kout << "Initializing CPU" << endl;                                     // tell the console we are initializing the system
 
-        CPU::init(mbt); KernelTTY.print_str("CPU ");
+        kout << "Initializing CPU"
+             << endl;                                     // tell the console we are initializing the system
+
+        CPU::init(mbt);
+        KernelTTY.print_str("CPU ");
         kout << "\tCPU" << kout.BOLD_GREEN << "     OK" << kout.YELLOW << endl;
-        GDT::init(); KernelTTY.print_str("GDT ");
+        GDT::init();
+        KernelTTY.print_str("GDT ");
         kout << "\tGDT" << kout.BOLD_GREEN << "     OK" << kout.YELLOW << endl;
-        IDT::init(); KernelTTY.print_str("IDT ");
+        IDT::init();
+        KernelTTY.print_str("IDT ");
         kout << "\tIDT" << kout.BOLD_GREEN << "     OK" << kout.YELLOW << endl;
-        ISR::init(); KernelTTY.print_str("ISR ");
+        ISR::init();
+        KernelTTY.print_str("ISR ");
         kout << "\tISR" << kout.BOLD_GREEN << "     OK" << kout.YELLOW << endl;
-        IRQ::init(); KernelTTY.print_str("IRQ ");
+        IRQ::init();
+        KernelTTY.print_str("IRQ ");
         kout << "\tIRQ" << kout.BOLD_GREEN << "     OK" << kout.YELLOW << endl;
         EnableINT();
         kout << "\tINT" << kout.BOLD_GREEN << "     OK" << kout.YELLOW << endl;
@@ -91,13 +96,13 @@ class Kernel {
             if (i % 11 == 0) {
                 kout << ".";
             }
-             
+
         }
         kout << kout.BOLD_GREEN << " OK" << kout.YELLOW << endl << endl;
 
         KernelTTY.print_str("PIC ");
 
-        kout << "Multiboot info (*" << (u32)mbt << ")" << endl;
+        kout << "Multiboot info (*" << (u32) mbt << ")" << endl;
         kout << "\tflags                : " << mbt->flags << endl;
         kout << "\tmem_lower            : " << mbt->mem_lower << endl;
         kout << "\tmem_upper            : " << mbt->mem_upper << endl;
@@ -122,35 +127,30 @@ class Kernel {
         kout << "\tframebuffer_pitch    : " << mbt->framebuffer_pitch << endl;
         kout << "\tframebuffer_width    : " << mbt->framebuffer_width << " bytes" << endl;
         kout << "\tframebuffer_height   : " << mbt->framebuffer_height << " bytes" << endl;
-        kout << "\tframebuffer dims     : " << mbt->framebuffer_width / 4 << "x" << (u32)(mbt->framebuffer_height) << endl;
+        kout << "\tframebuffer dims     : " << mbt->framebuffer_width / 4 << "x" << (u32) (mbt->framebuffer_height) << endl;
         kout << "\tframebuffer_bpp      : " << mbt->framebuffer_bpp << endl;
         kout << "\tframebuffer_type     : " << mbt->framebuffer_type << endl;
         kout << endl;
 
         kout << "FRAMEBUFFER DIR ADDRESS: 0x" << (PAGEDIR_INDEX(mbt->framebuffer_addr)) << endl;
-      
+
 
         vmm::init(mbt, boot_page_dir);
-       
-        
+
+
         //Page::MapPhysRegion(Page::GetPageDir(), SUPER_USER_MEMORY | PRESENT_FLAG | READ_WRITE_ENABLED, mbt->framebuffer_addr, PAGEDIR_INDEX(mbt->framebuffer_addr), 4 _MB);
 
-        vmm::manual_table_fill(vmm::GetSystemDirectory(), PAGEDIR_INDEX(mbt->framebuffer_addr), mbt->framebuffer_addr, (1024 * 768 * 4), USER | PRESENT | R_W );        
+        vmm::manual_table_fill(vmm::GetSystemDirectory(),
+                               PAGEDIR_INDEX(mbt->framebuffer_addr),
+                               mbt->framebuffer_addr,
+                               (1024 * 768 * 4),
+                               USER | PRESENT | R_W);
 
-        //Page::PrintPageDir((u32)vmm::GetSystemDirectory().table, (u32)vmm::GetSystemDirectory().vtable);
+        GXDriver::gxinit((void *) (mbt->framebuffer_addr), 1024, 768);
 
-        System::Graphics::Driver::gxinit((void*)(mbt->framebuffer_addr), 1024, 768);
-        
-
-        //Page::paging_init((u32*)magic, 24 _KB, boot_page_dir);
-
-
+        Disk::init_driver();
 
         kout << endl << endl;
-        
-
-        
-
 
 
     }
@@ -159,25 +159,24 @@ class Kernel {
         /* Kernel Finish */
         KernelTTY.setcolor(COLOR::WHITE, COLOR::BLACK);
         PIT::Sleep(1000);
-        KernelTTY.print_str("\n\n--------------------------------------------------------------------------------------\nKernel Eneded");
+        KernelTTY.print_str(
+                "\n\n--------------------------------------------------------------------------------------\nKernel Eneded");
         for (int i = 0; i < 10; i++) {
             PIT::Sleep(1000);
             KernelTTY.print_str(".");
         }
         KernelTTY.print_str("\nPowerHold!\n");
 
-        
-        
         Power::hold();
-
     }
 
     void init_kernel();
+
     void system_init();
 
-    multiboot_info_t* mbt;
+    multiboot_info_t *mbt;
     Driver::VGA KernelTTY;
-    //Driver::vbe VBE_DRIVER; 
+    //GXDriver::vbe VBE_DRIVER;
 
 
 };

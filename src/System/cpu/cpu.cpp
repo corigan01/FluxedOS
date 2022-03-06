@@ -106,7 +106,7 @@ const char *Err[] =
     "Coprocessor Fault",
     "Alignment Check",
     "Machine Check",
-    "Out of Memory", // 19
+    "Out of Memory",
     "ASSERT",
     "Reserved",
     "Reserved",
@@ -137,8 +137,10 @@ void System::CPU::IRQ::uninstallIRQ(int irq) {
 // But we can install custom handlers for each interrupt.
 
 void *ISR_HANDLERS[16] = {
-    0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0
+        nullptr, nullptr,nullptr,  nullptr,
+        nullptr, nullptr,nullptr,  nullptr,
+        nullptr, nullptr,nullptr, nullptr,
+        nullptr,nullptr,nullptr, nullptr
 };
 
 void System::CPU::ISR::installISR(int irq, void(*handler)(register_t *r)) {
@@ -182,7 +184,8 @@ void Err_hanlder(struct regs *r) {
         kout << "\t\t|     ...    |     ...    |    ...    " << endl;
         u32 *stack = (u32*)r->esp;
         for (int i = 0; i < 10; i++) {
-            kout << (i == 2 ? kout.GREEN : kout.YELLOW) << "\t\t| 0x" << kout.ToHex(u32(stack + i)) << " | 0x" << kout.ToHex(stack[i]) << " | " << (stack[i] > 0x0C0000 ? "(NO SYMBOLS) -- > (CAN NOT FIND FUNCTION CALL)" : "N/A") << endl;
+            kout << (i == 2 ? kout.GREEN : kout.YELLOW) << "\t\t| 0x" << kout.ToHex(u32(stack + i)) << " | 0x" <<
+            kout.ToHex(stack[i]) << " | " << (stack[i] > 0x0C0000 ? "(NO SYMBOLS) -- > (CAN NOT FIND FUNCTION CALL)" : "N/A") << endl;
         }
         kout << "\t\t|     ...    |     ...    |    ...    " << endl;
         kout << "\t\t|------------|------------|------------" << endl;
@@ -220,7 +223,8 @@ void Err_hanlder(struct regs *r) {
         kout << "========================================" << endl;
 
         kout << "Passing to custom handler..." << endl;
-HALT;
+
+        HALT;
 
         void (*handler)(struct regs *r);
 

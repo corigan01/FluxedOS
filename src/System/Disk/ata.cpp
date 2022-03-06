@@ -22,9 +22,121 @@
 
 #include "ata.hpp"
 #include <System/Port/port.hpp>
+#include <System/cpu/cpu.hpp>
+#include <System/memory/kmemory.hpp>
+
 
 using namespace System;
 using namespace System::IO;
+
+#define ATA_PRIMARY_IO 0x1F0
+#define ATA_SECONDARY_IO 0x170
+
+#define ATA_PRIMARY_DCR_AS 0x3F6
+#define ATA_SECONDARY_DCR_AS 0x376
+
+#define ATA_PRIMARY_IRQ 14
+#define ATA_SECONDARY_IRQ 15
+
+u8 *ide_buf = 0;
+
+void Disk::ata_primary_irq(register_t * r) {
+
+
+    CPU::PIC::SendEOI(ATA_PRIMARY_IRQ);
+}
+
+void Disk::ata_secondary_irq(register_t * r) {
+
+
+    CPU::PIC::SendEOI(ATA_SECONDARY_IRQ);
+}
+
+void Disk::ide_select_drive(u8 Bus, u8 Device) {
+    if (Bus == ATA_PRIMARY) {
+        if (Device == ATA_MASTER){
+            Port::byte_out(ATA_PRIMARY_IO + ATA_REG_HDDEVSEL, 0xA0);
+        }
+        else Port::byte_out(ATA_PRIMARY_IO + ATA_REG_HDDEVSEL, 0xB0);
+    }
+    else if (Bus == ATA_SECONDARY) {
+        if (Device == ATA_MASTER) {
+            Port::byte_out(ATA_SECONDARY_IO + ATA_REG_HDDEVSEL, 0xA0);
+        }
+        else Port::byte_out(ATA_SECONDARY_IO + ATA_REG_HDDEVSEL, 0xB0);
+    }
+
+}
+
+u8 Disk::ide_check_device(u8 bus, u8 drive) {
+    u16 io = 0;
+
+    Disk::ide_select_drive(bus, drive);
+
+    if (bus == ATA_PRIMARY) io = ATA_PRIMARY_IO;
+    else io = ATA_SECONDARY_IO;
+
+    // ATA specs say these values must be zero before sending IDENTIFY
+    Port::byte_out(io + ATA_REG_SECCOUNT0, 0);
+    Port::byte_out(io + ATA_REG_LBA0, 0);
+    Port::byte_out(io + ATA_REG_LBA1, 0);
+    Port::byte_out(io + ATA_REG_LBA2, 0);
+
+    // Now, send IDENTIFY
+    Port::byte_out(io + ATA_REG_COMMAND, ATA_CMD_IDENTIFY);
+    kout.printf("Sent IDENTIFY\n");
+
+    // Now, read status port
+    u8 status = Port::byte_in(io + ATA_REG_STATUS);
+
+    if (!status) return 0;
+
+    // Now, poll until BSY is clear.
+    while ((Port::byte_in(io + ATA_REG_STATUS) & ATA_SR_BSY) != 0);
+
+    do {
+        status = Port::byte_in(io + ATA_REG_STATUS);
+        if (status & ATA_SR_ERR) {
+            kout.printf("%s%s has ERR set. Disabled.\n", ((bus == ATA_PRIMARY) ? "Primary" : "Secondary"),
+                        ((drive == ATA_PRIMARY) ? " master" : " slave"));
+            return 0;
+        }
+    } while (!(status & ATA_SR_DRQ));
+
+    kout.printf("%s%s is online.\n", ((bus == ATA_PRIMARY) ? "Primary" : "Secondary"),
+                ((drive == ATA_PRIMARY) ? " master" : " slave"));
+
+    // Now, actually read the data
+    for (int i = 0; i < 256; i++) {
+        *(u16 *) (ide_buf + i * 2) = Port::word_in(io + ATA_REG_DATA);
+    }
+
+    return 1;
+}
+
+void Disk::init_driver() {
+    kout << "Setting IRQ" << endl;
+    CPU::IRQ::installIRQ(ATA_PRIMARY_IRQ, System::Disk::ata_primary_irq);
+    CPU::IRQ::installIRQ(ATA_SECONDARY_IRQ, System::Disk::ata_secondary_irq);
+
+    kout << "Looking for all Disks.." << endl;
+
+    ide_buf = (u8 *)(Memory::kmalloc(sizeof(u8) * 512));
+
+    kout << (ide_check_device(ATA_PRIMARY, ATA_MASTER) > 0 ? "Found ATA Primary Master!" : "NO PRIMARY MASTER DISK") << endl;
+    kout << (ide_check_device(ATA_PRIMARY, ATA_SLAVE) > 0 ? "Found ATA Primary Slave!" : "NO PRIMARY SLAVE DISK") << endl;
+    kout << (ide_check_device(ATA_SECONDARY, ATA_MASTER) > 0 ? "Found ATA Secondary Master!" : "NO SECONDARY MASTER DISK") << endl;
+    kout << (ide_check_device(ATA_SECONDARY, ATA_SLAVE) > 0 ? "Found ATA Secondary Slave!" : "NO SECONDARY SLAVE DISK") << endl;
+
+    char *str = (char *)Memory::kmalloc(40);
+    for(int i = 0; i < 40; i += 2) {
+        str[i] = ide_buf[ATA_IDENT_MODEL + i + 1];
+        str[i + 1] = ide_buf[ATA_IDENT_MODEL + i];
+    }
+
+    kout << "Drive: " << str << endl;
+}
+
 
 /*#define ATA_PRIMARY_IO 0x1F0
 #define ATA_SECONDARY_IO 0x170
@@ -245,7 +357,7 @@ void ata_probe()
 	}
 	ide_identify(ATA_PRIMARY, ATA_SLAVE);
 	//ide_identify(ATA_SECONDARY, ATA_MASTER);
-	//ide_identify(ATA_SECONDARY, ATA_SLAVE);
+	//ide_check_device(ATA_SECONDARY, ATA_SLAVE);
 }
 
 void ata_init()

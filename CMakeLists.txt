@@ -80,8 +80,7 @@ set (CXX
     src/System/Graphics/DisplayServer/ds.cpp
     src/System/Graphics/vbe.cpp
     src/System/memory/vmm/vmm.cpp
-    src/boot/cppentry.cpp
-    src/System/CompilerFixes/cxa.cpp
+        src/System/CompilerFixes/cxa.cpp
     src/System/CompilerFixes/icxxabi.cpp
     src/System/memory/staticalloc/skmalloc.cpp
     src/System/Disk/ata.cpp
@@ -123,10 +122,13 @@ add_custom_target(iso
 add_dependencies(iso FluxedOS.bin)
 
 add_custom_target(run USES_TERMINAL
-    COMMAND  qemu-system-x86_64 -cdrom FluxedOS.iso -boot strict=on -cpu max -smp 1,sockets=1,cores=1,threads=1 -display gtk -m 800m -k en-us -serial stdio -nic none 
+    COMMAND  qemu-system-x86_64 -cdrom FluxedOS.iso -drive format=raw,file=disk.img -boot strict=on -cpu max -smp 1,sockets=1,cores=1,threads=1 -display gtk -m 800m -k en-us -serial stdio -nic none
     DEPENDS iso
 )
 
+add_custom_target(mkimg USES_TERMINAL
+        COMMAND dd if=/dev/zero of=disk.img bs=1M count=50 && mkfs ext2 -F disk.img && mkdir fs &> /dev/null && sudo sudo mount -t ext2 -o loop disk.img fs && sudo sudo chmod 777 -R disk.img fs/
+        )
 
 add_custom_target(debug USES_TERMINAL
     COMMAND  objcopy --only-keep-debug FluxedOS.bin FluxedOS.elf && strip --strip-debug --strip-unneeded FluxedOS.bin && qemu-system-x86_64 -s -S FluxedOS.bin -cdrom FluxedOS.iso -boot strict=on -cpu max -smp 1,sockets=1,cores=1,threads=1 -display gtk -m 500m -k en-us -serial stdio &

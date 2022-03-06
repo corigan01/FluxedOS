@@ -20,13 +20,10 @@
  */
 
 #include "kmemory.hpp"
-#include <System/memory/pmm/pmm.hpp>
 #include <System/memory/MemorySizes.hpp>
-#include <System/Display/Display.hpp>
 #include <System/Clock/PIT/PIT.hpp>
 #include <System/memory/paging/page.hpp>
 #include <lib/vector/KernelVector.hpp>
-#include <System/memory/staticalloc/skmalloc.hpp>
 #include <lib/StanderdOperations/Operations.h>
 #include <System/memory/vmm/vmm.hpp>
 
@@ -49,23 +46,23 @@ K_Vector<MemoryEntry> MemoryMap(0);
 void PrintMemoryMap(int addr = -1) {
     kout << endl;
     kout << "Kernel Memory Map: " << endl;
-    kout << "\t|    BEGIN   |     END    |     SIZE     | USED |" << endl;
-    kout << "\t|------------|------------|--------------|------|" << endl;
+    kout << "\t|    BEGIN   |     END    |   SIZE  | USED |" << endl;
+    kout << "\t|------------|------------|---------|------|" << endl;
     for (int i = 0; i < MemoryMap.size(); i++) {
         u32 MemorySize = (MemoryMap[i].End - MemoryMap[i].Start);
-        const char* SubScript = (MemorySize > (1 _MB) ? " MB" : (MemorySize > (1 _KB) ? " KB" : " Bytes"));
+        const char* SubScript = (MemorySize > (1 _MB) ? " MB" : (MemorySize > (1 _KB) ? " KB" : "  B"));
         
         if (MemorySize > (1 _MB)) MemorySize /= 1 _MB;
         if (MemorySize > (1 _KB)) MemorySize /= 1 _KB;
 
         kout << "\t| 0x" << kout.ToHex(MemoryMap[i].Start) << " | 0x" << kout.ToHex(MemoryMap[i].End) 
-             << " | " << MemorySize << " \t" << SubScript <<  "\t | " << (MemoryMap[i].Used ? kout.RED : kout.GREEN) 
+             << " | " << MemorySize << (MemorySize > 9 ? (MemorySize > 99 ? " " : "  " ) : "   ") << SubScript <<  " | " << (MemoryMap[i].Used ? kout.RED : kout.GREEN)
              << (MemoryMap[i].Used ? "USED" : "FREE") << kout.YELLOW << " |" 
              << (addr == i ? " <-- ALLOC" : "") << endl;
 
         //kout << "MEMORY : " << kout.ToHex(MemoryMap[i].Start) << " --> " << kout.ToHex(MemoryMap[i].End) << ", SIZE: " << MemorySize << SubScript << "\t USED: " << (MemoryMap[i].Used ? "(USED)" : "(FREE)") << endl;
     }
-    kout << "\t|------------|------------|--------------|------|" << endl << endl;
+    kout << "\t|------------|------------|---------|------|" << endl;
 
 }
 
@@ -131,9 +128,9 @@ void Memory::SetPages(Page_Entry *pool, u32 size) {
 }
 
 void Memory::ConJoin(u32 m1) {
-    if (m1 >= MemoryMap.size() && m1 < 0 || MemoryMap.size() <= 1) return;
+    if ((m1 >= MemoryMap.size() && m1 < 0) || MemoryMap.size() <= 1) return;
 
-    if (MemoryMap[m1].Used == false && MemoryMap[m1 + 1].Used == false) {
+    if (!MemoryMap[m1].Used && !MemoryMap[m1 + 1].Used) {
         if (MemoryMap[m1].End == MemoryMap[m1 + 1].Start || MemoryMap[m1].End == MemoryMap[m1 + 1].Start - 1) {
             kout << "Joined Memory index " << m1 << " with " << m1 + 1 << " | (" << MemoryMap[m1].Start << ", " << MemoryMap[m1].End << ") --> (" << MemoryMap[m1].Start << ", " << MemoryMap[m1 + 1].End << ")" << endl;
             MemoryMap[m1].End = MemoryMap[m1 + 1].End;
@@ -142,18 +139,19 @@ void Memory::ConJoin(u32 m1) {
         }
     }
     
-    kout << "ERROR JOINING MEMORY (ERROR CODE): " << (m1 < MemoryMap.size() && m1 >= 0) << (MemoryMap[m1].Used == false) << (MemoryMap[m1].End == MemoryMap[m1 + 1].Start || MemoryMap[m1].End == MemoryMap[m1].Start + 1) << endl;
+    kout << "ERROR JOINING MEMORY (ERROR CODE): " << (m1 < MemoryMap.size() && m1 >= 0) << !MemoryMap[m1].Used
+         << (MemoryMap[m1].End == MemoryMap[m1 + 1].Start || MemoryMap[m1].End == MemoryMap[m1].Start + 1) << endl;
 }
 
 
 void* Memory::kmalloc(size_t size) {
     if (size > KHEAP_MAX_ALLOC) {
         kout << "Requested allocation is too large!" << endl;
-        return NULL;
+        return nullptr;
     }
     if (size == 0) { 
         kout << "Requested allocation is too small!" << endl;
-        return NULL;
+        return nullptr;
     }
 
    //kout << "Requested size " << kout.BOLD_CYAN << size << kout.YELLOW << ". Searching..." << endl;
@@ -201,8 +199,8 @@ void* Memory::kmalloc(size_t size) {
     }
 
     kout << kout.BOLD_RED << "COULD NOT FIND MEMORY, OR IS OUT OF MEMORY!" << kout.YELLOW << endl;
-    Vasm("int $0x13"); // Cause fault because we are just going to page fault anyway
-    return (void*)NULL;
+    Vasm("int $0x13"); // Cause fault because we are just going to page fault anyway (This is going to be a panic later)
+    return nullptr;
 }
 void Memory::kfree(void* ptr) {
     for (u32 i = 0; i < MemoryMap.size(); i++) {

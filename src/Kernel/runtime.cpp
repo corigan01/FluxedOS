@@ -93,7 +93,7 @@ void Kernel::system_init() {
     //NO_INSTRUCTION;
 
     kout << "Listing PCI..." << endl;
-    Graphics::Driver::drawstring("Listing PCI", 10, 330, 0xFF0000);
+    Graphics::GXDriver::drawstring("Listing PCI", 10, 330, 0xFF0000);
 
     /*for (int e = 0; e < 16; e++) {
         for (int i = 0; i < 64; i++) {
@@ -109,9 +109,9 @@ void Kernel::system_init() {
                 INT_TO_STRING(pci_s, pci);
                 INT_TO_STRING(device_s, device);
                 
-                Graphics::Driver::drawstring("PCI DEVICE: ", 10, 350 + i * 30, 0xFF0000);
+                Graphics::GXDriver::drawstring("PCI DEVICE: ", 10, 350 + i * 30, 0xFF0000);
 
-                Graphics::Driver::drawstring(ClassCodeName[Class], 270, 350 + i * 30, 0x00FF00);
+                Graphics::GXDriver::drawstring(ClassCodeName[Class], 270, 350 + i * 30, 0x00FF00);
 
 
                 kout << "\tVender: " << pci << "\t Device: " << device << "\t Class: " << ClassCodeName[Class] << "\t Subclass: " << SubClass << endl;
@@ -127,7 +127,7 @@ void Kernel::system_init() {
 
 
 
-    Graphics::Driver::drawstring("Starting Display Server!", 10, 550, 0xFF0000);
+    Graphics::GXDriver::drawstring("Starting Display Server!", 10, 550, 0xFF0000);
     //while(1) {};
     kout << "Initializing Display Server..." << endl;
     Graphics::lux DisplayServer;
@@ -174,8 +174,8 @@ void Kernel::system_init() {
 
     INT_TO_STRING(MemoryLeft, pmm::RequestInitial() / (1024 * 1024));
     INT_TO_STRING(BufferAddress, (u32)DisplayServer.get_framebuffer());
-    INT_TO_STRING(ScreenWidth, Graphics::Driver::getinfo().width);
-    INT_TO_STRING(ScreenHeight, Graphics::Driver::getinfo().height);
+    INT_TO_STRING(ScreenWidth, Graphics::GXDriver::getinfo().width);
+    INT_TO_STRING(ScreenHeight, Graphics::GXDriver::getinfo().height);
 
     InfomationWindow.drawstring("Installed Memory   : ", 10, 100, 0xFFFFFF);
     InfomationWindow.drawstring(MemoryLeft, 260, 100, 0xFFFFFF);
@@ -193,9 +193,9 @@ void Kernel::system_init() {
     DisplayServer.draw_windows();
     DisplayServer.flip_buffer();
 
-    Graphics::Driver::fillrect(0x246b70, 0, 0, Graphics::Driver::getinfo().width, 30);
-    Graphics::Driver::fillcircle(0x297a5c, 10, 10, 50);    
-    Graphics::Driver::drawstring("FluxedOS!", 10, 10, 0xFFFFFF);
+    Graphics::GXDriver::fillrect(0x246b70, 0, 0, Graphics::GXDriver::getinfo().width, 30);
+    Graphics::GXDriver::fillcircle(0x297a5c, 10, 10, 50);
+    Graphics::GXDriver::drawstring("FluxedOS!", 10, 10, 0xFFFFFF);
         
 
     

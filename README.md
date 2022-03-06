@@ -15,7 +15,7 @@ A hobbyist OS project!
 - [x] IRQ Handler
 - [x] PIT
 - [x] PIC
-- [ ] ATA (ide) Driver
+- [ ] ATA (ide) GXDriver
 - [ ] File system
 - [ ] Read and Write
 - [ ] Install to Drive

@@ -151,7 +151,7 @@ namespace System
 
             private:
             K_Vector<lwin*> windows;
-            Driver::GraphicsInfo hardwareInfo;
+            GXDriver::GraphicsInfo hardwareInfo;
             u8* doubleframebuffer;
         };
 
