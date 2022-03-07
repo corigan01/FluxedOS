@@ -208,7 +208,7 @@ void Memory::kfree(void* ptr) {
             MemoryMap[i].Used = 0;
             kout << "Freed memory at " << (u32)ptr << endl;
             ConJoin(i);
-            ConJoin(i);
+            //ConJoin(i); // This causes a fault for some reason
             
             PrintMemoryMap();
 

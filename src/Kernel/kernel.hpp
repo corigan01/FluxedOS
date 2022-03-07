@@ -148,7 +148,7 @@ public:
 
         GXDriver::gxinit((void *) (mbt->framebuffer_addr), 1024, 768);
 
-        Disk::init_driver();
+
 
         kout << endl << endl;
 

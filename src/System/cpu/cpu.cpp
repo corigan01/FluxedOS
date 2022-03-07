@@ -70,7 +70,7 @@ IRQ	        Description
 3       	COM2 (if enabled)                                        +
 4       	COM1 (if enabled)                                        +
 5       	LPT2 (if enabled)                                        +
-6       	Floppy Disk                                              +
+6       	Floppy vDisk                                              +
 7       	LPT1 / Unreliable "spurious" interrupt (usually)         +
 8       	CMOS real-time clock (if enabled)                        +
 9       	Free for peripherals / legacy SCSI / NIC                 +
@@ -78,8 +78,8 @@ IRQ	        Description
 11      	Free for peripherals / SCSI / NIC                        +
 12      	PS2 Mouse                                                +
 13      	FPU / Coprocessor / Inter-processor                      +
-14      	Primary ATA Hard Disk                                    +
-15      	Secondary ATA Hard Disk                                  +
+14      	Primary ATA Hard vDisk                                    +
+15      	Secondary ATA Hard vDisk                                  +
 ----------------------------------------------------------------------
 
 

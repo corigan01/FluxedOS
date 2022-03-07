@@ -25,6 +25,7 @@
 #include <System/memory/kmemory.hpp>
 #include <lib/string/string.hpp>
 #include <System/Graphics/DisplayServer/ds.hpp>
+#include <System/Disk/vDisk.hpp>
 #include "BUILD.h"
 
 
@@ -123,7 +124,20 @@ void Kernel::system_init() {
 
     //for(;;) {};
 
-    
+
+
+    Disk::init_all_disks();
+
+    Disk::disk_t master = Disk::get_disk(0);
+
+
+    Disk::read_sector(master, 0);
+
+    for (int i = 0; i < 512; i ++) {
+        kout << master.read_write_buffer[i] << " ";
+    }
+
+    kout << endl;
 
 
 

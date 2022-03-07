@@ -23,6 +23,7 @@
 
 #include <lib/core/core.h>
 #include <System/kout/kout.hpp>
+#include <System/Disk/vDisk.hpp>
 
 #define ATA_SR_BSY     0x80
 #define ATA_SR_DRDY    0x40
@@ -103,26 +104,30 @@
 #define      ATA_READ      0x00
 #define      ATA_WRITE     0x013
 
-typedef struct {
-	uint8_t drive;
-} ide_private_data;
 
 namespace System{
     namespace Disk {
 
-        void ata_secondary_irq(register_t *r);
-        void ata_primary_irq(register_t *r);
+        namespace PIO {
+            void init_driver();
 
-        void init_driver();
+            void ata_secondary_irq(register_t *r);
+            void ata_primary_irq(register_t *r);
 
-        void ide_select_drive(u8 Bus, u8 Device);
+            void ide_select_drive(u8 Bus, u8 Device);
+            u8 ide_check_device(u8 bus, u8 drive);
+            void ide_400ns_delay(u16 io);
+            void ide_poll(u16 io);
+            u8 ata_read_one(u8 *buf, u32 lba, u8 drive);
+            void ide_setup_device(u8 bus, u8 drive);
+            void ide_init_all();
+            void ata_write_one(u8 *buf, u32 lba, u8 drive);
 
-        u8 ide_check_device(u8 bus, u8 drive);
 
-        void ide_400ns_delay(u16 io);
+            void Disk_write_sector(disk_t disk, u32 lda);
 
-        void ide_poll(u16 io);
+            void Disk_read_sector(disk_t disk, u32 lda);
+        }
 
-        u8 ata_read_one(u8 *buf, u32 lba, u8 drive);
     }
 }
