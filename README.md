@@ -62,6 +62,7 @@ mkdir build
 cd build
 
 cmake -GNinja .. # If you want to use make then use "cmake .." instead
+ninja mkimg # makes the disk.img file (500mb) 
 ninja run
 ```
 
