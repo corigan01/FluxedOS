@@ -216,6 +216,7 @@ const char* SerialLog::ToString(u32 value) {
     return rvalue;
 }
 
+
 /*template <class T> 
 SerialLog &SerialLog::operator<<(const T &v) {
     

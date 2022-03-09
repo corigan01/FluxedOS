@@ -259,6 +259,15 @@ void PIO::ide_setup_device(u8 bus, u8 drive) {
         str[i + 1] = ide_buf[ATA_IDENT_MODEL + i];
     }
 
+    for (int i = 40; i > 0; i --) {
+        if (str[i] == ' ' || str[i] == '\0') {
+            str[i] = '\0';
+        }
+        else {
+            break;
+        }
+    }
+
     Disk::disk_t disk_type;
 
     disk_type = {
@@ -272,8 +281,6 @@ void PIO::ide_setup_device(u8 bus, u8 drive) {
     memcpy(disk_type.disk_info, ide_buf, 512);
 
     Disk::add_disk(disk_type);
-
-    Memory::kfree(str);
 
 }
 

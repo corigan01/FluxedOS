@@ -30,8 +30,6 @@
 using namespace System;
 using namespace System::Memory;
 
-
-
 Page_Entry* Pool;
 size_t Pool_Size;
 
@@ -43,7 +41,7 @@ struct MemoryEntry
 };
 K_Vector<MemoryEntry> MemoryMap(0);
 
-void PrintMemoryMap(int addr = -1) {
+void Memory::PrintMemoryMap(int addr) {
     kout << endl;
     kout << "Kernel Memory Map: " << endl;
     kout << "\t|    BEGIN   |     END    |   SIZE  | USED |" << endl;
@@ -132,7 +130,7 @@ void Memory::ConJoin(u32 m1) {
 
     if (!MemoryMap[m1].Used && !MemoryMap[m1 + 1].Used) {
         if (MemoryMap[m1].End == MemoryMap[m1 + 1].Start || MemoryMap[m1].End == MemoryMap[m1 + 1].Start - 1) {
-            kout << "Joined Memory index " << m1 << " with " << m1 + 1 << " | (" << MemoryMap[m1].Start << ", " << MemoryMap[m1].End << ") --> (" << MemoryMap[m1].Start << ", " << MemoryMap[m1 + 1].End << ")" << endl;
+            //kout << "Joined Memory index " << m1 << " with " << m1 + 1 << " | (" << MemoryMap[m1].Start << ", " << MemoryMap[m1].End << ") --> (" << MemoryMap[m1].Start << ", " << MemoryMap[m1 + 1].End << ")" << endl;
             MemoryMap[m1].End = MemoryMap[m1 + 1].End;
             MemoryMap.pop_at(m1 + 1);
             return;
@@ -188,7 +186,7 @@ void* Memory::kmalloc(size_t size) {
                 MemoryMap[i] = CurrentMemoryEntry;
                 MemoryMap.insert_at(i, NewMemoryEntry);
 
-                PrintMemoryMap(i);
+                //PrintMemoryMap(i);
 
                 memset((void*)MemoryStart, NULL, size);
                 //kout << "Returning memory addr *" << (u32)MemoryStart << " with size of " << size << endl << endl;
@@ -206,11 +204,11 @@ void Memory::kfree(void* ptr) {
     for (u32 i = 0; i < MemoryMap.size(); i++) {
         if ((u32)ptr == MemoryMap[i].Start) {
             MemoryMap[i].Used = 0;
-            kout << "Freed memory at " << (u32)ptr << endl;
+            //kout << "Freed memory at " << (u32)ptr << endl;
             ConJoin(i);
             //ConJoin(i); // This causes a fault for some reason
             
-            PrintMemoryMap();
+            //PrintMemoryMap();
 
             return;
         }

@@ -46,5 +46,15 @@ namespace System
 
         u32 MemRemaining();
 
+        void PrintMemoryMap(int addr = -1);
     }
 }
+
+
+// inlines
+inline void* operator new(size_t, void* p)      { return p; }
+inline void* operator new[](size_t, void* p)    { return p; }
+inline void* operator new(size_t size)          { return ::System::Memory::kmalloc(size); }
+
+inline void operator delete(void* p)            { ::System::Memory::kfree(p); }
+inline void operator delete(void* p, size_t)    { ::System::Memory::kfree(p); }

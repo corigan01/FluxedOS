@@ -24,6 +24,7 @@
 
 template <class T> 
 K_Vector<T>::~K_Vector() {
+    kout << "K_VECTOR IS DECONSTRUCTED" << endl;
     free_pointer();
 }
 

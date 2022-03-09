@@ -147,10 +147,5 @@ void Kernel::init_kernel() {
 
         //String something = "idk";
         Graphics::GXDriver::drawstring("BOOT!", 10, 310, 0xFF0000);
-
-        
-
-        this->system_init();
-        
 }
  

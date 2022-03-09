@@ -19,7 +19,7 @@
  *   
  */
 
-#include "Display.hpp" 
+#include "Display.hpp"
 #include <System/Port/port.hpp>
 #include <lib/core/core.h>
 #include <System/memory/pmm/pmm.hpp>
@@ -51,69 +51,69 @@ uint16_t VGA::entry(char ch, u8 f, u8 b) {
 
 void VGA::cursor_enable(u8 cursor_start, u8 cursor_end) {
     Port::byte_out(0x3D4, 0x0A);
-	Port::byte_out(0x3D5, (Port::byte_in(0x3D5) & 0xC0) | cursor_start);
- 
-	Port::byte_out(0x3D4, 0x0B);
-	Port::byte_out(0x3D5, (Port::byte_in(0x3D5) & 0xE0) | cursor_end);  
+    Port::byte_out(0x3D5, (Port::byte_in(0x3D5) & 0xC0) | cursor_start);
+
+    Port::byte_out(0x3D4, 0x0B);
+    Port::byte_out(0x3D5, (Port::byte_in(0x3D5) & 0xE0) | cursor_end);
 }
 
 void VGA::cursor_update(u8 cs, u8 ce) {
     u16 pos = ce * 80 + cs;
 
     Port::byte_out(0x3D4, 0x0F);
-	Port::byte_out(0x3D5, (uint8_t) (pos & 0xFF));
-	Port::byte_out(0x3D4, 0x0E);
-	Port::byte_out(0x3D5, (uint8_t) ((pos >> 8) & 0xFF));
+    Port::byte_out(0x3D5, (uint8_t) (pos & 0xFF));
+    Port::byte_out(0x3D4, 0x0E);
+    Port::byte_out(0x3D5, (uint8_t) ((pos >> 8) & 0xFF));
 }
 
-void VGA::BufferSet(u16* buffer) {
+void VGA::BufferSet(u16 *buffer) {
     VBUF = buffer;
     memset(VBUF, NULL, sizeof(u16) * 80 * 25);
-    
+
     //for (int i = 0; i < 25; i++) print_char('\n');
 }
 
 void VGA::print_char(char c) {
-    if ((u32)internalBuffer <= 0) return;
-    
-    switch (c)
-    {
-    case '\n':
+    if ((u32) internalBuffer <= 0) return;
+
+    switch (c) {
+        case '\n':
             if (lineNumber < 25) BufferSize = 80 * lineNumber++;
             else {
                 for (int i = 0; i < (80 * 24); i++) internalBuffer[i] = internalBuffer[i + 80];
                 for (int i = 0; i < 80; i++) internalBuffer[80 * 24 + i] = 0;
                 BufferSize = 80 * 24;
             }
-        break;
+            break;
 
-    case '\r':
+        case '\r':
             lineNumber--;
             print_char('\n');
-        break;
+            break;
 
-    case '\t':
-            for (int i = 0; i < 5; i ++) {
+        case '\t':
+            for (int i = 0; i < 5; i++) {
                 print_char(' ');
             }
-        break;
+            break;
 
-    case '\e':
-        BufferSize--;
-        internalBuffer[BufferSize] = entry(' ', FColor, BColor);
-        break;
+        case '\e':
+            BufferSize--;
+            internalBuffer[BufferSize] = entry(' ', FColor, BColor);
+            break;
 
-    default:
-        if (BufferSize < (80 * 25)) internalBuffer[BufferSize++] = this->entry(c, FColor, BColor);
-        break;
+        default:
+            if (BufferSize < (80 * 25)) internalBuffer[BufferSize++] = this->entry(c, FColor, BColor);
+            break;
     }
 
     cursor_update(BufferSize % 80, lineNumber - 1);
 }
+
 void VGA::clear_screen() {
     auto reset = [this]() {
         uint16 MaxSize = 80 * 24; // TODO: CHANGE THIS!!
-        for(int i = 0; i < MaxSize; i++){
+        for (int i = 0; i < MaxSize; i++) {
             internalBuffer[i] = entry(NULL, FColor, BColor);
         }
         lineNumber = 0;
@@ -133,29 +133,29 @@ void VGA::clear_screen() {
 
 
 }
+
 void VGA::clear_line(u32 linenumber) {
-    for (int i = linenumber * 80; i < 80; i ++) {
+    for (int i = linenumber * 80; i < 80; i++) {
         internalBuffer[i] = entry(' ', NULL, NULL);
     }
 }
 
-void VGA::print_str(const char* str) {
-    for (int i = 0 ; i < strlen(str); i++) {
+void VGA::print_str(const char *str) {
+    for (int i = 0; i < strlen(str); i++) {
         if (0x20 <= str[i] <= 0x7e || str[i] == '\n') {
             this->print_char(str[i]);
-        }
-        else {
+        } else {
             this->print_char(0xfe);
         }
-        
+
     }
 }
 
-void VGA::printf(const char* str, ...) {
+void VGA::printf(const char *str, ...) {
     va_list va;
-    va_start(va, str);
+            va_start(va, str);
     VGA::fmat(str, [this](int ch) { print_char(ch); }, va);
-    va_end(va);
+            va_end(va);
 }
 
 u16 COLOR::ColorVar(u8 ForgroundColor, u8 BackroundColor) {

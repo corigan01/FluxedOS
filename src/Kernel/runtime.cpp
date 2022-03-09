@@ -27,6 +27,7 @@
 #include <System/Graphics/DisplayServer/ds.hpp>
 #include <System/Disk/vDisk.hpp>
 #include "BUILD.h"
+#include <System/fs/mbt.hpp>
 
 
 using namespace System;
@@ -34,22 +35,22 @@ using namespace System::IO;
 using namespace System::VirtualConsole;
 using namespace System::Memory;
 
-uint16_t pciConfigReadWord (uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset) {
+uint16_t pciConfigReadWord(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset) {
     uint32_t address;
-    uint32_t lbus  = (uint32_t)bus;
-    uint32_t lslot = (uint32_t)slot;
-    uint32_t lfunc = (uint32_t)func;
+    uint32_t lbus = (uint32_t) bus;
+    uint32_t lslot = (uint32_t) slot;
+    uint32_t lfunc = (uint32_t) func;
     uint16_t tmp = 0;
- 
+
     /* create configuration address as per Figure 1 */
-    address = (uint32_t)((lbus << 16) | (lslot << 11) |
-              (lfunc << 8) | (offset & 0xfc) | ((uint32_t)0x80000000));
- 
+    address = (uint32_t) ((lbus << 16) | (lslot << 11) |
+                          (lfunc << 8) | (offset & 0xfc) | ((uint32_t) 0x80000000));
+
     /* write out the address */
     Port::long_out(0xCF8, address);
     /* read in the data */
     /* (offset & 2) * 8) = 0 will choose the first word of the 32 bits register */
-    tmp = (uint16_t)((Port::long_in(0xCFC) >> ((offset & 2) * 8)) & 0xffff);
+    tmp = (uint16_t) ((Port::long_in(0xCFC) >> ((offset & 2) * 8)) & 0xffff);
     return (tmp);
 }
 
@@ -57,37 +58,36 @@ uint16_t pciCheckVendor(uint8_t bus, uint8_t slot) {
     uint16_t vendor, device;
     /* try and read the first configuration register. Since there are no */
     /* vendors that == 0xFFFF, it must be a non-existent device. */
-    if ((vendor = pciConfigReadWord(bus,slot,0,0)) != 0xFFFF) {
-       device = pciConfigReadWord(bus,slot,0,2);
-       return vendor;
-    } 
-    else {
+    if ((vendor = pciConfigReadWord(bus, slot, 0, 0)) != 0xFFFF) {
+        device = pciConfigReadWord(bus, slot, 0, 2);
+        return vendor;
+    } else {
         return NULL;
     }
 }
 
-const char * ClassCodeName[] = {
-    "Unclassified Device",
-    "Mass Storage Controller",
-    "Network Controller ",
-    "Display Controller ",
-    "Multimedia Controller",
-    "Memory Controller",
-    "Bridge Device",
-    "Simple Communication Controller",
-    "Base System Peripheral",
-    "Input Device Controller",
-    "Docking Station",
-    "Processor",
-    "Serial Bus Controller",
-    "Wireless Controller",
-    "Intelligent Controller",
-    "Satellite Communication Controller",
-    "Encryption Controller",
-    "Signal Processing Controller",
-    "Processing Accelerator",
-    "Non-Essential Instrumentation",
-    "0x3F (Reserved)"
+const char *ClassCodeName[] = {
+        "Unclassified Device",
+        "Mass Storage Controller",
+        "Network Controller ",
+        "Display Controller ",
+        "Multimedia Controller",
+        "Memory Controller",
+        "Bridge Device",
+        "Simple Communication Controller",
+        "Base System Peripheral",
+        "Input Device Controller",
+        "Docking Station",
+        "Processor",
+        "Serial Bus Controller",
+        "Wireless Controller",
+        "Intelligent Controller",
+        "Satellite Communication Controller",
+        "Encryption Controller",
+        "Signal Processing Controller",
+        "Processing Accelerator",
+        "Non-Essential Instrumentation",
+        "0x3F (Reserved)"
 };
 
 void Kernel::system_init() {
@@ -130,15 +130,9 @@ void Kernel::system_init() {
 
     Disk::disk_t master = Disk::get_disk(0);
 
-
-    Disk::read_sector(master, 0);
-
-    for (int i = 0; i < 512; i ++) {
-        kout << master.read_write_buffer[i] << " ";
-    }
+    fs::read_mbt_disk(master);
 
     kout << endl;
-
 
 
     Graphics::GXDriver::drawstring("Starting Display Server!", 10, 550, 0xFF0000);
@@ -147,7 +141,6 @@ void Kernel::system_init() {
     Graphics::lux DisplayServer;
     DisplayServer.init();
 
-    
 
     lwin BackroundWindow2;
     BackroundWindow2.init();
@@ -159,14 +152,15 @@ void Kernel::system_init() {
 
     DisplayServer.attach_window(&BackroundWindow2);
     BackroundWindow2.construct_pointer();
-    BackroundWindow2.fillrect(0xFF63F7 - 0x222222, 0, 0, BackroundWindow2.get_window_width(), BackroundWindow2.get_window_height());
+    BackroundWindow2.fillrect(0xFF63F7 - 0x222222, 0, 0, BackroundWindow2.get_window_width(),
+                              BackroundWindow2.get_window_height());
     //BackroundWindow2.drawstring("Title", 10, 100, 0xFF0000);
 
     // 255 99 247
     //0xFF 63 F7
     // 
 
-    
+
 
     lwin InfomationWindow;
     InfomationWindow.init();
@@ -176,7 +170,8 @@ void Kernel::system_init() {
 
     DisplayServer.attach_window(&InfomationWindow);
     InfomationWindow.construct_pointer();
-    InfomationWindow.fillrect(0x297A5C, 0, 0, InfomationWindow.get_window_width(), InfomationWindow.get_window_height());
+    InfomationWindow.fillrect(0x297A5C, 0, 0, InfomationWindow.get_window_width(),
+                              InfomationWindow.get_window_height());
     InfomationWindow.drawstring("FluxedOS", 10, 10, 0xFFFFFF);
 
     INT_TO_STRING(BUILDb, BUILD);
@@ -187,7 +182,7 @@ void Kernel::system_init() {
     InfomationWindow.drawstring("Copyright (C) 2022 FluxedOS", 10, 70, 0xFFFFFF);
 
     INT_TO_STRING(MemoryLeft, pmm::RequestInitial() / (1024 * 1024));
-    INT_TO_STRING(BufferAddress, (u32)DisplayServer.get_framebuffer());
+    INT_TO_STRING(BufferAddress, (u32) DisplayServer.get_framebuffer());
     INT_TO_STRING(ScreenWidth, Graphics::GXDriver::getinfo().width);
     INT_TO_STRING(ScreenHeight, Graphics::GXDriver::getinfo().height);
 
@@ -201,18 +196,15 @@ void Kernel::system_init() {
     InfomationWindow.drawstring(ScreenHeight, 260, 160, 0xFFFFFF);
     InfomationWindow.drawstring("CPU PIT RTC KBD VMM PAG FPU VBE", 10, 180, 0xFF0000);
 
-    
+
     //window.putpixel(10, 10, 0xFF00FF);
-    
+
     DisplayServer.draw_windows();
     DisplayServer.flip_buffer();
 
     Graphics::GXDriver::fillrect(0x246b70, 0, 0, Graphics::GXDriver::getinfo().width, 30);
     Graphics::GXDriver::fillcircle(0x297a5c, 10, 10, 50);
     Graphics::GXDriver::drawstring("FluxedOS!", 10, 10, 0xFFFFFF);
-        
-
-    
 
 
     lwin window;
@@ -232,8 +224,10 @@ void Kernel::system_init() {
 
     u32 TimeAfter = PIT::GetCurrentClock();
 
+    Memory::PrintMemoryMap();
+
     // this is a shitty while loop for lol
-    for (int Iter = 0;;Iter++) {
+    for (u32 Iter = 0; Iter < 10; Iter++) {
         u32 TimeBefore = PIT::GetCurrentClock();
 
         for (char i = 0; i < 60; i++) {
@@ -249,15 +243,15 @@ void Kernel::system_init() {
 
             // Draw the 'a'-'z' chars 10 times
             window.drawstring(kout.ToString(i), 10, 30, 0x00);
-                
+
 
             // Draw how many times we have done this entire process
-            window.drawstring(kout.ToString(Iter), 10, 50, 0x00);     
-            window.drawstring(kout.ToString(Iter * 60), 10, 70, 0x00); 
+            window.drawstring(kout.ToString(Iter), 10, 50, 0x00);
+            window.drawstring(kout.ToString(Iter * 60), 10, 70, 0x00);
             window.drawstring(kout.ToString(PIT::GetCurrentClock()), 10, 90, 0x00);
-            
+
             window.drawstring(kout.ToString(
-                TimeAfter
+                    TimeAfter
             ), 10, 110, 0x00);
 
 
@@ -269,10 +263,8 @@ void Kernel::system_init() {
         }
 
 
-
-
         TimeAfter = PIT::GetCurrentClock() - TimeBefore;
-        
+
     }
 
     /*
@@ -308,9 +300,9 @@ void Kernel::system_init() {
 
 
     kout << "Done!" << endl;
-    
 
-    
+
+
 
 
     /*console *dev_console;
@@ -338,8 +330,8 @@ void Kernel::system_init() {
         
     }*/
 
-    
+
 
     //for(;;) {};
-        
+
 }

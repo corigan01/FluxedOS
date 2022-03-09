@@ -84,7 +84,7 @@ set (CXX
     src/System/CompilerFixes/icxxabi.cpp
     src/System/memory/staticalloc/skmalloc.cpp
     src/System/Disk/ata.cpp
-        src/System/Disk/vDisk.cpp src/System/Disk/vDisk.hpp)
+        src/System/Disk/vDisk.cpp src/System/Disk/vDisk.hpp src/System/fs/mbt.cpp src/System/fs/mbt.hpp)
 
 set_source_files_properties(${ASM} PROPERTIES LANGUAGE ASM_NASM)
 set_source_files_properties(${GAS} PROPERTIES LANGUAGE ASM)
@@ -122,7 +122,7 @@ add_custom_target(iso
 add_dependencies(iso FluxedOS.bin)
 
 add_custom_target(run USES_TERMINAL
-    COMMAND  qemu-system-x86_64 -cdrom FluxedOS.iso -drive format=raw,file=disk.img -boot strict=on -cpu max -smp 1,sockets=1,cores=1,threads=1 -display gtk -m 800m -k en-us -serial stdio -nic none
+    COMMAND  qemu-system-x86_64 -boot order=dc -cdrom FluxedOS.iso -drive format=raw,file=disk.img -boot strict=on -cpu max -smp 1,sockets=1,cores=1,threads=1 -display gtk -m 800m -k en-us -serial stdio -nic none
     DEPENDS iso
 )
 

@@ -36,8 +36,6 @@ void StaticHeap::init(void* startloc, u32 offset) {
     MemoryAddr = (u32*)startloc;
     Offset = offset;
     Alloc = 0;
-
-    //memset(startloc, NULL, offset);
 }
 
 void* StaticHeap::skmalloc(size_t size) {
