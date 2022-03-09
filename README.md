@@ -15,9 +15,12 @@ A hobbyist OS project!
 - [x] IRQ Handler
 - [x] PIT
 - [x] PIC
-- [ ] ATA (ide) GXDriver
-- [ ] File system
-- [ ] Read and Write
+- [x] ATA (ide) Driver
+- [x] Partition Reader
+- [ ] EXT2 file system
+- [ ] Virtual File system (SOON.tm)
+- [ ] ELF Parser
+- [x] Read and Write
 - [ ] Install to Drive
 - [ ] Boot from Drive
 - [X] Heap / Memory management 
