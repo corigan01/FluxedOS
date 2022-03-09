@@ -33,7 +33,9 @@
 &> mkdir build
 &> cd build
 &> cmake -GNinja ..
-&> ninja run
+
+&> ninja mkimg # makes the disk.img file (500mb)
+&> ninja run # now you are ready to be a FluxedOS enjoyer :)
 ...
 ```
 
