@@ -28,7 +28,8 @@
 #include <System/Disk/vDisk.hpp>
 #include "BUILD.h"
 #include <System/fs/mbt.hpp>
-
+#include <System/fs/ext2.hpp>
+#include <System/fs/vfs.hpp>
 
 using namespace System;
 using namespace System::IO;
@@ -125,12 +126,34 @@ void Kernel::system_init() {
     //for(;;) {};
 
 
-
+    // Look for all disks
     Disk::init_all_disks();
 
+    // Get disk 0
     Disk::disk_t master = Disk::get_disk(0);
 
+    // Read the partitions of disk 'master'
     fs::read_mbt_disk(master);
+
+    // Get all the partitions
+    auto DiskList = fs::GetAllPartitions();
+
+    // init vfs
+    fs::init("/");
+
+    // Look through all the partitions and find the one that is EXT2
+    for (int i = 0; i < DiskList->size(); i ++) {
+        fs::fs_node_t file_system_node;
+        file_system_node.partition = DiskList->getat(i);
+
+        if (file_system_node.partition->PartitionType == fs::EXT2) {
+            file_system_node.mount_point = "/";
+
+            fs::add_node(file_system_node);
+            break;
+        }
+
+    }
 
     kout << endl;
 

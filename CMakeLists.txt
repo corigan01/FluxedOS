@@ -84,7 +84,7 @@ set (CXX
     src/System/CompilerFixes/icxxabi.cpp
     src/System/memory/staticalloc/skmalloc.cpp
     src/System/Disk/ata.cpp
-        src/System/Disk/vDisk.cpp src/System/Disk/vDisk.hpp src/System/fs/mbt.cpp src/System/fs/mbt.hpp)
+        src/System/Disk/vDisk.cpp src/System/Disk/vDisk.hpp src/System/fs/mbt.cpp src/System/fs/mbt.hpp src/System/fs/ext2.cpp src/System/fs/ext2.hpp src/System/fs/vfs.cpp src/System/fs/vfs.hpp)
 
 set_source_files_properties(${ASM} PROPERTIES LANGUAGE ASM_NASM)
 set_source_files_properties(${GAS} PROPERTIES LANGUAGE ASM)
@@ -114,7 +114,7 @@ target_compile_options(FluxedOS.bin PUBLIC $<$<COMPILE_LANG_AND_ID:C,Clang>:
     ${CMAKE_C_COMPILE_FEATURES}
 >)
 
-
+# making the ISO
 add_custom_target(iso
     COMMAND mkdir -p isodir/boot/grub && cp FluxedOS.bin isodir/boot/FluxedOS.bin && cp ../src/grub.cfg isodir/boot/grub/grub.cfg && grub-mkrescue -o FluxedOS.iso isodir && cp FluxedOS.iso ../ISO
     BYPRODUCTS FluxedOS.iso
@@ -127,7 +127,7 @@ add_custom_target(run USES_TERMINAL
 )
 
 add_custom_target(mkimg USES_TERMINAL
-        COMMAND bash ../tools/make_image.sh
+        COMMAND bash ../tools/mkimg.sh
         )
 
 add_custom_target(debug USES_TERMINAL

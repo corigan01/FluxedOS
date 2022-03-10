@@ -28,7 +28,7 @@ namespace System {
 
         namespace DiskTypes {
             enum Driver {
-              ATA_PIO = 0,
+              ATA_PIO = 1,
               ATA_DMA
             };
 

@@ -45,7 +45,8 @@ void System::fs::read_mbt_disk(System::Disk::disk_t disk) {
         }
 
         if (partition->size_in_sectors > 0) {
-            partition->disk = &disk;
+            partition->disk = new Disk::disk_t ;
+            memcpy(partition->disk, &disk, sizeof(Disk::disk_t));
 
             kout << endl;
             kout << "New Disk partition \'" << e << "\' on disk \"" << partition->disk->name << "\" : " << endl;
@@ -54,6 +55,7 @@ void System::fs::read_mbt_disk(System::Disk::disk_t disk) {
             kout << "  - Start Sector    \t:  " << partition->lba << endl;
             kout << "  - Size in Sectors \t:  " << partition->size_in_sectors << endl;
             kout << endl;
+
 
             partitions->push_back(partition);
         }
@@ -65,7 +67,7 @@ void System::fs::read_mbt_disk(System::Disk::disk_t disk) {
     kout << "Partitions Number: " << partitions->size() << endl;
 }
 
-K_Vector<fs::partition_t*>* System::fs::GetAllPartitions(Disk::disk_t disk) {
+K_Vector<fs::partition_t*>* System::fs::GetAllPartitions() {
     return partitions;
 }
 

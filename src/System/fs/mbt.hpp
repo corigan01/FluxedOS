@@ -28,6 +28,11 @@
 namespace System {
     namespace fs {
 
+        enum {
+            EXT2 = 131,
+            LINUX = 131
+        };
+
         typedef struct {
             u8 low;
             u8 mid;
@@ -47,6 +52,6 @@ namespace System {
 
         void read_mbt_disk(Disk::disk_t disk);
 
-        K_Vector<partition_t *> *GetAllPartitions(Disk::disk_t disk);
+        K_Vector<partition_t *> *GetAllPartitions();
     }
 }

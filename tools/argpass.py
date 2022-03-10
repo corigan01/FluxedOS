@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 #@bin ARG PASS
 #@desc Pass version number to OS
 
