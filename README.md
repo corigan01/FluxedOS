@@ -52,6 +52,7 @@ See [HERE](https://github.com/corigan01/FluxedOS/blob/main/src/build/README.md) 
 * nasm
 * gcc / g++
 * grub
+* xorriso
 
 ### Basic Build Instructions
 ```bash

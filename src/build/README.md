@@ -7,8 +7,6 @@
 # ---------------------------------------
 # git
 # g++
-# gcc-multilib
-# g++-multilib
 # qemu-system-x86
 # xorriso
 # nasm
