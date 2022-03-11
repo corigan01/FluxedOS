@@ -53,7 +53,13 @@ void pmm::init(multiboot_info_t *mbt) {
 	// First we need to calc how many entries we have, so then we can ask
 	// skmalloc nicely how much we need to store!
 	for (multiboot_memory_map_t* entry = MemoryDiscriptor.Addr; entry < MemoryDiscriptor.Addr + MemoryDiscriptor.Len;) {
+        if ((u32)entry < LOAD_MEMORY_ADDRESS) {
+            kout << "Entry Error: " << kout.ToHex((u32)entry) << endl;
+            continue;
+        }
+
 		entry = (multiboot_memory_map_t*) ((unsigned int) entry + entry->size + sizeof(entry->size));
+
 		if (entry->base_addr_low <= 0) continue;
 
 		MemoryEntries++;

@@ -281,14 +281,29 @@ void Kernel::system_init() {
             // Now redraw the window
             window.redraw_window();
 
+
             //DisplayServer.draw_windows();
             //DisplayServer.flip_buffer();
+
+            /*lwin Test_window;
+            Test_window.set_window_position(0, 0);
+            Test_window.set_window_size(100, 100);
+            Test_window.set_window_title("Test");
+            Test_window.construct_pointer();
+
+            Test_window.fillrect(0xFFFFFF, 0, 0, Test_window.get_window_width(), Test_window.get_window_height());
+
+            DisplayServer.attach_window(&Test_window);
+
+            Test_window.redraw_window();*/
         }
 
 
         TimeAfter = PIT::GetCurrentClock() - TimeBefore;
 
     }
+
+    Memory::PrintMemoryMap();
 
     /*
     kout << endl << endl << endl;

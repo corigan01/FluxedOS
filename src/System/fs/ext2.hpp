@@ -58,6 +58,68 @@ namespace System {
                 u16 GroupID;
             } superblock_t;
 
+            typedef struct {
+                u32 block_usage_bitmap;
+                u32 inode_usage_bitmap;
+                u32 starting_block_address;
+                u16 unallocated_blocks;
+                u16 unallocated_inodes;
+                u16 directories;
+            } block_group_t;
+
+            namespace inode_type {
+                enum type {
+                    FIFO = 0x1000,
+                    CHARACTER_DEVICE = 0x2000,
+                    DIRECTORY = 0x4000,
+                    BLOCK_DEVICE = 0x6000,
+                    REGULAR_FILE = 0x8000,
+                    SYMBOLIC_LINK = 0xA000,
+                    UNIX_SOCKET = 0xC000
+                };
+            }
+
+            namespace inode_perms {
+                enum perms {
+                    OTHER_X = 0x001,
+                    OTHER_W = 0x002,
+                    OTHER_R = 0x004,
+                    GROUP_X = 0x008,
+                    GROUP_W = 0x010,
+                    GROUP_R = 0x020,
+                    USER_X  = 0x040,
+                    USER_W  = 0x080,
+                    USER_R  = 0x100,
+                    STICKY  = 0x200,
+                    GROUPID = 0x400,
+                    USERID  = 0x800
+                };
+            }
+
+            typedef struct {
+                u16 type_and_perms;
+                u16 userID;
+                u32 low_size;
+                u32 last_access;
+                u32 creation_time;
+                u32 last_modification_time;
+                u32 deletion_time;
+                u16 group_id;
+                u16 hard_links;
+                u32 disk_sectors;
+                u32 flags;
+                u32 ossv1;
+                u32 blocks[11];
+                u32 singly_block_pointer;
+                u32 doubly_block_pointer;
+                u32 triply_block_pointer;
+                u32 generation_number;
+                u32 reserved1;
+                u32 reserved2;
+                u32 fragment_block_address;
+                u32 ossv2;
+            } inode_t;
+
             void test_node(fs::fs_node_t node);
 
         }

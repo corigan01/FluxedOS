@@ -22,41 +22,87 @@
 #include "ext2.hpp"
 
 using namespace System;
+using namespace System::fs;
+using namespace System::fs::ext2;
 
-void System::fs::ext2::test_node(System::fs::fs_node_t node) {
-    kout << "Testing node..." << endl;
+u32 SuperblockSize = 1024;
+u32 SectorSize = 512;
+u32 SectorsInBlock = 2;
+u32 BlockSize = 1024;
 
-    superblock_t *sb = new superblock_t;
+superblock_t* read_superblock(fs::fs_node_t node) {
+    superblock_t *sb = (superblock_t*)Memory::kmalloc(1024);
 
     u32 BeginingOfPartition = node.partition->lba;
     u32 BeginingOfSuperblock = BeginingOfPartition + 2;
 
-    u8* SuperblockBuffer = (u8*)Memory::kmalloc(1024);
-
-    u32 SuperblockSize = 1024;
-    u32 SectorSize = 512;
 
     for (u32 i = BeginingOfSuperblock; i < (BeginingOfSuperblock + (SuperblockSize / SectorSize)); i ++) {
         Disk::read_sector(*node.partition->disk, i);
 
         for (int e = 0; e < 512; e ++) {
-            SuperblockBuffer[e + ((i - BeginingOfSuperblock) * 512)] = node.partition->disk->read_write_buffer[e];
+            ((u8*)sb)[e + ((i - BeginingOfSuperblock) * 512)] = node.partition->disk->read_write_buffer[e];
         }
     }
 
 
-    for (int i = 0; i < 84; i ++) {
-        ((u8*)sb)[i] = SuperblockBuffer[i];
+    kout << "Superblock info:" << endl;
+    kout << "\tInodes               : " << sb->total_inods << endl;
+    kout << "\tBlocks               : " << sb->total_bocks << endl;
+    kout << "\tReserved             : " << sb->reserved_blocks << endl;
+    kout << "\tunallocBlocks        : " << sb->total_unalloc_blocks << endl;
+    kout << "\tunallocInodes        : " << sb->total_unalloc_inoodes << endl;
+    kout << "\tSuperblock           : " << sb->block_of_super_block << endl;
+    kout << "\tShift Block          : " << sb->block_size_shift << endl;
+    kout << "\tBlocks per Group     : " << sb->blocks_per_group << endl;
+    kout << "\tShift Inode          : " << sb->total_unalloc_inoodes << endl;
+    kout << "\tFile System ID       : 0x" << kout.ToHex(sb->ext2sig) << (sb->ext2sig == 0xEF53 ? "  <-- Valid Sig" : "  <-- NOT VALID") << endl;
+    kout << endl;
+
+    return sb;
+}
+
+block_group_t* read_blockgroup(fs::fs_node_t node, superblock_t* superblock, u32 id) {
+    block_group_t* BlockGroup = (block_group_t *)Memory::kmalloc(1024);
+
+    u32 BeginingOfSuperblock = node.partition->lba + (SectorsInBlock * superblock->block_of_super_block);
+    u32 BlockGroupOffset = id * 32;
+    u32 BlockGroupStart = BeginingOfSuperblock + (SuperblockSize / SectorSize) + (BlockGroupOffset / BlockSize);
+
+    for (u32 i = BlockGroupStart; i < (BlockGroupStart + 1); i ++) {
+        Disk::read_sector(*node.partition->disk, i);
+
+        kout << "reading: " << i << endl;
+
+        for (int e = 0; e < 512; e ++) {
+            ((u8*)BlockGroup)[e + ((i - BlockGroupStart) * 512)] =
+                    node.partition->disk->read_write_buffer[e + BlockGroupOffset];
+        }
     }
 
-    kout << "Superblock info:" << endl;
-    kout << "\tInodes\t\t: " << sb->total_inods << endl;
-    kout << "\tBlocks\t\t: " << sb->total_bocks << endl;
-    kout << "\tReserved\t: " << sb->reserved_blocks << endl;
-    kout << "\tunallocBlocks\t: " << sb->total_unalloc_blocks << endl;
-    kout << "\tunallocInodes\t: " << sb->total_unalloc_inoodes << endl;
-    kout << "\tSuperblock\t: " << sb->block_of_super_block << endl;
-    kout << "\tShift Block\t: " << sb->block_size_shift << endl;
-    kout << "\tShift Inode\t: " << sb->total_unalloc_inoodes << endl;
-    kout << "\tFS ID\t\t: 0x" << kout.ToHex(sb->ext2sig) << (sb->ext2sig == 0xEF53 ? "  <-- Valid Sig" : "  <-- NOT VALID") << endl;
+    kout << "Block Group Info (" << id << ") :" << endl;
+    kout << "\tblock_usage_bitmap       : " << BlockGroup->block_usage_bitmap << endl;
+    kout << "\tinode_usage_bitmap       : " << BlockGroup->inode_usage_bitmap << endl;
+    kout << "\tstarting_block_address   : " << BlockGroup->starting_block_address << endl;
+    kout << "\tunallocated_blocks       : " << BlockGroup->unallocated_blocks << endl;
+    kout << "\tunallocated_inodes       : " << BlockGroup->unallocated_inodes << endl;
+    kout << "\tdirectories              : " << BlockGroup->directories << endl;
+    kout << endl;
+
+    return BlockGroup;
+}
+
+void System::fs::ext2::test_node(System::fs::fs_node_t node) {
+    kout << "Testing node..." << endl;
+
+    superblock_t *Superblock = read_superblock(node);
+
+    u32 TotalNumberOfBlockGroups = Superblock->total_inods / Superblock->inodes_per_group;
+    kout << "Total Number of Blocks Per Group: " << TotalNumberOfBlockGroups << endl;
+
+    block_group_t* FirstBlockGroup = read_blockgroup(node, Superblock, 0);
+
+
+
+
 }

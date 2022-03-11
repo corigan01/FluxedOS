@@ -65,6 +65,12 @@ class String : public K_Vector<char> {
     // may work on a find command because it can be helpful when programming complext things with string later down the line
     u32 find(String str);
 
+private:
+
+    void ResetAlloc();
+
+    // There should only be one alloc
+    char* TempReturnBuffer;
     
     
 };
