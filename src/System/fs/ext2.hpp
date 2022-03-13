@@ -56,6 +56,9 @@ namespace System {
                 u32 major_version;
                 u16 usrID;
                 u16 GroupID;
+                u32 FirstReservedInode;
+                u16 inodeSize;
+                u16 blockOfSuperblock;
             } superblock_t;
 
             typedef struct {
@@ -117,7 +120,7 @@ namespace System {
                 u32 reserved1;
                 u32 reserved2;
                 u32 fragment_block_address;
-                u32 ossv2;
+                u32 ossv2[4];
             } inode_t;
 
             void test_node(fs::fs_node_t node);
