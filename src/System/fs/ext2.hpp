@@ -68,6 +68,7 @@ namespace System {
                 u16 unallocated_blocks;
                 u16 unallocated_inodes;
                 u16 directories;
+                u32 reserved[3];
             } block_group_t;
 
             namespace inode_type {
@@ -99,6 +100,8 @@ namespace System {
                 };
             }
 
+            typedef u8* block_t;
+
             typedef struct {
                 u16 type_and_perms;
                 u16 userID;
@@ -122,6 +125,14 @@ namespace System {
                 u32 fragment_block_address;
                 u32 ossv2[4];
             } inode_t;
+
+            typedef struct {
+                u32 inode;
+                u16 totalsize;
+                u8  nameleng;
+                u8  typeind;
+                char* name;
+            } directory_t;
 
             void test_node(fs::fs_node_t node);
 

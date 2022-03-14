@@ -38,3 +38,5 @@ sudo mount -text2 /dev/loop0 fs/
 sudo chmod 777 -R disk.img fs/
 
 echo "Hello World" > fs/"THIS IS A NEW FILE.txt"
+mkdir fs/Hello
+echo "test" > fs/Hello/"Wow.txt"
