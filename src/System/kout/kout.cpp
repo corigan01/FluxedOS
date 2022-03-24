@@ -67,6 +67,16 @@ const char* SerialLog::ToHex(u32 v) {
     return buf;
 }
 
+const char* SerialLog::ToSmallHex(u8 v) {
+    static char buf[9];
+    buf[8] = 0;
+    for (int i = 1; i >= 0; i--) {
+        buf[i] = "0123456789ABCDEF"[v & 0xF];
+        v >>= 4;
+    }
+    return buf;
+}
+
 SerialLog &SerialLog::operator<<(const TraceInfo v) {
     kout << "[" << v.Func << ":" << v.line << "]: ";
 
@@ -215,6 +225,8 @@ const char* SerialLog::ToString(u32 value) {
     itoa(value, rvalue);
     return rvalue;
 }
+
+
 
 
 /*template <class T> 

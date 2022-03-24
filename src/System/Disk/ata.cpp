@@ -103,7 +103,7 @@ u8 PIO::ide_check_device(u8 bus, u8 drive) {
     do {
         status = Port::byte_in(io + ATA_REG_STATUS);
         if (status & ATA_SR_ERR) {
-            kout.printf("%s%s has ERR set. Disabled.\n", ((bus == ATA_PRIMARY) ? "Primary" : "Secondary"),
+            kout.printf("%s%s has ERROR BIT SET.\n", ((bus == ATA_PRIMARY) ? "Primary" : "Secondary"),
                         ((drive == ATA_PRIMARY) ? " master" : " slave"));
             return 0;
         }

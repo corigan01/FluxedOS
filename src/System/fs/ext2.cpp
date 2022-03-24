@@ -36,12 +36,37 @@ void memtrfs(void* des, void* src, u32 offset, u32 amount) {
     }
 }
 
+void print_block(block_t block) {
+    kout << "Block: " << endl;
+    for (int i = 0; i < 64; i++) {
+        for (int e = 0; e < 16; e++) {
+            kout << " " << kout.ToSmallHex(block[(i * 64) + e]);
+        }
+
+        kout << "\t|\t>";
+
+        for (int e = 0; e < 16; e++) {
+            char ch = (char)block[(i * 64) + e];
+
+            if (!ch) ch = ' ';
+            else if (ch == '\n') ch = '~';
+            //else if (ch > 'z') ch = ' ';
+            else if (ch < '!') ch = ' ';
+
+            kout << " " << ch;
+        }
+
+        kout << endl;
+    }
+    kout << endl;
+}
+
 block_t read_block(fs::fs_node_t node, u32 offset) {
     u32 sectorOffset = node.partition->lba + (offset * (BlockSize / SectorSize));
 
-    block_t Block = (u8*) Memory::kmalloc(BlockSize);
+    auto Block = (u8*) Memory::kmalloc(BlockSize);
 
-    for (int i = sectorOffset; i < (sectorOffset + (BlockSize / SectorSize)); i++) {
+    for (u32 i = sectorOffset; i < (sectorOffset + (BlockSize / SectorSize)); i++) {
         Disk::read_sector(*node.partition->disk, i);
 
         for (int e = 0; e < SectorSize; e++) {
@@ -49,16 +74,12 @@ block_t read_block(fs::fs_node_t node, u32 offset) {
         }
     }
 
-    for (int i = 0; i < 1024; i ++) {
-        kout << " " << Block[i];
-    }
-
     return Block;
 }
 
 superblock_t* read_superblock(fs::fs_node_t node) {
 
-    superblock_t *sb = (superblock_t*) read_block(node, 1);
+    auto *sb = (superblock_t*) read_block(node, 1);
 
     kout << "Superblock info:" << endl;
     kout << "\tInodes               : " << sb->total_inods << endl;
@@ -80,7 +101,7 @@ superblock_t* read_superblock(fs::fs_node_t node) {
 
 
 block_group_t* read_blockgroup(fs::fs_node_t node, superblock_t* superblock, u32 id) {
-    block_group_t* BlockGroup = (block_group_t *)Memory::kmalloc(sizeof(block_group_t));
+    auto* BlockGroup = (block_group_t *)Memory::kmalloc(sizeof(block_group_t));
     block_t block = read_block(node, superblock->block_of_super_block + 1);
 
     memtrfs(BlockGroup, block, sizeof(block_group_t) * id, sizeof(block_group_t));
@@ -101,7 +122,7 @@ block_group_t* read_blockgroup(fs::fs_node_t node, superblock_t* superblock, u32
 
 inode_t* read_inode(fs::fs_node_t node, superblock_t* superblock, u32 id) {
 
-    inode_t * inode = (inode_t*)Memory::kmalloc(superblock->inodeSize);
+    auto * inode = (inode_t*)Memory::kmalloc(superblock->inodeSize);
 
     // First we need to figure out which block group contains our inode
     u32 ContainingBlockGroup = (id - 1) / superblock->inodes_per_group;
@@ -137,7 +158,10 @@ inode_t* read_inode(fs::fs_node_t node, superblock_t* superblock, u32 id) {
 
    memtrfs(inode, block, (InodeIndex % (BlockSize / superblock->inodeSize)) * superblock->inodeSize, superblock->inodeSize);
 
-    const char* Type[] = {
+    Memory::kfree(block);
+    Memory::kfree(InodesBlockgroup);
+
+    constexpr char* Type[] = {
             "FIFO",
             "Character Device",
             "Directory",
@@ -204,7 +228,11 @@ inode_t* read_inode(fs::fs_node_t node, superblock_t* superblock, u32 id) {
 directory_t *read_dir(fs::fs_node_t node, superblock_t* superblock, inode_t* inode) {
     block_t dirblock = read_block(node, inode->blocks[0]);
 
-    if (inode->low_size <= 0 || (inode->type_and_perms & 0xF000) != inode_type::DIRECTORY) return {};
+    if (inode->low_size <= 0 || (inode->type_and_perms & 0xF000) != inode_type::DIRECTORY) {
+        kout << "Not a Directory!" << endl;
+        return {};
+
+    }
 
     kout << "Size: " << inode->low_size << endl;
 
@@ -242,114 +270,18 @@ void System::fs::ext2::test_node(System::fs::fs_node_t node) {
     u32 TotalNumberOfBlockGroups = Superblock->total_inods / Superblock->inodes_per_group;
     kout << "Total Number of Block Groups: " << TotalNumberOfBlockGroups << endl;
 
+    inode_t * inode = read_inode(node, Superblock, 13);
 
-    //read_blockgroup(node, Superblock, 0);
-    //read_block(node, 262);
-
-
-    //for (int i = 2; i < 20; i++) {
-    //    inode_t* inode = read_inode(node, Superblock, i);
-    //    read_dir(node, Superblock, inode);
-    //}
-
-    inode_t * inode = read_inode(node, Superblock, 12);
     block_t block = read_block(node, inode->blocks[0]);
+    print_block(block);
+    Memory::kfree(block);
 
+    directory_t* dir = read_dir(node, Superblock, inode);
 
-    /*kout << "Calculating Inode: " << endl;
+    Memory::kfree(Superblock);
+    Memory::kfree(inode);
+    Memory::kfree(dir);
 
-    Superblock->inodeSize;
-
-    u32 InodeID = 11;
-    u32 BlockGroup = (InodeID - 1) / Superblock->inodes_per_group;
-    u32 InodeIndex = (InodeID - 1) % Superblock->inodes_per_group;
-    u32 BlockOfInode = ((InodeIndex * Superblock->inodeSize) / BlockSize) ;
-
-    kout << "Finding Inode: " << endl;
-    kout << "\tInode ID       : " << InodeID << endl;
-    kout << "\tBlock Group    : " << BlockGroup << endl;
-    kout << "\tInode Index    : " << InodeIndex << endl;
-    kout << "\tBlock of Inode : " << BlockOfInode << endl;
-    kout << endl;
-
-    u32 BeginingOfPartition = node.partition->lba;
-
-    block_group_t* FirstBlockGroup = read_blockgroup(node, Superblock, BlockGroup);
-    kout << "Block Group --> (*" << FirstBlockGroup->inode_usage_bitmap << " + " <<  BlockOfInode << ")[" << InodeIndex << "]" << endl;
-
-    u32 SectorRead = (((FirstBlockGroup->inode_usage_bitmap + (BlockOfInode - 1)) * BlockSize) / SectorSize) + BeginingOfPartition;
-
-    Disk::read_sector(*node.partition->disk, SectorRead);
-
-    InodeIndex -= (BlockOfInode * 2) * (SectorSize / Superblock->inodeSize);
-
-    kout << "index: " << InodeIndex * Superblock->inodeSize << endl;
-
-    kout << "Reading Sector: " << SectorRead << "  Block: " << BlockOfInode + FirstBlockGroup->inode_usage_bitmap << endl;
-
-    inode_t *inode = (inode_t*)Memory::kmalloc(Superblock->inodeSize);
-
-    for (int i = 0; i < 512; i ++) {
-        kout << ((i > (InodeIndex * Superblock->inodeSize) && i < (InodeIndex * Superblock->inodeSize + Superblock->inodeSize)) ? kout.GREEN : kout.YELLOW) << "  " << node.partition->disk->read_write_buffer[i];
-
-        if ((i > (InodeIndex * Superblock->inodeSize) && i < (InodeIndex * Superblock->inodeSize + Superblock->inodeSize))) {
-            ((u8*)inode)[ i - (InodeIndex * Superblock->inodeSize)] =  node.partition->disk->read_write_buffer[i];
-        }
-    }
-
-    kout << kout.YELLOW << endl;
-
-    const char* Type[] = {
-            "FIFO",
-            "Character Device",
-            "Directory",
-            "Block Device",
-            "Regular File",
-            "Symbolic Link",
-            "Unix Socket",
-            "UNKNOWN"
-            };
-
-    u32 HighNode = inode->type_and_perms & 0xF000;
-    u32 typeIndex = 0;
-
-    switch (HighNode) {
-        case inode_type::FIFO:
-            typeIndex = 0;
-            break;
-        case inode_type::CHARACTER_DEVICE:
-            typeIndex = 1;
-            break;
-        case inode_type::DIRECTORY:
-            typeIndex = 2;
-            break;
-        case inode_type::BLOCK_DEVICE:
-            typeIndex = 3;
-            break;
-        case inode_type::REGULAR_FILE:
-            typeIndex = 4;
-            break;
-        case inode_type::SYMBOLIC_LINK:
-            typeIndex = 5;
-            break;
-        case inode_type::UNIX_SOCKET:
-            typeIndex = 6;
-            break;
-        default:
-            typeIndex = 7;
-            break;
-    }
-
-
-    kout << "Inode: " << endl;
-    kout << "  Type: " << Type[typeIndex] << endl;
-    kout << "  UserID: " << inode->userID << endl;
-    kout << "  low_size: " << inode->low_size << endl;
-    kout << "  disk sectors: " << inode->disk_sectors << endl;
-    kout << "  flags: " << inode->flags << endl;
-    kout << "  fragment: " << inode->fragment_block_address << endl;
-
-    */
 
 
 }

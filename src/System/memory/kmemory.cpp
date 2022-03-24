@@ -48,7 +48,7 @@ void Memory::PrintMemoryMap(int addr) {
     kout << "\t|------------|------------|---------|------|" << endl;
     for (int i = 0; i < MemoryMap.size(); i++) {
         u32 MemorySize = (MemoryMap[i].End - MemoryMap[i].Start);
-        const char* SubScript = (MemorySize > (1 _MB) ? " MB" : (MemorySize > (1 _KB) ? " KB" : "  B"));
+        const char* SubScript = (MemorySize >= (1 _MB) ? " MB" : (MemorySize >= (1 _KB) ? " KB" : "  B"));
         
         if (MemorySize >= (1 _MB)) MemorySize /= 1 _MB;
         if (MemorySize >= (1 _KB)) MemorySize /= 1 _KB;
@@ -75,7 +75,7 @@ void Memory::init_memory(multiboot_info_t *mbt, u32 page_start, u32 page_end) {
         MemoryEntry entry = {
             Addr,
             Addr + (4 _MB),
-            0
+            false
         };
 
         MemoryMap.push_back(entry);
@@ -176,12 +176,12 @@ void* Memory::kmalloc(size_t size) {
                 MemoryEntry NewMemoryEntry = {
                     MemoryStart,
                     MemoryStart + size,
-                    1
+                    true
                 };
                 MemoryEntry CurrentMemoryEntry = {
                     MemoryStart + size + 1,
                     MemoryMap[i].End,
-                    0
+                    false
                 };
                 MemoryMap[i] = CurrentMemoryEntry;
                 MemoryMap.insert_at(i, NewMemoryEntry);

@@ -66,6 +66,8 @@ namespace System
             void printf(const char* str, ...);
 
             static const char* ToHex(u32 v);
+            const char *ToSmallHex(u8 v);
+
             static const char* ToString(u32 value);
 
             
