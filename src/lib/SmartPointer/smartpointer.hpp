@@ -24,28 +24,29 @@
 #include <lib/core/core.h>
 #include <lib/StanderdOperations/Operations.h>
 #include <lib/assert/assert.hpp>
+#include <System/memory/kmemory.hpp>
+
+#define CAST_TO_SMART_POINTER(type, pointer) ((type*)((void*)pointer))
 
 template <class T>
-class SPointer {
-    public:
+class SmartPtr {
+    T* ptr;
+public:
+    SmartPtr(T* p) { ptr = p; }
+    SmartPtr() { ptr = (T*)System::Memory::kmalloc(sizeof(T)); }
+    ~SmartPtr() { System::Memory::kfree((void*)ptr); }
 
-    SPointer(void* Pointer) {
-        Pointer = (T*)Pointer;
+    T* rawptr() { return ptr; }
+
+    T& operator*() { return *ptr; }
+    T* operator->() { return ptr; }
+
+    void operator=(T* p) {
+        System::Memory::kfree((void*)ptr);
+        ptr = p;
     }
-    ~SPointer();
 
-    void AppendItem(T item);
-    void PopLast();
-    void SetItem(u32 index, T item);
-    void SetPointer(void* PointerLocation);
-    void MoveContents(void* NewLocation);
+    bool operator==(SmartPtr<T> p) { return p.ptr == ptr; }
+    bool operator==(T* p) { return p == ptr; }
 
-    private:
-
-    T* Pointer;
-    u32 Size = 0;
-
-    bool IsNull = true;
-    bool Locked = false;
-
-}; 
+};

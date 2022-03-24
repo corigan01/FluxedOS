@@ -226,6 +226,12 @@ const char* SerialLog::ToString(u32 value) {
     return rvalue;
 }
 
+SerialLog &SerialLog::operator<<(void *v) {
+    kout << kout.ToHex((u32)v);
+
+    return *this;
+}
+
 
 
 

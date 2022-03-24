@@ -20,33 +20,3 @@
  */
 
 #include "smartpointer.hpp"
-
-template<class T>
-void SPointer<T>::MoveContents(void* NewLocation) {
-    memcpy(NewLocation, (void*)Pointer, Size);
-
-    Pointer = (T*)NewLocation;
-}
-
-template<class T>
-void SPointer<T>::SetPointer(void* PointerLocation) {
-    Pointer = (T*)PointerLocation;
-    Size = 0;
-}
-
-template<class T>
-void SPointer<T>::AppendItem(T item) {
-    Pointer[Size++] = item;
-}
-
-template<class T>
-void SPointer<T>::PopLast() {
-    Pointer[Size--] = (T) NULL;
-}
-
-template<class T>
-void SPointer<T>::SetItem(u32 index, T item) {
-    ASSERT(index > Size);
-
-    Pointer[index] = item;
-}

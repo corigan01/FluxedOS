@@ -91,16 +91,16 @@ namespace System {
                     GROUP_X = 0x008,
                     GROUP_W = 0x010,
                     GROUP_R = 0x020,
-                    USER_X  = 0x040,
-                    USER_W  = 0x080,
-                    USER_R  = 0x100,
-                    STICKY  = 0x200,
+                    USER_X = 0x040,
+                    USER_W = 0x080,
+                    USER_R = 0x100,
+                    STICKY = 0x200,
                     GROUPID = 0x400,
-                    USERID  = 0x800
+                    USERID = 0x800
                 };
             }
 
-            typedef u8* block_t;
+            typedef u8 *block_t;
 
             typedef struct {
                 u16 type_and_perms;
@@ -129,9 +129,9 @@ namespace System {
             typedef struct {
                 u32 inode;
                 u16 totalsize;
-                u8  nameleng;
-                u8  typeind;
-                char* name;
+                u8 nameleng;
+                u8 typeind;
+                char *name;
             } directory_t;
 
             void test_node(fs::fs_node_t node);

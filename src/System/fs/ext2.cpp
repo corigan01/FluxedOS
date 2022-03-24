@@ -48,15 +48,17 @@ void print_block(block_t block) {
         for (int e = 0; e < 16; e++) {
             char ch = (char)block[(i * 64) + e];
 
-            if (!ch) ch = ' ';
+            if (!ch) ch = '.';
             else if (ch == '\n') ch = '~';
-            //else if (ch > 'z') ch = ' ';
-            else if (ch < '!') ch = ' ';
+            else if (ch < '!') ch = '.';
+            else kout << kout.GREEN;
 
             kout << " " << ch;
+
+            kout << kout.YELLOW;
         }
 
-        kout << endl;
+        kout << " <" << endl;
     }
     kout << endl;
 }
@@ -270,7 +272,7 @@ void System::fs::ext2::test_node(System::fs::fs_node_t node) {
     u32 TotalNumberOfBlockGroups = Superblock->total_inods / Superblock->inodes_per_group;
     kout << "Total Number of Block Groups: " << TotalNumberOfBlockGroups << endl;
 
-    inode_t * inode = read_inode(node, Superblock, 13);
+    inode_t * inode = read_inode(node, Superblock, 2);
 
     block_t block = read_block(node, inode->blocks[0]);
     print_block(block);

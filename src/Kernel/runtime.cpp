@@ -299,6 +299,8 @@ void Kernel::system_init() {
         }
 
 
+
+
         TimeAfter = PIT::GetCurrentClock() - TimeBefore;
 
     }

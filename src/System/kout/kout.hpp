@@ -29,6 +29,7 @@ namespace System
 {
     namespace Display 
     {
+
         // General output, this is so you can use any output mode and keep the basic output functions
 
         #define kout System::Display::SerialLog()
@@ -62,6 +63,7 @@ namespace System
             SerialLog &operator<<(const char         v);
             SerialLog &operator<<(bool               v);
             SerialLog &operator<<(const TraceInfo    v);
+            SerialLog &operator<<(void*              v);
 
             void printf(const char* str, ...);
 
