@@ -131,7 +131,7 @@ namespace System {
                 u16 totalsize;
                 u8 nameleng;
                 u8 typeind;
-                char *name;
+                char* name;
             } directory_t;
 
             void test_node(fs::fs_node_t node);

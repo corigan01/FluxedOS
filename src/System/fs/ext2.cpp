@@ -20,6 +20,7 @@
  */
 
 #include "ext2.hpp"
+#include <lib/vector/KernelVector.hpp>
 
 using namespace System;
 using namespace System::fs;
@@ -36,21 +37,48 @@ void memtrfs(void* des, void* src, u32 offset, u32 amount) {
     }
 }
 
-void print_block(block_t block) {
+void print_block(block_t block, u32 highlightbegin = 0, u32 highlightzone = 0) {
     kout << "Block: " << endl;
     for (int i = 0; i < 64; i++) {
+        kout << kout.ToHex(i * 16) << "  | ";
+
+
+
         for (int e = 0; e < 16; e++) {
-            kout << " " << kout.ToSmallHex(block[(i * 64) + e]);
+
+            u32 address = (i * 16) + e;
+
+            char ch = (char)block[address];
+
+            if (ch == 0) kout << kout.YELLOW;
+            else if (ch == ' ') kout << kout.GREEN;
+            else if (ch < '!') kout << kout.BLUE;
+            else kout << kout.GREEN;
+
+            if (address >= highlightbegin && address < highlightzone) {
+                kout << kout.BOLD_MAGENTA;
+            }
+
+            kout << " " << kout.ToSmallHex(block[(i * 16) + e]);
+
+            kout << kout.YELLOW;
         }
 
-        kout << "\t|\t>";
+        kout << "   |   >";
 
         for (int e = 0; e < 16; e++) {
-            char ch = (char)block[(i * 64) + e];
+            char ch = (char)block[(i * 16) + e];
 
             if (!ch) ch = '.';
-            else if (ch == '\n') ch = '~';
-            else if (ch < '!') ch = '.';
+            else if (ch == ' ') kout << kout.GREEN;
+            else if (ch == '\n') {
+                ch = '~';
+                kout << kout.BLUE;
+            }
+            else if (ch < '!') {
+                ch = '.';
+                kout << kout.BLUE;
+            }
             else kout << kout.GREEN;
 
             kout << " " << ch;
@@ -227,7 +255,7 @@ inode_t* read_inode(fs::fs_node_t node, superblock_t* superblock, u32 id) {
     return inode;
 }
 
-directory_t *read_dir(fs::fs_node_t node, superblock_t* superblock, inode_t* inode) {
+directory_t *read_dir(fs::fs_node_t node, superblock_t* superblock, inode_t* inode, u32 offset) {
     block_t dirblock = read_block(node, inode->blocks[0]);
 
     if (inode->low_size <= 0 || (inode->type_and_perms & 0xF000) != inode_type::DIRECTORY) {
@@ -239,11 +267,10 @@ directory_t *read_dir(fs::fs_node_t node, superblock_t* superblock, inode_t* ino
     kout << "Size: " << inode->low_size << endl;
 
     auto *dir = (directory_t*)Memory::kmalloc(inode->low_size);
-
-    memtrfs(dir, dirblock, 0, inode->low_size);
+    memtrfs(dir, dirblock, offset, inode->low_size);
 
     char* name = (char*) Memory::kmalloc(dir->nameleng + 1);
-    memtrfs(name, dir, 8, dir->nameleng);
+    memtrfs(name, dir, 8 + offset, dir->nameleng);
 
     name[dir->nameleng] = '\0';
     dir->name = name;
@@ -264,26 +291,57 @@ directory_t *read_dir(fs::fs_node_t node, superblock_t* superblock, inode_t* ino
     return dir;
 }
 
+void parse_root_dir(fs::fs_node_t node, superblock_t* superblock, inode_t* inode) {
+    block_t block = read_block(node, inode->blocks[0]);
+
+    K_Vector<directory_t*> dir_entries;
+
+    auto* dir = (directory_t*)Memory::kmalloc(inode->low_size);
+
+    for (int i = 0; i < inode->low_size;) {
+
+        // TODO: FIX ME
+        memtrfs(dir, block, i, inode->low_size - i);
+        //memtrfs(dir, dir, 0, dir->totalsize);
+
+        if (dir->totalsize == 0) break;
+        i += dir->totalsize;
+
+        char* name = (char*) Memory::kmalloc(dir->nameleng + 1);
+        memtrfs(name, dir, 8, dir->nameleng);
+
+        name[dir->nameleng] = '\0';
+        dir->name = name;
+
+        kout << "Dir: " << endl;
+        kout << "\tinode: " << dir->inode << endl;
+        kout << "\ttotal size: " << dir->totalsize << endl;
+        kout << "\tnamelng: " << dir->nameleng << endl;
+        kout << "\ttypeind: " << dir->typeind << endl;
+        kout << "\tname: " << dir->name << endl;
+    }
+}
+
 void System::fs::ext2::test_node(System::fs::fs_node_t node) {
     kout << "Testing node..." << endl;
 
     superblock_t *Superblock = read_superblock(node);
+
+    block_t block = read_block(node, 1);
+    print_block(block);
+    Memory::kfree(block);
 
     u32 TotalNumberOfBlockGroups = Superblock->total_inods / Superblock->inodes_per_group;
     kout << "Total Number of Block Groups: " << TotalNumberOfBlockGroups << endl;
 
     inode_t * inode = read_inode(node, Superblock, 2);
 
-    block_t block = read_block(node, inode->blocks[0]);
-    print_block(block);
-    Memory::kfree(block);
+    block = read_block(node, inode->blocks[0]);
 
-    directory_t* dir = read_dir(node, Superblock, inode);
+    parse_root_dir(node, Superblock, inode);
 
     Memory::kfree(Superblock);
     Memory::kfree(inode);
-    Memory::kfree(dir);
-
-
+    Memory::kfree(block);
 
 }
