@@ -84,7 +84,14 @@ set (CXX
     src/System/CompilerFixes/icxxabi.cpp
     src/System/memory/staticalloc/skmalloc.cpp
     src/System/Disk/ata.cpp
-        src/System/Disk/vDisk.cpp src/System/Disk/vDisk.hpp src/System/fs/mbt.cpp src/System/fs/mbt.hpp src/System/fs/ext2.cpp src/System/fs/ext2.hpp src/System/fs/vfs.cpp src/System/fs/vfs.hpp)
+        src/System/Disk/vDisk.cpp
+        src/System/Disk/vDisk.hpp
+        src/System/fs/mbt.cpp
+        src/System/fs/mbt.hpp
+        src/System/fs/ext2.cpp
+        src/System/fs/ext2.hpp
+        src/System/fs/vfs.cpp
+        src/System/fs/vfs.hpp )
 
 set_source_files_properties(${ASM} PROPERTIES LANGUAGE ASM_NASM)
 set_source_files_properties(${GAS} PROPERTIES LANGUAGE ASM)

@@ -28,7 +28,7 @@ using namespace System;
 
 K_Vector<fs::partition_t*>* partitions;
 
-void System::fs::read_mbt_disk(System::Disk::disk_t disk) {
+void System::fs::import_disk_partitions(System::Disk::disk_t disk) {
 
     if (partitions == nullptr) {
         partitions = new K_Vector<fs::partition_t*>();

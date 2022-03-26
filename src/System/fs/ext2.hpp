@@ -25,6 +25,7 @@
 #include <System/Disk/vDisk.hpp>
 #include "lib/vector/k_vector/k_vector.hpp"
 #include <System/fs/vfs.hpp>
+#include <lib/SmartPointer/smartpointer.hpp>
 
 namespace System {
     namespace fs {
@@ -100,7 +101,7 @@ namespace System {
                 };
             }
 
-            typedef u8 *block_t;
+            typedef u8* block_t;
 
             typedef struct {
                 u16 type_and_perms;
@@ -134,7 +135,9 @@ namespace System {
                 char* name;
             } directory_t;
 
-            void test_node(fs::fs_node_t node);
+            bool test_node(fs::fs_node_t node);
+
+            size_t num_of_dir_entries(directory_t parent);
 
         }
     }

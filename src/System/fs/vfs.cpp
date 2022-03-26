@@ -37,7 +37,11 @@ void System::fs::init(const char* root_mount_location) {
 void System::fs::add_node(System::fs::fs_node_t node) {
 
     kout << "Added fs node!" << endl;
-    ext2::test_node(node);
+
+    if (ext2::test_node(node)) {
+        node.fs_type = fs::fs_node_t::EXT2;
+    }
+
     NodeList.push_back(node);
 }
 
@@ -50,10 +54,57 @@ void System::fs::remove_node(const char *mount_point) {
     }
 }
 
-System::fs::file_t System::fs::ReadFile(const char *loc) {
-    return System::fs::file_t();
+void fs::CreateDir(fs::dir_t dir) {
+
 }
 
-void System::fs::WriteFile(System::fs::file_t file) {
+void fs::DeleteDir(fs::dir_t dir) {
+
+}
+
+K_Vector<fs::dir_t> fs::ListDirectories(fs::dir_t parent) {
+    auto node = fs::GetParentNode(parent);
+
+    if (node.fs_type == fs::fs_node_t::EXT2) {
+
+    }
+}
+
+fs::fs_node_t fs::GetParentNode(const char *path) {
+    auto closest_path = fs::GetRootNode();
+
+    for (size_t i = 0; i < NodeList.size(); i++) {
+        auto &node = NodeList[i];
+
+        if (strcmp(closest_path.mount_point, path) < strcmp(node.mount_point, path))
+            closest_path = node;
+    }
+
+    return closest_path;
+}
+
+K_Vector<fs::File> fs::ListAllFiles(fs::dir_t parent) {
+    return {};
+}
+
+void fs::CreateFile(fs::dir_t parent, const char *name) {
+
+}
+
+fs::fs_node_t fs::GetRootNode() {
+    for (size_t i = 0; i < NodeList.size(); i++) {
+        if (strcmp(NodeList[i].mount_point, "/") != 0)
+            return NodeList[i];
+    }
+
+    return {};
+}
+
+
+void fs::File::operator<<(const char *data) {
+
+}
+
+void fs::File::operator>>(void *data) {
 
 }

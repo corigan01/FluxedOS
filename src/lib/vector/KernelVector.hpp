@@ -21,7 +21,7 @@
 
 #pragma once
 
-// The compiler is dumb and it does not find the symbols that are defined in the cpp file -
+// The compiler is dumb, and it does not find the symbols that are defined in the cpp file -
 // so you must include both cpp and hpp files together. 
 // This file just makes it easier for someone to include both files together
 #include "k_vector/k_vector.hpp"

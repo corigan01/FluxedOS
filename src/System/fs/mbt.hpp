@@ -50,7 +50,7 @@ namespace System {
             Disk::disk_t* disk;
         } partition_t;
 
-        void read_mbt_disk(Disk::disk_t disk);
+        void import_disk_partitions(Disk::disk_t disk);
 
         K_Vector<partition_t *> *GetAllPartitions();
     }

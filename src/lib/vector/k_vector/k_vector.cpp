@@ -30,7 +30,7 @@ K_Vector<T>::~K_Vector() {
 
 template <class T>
 void K_Vector<T>::free_pointer() {
-    for (int bank = 0; bank < contentsize; bank++) {
+    for (int bank = 0; bank < content_size; bank++) {
         auto ContentBank = &content[bank];
         System::Memory::kfree((void*)ContentBank);
     }
@@ -43,22 +43,22 @@ K_Vector<T>::K_Vector(size_t loc) {
 
 template <class T>
 K_Vector<T>::K_Vector() {
-    ChangePointer(System::Memory::kmalloc((sizeof(T) * 1000) + (sizeof(DB) * 10)));
+    ChangePointer(System::Memory::kmalloc((sizeof(T) * 1000) + (sizeof(data_base_t) * 10)));
     
 }
         
 template <class T>
 void K_Vector<T>::ChangePointer(void* p) {
     u32* FirstMemoryPointer = (u32*)p;
-    content = (DB*)FirstMemoryPointer;
-    contentsize = 0;
+    content = (data_base_t*)FirstMemoryPointer;
+    content_size = 0;
     kout << "First Memory Pointer: " << kout.ToHex((u32)FirstMemoryPointer) << endl;
     
-    FirstMemoryPointer += (sizeof(DB) * 10);
+    FirstMemoryPointer += (sizeof(data_base_t) * 10);
 
-    D* temp_content = (D*)FirstMemoryPointer;
-    content[contentsize].h = temp_content;
-    content[contentsize++].MemoryBank = 0;
+    auto* temp_content = (data_t*)FirstMemoryPointer;
+    content[content_size].h = temp_content;
+    content[content_size++].MemoryBank = 0;
 
     VectorSize = 0;
     EndOfVector = 0;
@@ -83,12 +83,12 @@ int K_Vector<T>::size() {
 template <class T>
 void K_Vector<T>::pop_at(size_t s) {
     bool SuccessfulAlloc = false;
-    // we dont find the address already so we have to create a new one
-    for (int bank = 0; bank < contentsize; bank++) {
+    // we don't find the address already, so we have to create a new one
+    for (int bank = 0; bank < content_size; bank++) {
         auto ContentBank = &content[bank];
         
         for (int i = 0; i < ContentBank->alloc; i++) {
-            // then we look through the data and see if we can find an full space
+            // then we look through the data and see if we can find a full space
             auto data = &ContentBank->h[i];
             if (data->DoesPoint == true && data->PointsTo == s) {
                 if (!SuccessfulAlloc) {
@@ -116,8 +116,8 @@ void K_Vector<T>::pop_at(size_t s) {
 template <class T>
 void K_Vector<T>::insert_at(size_t s, T d) {
     bool SuccessfulAlloc = false;
-    // we dont find the address already so we have to create a new one
-    for (int bank = 0; bank < contentsize; bank++) {
+    // we don't find the address already, so we have to create a new one
+    for (int bank = 0; bank < content_size; bank++) {
         auto ContentBank = &content[bank];
 
         // then we check if that bank is full or not
@@ -147,10 +147,10 @@ void K_Vector<T>::insert_at(size_t s, T d) {
         }
     }
 
-    // alloc new bank here because we dont have any empty addresses
+    // alloc new bank here because we don't have any empty addresses
     if (!SuccessfulAlloc) {
         bool HasRoom = false;
-        for (int bank = 0; bank < contentsize; bank++) {
+        for (int bank = 0; bank < content_size; bank++) {
             auto ContentBank = &content[bank];
 
             if (ContentBank->alloc < 1000) {
@@ -161,29 +161,11 @@ void K_Vector<T>::insert_at(size_t s, T d) {
             }
         }
     }
-
-    /*for (int bank = 0; bank < contentsize; bank++) {
-        auto ContentBank = content[bank];
-
-        
-        for (int i = 0; i < ContentBank.alloc; i++) {
-
-            // then we look through the data and see if we can find an empty space
-            auto data = &ContentBank.h[i];
-            
-            kout << data->DoesPoint << " ------ " << data->PointsTo << endl;
-            
-        }
-        
-    }
-
-    kout << endl << endl;*/
-    
 }
 
 template <class T>
 T K_Vector<T>::getat(uint32 s) {
-    for (int bank = 0; bank < contentsize; bank++) {
+    for (int bank = 0; bank < content_size; bank++) {
         auto ContentBank = &content[bank];   
 
         for (int i = 0; i < ContentBank->alloc; i++) {
@@ -200,7 +182,7 @@ T K_Vector<T>::getat(uint32 s) {
 
 template <class T>
 T& K_Vector<T>::operator [](size_t s) {
-    for (int bank = 0; bank < contentsize; bank++) {
+    for (int bank = 0; bank < content_size; bank++) {
         auto ContentBank = &content[bank];   
 
         for (int i = 0; i < ContentBank->alloc; i++) {
@@ -217,19 +199,15 @@ T& K_Vector<T>::operator [](size_t s) {
 }
 
 template <class T>
-void K_Vector<T>::operator =(K_Vector s) {
-    
+K_Vector<T>& K_Vector<T>::operator =(K_Vector s) {
+    return *this;
 }
 
 template <class T>
-void K_Vector<T>::empty() {
+void K_Vector<T>::delete_all() {
     for (int i = 0; size() != 0; i++) {
         pop_back();
     }
 }
 
-template <class T>
-void K_Vector<T>::IncRemaining(int adr, int inc) {
-    
-}
 

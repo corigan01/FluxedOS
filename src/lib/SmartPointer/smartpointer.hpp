@@ -41,6 +41,8 @@ public:
     T& operator*() { return *ptr; }
     T* operator->() { return ptr; }
 
+    T& operator[](size_t index) { return ptr[index]; }
+
     void operator=(T* p) {
         System::Memory::kfree((void*)ptr);
         ptr = p;

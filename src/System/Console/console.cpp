@@ -118,7 +118,7 @@ void console::ReturnUser() {
     }
 
     this->HasFinalUserString = false;
-    UserCommand.empty();
+    UserCommand.delete_all();
     
 }
 

@@ -33,18 +33,18 @@
 template <class T>
 class K_Vector {
     protected:
-        struct D { // This is the main data storage for the vector, it contains the accual content
+        struct data_t { // This is the main data storage for the vector, it contains the actual content
             T Data; // Data Storage
             u32 PointsTo = 0; // The index this unit will point to 
-            bool DoesPoint = 0; // This tells if this data has been popped 
+            bool DoesPoint = false; // This tells if this data has been popped
         };
-        struct DB { // This is the data vector which stores banks of content for allocating more memory when the vector fills up
-            D *h;
+        struct data_base_t { // This is the data vector which stores banks of content for allocating more memory when the vector fills up
+            data_t *h;
             u32 MemoryBank = 0;
             u32 alloc = 0;
         };
-        DB *content;
-        u32 contentsize = 0;
+        data_base_t *content;
+        u32 content_size = 0;
 
         u32 VectorSize = 0; // how many alive entries there are
         u32 EndOfVector = 0; // how many total entries there are
@@ -63,7 +63,7 @@ class K_Vector {
 
         void push_back(T data);
         void pop_back();
-        void empty(); 
+        void delete_all();
 
         void pop_at(size_t s);
         void insert_at(size_t s, T d);
@@ -72,13 +72,7 @@ class K_Vector {
 
         T getat(uint32 s);
         T& operator  [](size_t s);
-        void operator =(K_Vector s);
+        K_Vector& operator =(K_Vector s);
 
-
-    private:
-
-        // This will increment the remaining vector numbers depening on what they point to
-        // [ =  =  =  =  =  =] 1, 2, 3, 4, 5, 6 --> 1, 2, [3], 4, 5, 6, 7
-        void IncRemaining(int adr, int inc);
 };
 

@@ -31,21 +31,56 @@ namespace System {
 
         typedef struct {
             partition_t *partition;
+            enum FS_TYPE {
+                EXT2 = 0
+            } fs_type;
             char* mount_point;
         } fs_node_t;
 
+        typedef char* path_t;
+        typedef path_t dir_t;
+
         typedef struct {
+            u8* block;
             u32 size;
-            char* loc;
-        } file_t;
+        } data_block_t;
+
+        class File {
+        private:
+            u32 size;
+            char* name;
+            dir_t parent;
+
+        public:
+            void operator <<(const char* data);
+            void operator >>(void* data);
+
+            data_block_t ReadLine(size_t line);
+            data_block_t ReadBlock(size_t block);
+            data_block_t ReadEntireFile();
+
+            void WriteEntireFile(data_block_t data);
+            void AppendData(data_block_t data);
+
+            void RemoveAllContents();
+
+        };
 
         void init(const char* root_mount_location);
+
+        fs_node_t GetRootNode();
+        fs_node_t GetParentNode(const char* path);
 
         void add_node(fs_node_t node);
         void remove_node(const char* mount_point);
 
-        file_t ReadFile(const char* loc);
-        void WriteFile(file_t file);
+        void CreateDir(dir_t dir);
+        void DeleteDir(dir_t dir);
+
+        K_Vector<dir_t> ListDirectories(dir_t parent);
+        K_Vector<File> ListAllFiles(dir_t parent);
+
+        void CreateFile(dir_t parent, const char* name);
 
 
     }

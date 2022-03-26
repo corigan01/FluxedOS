@@ -291,7 +291,7 @@ directory_t *read_dir(fs::fs_node_t node, superblock_t* superblock, inode_t* ino
     return dir;
 }
 
-void parse_root_dir(fs::fs_node_t node, superblock_t* superblock, inode_t* inode) {
+K_Vector<directory_t*> parse_dir(fs::fs_node_t node, superblock_t* superblock, inode_t* inode) {
     block_t block = read_block(node, inode->blocks[0]);
 
     K_Vector<directory_t*> dir_entries;
@@ -302,7 +302,7 @@ void parse_root_dir(fs::fs_node_t node, superblock_t* superblock, inode_t* inode
 
         // TODO: FIX ME
         memtrfs(dir, block, i, inode->low_size - i);
-        //memtrfs(dir, dir, 0, dir->totalsize);
+        memtrfs(dir, dir, 0, dir->totalsize);
 
         if (dir->totalsize == 0) break;
         i += dir->totalsize;
@@ -319,10 +319,15 @@ void parse_root_dir(fs::fs_node_t node, superblock_t* superblock, inode_t* inode
         kout << "\tnamelng: " << dir->nameleng << endl;
         kout << "\ttypeind: " << dir->typeind << endl;
         kout << "\tname: " << dir->name << endl;
+
+        dir_entries.push_back(dir);
+        dir = (directory_t*)Memory::kmalloc(inode->low_size);
     }
+
+    return dir_entries;
 }
 
-void System::fs::ext2::test_node(System::fs::fs_node_t node) {
+bool System::fs::ext2::test_node(System::fs::fs_node_t node) {
     kout << "Testing node..." << endl;
 
     superblock_t *Superblock = read_superblock(node);
@@ -334,14 +339,15 @@ void System::fs::ext2::test_node(System::fs::fs_node_t node) {
     u32 TotalNumberOfBlockGroups = Superblock->total_inods / Superblock->inodes_per_group;
     kout << "Total Number of Block Groups: " << TotalNumberOfBlockGroups << endl;
 
-    inode_t * inode = read_inode(node, Superblock, 2);
+    inode_t * inode = read_inode(node, Superblock, 56897);
 
     block = read_block(node, inode->blocks[0]);
 
-    parse_root_dir(node, Superblock, inode);
+    parse_dir(node, Superblock, inode);
 
     Memory::kfree(Superblock);
     Memory::kfree(inode);
     Memory::kfree(block);
 
+    return true;
 }

@@ -133,7 +133,7 @@ void Kernel::system_init() {
     Disk::disk_t master = Disk::get_disk(0);
 
     // Read the partitions of disk 'master'
-    fs::read_mbt_disk(master);
+    fs::import_disk_partitions(master);
 
     // Get all the partitions
     auto DiskList = fs::GetAllPartitions();
@@ -153,6 +153,14 @@ void Kernel::system_init() {
             break;
         }
 
+    }
+
+    // List all Directories
+    auto dirs = fs::ListDirectories("/");
+
+    kout << "Printing Directories!" << endl;
+    for (int i = 0; i < dirs.size(); i++) {
+        kout << "\t" << dirs[i] << endl;
     }
 
     kout << endl;

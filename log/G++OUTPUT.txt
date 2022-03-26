@@ -17,7 +17,7 @@ In file included from [01m[Ksrc/lib/vector/KernelVector.hpp:28[m[K,
 src/lib/vector/k_vector/k_vector.cpp: In instantiation of ‘[01m[Kvoid K_Vector<T>::ChangePointer(void*) [with T = MemoryEntry][m[K’:
 [01m[K./src/System/memory/kmemory.cpp:50:28:[m[K   required from here
 [01m[Ksrc/lib/vector/k_vector/k_vector.cpp:55:24:[m[K [01;35m[Kwarning: [m[Kpointer of type ‘[01m[Kvoid *[m[K’ used in arithmetic [[01;35m[K-Wpointer-arith[m[K]
-   55 |     [01;35m[KFirstMemoryPointer += (sizeof(DB) * 10)[m[K;
+   55 |     [01;35m[KFirstMemoryPointer += (sizeof(data_base_t) * 10)[m[K;
       |     [01;35m[K~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~[m[K
 src/lib/vector/k_vector/k_vector.cpp: In instantiation of ‘[01m[Kvoid K_Vector<T>::insert_at(size_t, T) [with T = MemoryEntry; size_t = unsigned int][m[K’:
 [01m[K./src/System/memory/kmemory.cpp:158:36:[m[K   required from here
