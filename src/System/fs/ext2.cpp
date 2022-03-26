@@ -42,8 +42,6 @@ void print_block(block_t block, u32 highlightbegin = 0, u32 highlightzone = 0) {
     for (int i = 0; i < 64; i++) {
         kout << kout.ToHex(i * 16) << "  | ";
 
-
-
         for (int e = 0; e < 16; e++) {
 
             u32 address = (i * 16) + e;
@@ -111,7 +109,7 @@ superblock_t* read_superblock(fs::fs_node_t node) {
 
     auto *sb = (superblock_t*) read_block(node, 1);
 
-    kout << "Superblock info:" << endl;
+    /*kout << "Superblock info:" << endl;
     kout << "\tInodes               : " << sb->total_inods << endl;
     kout << "\tBlocks               : " << sb->total_bocks << endl;
     kout << "\tReserved             : " << sb->reserved_blocks << endl;
@@ -123,7 +121,7 @@ superblock_t* read_superblock(fs::fs_node_t node) {
     kout << "\tBlocks per Group     : " << sb->blocks_per_group << endl;
     kout << "\tShift Inode          : " << sb->total_unalloc_inoodes << endl;
     kout << "\tFile System ID       : 0x" << kout.ToHex(sb->ext2sig) << (sb->ext2sig == 0xEF53 ? "  <-- Valid Sig" : "  <-- NOT VALID") << endl;
-    kout << endl;
+    kout << endl;*/
 
     return sb;
 }
@@ -138,14 +136,14 @@ block_group_t* read_blockgroup(fs::fs_node_t node, superblock_t* superblock, u32
 
     Memory::kfree(block);
 
-    kout << "Block Group Info (" << id << ") :" << endl;
+    /*kout << "Block Group Info (" << id << ") :" << endl;
     kout << "\tblock_usage_bitmap       : " << BlockGroup->block_usage_bitmap << endl;
     kout << "\tinode_usage_bitmap       : " << BlockGroup->inode_usage_bitmap << endl;
     kout << "\tstarting_block_address   : " << BlockGroup->starting_block_address << endl;
     kout << "\tunallocated_blocks       : " << BlockGroup->unallocated_blocks << endl;
     kout << "\tunallocated_inodes       : " << BlockGroup->unallocated_inodes << endl;
     kout << "\tdirectories              : " << BlockGroup->directories << endl;
-    kout << endl;
+    kout << endl;*/
 
     return BlockGroup;
 }
@@ -175,14 +173,14 @@ inode_t* read_inode(fs::fs_node_t node, superblock_t* superblock, u32 id) {
     // next we need the offset that is inside that block
     u32 InodeIndexWithinBlock = (InodeIndex % InodesPerBlock) * superblock->inodeSize;
 
-    kout << "Finding Inode: " << endl;
+    /*kout << "Finding Inode: " << endl;
     kout << "\tInode ID       : " << id << endl;
     kout << "\tBlock Group    : " << ContainingBlockGroup << endl;
     kout << "\tInode Index    : " << InodeIndex << endl;
     kout << "\tBlock of Inode : " << BlockOffset << endl;
     kout << "\tIndex          : " << InodeIndexWithinBlock << endl;
     kout << "\tReading Block  : " << InodesBlockgroup->inode_usage_bitmap + BlockOffset << endl;
-    kout << endl;
+    kout << endl;*/
 
    block_t block = read_block(node, InodesBlockgroup->starting_block_address + BlockOffset);
 
@@ -190,6 +188,7 @@ inode_t* read_inode(fs::fs_node_t node, superblock_t* superblock, u32 id) {
 
     Memory::kfree(block);
     Memory::kfree(InodesBlockgroup);
+
 
     constexpr char* Type[] = {
             "FIFO",
@@ -233,7 +232,7 @@ inode_t* read_inode(fs::fs_node_t node, superblock_t* superblock, u32 id) {
     }
 
 
-    kout << "Inode: " << endl;
+   /* kout << "Inode: " << endl;
     kout << "  Type         : " << Type[typeIndex] << endl;
     kout << "  UserID       : " << inode->userID << endl;
     kout << "  low_size     : " << inode->low_size << endl;
@@ -250,7 +249,7 @@ inode_t* read_inode(fs::fs_node_t node, superblock_t* superblock, u32 id) {
     kout << "  blocks 7     : " << inode->blocks[7] << endl;
     kout << "  blocks 8     : " << inode->blocks[8] << endl;
     kout << "  blocks 9     : " << inode->blocks[9] << endl;
-    kout << "  blocks 10    : " << inode->blocks[10] << endl;
+    kout << "  blocks 10    : " << inode->blocks[10] << endl;*/
 
     return inode;
 }
@@ -279,12 +278,12 @@ directory_t *read_dir(fs::fs_node_t node, superblock_t* superblock, inode_t* ino
         kout << " " << kout.ToHex(((u8*)dir)[i]);
     }
 
-    kout << "Dir: " << endl;
+    /*kout << "Dir: " << endl;
     kout << "\tinode: " << dir->inode << endl;
     kout << "\ttotal size: " << dir->totalsize << endl;
     kout << "\tnamelng: " << dir->nameleng << endl;
     kout << "\ttypeind: " << dir->typeind << endl;
-    kout << "\tname: \"" << dir->name << "\"" << endl;
+    kout << "\tname: \"" << dir->name << "\"" << endl;*/
 
     Memory::kfree(dirblock);
 
@@ -324,6 +323,8 @@ K_Vector<directory_t*> parse_dir(fs::fs_node_t node, superblock_t* superblock, i
         dir = (directory_t*)Memory::kmalloc(inode->low_size);
     }
 
+
+    Memory::kfree(dir);
     Memory::kfree(block);
 
     return dir_entries;
@@ -336,11 +337,11 @@ K_Vector<directory_t*> ext2::get_root_directory(System::fs::fs_node_t node) {
 
     auto returningVector = parse_dir(node, Superblock, root_inode);
 
-    kout << "\nRoot Dir:" << endl;
+    /*kout << "\nRoot Dir:" << endl;
     for (int i = 0; i < returningVector.size(); i++) {
         kout << "/" << returningVector[i]->name << endl;
     }
-    kout << endl;
+    kout << endl;*/
 
     Memory::kfree(Superblock);
     Memory::kfree(root_inode);

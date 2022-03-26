@@ -156,26 +156,25 @@ void Kernel::system_init() {
 
     }
 
+    for (int i = 0; i < 100; i++) {
+        auto dirs = fs::ListDirectories("/Hello/");
 
-    auto dirs = fs::ListDirectories("/Hello/");
+        kout << "Printing Directories!" << endl;
+        for (int e = 0; e < dirs.size(); e++) {
+            kout << "\t" << dirs[e] << endl;
+        }
 
-    kout << "Printing Directories!" << endl;
-    for (int i = 0; i < dirs.size(); i++) {
-        kout << "\t" << dirs[i] << endl;
+        for (int e = 0; e < dirs.size(); e++) {
+            kfree(dirs[e]);
+        }
+
+        dirs.delete_all();
+        dirs.free_pointer();
     }
-
-    for (int i = 0; i < dirs.size(); i++) {
-        kfree(dirs[i]);
-    }
-
-    dirs.delete_all();
-    dirs.free_pointer();
 
 
 
     kout << endl;
-
-
 
     Graphics::GXDriver::drawstring("Starting Display Server!", 10, 550, 0xFF0000);
     //while(1) {};

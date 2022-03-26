@@ -24,7 +24,8 @@
 
 template <class T> 
 K_Vector<T>::~K_Vector() {
-    kout << "K_VECTOR IS DECONSTRUCTED" << endl;
+    //kout << "K_VECTOR IS DECONSTRUCTED" << endl;
+    this->delete_all();
     free_pointer();
 }
 
@@ -95,7 +96,7 @@ void K_Vector<T>::pop_at(size_t s) {
             auto data = &ContentBank->h[i];
             if (data->DoesPoint == true && data->PointsTo == s) {
                 if (!SuccessfulAlloc) {
-                    // we then remove that entry 
+                    // we then remove that entry
                     data->DoesPoint = false;
                     data->PointsTo = -1;
                     VectorSize--;

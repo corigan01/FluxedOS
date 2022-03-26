@@ -72,14 +72,14 @@ K_Vector<fs::dir_t> fs::ListDirectories(fs::dir_t parent) {
     // Get the node that is mounted closest to the parent
     // If there is only one node that is mounted then it will be returned,
     // but if there are multiple nodes with mount points inside other
-    // directories, then we need to find the node that is highest up the
+    // directories, then we need to find the node that is the highest up the
     // chain of mounted disks.
     auto node = fs::GetParentNode(parent);
 
     // Now we need to parse the parent for separators ('/')
     K_Vector<int> separators;
 
-    // So we go through the array looking for any / characters and then we
+    // So we go through the array looking for any / characters, and then we
     // append the index at which they were found.
     for (int i = 0; i < strlen(parent); i++) {
         if (parent[i] == '/')
@@ -138,14 +138,15 @@ K_Vector<fs::dir_t> fs::ListDirectories(fs::dir_t parent) {
     K_Vector<fs::dir_t> directories;
     if (node.fs_type == fs::fs_node_t::EXT2) {
         auto workingDirectory = ext2::get_root_directory(node);
+        bool FoundDirectory = false;
+
 
         // Just return the root directory
         if (directoryStrings.size() == 0 && strlen(parent) == 1) {
-            for (int i = 0; i < workingDirectory.size(); i++) {
-                directories.push_back(workingDirectory[i]->name);
-            }
+            FoundDirectory = true;
         }
         else {
+
             // Goes through each piece of what we put into 'parent'
             for (int i = 0; i < directoryStrings.size(); i++) {
 
@@ -153,15 +154,16 @@ K_Vector<fs::dir_t> fs::ListDirectories(fs::dir_t parent) {
                 // the piece we put into our 'directoryStrings'
                 for (int e = 0; e < workingDirectory.size(); e++) {
                     if (strcmp(workingDirectory[e]->name, directoryStrings[i]) == 0) {
-                        kout << "Found Directory!" << endl;
+                        FoundDirectory = true;
+
                         auto newdir = ext2::get_directories(node, workingDirectory[e]);
 
                         // Make sure to clean everything up
                         for (int f = 0; f < workingDirectory.size(); f++) {
+                            Memory::kfree(workingDirectory[f]->name);
                             Memory::kfree(workingDirectory[f]);
                         }
                         workingDirectory.delete_all();
-
 
                         // Copy over the new vector
                         for (int f = 0; f < newdir.size(); f++ ) {
@@ -172,25 +174,30 @@ K_Vector<fs::dir_t> fs::ListDirectories(fs::dir_t parent) {
                     }
                 }
             }
+        }
 
-            // Now just return the names
+        // Now just return the names
+        if (FoundDirectory) {
             for (int i = 0; i < workingDirectory.size(); i++) {
-                directories.push_back(workingDirectory[i]->name);
+                char* name = (char *)(Memory::kmalloc(workingDirectory[i]->nameleng + 1));
+                name[workingDirectory[i]->nameleng] = '\0';
+                memcpy(name, workingDirectory[i]->name, workingDirectory[i]->nameleng + 1);
+
+                directories.push_back(name);
             }
         }
 
         // Some more cleanup
         for (int i = 0; i < workingDirectory.size(); i++) {
+            Memory::kfree(workingDirectory[i]->name);
             Memory::kfree(workingDirectory[i]);
         }
-        workingDirectory.delete_all();
     }
 
     // our last and final cleanup
     for (int i = 0; i < directoryStrings.size(); i++) {
         Memory::kfree(directoryStrings[i]);
     }
-    directoryStrings.delete_all();
 
     // finally, return the nice little vector we made
     return directories;
