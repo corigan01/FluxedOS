@@ -79,12 +79,19 @@ K_Vector<fs::dir_t> fs::ListDirectories(fs::dir_t parent) {
     // Now we need to parse the parent for separators ('/')
     K_Vector<int> separators;
 
+    // So we go through the array looking for any / characters and then we
+    // append the index at which they were found.
     for (int i = 0; i < strlen(parent); i++) {
         if (parent[i] == '/')
             separators.push_back(i);
     }
     separators.push_back(strlen(parent) - 1);
 
+    // This is where things get interesting, we now need to split the dir
+    // into little parts. Each part is the part inside the '/'.
+    // An example of this would be as follows:
+    // &> input  = "/Home/User/Test/"
+    // &> output = {"Home", "User", "Test"}
     K_Vector<char*> directoryStrings;
     for (int i = 0; i < separators.size() - 1; i++) {
         size_t betweenSeperators = separators[i + 1] - separators[i];
@@ -101,33 +108,62 @@ K_Vector<fs::dir_t> fs::ListDirectories(fs::dir_t parent) {
         }
     }
 
-    for (int i = 0; i < directoryStrings.size(); i++) {
-        kout << "Directory Strings: " << directoryStrings[i] << endl;
-    }
-
+    // Now that we have the directories in little bite size pieces, we
+    // can ask the file system driver if it has any directories with the
+    // same name.
+    //
+    // This gets a little complex because we need to check this same
+    // process for each little piece we have. Once we check a piece,
+    // we then check if the next piece is inside the previous piece's
+    // directory.
+    //
+    // An example of what this snippet does can be described as follows:
+    // input = {"Home", "User", "Test"}
+    //
+    // FileSystem Root = {"Home", "etc", "root"}
+    //                    "Home" <-- Found the first element
+    //
+    // FileSystem "Home" = {"..", "Test", "User"}
+    //                                    "User" <-- Found the second element
+    //
+    // FileSystem "User" = {"Test"}
+    //                      "Test" <-- Found the last element
+    //
+    // FileSystem "Test" = {"MyDir", "MyFolders", "Documents"}
+    //
+    // Now that we have the filesystem tell us what's inside that directory,
+    // we are done! We just need to return its findings :)
+    //
+    // output = {"MyDir", "MyFolders", "Documents"};
     K_Vector<fs::dir_t> directories;
-
     if (node.fs_type == fs::fs_node_t::EXT2) {
         auto workingDirectory = ext2::get_root_directory(node);
 
-        if (directoryStrings.size() == 0) {
+        // Just return the root directory
+        if (directoryStrings.size() == 0 && strlen(parent) == 1) {
             for (int i = 0; i < workingDirectory.size(); i++) {
                 directories.push_back(workingDirectory[i]->name);
             }
         }
         else {
+            // Goes through each piece of what we put into 'parent'
             for (int i = 0; i < directoryStrings.size(); i++) {
+
+                // Looks to find if any of the actual files looks like
+                // the piece we put into our 'directoryStrings'
                 for (int e = 0; e < workingDirectory.size(); e++) {
                     if (strcmp(workingDirectory[e]->name, directoryStrings[i]) == 0) {
                         kout << "Found Directory!" << endl;
                         auto newdir = ext2::get_directories(node, workingDirectory[e]);
 
+                        // Make sure to clean everything up
                         for (int f = 0; f < workingDirectory.size(); f++) {
                             Memory::kfree(workingDirectory[f]);
                         }
-
                         workingDirectory.delete_all();
 
+
+                        // Copy over the new vector
                         for (int f = 0; f < newdir.size(); f++ ) {
                             workingDirectory.push_back(newdir[f]);
                         }
@@ -137,12 +173,26 @@ K_Vector<fs::dir_t> fs::ListDirectories(fs::dir_t parent) {
                 }
             }
 
+            // Now just return the names
             for (int i = 0; i < workingDirectory.size(); i++) {
                 directories.push_back(workingDirectory[i]->name);
             }
         }
+
+        // Some more cleanup
+        for (int i = 0; i < workingDirectory.size(); i++) {
+            Memory::kfree(workingDirectory[i]);
+        }
+        workingDirectory.delete_all();
     }
 
+    // our last and final cleanup
+    for (int i = 0; i < directoryStrings.size(); i++) {
+        Memory::kfree(directoryStrings[i]);
+    }
+    directoryStrings.delete_all();
+
+    // finally, return the nice little vector we made
     return directories;
 }
 
@@ -186,4 +236,28 @@ void fs::File::operator<<(const char *data) {
 
 void fs::File::operator>>(void *data) {
 
+}
+
+void fs::File::RemoveAllContents() {
+
+}
+
+void fs::File::AppendData(fs::data_block_t data) {
+
+}
+
+void fs::File::WriteEntireFile(fs::data_block_t data) {
+
+}
+
+fs::data_block_t fs::File::ReadEntireFile() {
+    return {};
+}
+
+fs::data_block_t fs::File::ReadBlock(size_t block) {
+    return {};
+}
+
+fs::data_block_t fs::File::ReadLine(size_t line) {
+    return {};
 }

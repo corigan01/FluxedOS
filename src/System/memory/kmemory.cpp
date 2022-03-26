@@ -137,8 +137,8 @@ void Memory::ConJoin(u32 m1) {
         }
     }
     
-    kout << "ERROR JOINING MEMORY (ERROR CODE): " << (m1 < MemoryMap.size() && m1 >= 0) << !MemoryMap[m1].Used
-         << (MemoryMap[m1].End == MemoryMap[m1 + 1].Start || MemoryMap[m1].End == MemoryMap[m1].Start + 1) << endl;
+    //kout << "ERROR JOINING MEMORY (ERROR CODE): " << (m1 < MemoryMap.size() && m1 >= 0) << !MemoryMap[m1].Used
+    //     << (MemoryMap[m1].End == MemoryMap[m1 + 1].Start || MemoryMap[m1].End == MemoryMap[m1].Start + 1) << endl;
 }
 
 

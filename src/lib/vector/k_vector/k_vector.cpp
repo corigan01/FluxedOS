@@ -32,6 +32,7 @@ template <class T>
 void K_Vector<T>::free_pointer() {
     for (int bank = 0; bank < content_size; bank++) {
         auto ContentBank = &content[bank];
+
         System::Memory::kfree((void*)ContentBank);
     }
 }
@@ -49,10 +50,12 @@ K_Vector<T>::K_Vector() {
         
 template <class T>
 void K_Vector<T>::ChangePointer(void* p) {
+    free_pointer();
+
     u32* FirstMemoryPointer = (u32*)p;
     content = (data_base_t*)FirstMemoryPointer;
     content_size = 0;
-    kout << "First Memory Pointer: " << kout.ToHex((u32)FirstMemoryPointer) << endl;
+    //kout << "First Memory Pointer: " << kout.ToHex((u32)FirstMemoryPointer) << endl;
     
     FirstMemoryPointer += (sizeof(data_base_t) * 10);
 

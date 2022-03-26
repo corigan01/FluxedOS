@@ -141,6 +141,7 @@ void Kernel::system_init() {
     // init vfs
     fs::init("/");
 
+
     // Look through all the partitions and find the one that is EXT2
     for (int i = 0; i < DiskList->size(); i ++) {
         fs::fs_node_t file_system_node;
@@ -155,15 +156,25 @@ void Kernel::system_init() {
 
     }
 
-    // List all Directories
-    auto dirs = fs::ListDirectories("/Hello/test/test2/");
+
+    auto dirs = fs::ListDirectories("/Hello/");
 
     kout << "Printing Directories!" << endl;
     for (int i = 0; i < dirs.size(); i++) {
         kout << "\t" << dirs[i] << endl;
     }
 
+    for (int i = 0; i < dirs.size(); i++) {
+        kfree(dirs[i]);
+    }
+
+    dirs.delete_all();
+    dirs.free_pointer();
+
+
+
     kout << endl;
+
 
 
     Graphics::GXDriver::drawstring("Starting Display Server!", 10, 550, 0xFF0000);
