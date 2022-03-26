@@ -62,12 +62,88 @@ void fs::DeleteDir(fs::dir_t dir) {
 
 }
 
+// path must in the form of "/file1/file2/file3"
+// root path must also still input "/"
 K_Vector<fs::dir_t> fs::ListDirectories(fs::dir_t parent) {
+    ASSERT(strlen(parent));
+    ASSERT(parent[0] == '/');
+    ASSERT(parent[strlen(parent) - 1] == '/')
+
+    // Get the node that is mounted closest to the parent
+    // If there is only one node that is mounted then it will be returned,
+    // but if there are multiple nodes with mount points inside other
+    // directories, then we need to find the node that is highest up the
+    // chain of mounted disks.
     auto node = fs::GetParentNode(parent);
 
-    if (node.fs_type == fs::fs_node_t::EXT2) {
+    // Now we need to parse the parent for separators ('/')
+    K_Vector<int> separators;
 
+    for (int i = 0; i < strlen(parent); i++) {
+        if (parent[i] == '/')
+            separators.push_back(i);
     }
+    separators.push_back(strlen(parent) - 1);
+
+    K_Vector<char*> directoryStrings;
+    for (int i = 0; i < separators.size() - 1; i++) {
+        size_t betweenSeperators = separators[i + 1] - separators[i];
+
+        if (betweenSeperators > 0) {
+            char* string = (char*) Memory::kmalloc(betweenSeperators + 1);
+            string[betweenSeperators] = '\0';
+
+            for (int e = separators[i]; e < separators[i + 1] - 1; e++) {
+                string[e - separators[i]] = parent[e + 1];
+            }
+
+            directoryStrings.push_back(string);
+        }
+    }
+
+    for (int i = 0; i < directoryStrings.size(); i++) {
+        kout << "Directory Strings: " << directoryStrings[i] << endl;
+    }
+
+    K_Vector<fs::dir_t> directories;
+
+    if (node.fs_type == fs::fs_node_t::EXT2) {
+        auto workingDirectory = ext2::get_root_directory(node);
+
+        if (directoryStrings.size() == 0) {
+            for (int i = 0; i < workingDirectory.size(); i++) {
+                directories.push_back(workingDirectory[i]->name);
+            }
+        }
+        else {
+            for (int i = 0; i < directoryStrings.size(); i++) {
+                for (int e = 0; e < workingDirectory.size(); e++) {
+                    if (strcmp(workingDirectory[e]->name, directoryStrings[i]) == 0) {
+                        kout << "Found Directory!" << endl;
+                        auto newdir = ext2::get_directories(node, workingDirectory[e]);
+
+                        for (int f = 0; f < workingDirectory.size(); f++) {
+                            Memory::kfree(workingDirectory[f]);
+                        }
+
+                        workingDirectory.delete_all();
+
+                        for (int f = 0; f < newdir.size(); f++ ) {
+                            workingDirectory.push_back(newdir[f]);
+                        }
+
+                        break;
+                    }
+                }
+            }
+
+            for (int i = 0; i < workingDirectory.size(); i++) {
+                directories.push_back(workingDirectory[i]->name);
+            }
+        }
+    }
+
+    return directories;
 }
 
 fs::fs_node_t fs::GetParentNode(const char *path) {
@@ -75,6 +151,9 @@ fs::fs_node_t fs::GetParentNode(const char *path) {
 
     for (size_t i = 0; i < NodeList.size(); i++) {
         auto &node = NodeList[i];
+
+        ASSERT(closest_path.mount_point);
+        ASSERT(node.mount_point);
 
         if (strcmp(closest_path.mount_point, path) < strcmp(node.mount_point, path))
             closest_path = node;
@@ -93,7 +172,7 @@ void fs::CreateFile(fs::dir_t parent, const char *name) {
 
 fs::fs_node_t fs::GetRootNode() {
     for (size_t i = 0; i < NodeList.size(); i++) {
-        if (strcmp(NodeList[i].mount_point, "/") != 0)
+        if (strcmp(NodeList[i].mount_point, "/") == 0)
             return NodeList[i];
     }
 

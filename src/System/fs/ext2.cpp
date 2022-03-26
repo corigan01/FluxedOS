@@ -313,24 +313,69 @@ K_Vector<directory_t*> parse_dir(fs::fs_node_t node, superblock_t* superblock, i
         name[dir->nameleng] = '\0';
         dir->name = name;
 
-        kout << "Dir: " << endl;
+        /*kout << "Dir: " << endl;
         kout << "\tinode: " << dir->inode << endl;
         kout << "\ttotal size: " << dir->totalsize << endl;
         kout << "\tnamelng: " << dir->nameleng << endl;
         kout << "\ttypeind: " << dir->typeind << endl;
-        kout << "\tname: " << dir->name << endl;
+        kout << "\tname: " << dir->name << endl;*/
 
         dir_entries.push_back(dir);
         dir = (directory_t*)Memory::kmalloc(inode->low_size);
     }
 
+    Memory::kfree(block);
+
     return dir_entries;
+}
+
+K_Vector<directory_t*> ext2::get_root_directory(System::fs::fs_node_t node) {
+    superblock_t *Superblock = read_superblock(node);
+
+    inode_t *root_inode = read_inode(node, Superblock, RootDirectoryInode);
+
+    auto returningVector = parse_dir(node, Superblock, root_inode);
+
+    kout << "\nRoot Dir:" << endl;
+    for (int i = 0; i < returningVector.size(); i++) {
+        kout << "/" << returningVector[i]->name << endl;
+    }
+    kout << endl;
+
+    Memory::kfree(Superblock);
+    Memory::kfree(root_inode);
+
+    return returningVector;
+}
+
+K_Vector<directory_t*> ext2::get_directories(System::fs::fs_node_t node, directory_t* parent) {
+    superblock_t* superblock = read_superblock(node);
+    inode_t* inode = read_inode(node, superblock, parent->inode);
+
+    auto parsed_directory = parse_dir(node, superblock, inode);
+
+    Memory::kfree(superblock);
+    Memory::kfree(inode);
+
+    return parsed_directory;
 }
 
 bool System::fs::ext2::test_node(System::fs::fs_node_t node) {
     kout << "Testing node..." << endl;
 
+    // Get the Superblock
     superblock_t *Superblock = read_superblock(node);
+
+    // Test condition
+    bool superblockSuccess =  Superblock->ext2sig == 0xEF53;
+
+    // Give the memory back
+    Memory::kfree(Superblock);
+
+    // return final output
+    return superblockSuccess;
+
+    /*superblock_t *Superblock = read_superblock(node);
 
     block_t block = read_block(node, 1);
     print_block(block);
@@ -347,7 +392,5 @@ bool System::fs::ext2::test_node(System::fs::fs_node_t node) {
 
     Memory::kfree(Superblock);
     Memory::kfree(inode);
-    Memory::kfree(block);
-
-    return true;
+    Memory::kfree(block);*/
 }

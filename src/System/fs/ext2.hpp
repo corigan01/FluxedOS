@@ -27,6 +27,8 @@
 #include <System/fs/vfs.hpp>
 #include <lib/SmartPointer/smartpointer.hpp>
 
+#define RootDirectoryInode 2
+
 namespace System {
     namespace fs {
         namespace ext2 {
@@ -139,6 +141,10 @@ namespace System {
 
             size_t num_of_dir_entries(directory_t parent);
 
+
+
+            K_Vector<directory_t*> get_root_directory(System::fs::fs_node_t node);
+            K_Vector<directory_t *> get_directories(fs_node_t node, directory_t *parent);
         }
     }
 }

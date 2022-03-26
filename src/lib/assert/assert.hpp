@@ -24,7 +24,7 @@
 #include <System/kout/kout.hpp>
 #include <lib/core/core.h>
 
-#define ASSERT(cond) _ASSERT(cond, __FILE__, __FUNCTION__, __LINE__); 
+#define ASSERT(cond) _ASSERT(cond, __FILE__, __FUNCTION__, __LINE__);
 #define ASSERT_NOT_REACHED(string)  kout << "\n\n**ASSERT NOT REACHED**: " << string << endl; ASSERT(false); 
 
 void _ASSERT(bool arg, const char * Filename, const char * Func, u32 Line);

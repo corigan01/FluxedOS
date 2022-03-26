@@ -156,7 +156,7 @@ void Kernel::system_init() {
     }
 
     // List all Directories
-    auto dirs = fs::ListDirectories("/");
+    auto dirs = fs::ListDirectories("/Hello/test/test2/");
 
     kout << "Printing Directories!" << endl;
     for (int i = 0; i < dirs.size(); i++) {
