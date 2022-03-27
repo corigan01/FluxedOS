@@ -153,11 +153,10 @@ void Kernel::system_init() {
             fs::add_node(file_system_node);
             break;
         }
-
     }
 
-    for (int i = 0; i < 100; i++) {
-        auto dirs = fs::ListDirectories("/Hello/");
+    for (int i = 0; i < 1; i++) {
+        auto dirs = fs::ListEntires("/");
 
         kout << "Printing Directories!" << endl;
         for (int e = 0; e < dirs.size(); e++) {
@@ -171,7 +170,6 @@ void Kernel::system_init() {
         dirs.delete_all();
         dirs.free_pointer();
     }
-
 
 
     kout << endl;

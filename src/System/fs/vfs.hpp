@@ -77,7 +77,7 @@ namespace System {
         void CreateDir(dir_t dir);
         void DeleteDir(dir_t dir);
 
-        K_Vector<dir_t> ListDirectories(dir_t parent);
+        K_Vector<dir_t> ListEntires(dir_t parent);
         K_Vector<File> ListAllFiles(dir_t parent);
 
         void CreateFile(dir_t parent, const char* name);

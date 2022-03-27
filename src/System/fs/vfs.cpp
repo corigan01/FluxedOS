@@ -64,7 +64,7 @@ void fs::DeleteDir(fs::dir_t dir) {
 
 // path must in the form of "/file1/file2/file3"
 // root path must also still input "/"
-K_Vector<fs::dir_t> fs::ListDirectories(fs::dir_t parent) {
+K_Vector<fs::dir_t> fs::ListEntires(fs::dir_t parent) {
     ASSERT(strlen(parent));
     ASSERT(parent[0] == '/');
     ASSERT(parent[strlen(parent) - 1] == '/')
