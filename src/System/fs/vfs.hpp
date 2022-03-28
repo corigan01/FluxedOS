@@ -24,6 +24,7 @@
 #include <lib/core/core.h>
 #include <System/Disk/vDisk.hpp>
 #include <lib/vector/k_vector/k_vector.hpp>
+
 #include "mbt.hpp"
 
 namespace System {
@@ -64,12 +65,22 @@ namespace System {
 
             void RemoveAllContents();
 
+            u32 GetFileSize();
+            const char* GetFileName();
+            dir_t GetPath();
         };
 
         void init(const char* root_mount_location);
 
         fs_node_t GetRootNode();
-        fs_node_t GetParentNode(const char* path);
+        fs_node_t GetParentNode(path_t path);
+
+        K_Vector<char*> PathToVector(path_t path);
+
+        K_Vector<dir_t> ListEntires(path_t path);
+
+
+        File OpenFile(dir_t path);
 
         void add_node(fs_node_t node);
         void remove_node(const char* mount_point);
@@ -77,10 +88,60 @@ namespace System {
         void CreateDir(dir_t dir);
         void DeleteDir(dir_t dir);
 
-        K_Vector<dir_t> ListEntires(dir_t parent);
-        K_Vector<File> ListAllFiles(dir_t parent);
-
         void CreateFile(dir_t parent, const char* name);
+
+        namespace vfs {
+            namespace response {
+                enum status {
+                    ERROR = -1,
+                    OK = 0,
+                    WAIT = 1,
+                    DOES_NOT_EXIST = 2
+                };
+
+                typedef struct {
+                    u8* storage;
+                    size_t size;
+                } buffer_t;
+
+                enum type {
+                    LIST_ENTRIES = 0,
+                    GET_ENTRY,
+                    MKDIR,
+                    TOUCH,
+                    APPEND,
+                    WRITE,
+                    READ
+                };
+            }
+
+            typedef struct {
+                response::status responseStatus;
+                response::buffer_t buffer;
+            } vfs_response_t;
+
+            template<class T, typename server>
+            bool AddNode(server s) {
+
+            }
+        }
+        namespace ext2 {
+            vfs::vfs_response_t FileSystemServer (void* prv_data, fs_node_t node, vfs::response::type request,
+                                                  vfs::response::buffer_t buffer = {.size = 0}) {
+
+            }
+
+            typedef struct {
+                u8 example_data_that_ext2_would_need_to_store_in_a_buffer_to_make_it_work;
+            } file_system_info;
+        }
+
+
+
+
+        void test() {
+            vfs::AddNode<ext2::file_system_info>(ext2::FileSystemServer);
+        }
 
 
     }

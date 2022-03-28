@@ -62,30 +62,17 @@ void fs::DeleteDir(fs::dir_t dir) {
 
 }
 
-// path must in the form of "/file1/file2/file3"
-// root path must also still input "/"
-K_Vector<fs::dir_t> fs::ListEntires(fs::dir_t parent) {
-    ASSERT(strlen(parent));
-    ASSERT(parent[0] == '/');
-    ASSERT(parent[strlen(parent) - 1] == '/')
-
-    // Get the node that is mounted closest to the parent
-    // If there is only one node that is mounted then it will be returned,
-    // but if there are multiple nodes with mount points inside other
-    // directories, then we need to find the node that is the highest up the
-    // chain of mounted disks.
-    auto node = fs::GetParentNode(parent);
-
+K_Vector<char*> fs::PathToVector(fs::dir_t path) {
     // Now we need to parse the parent for separators ('/')
     K_Vector<int> separators;
 
     // So we go through the array looking for any / characters, and then we
     // append the index at which they were found.
-    for (int i = 0; i < strlen(parent); i++) {
-        if (parent[i] == '/')
+    for (int i = 0; i < strlen(path); i++) {
+        if (path[i] == '/')
             separators.push_back(i);
     }
-    separators.push_back(strlen(parent) - 1);
+    separators.push_back(strlen(path) - 1);
 
     // This is where things get interesting, we now need to split the dir
     // into little parts. Each part is the part inside the '/'.
@@ -101,12 +88,30 @@ K_Vector<fs::dir_t> fs::ListEntires(fs::dir_t parent) {
             string[betweenSeperators] = '\0';
 
             for (int e = separators[i]; e < separators[i + 1] - 1; e++) {
-                string[e - separators[i]] = parent[e + 1];
+                string[e - separators[i]] = path[e + 1];
             }
 
             directoryStrings.push_back(string);
         }
     }
+    return directoryStrings;
+}
+
+// path must in the form of "/file1/file2/file3"
+// root path must also still input "/"
+K_Vector<fs::dir_t> fs::ListEntires(fs::dir_t parent) {
+    ASSERT(strlen(parent));
+    ASSERT(parent[0] == '/');
+    ASSERT(parent[strlen(parent) - 1] == '/')
+
+    // Get the node that is mounted closest to the parent
+    // If there is only one node that is mounted then it will be returned,
+    // but if there are multiple nodes with mount points inside other
+    // directories, then we need to find the node that is the highest up the
+    // chain of mounted disks.
+    auto node = fs::GetParentNode(parent);
+
+    auto directoryStrings = PathToVector(parent);
 
     // Now that we have the directories in little bite size pieces, we
     // can ask the file system driver if it has any directories with the
@@ -219,9 +224,6 @@ fs::fs_node_t fs::GetParentNode(const char *path) {
     return closest_path;
 }
 
-K_Vector<fs::File> fs::ListAllFiles(fs::dir_t parent) {
-    return {};
-}
 
 void fs::CreateFile(fs::dir_t parent, const char *name) {
 
@@ -234,6 +236,26 @@ fs::fs_node_t fs::GetRootNode() {
     }
 
     return {};
+}
+
+
+
+fs::File fs::OpenFile(fs::dir_t path) {
+    ASSERT(strlen(path));
+    ASSERT(path[0] == '/');
+
+    // Get the node that is mounted closest to the parent
+    // If there is only one node that is mounted then it will be returned,
+    // but if there are multiple nodes with mount points inside other
+    // directories, then we need to find the node that is the highest up the
+    // chain of mounted disks.
+    auto node = fs::GetParentNode(path);
+
+    auto directoryString = PathToVector(path);
+
+
+
+
 }
 
 
@@ -267,4 +289,16 @@ fs::data_block_t fs::File::ReadBlock(size_t block) {
 
 fs::data_block_t fs::File::ReadLine(size_t line) {
     return {};
+}
+
+u32 fs::File::GetFileSize() {
+    return 0;
+}
+
+const char *fs::File::GetFileName() {
+    return nullptr;
+}
+
+fs::dir_t fs::File::GetPath() {
+    return nullptr;
 }
