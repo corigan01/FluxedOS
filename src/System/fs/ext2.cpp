@@ -332,7 +332,6 @@ K_Vector<directory_t*> parse_dir(fs::fs_node_t node, superblock_t* superblock, i
 
 K_Vector<directory_t*> ext2::get_root_directory(System::fs::fs_node_t node) {
     superblock_t *Superblock = read_superblock(node);
-
     inode_t *root_inode = read_inode(node, Superblock, RootDirectoryInode);
 
     auto returningVector = parse_dir(node, Superblock, root_inode);
@@ -375,25 +374,101 @@ bool System::fs::ext2::test_node(System::fs::fs_node_t node) {
 
     // return final output
     return superblockSuccess;
-
-    /*superblock_t *Superblock = read_superblock(node);
-
-    block_t block = read_block(node, 1);
-    print_block(block);
-    Memory::kfree(block);
-
-    u32 TotalNumberOfBlockGroups = Superblock->total_inods / Superblock->inodes_per_group;
-    kout << "Total Number of Block Groups: " << TotalNumberOfBlockGroups << endl;
-
-    inode_t * inode = read_inode(node, Superblock, 56897);
-
-    block = read_block(node, inode->blocks[0]);
-
-    parse_dir(node, Superblock, inode);
-
-    Memory::kfree(Superblock);
-    Memory::kfree(inode);
-    Memory::kfree(block);*/
 }
 
 
+vfs::vfs_response_t ext2::FileSystemServer (void* prv_data, fs_node_t node, vfs::request::type request,
+                                      vfs::request::buffer_t buffer) {
+
+    auto private_data = (ext2::ext2_info_t*)prv_data;
+
+    // INIT REQUEST
+    if (request == vfs::request::INIT) {
+        auto is_ext2fs = ext2::test_node(node);
+
+        if (is_ext2fs) {
+            private_data->superblock = read_superblock(node);
+            private_data->current_directory_inode = read_inode(node, private_data->superblock, RootDirectoryInode);
+            private_data->refresh_event = false; // only true on write events so the next read event can re-read the blocks
+
+            return {vfs::request::VALID};
+        }
+        else {
+            return {vfs::request::NOT_VALID};
+        }
+    }
+    else if (request == vfs::request::LIST_ENTRIES) {
+
+        vfs::vfs_response_t response = {vfs::request::OK};
+
+        auto root = get_root_directory(node);
+        auto split_up_fs = fs::PathToVector((path_t)buffer.storage);
+
+        bool found_next_entry = false;
+        if (split_up_fs.size() == 1) {
+            kout << "Root dir!" << endl;
+        }
+        else {
+            for (int i = 1; i < split_up_fs.size(); i++) {
+                for (int e = 0; e < root.size(); e++) {
+                    found_next_entry = false;
+                    if (split_up_fs[i] == root[e]->name) {
+                        kout << "Found Entry: " << root[e]->name << endl;
+
+                        auto new_root = get_directories(node, root[e]);
+
+                        for (size_t f = 0; f < root.size(); f++) {
+                            Memory::kfree(root[f]->name);
+                            Memory::kfree(root[f]);
+                        }
+                        root.delete_all();
+
+                        for (size_t f = 0; f < new_root.size(); f++) {
+                            root.push_back(new_root[f]);
+                        }
+
+                        found_next_entry = true;
+                        break;
+                    }
+                }
+
+                if (!found_next_entry) {
+                    kout << "Could not find entry: " << split_up_fs[i] << " in our directory!" << endl;
+
+                    response.responseStatus = vfs::request::DOES_NOT_EXIST;
+                    break;
+                }
+            }
+        }
+
+        for (int i = 0; i < split_up_fs.size(); i++) {
+            Memory::kfree(split_up_fs[i]);
+        }
+        split_up_fs.delete_all();
+
+        auto* resp = (vfs::request::buffer_t*) Memory::kmalloc(sizeof(vfs::request::buffer_t) * root.size() + sizeof(size_t));
+        for (int i = 0; i < root.size(); i++) {
+            resp[i].size = root[i]->nameleng + 1;
+            resp[i].storage = (u8*)Memory::kmalloc(resp[i].size);
+
+            memcpy(resp[i].storage, root[i]->name, resp[i].size);
+        }
+
+        response.buffer.storage = (u8*)resp;
+        response.buffer.size = root.size();
+
+        for (size_t i = 0; i < root.size(); i++) {
+            Memory::kfree(root[i]);
+        }
+        root.delete_all();
+
+        return response;
+    }
+    else {
+        kout << "[EXT2]: Request Not Supported!" << endl;
+        return {vfs::request::BAD_REQUEST};
+    }
+
+
+    return {vfs::request::ERROR};
+}

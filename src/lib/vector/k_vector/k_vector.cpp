@@ -214,4 +214,9 @@ void K_Vector<T>::delete_all() {
     }
 }
 
+template<class T>
+void K_Vector<T>::construct_pointer() {
+    ChangePointer(System::Memory::kmalloc((sizeof(T) * 1000) + (sizeof(data_base_t) * 10)));
+}
+
 

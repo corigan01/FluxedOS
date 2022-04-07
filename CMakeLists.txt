@@ -91,7 +91,7 @@ set (CXX
         src/System/fs/ext2.cpp
         src/System/fs/ext2.hpp
         src/System/fs/vfs.cpp
-        src/System/fs/vfs.hpp )
+        src/System/fs/vfs.hpp src/System/fs/vfs_impl.tcc)
 
 set_source_files_properties(${ASM} PROPERTIES LANGUAGE ASM_NASM)
 set_source_files_properties(${GAS} PROPERTIES LANGUAGE ASM)

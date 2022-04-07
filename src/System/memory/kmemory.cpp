@@ -33,13 +33,31 @@ using namespace System::Memory;
 Page_Entry* Pool;
 size_t Pool_Size;
 
+bool save_alloc = false;
+
 struct MemoryEntry
 {
     u32 Start;
     u32 End;
     bool Used;
 };
+
+enum DebugStatus {
+    EXACT_SIZE = 0,
+    RESIZE,
+    DEALLOC,
+    CONJOIN,
+    NEW
+};
+
+struct MemoryDebug {
+    MemoryEntry entry;
+    DebugStatus status;
+    size_t id = 0;
+};
+
 K_Vector<MemoryEntry> MemoryMap(0);
+K_Vector<MemoryDebug> DebugMap (0);
 
 void Memory::PrintMemoryMap(int addr) {
     kout << endl;
@@ -69,7 +87,7 @@ void Memory::init_memory(multiboot_info_t *mbt, u32 page_start, u32 page_end) {
     MemoryMap.ChangePointer((void*)(PAGEDIR_ADDRESS(page_start) + 1));
     // Now we need to give this memory area to MemoryMap
     // But we need to do it in a way that MemoryMap can read
-    for (int i = page_start + 1; i < page_end; i++) {
+    for (size_t i = page_start + 1; i < page_end; i++) {
         u32 Addr = PAGEDIR_ADDRESS(i);
 
         MemoryEntry entry = {
@@ -94,6 +112,8 @@ void Memory::init_memory(multiboot_info_t *mbt, u32 page_start, u32 page_end) {
 
     // Ok we should be done
     kout << "Starting memory manger: " << (page_end - (page_start + 1)) * 1024 << " pages available!" << endl;
+
+    DebugMap.construct_pointer();
 }
 
 
@@ -110,8 +130,9 @@ void Memory::SetPages(Page_Entry *pool, u32 size) {
             (u32)pool[i].ptr + PAGE_SIZE,
             false
         };
-        if ((u32)pool[i].ptr > 0) 
+        if ((u32)pool[i].ptr > 0) {
             MemoryMap.push_back(Current_Page);
+        }
     }
 
     for (u32 i = 0; i < MemoryMap.size(); i ++) {
@@ -159,10 +180,13 @@ void* Memory::kmalloc(size_t size) {
         u32 CurrentMemorySize = MemoryMap[i].End - MemoryMap[i].Start;
         //kout << "Found Memory at loc : " << (u32)MemoryMap[i].Start << " - " << (u32)MemoryMap[i].End << " [" << ((u32)MemoryMap[i].End - (u32)MemoryMap[i].Start)  << " bytes]" << endl; 
         if (!MemoryMap[i].Used && CurrentMemorySize != 0) {
-            
-
             if (CurrentMemorySize == size) {
-                MemoryMap[i].Used = 1;
+                MemoryMap[i].Used = true;
+
+                if (save_alloc) { // debugging mode
+                    MemoryDebug debug = {MemoryMap[i], EXACT_SIZE, i};
+                    DebugMap.push_back(debug);
+                }
 
                 //kout << "Found Exact Free Memory Size! " << endl;
 
@@ -186,6 +210,19 @@ void* Memory::kmalloc(size_t size) {
                 MemoryMap[i] = CurrentMemoryEntry;
                 MemoryMap.insert_at(i, NewMemoryEntry);
 
+                if (save_alloc) { // debugging mode
+
+                    for (size_t e = i + 1; e < DebugMap.size(); e++) {
+                        DebugMap[e].id++;
+                    }
+
+                    MemoryDebug debug = {NewMemoryEntry, NEW, i};
+                    DebugMap.push_back(debug);
+
+                    //debug = {CurrentMemoryEntry, RESIZE, i + 1};
+                    //DebugMap.push_back(debug);
+                }
+
                 //PrintMemoryMap(i);
 
                 memset((void*)MemoryStart, NULL, size);
@@ -202,14 +239,22 @@ void* Memory::kmalloc(size_t size) {
 }
 void Memory::kfree(void* ptr) {
     for (u32 i = 0; i < MemoryMap.size(); i++) {
-        if ((u32)ptr == MemoryMap[i].Start) {
-            MemoryMap[i].Used = 0;
-            //kout << "Freed memory at " << (u32)ptr << endl;
-            ConJoin(i);
+        if ((u32)ptr == MemoryMap[i].Start && MemoryMap[i].Used) {
+            MemoryMap[i].Used = false;
 
-            if (i > 0) {
-                ConJoin(i - 1);
+            if (save_alloc) { // debugging mode
+                MemoryDebug debug = {MemoryMap[i], DEALLOC, i};
+                DebugMap.push_back(debug);
             }
+
+            //kout << "Freed memory at " << (u32)ptr << endl;
+            if (!save_alloc) {
+                ConJoin(i);
+                if (i > 0) {
+                    ConJoin(i - 1);
+                }
+            }
+
             //ConJoin(i); // This causes a fault for some reason
             
             //PrintMemoryMap();
@@ -230,4 +275,144 @@ u32 Memory::MemRemaining() {
     }
 
     return total_mem;
+}
+
+u32 memory_start = 0;
+
+void Memory::start_debug() {
+    memory_start = MemRemaining();
+    save_alloc = true;
+}
+
+void Memory::end_debug() {
+    save_alloc = false;
+    u32 memory_diff = 0;
+    char sym = '-';
+
+    if (memory_start > MemRemaining()) {
+        memory_diff = memory_start - MemRemaining();
+        sym = '+';
+    }
+    else
+        memory_diff = MemRemaining() - memory_start;
+
+    kout << endl;
+    kout << "Kmalloc Debug Info" << endl;
+    kout << "\tMEMORY REMAINING\t" << MemRemaining() / MB << "MB" << endl;
+    kout << "\tMEMORY DIF      \t" << (sym == '+' ? kout.RED : kout.GREEN)  << sym << memory_diff << kout.YELLOW << endl;
+    kout << "\tDEBUG MAP -- TOTAL EVENTS: " << DebugMap.size() << endl;
+    kout << "\t\t| EVENT |  STATUS  | ID | USED |" << endl;
+    kout << "\t\t|-------|----------|----|------|" << endl;
+    for (int i = 0; i < DebugMap.size(); i++) {
+        char* stat = "";
+
+        switch (DebugMap[i].status) {
+            case RESIZE:
+                stat = "RESIZE ";
+                break;
+            case CONJOIN:
+                stat = "CONJOIN";
+                break;
+            case DEALLOC:
+                stat = "DEALLOC";
+                break;
+            case EXACT_SIZE:
+                stat = "EXACT  ";
+                break;
+            case NEW:
+                stat = "NEW    ";
+                break;
+            default:
+                stat = (char*)kout.ToString(DebugMap[i].status);
+                break;
+        }
+        kout << "\t\t|  " << i << (i < 10 ? "  " : (i < 100 ? " " : "")) << "  | " << stat << "  | " << DebugMap[i].id << " | " << (DebugMap[i].entry.Used ? kout.RED : kout.GREEN)
+                                                       << (DebugMap[i].entry.Used ? "USED" : "FREE") << kout.YELLOW
+                                                       << kout.YELLOW << " |" << endl;
+    }
+    kout << "\t\t|-------|----------|----|------|" << endl;
+
+    kout << "\tSorted DEBUG MAP" << endl;
+    kout << "\t\t| ID | STATUS |  MEMORY |  STAT   |" << endl;
+    kout << "\t\t|----|--------|---------|---------|" << endl;
+    K_Vector<u32> already_used;
+    u32 last_number = 0;
+
+    u32 size_of_last = 0;
+    char* subscript_of_last = "";
+
+    bool state_of_last = false;
+
+    for (int i = 0; i < DebugMap.size(); i++) {
+        u32 working_id = DebugMap[i].entry.Start;
+
+        bool already_used_index = false;
+        for (int e = 0; e < already_used.size(); e++) {
+            if (working_id == already_used[e]) {
+                already_used_index = true;
+                break;
+            }
+        }
+
+        if (already_used_index)
+            continue;
+
+        already_used.push_back(working_id);
+
+        if (last_number !=DebugMap[i].entry.Start) {
+            last_number = DebugMap[i].entry.Start;
+            if (state_of_last)
+                kout << "\t\t|    |" << kout.BOLD_RED << "   --- LEAK: " << size_of_last << " "
+                                       << subscript_of_last << (size_of_last > 9 ? (size_of_last > 99 ? "" : " " ) : "  ")
+                                       << " ---" << kout.YELLOW << "    |" << endl;
+            //kout << "\t\t|----|--------|---------|---------|" << endl;
+            kout << "\t\t|----|--------|---------|---------|" << endl;
+        }
+
+        for (int e = 0; e < DebugMap.size(); e++) {
+            if (working_id == DebugMap[i].entry.Start) {
+                char* stat = "";
+
+                switch (DebugMap[e].status) {
+                    case RESIZE:
+                        stat = "RESIZE ";
+                        break;
+                    case CONJOIN:
+                        stat = "CONJOIN";
+                        break;
+                    case DEALLOC:
+                        stat = "DEALLOC";
+                        break;
+                    case EXACT_SIZE:
+                        stat = "EXACT  ";
+                        break;
+                    case NEW:
+                        stat = "NEW    ";
+                        break;
+                    default:
+                        stat = (char*)kout.ToString(DebugMap[e].status);
+                        break;
+                }
+
+                size_of_last = (DebugMap[e].entry.End - DebugMap[e].entry.Start);
+
+                subscript_of_last = (char *)(size_of_last >= (1 _MB) ? " MB" : (size_of_last >= (1 _KB)
+                                                                                          ? " KB" : "  B"));
+
+                if (size_of_last >= (1 _MB)) size_of_last /= 1 _MB;
+                if (size_of_last >= (1 _KB)) size_of_last /= 1 _KB;
+
+                kout << "\t\t| " << DebugMap[e].id << " |  "
+                        << (DebugMap[e].entry.Used ? kout.RED : kout.GREEN)
+                        << (DebugMap[e].entry.Used ? "USED" : "FREE") << kout.YELLOW
+                        << "  | " << size_of_last << (size_of_last > 9 ? (size_of_last > 99 ? " " : "  " ) : "   ")
+                        << subscript_of_last << " | "
+                        << stat << " |" << endl;
+
+                state_of_last = DebugMap[e].entry.Used;
+            }
+        }
+        kout << "\t\t|----|--------|---------|---------|" << endl;
+    }
+    kout << endl;
 }

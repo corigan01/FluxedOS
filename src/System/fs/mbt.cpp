@@ -30,6 +30,8 @@ K_Vector<fs::partition_t*>* partitions;
 
 void System::fs::import_disk_partitions(System::Disk::disk_t disk) {
 
+    kout << "[MBT]: Searching Disk for partitions..." << endl;
+
     if (partitions == nullptr) {
         partitions = new K_Vector<fs::partition_t*>();
     }
@@ -38,7 +40,7 @@ void System::fs::import_disk_partitions(System::Disk::disk_t disk) {
 
 
     for (int e = 0; e < 4; e ++) {
-        partition_t *partition = (partition_t*)Memory::kmalloc(sizeof(partition_t));
+        auto *partition = (partition_t*)Memory::kmalloc(sizeof(partition_t));
 
         for (int i = 446 + (e * 16); i < 446 + ((e + 1) * 16); i++) {
             ((u8*)partition)[i - (446 + (e * 16))] = disk.read_write_buffer[i];
@@ -49,7 +51,7 @@ void System::fs::import_disk_partitions(System::Disk::disk_t disk) {
             memcpy(partition->disk, &disk, sizeof(Disk::disk_t));
 
             kout << endl;
-            kout << "New Disk partition \'" << e << "\' on disk \"" << partition->disk->name << "\" : " << endl;
+            kout << "[MBT]: New Disk partition \'" << e << "\' on disk \"" << partition->disk->name << "\" : " << endl;
             kout << "  - Drive Attributes\t:  " << partition->DriveAttributes << endl;
             kout << "  - PartitionType   \t:  " << partition->PartitionType << "\t<-- " << (partition->PartitionType == 0x83 ? "Valid Linux Partition" : "Unknown Partition") << endl;
             kout << "  - Start Sector    \t:  " << partition->lba << endl;
@@ -64,7 +66,7 @@ void System::fs::import_disk_partitions(System::Disk::disk_t disk) {
         }
     }
 
-    kout << "Partitions Number: " << partitions->size() << endl;
+    kout << "[MBT]: New Partitions Number: " << partitions->size() << endl;
 }
 
 K_Vector<fs::partition_t*>* System::fs::GetAllPartitions() {

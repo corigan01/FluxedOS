@@ -36,6 +36,7 @@ namespace System {
                 EXT2 = 0
             } fs_type;
             char* mount_point;
+            size_t index = 0;
         } fs_node_t;
 
         typedef char* path_t;
@@ -73,7 +74,7 @@ namespace System {
         void init(const char* root_mount_location);
 
         fs_node_t GetRootNode();
-        fs_node_t GetParentNode(path_t path);
+        fs_node_t GetChildNode(path_t path);
 
         K_Vector<char*> PathToVector(path_t path);
 
@@ -91,12 +92,15 @@ namespace System {
         void CreateFile(dir_t parent, const char* name);
 
         namespace vfs {
-            namespace response {
+            namespace request {
                 enum status {
                     ERROR = -1,
                     OK = 0,
                     WAIT = 1,
-                    DOES_NOT_EXIST = 2
+                    DOES_NOT_EXIST = 2,
+                    VALID = 3,
+                    BAD_REQUEST = 4,
+                    NOT_VALID = 5
                 };
 
                 typedef struct {
@@ -111,37 +115,72 @@ namespace System {
                     TOUCH,
                     APPEND,
                     WRITE,
-                    READ
+                    READ,
+                    INIT,
+                    DISCONNECT
                 };
             }
 
             typedef struct {
-                response::status responseStatus;
-                response::buffer_t buffer;
+                request::status responseStatus;
+                request::buffer_t buffer;
             } vfs_response_t;
 
+
+
+            vfs_response_t RunRequest(size_t index, vfs::request::type request, vfs::request::buffer_t buffer = {});
+
+            K_Vector<void*>& get_prv_data();
+            K_Vector<void*>& get_RequestServer();
+            K_Vector<fs::fs_node_t>& get_nodes();
+
+            request::buffer_t GetChildLocalPath(dir_t parent);
+
             template<class T, typename server>
-            bool AddNode(server s) {
+            bool AddNode(server s, fs_node_t node) {
+                vfs::vfs_response_t (*handler)(void *prv_data, fs_node_t node, vfs::request::type request,
+                        vfs::request::buffer_t buffer) = nullptr;
 
+                auto &RequestServer = get_RequestServer();
+                auto &prv_data = get_prv_data();
+                auto &nodes = get_nodes();
+
+                kout << endl;
+
+                if ( (u32)((void*)s) > 0 ) {
+                    handler = s;
+
+                    auto private_data_buffer = Memory::kmalloc(sizeof(T));
+
+                    kout << "[VFS]: Adding node to DB." << endl;
+
+                    RequestServer.push_back((void*)handler);
+                    prv_data.push_back(private_data_buffer);
+
+                    node.index = nodes.size();
+
+                    nodes.push_back(node);
+
+                    kout << "[VFS]: Running init request on FS." << endl;
+
+                    auto response = vfs::RunRequest(RequestServer.size() - 1, request::INIT);
+
+                    if (response.responseStatus == request::VALID) {
+                        kout << kout.GREEN << "[VFS]: Valid Node added!" << kout.YELLOW << endl;
+
+                        return true;
+                    }
+                    else {
+                        kout << kout.RED << "[VFS]: File System did not respond with a \'VALID\' response!" << kout.YELLOW << endl;
+
+                        return false;
+                    }
+                }
+
+                return false;
             }
         }
-        namespace ext2 {
-            vfs::vfs_response_t FileSystemServer (void* prv_data, fs_node_t node, vfs::response::type request,
-                                                  vfs::response::buffer_t buffer = {.size = 0}) {
 
-            }
-
-            typedef struct {
-                u8 example_data_that_ext2_would_need_to_store_in_a_buffer_to_make_it_work;
-            } file_system_info;
-        }
-
-
-
-
-        void test() {
-            vfs::AddNode<ext2::file_system_info>(ext2::FileSystemServer);
-        }
 
 
     }

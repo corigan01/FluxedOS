@@ -47,6 +47,9 @@ namespace System
         u32 MemRemaining();
 
         void PrintMemoryMap(int addr = -1);
+
+        void start_debug();
+        void end_debug();
     }
 }
 

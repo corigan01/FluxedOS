@@ -34,9 +34,12 @@ void System::Disk::init_all_disks() {
     // so we need to actually init it.
     disks.ChangePointer(kmalloc(1000 * sizeof(Disk::disk_t) + 10 * sizeof(Disk::disk_t)));
 
-    kout << "\nStarting Disk lookup..." << endl;
+    kout << endl;
+    kout << "[VDISK]: Beginning search for all disks..." << endl;
 
     PIO::init_driver();
+
+    kout << "[VDISK]: All Disks added!" << endl;
 }
 
 System::Disk::disk_t System::Disk::get_disk(u8 disk) {
@@ -49,7 +52,7 @@ u8 System::Disk::disk_count() {
 
 void System::Disk::add_disk(disk_t disk) {
 
-    kout << "\n\nSystem has detected a new Disk: " << endl;
+    kout << "\n[VDISK]: System has detected a new Disk: " << endl;
     kout << "\t - Name: " << disk.name << endl;
     kout << "\t - Data: 0x" << kout.ToHex((u32)disk.disk_info) << endl;
     kout << "\t - Disk: 0x" << kout.ToHex((u32)disk.disk_select) << endl;

@@ -139,11 +139,19 @@ namespace System {
 
             bool test_node(fs::fs_node_t node);
 
-            size_t num_of_dir_entries(directory_t parent);
-
-
             K_Vector<directory_t*> get_root_directory(System::fs::fs_node_t node);
             K_Vector<directory_t*> get_directories(fs_node_t node, directory_t *parent);
+
+
+
+            typedef struct {
+                superblock_t* superblock;
+                inode_t * current_directory_inode;
+                bool refresh_event;
+            } ext2_info_t;
+
+            vfs::vfs_response_t FileSystemServer (void* prv_data, fs_node_t node, vfs::request::type request,
+                                                  vfs::request::buffer_t buffer = {.size = 0});
 
         }
     }

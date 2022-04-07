@@ -148,7 +148,7 @@ void System::CPU::ISR::installISR(int irq, void(*handler)(register_t *r)) {
 }
 
 void System::CPU::ISR::uninstallISR(int irq) {
-    ISR_HANDLERS[irq] = 0;
+    ISR_HANDLERS[irq] = nullptr;
 }
 
 void Err_hanlder(struct regs *r) {

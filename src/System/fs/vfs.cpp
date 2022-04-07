@@ -24,31 +24,35 @@
 #include <System/fs/ext2.hpp>
 
 using namespace System;
+using namespace fs;
+using namespace vfs;
 
-K_Vector<fs::fs_node_t> NodeList;
+K_Vector<void*> prv_data;
+K_Vector<void*> RequestServer;
+K_Vector<fs::fs_node_t> nodes;
+
 const char* root_mount;
 
 void System::fs::init(const char* root_mount_location) {
     root_mount = root_mount_location;
 
-    NodeList.ChangePointer(Memory::kmalloc(sizeof(fs::fs_node_t) * 1010));
-}
-
-void System::fs::add_node(System::fs::fs_node_t node) {
-
-    kout << "Added fs node!" << endl;
-
-    if (ext2::test_node(node)) {
-        node.fs_type = fs::fs_node_t::EXT2;
-    }
-
-    NodeList.push_back(node);
+    nodes.construct_pointer();
+    RequestServer.construct_pointer();
+    prv_data.construct_pointer();
 }
 
 void System::fs::remove_node(const char *mount_point) {
-    for (int i = 0; i < NodeList.size(); i ++) {
-        if (NodeList[i].mount_point == mount_point) {
-            NodeList.pop_at(i);
+    for (int i = 0; i < nodes.size(); i ++) {
+        if (nodes[i].mount_point == mount_point) {
+            auto response = vfs::RunRequest(i, vfs::request::DISCONNECT);
+
+            if (response.responseStatus == vfs::request::OK) {
+                kout << "Safely removed node!" << endl;
+                nodes.pop_at(i);
+            }
+            else {
+                kout << "Node not removed!" << endl;
+            }
             break;
         }
     }
@@ -64,9 +68,9 @@ void fs::DeleteDir(fs::dir_t dir) {
 
 K_Vector<char*> fs::PathToVector(fs::dir_t path) {
     // Now we need to parse the parent for separators ('/')
-    K_Vector<int> separators;
+    K_Vector<size_t> separators;
 
-    // So we go through the array looking for any / characters, and then we
+    // So we go through the array looking for any '/' characters, and then we
     // append the index at which they were found.
     for (int i = 0; i < strlen(path); i++) {
         if (path[i] == '/')
@@ -80,20 +84,24 @@ K_Vector<char*> fs::PathToVector(fs::dir_t path) {
     // &> input  = "/Home/User/Test/"
     // &> output = {"Home", "User", "Test"}
     K_Vector<char*> directoryStrings;
+
+    directoryStrings.push_back("/");
+
     for (int i = 0; i < separators.size() - 1; i++) {
         size_t betweenSeperators = separators[i + 1] - separators[i];
-
         if (betweenSeperators > 0) {
             char* string = (char*) Memory::kmalloc(betweenSeperators + 1);
             string[betweenSeperators] = '\0';
 
-            for (int e = separators[i]; e < separators[i + 1] - 1; e++) {
+            for (size_t e = separators[i]; e < separators[i + 1] - 1; e++) {
                 string[e - separators[i]] = path[e + 1];
             }
 
             directoryStrings.push_back(string);
         }
     }
+
+
     return directoryStrings;
 }
 
@@ -104,115 +112,41 @@ K_Vector<fs::dir_t> fs::ListEntires(fs::dir_t parent) {
     ASSERT(parent[0] == '/');
     ASSERT(parent[strlen(parent) - 1] == '/')
 
-    // Get the node that is mounted closest to the parent
-    // If there is only one node that is mounted then it will be returned,
-    // but if there are multiple nodes with mount points inside other
-    // directories, then we need to find the node that is the highest up the
-    // chain of mounted disks.
-    auto node = fs::GetParentNode(parent);
+    kout << "Listing Entires" << endl;
 
-    auto directoryStrings = PathToVector(parent);
+    auto node = GetChildNode(parent);
+    auto request = GetChildLocalPath(parent);
 
-    // Now that we have the directories in little bite size pieces, we
-    // can ask the file system driver if it has any directories with the
-    // same name.
-    //
-    // This gets a little complex because we need to check this same
-    // process for each little piece we have. Once we check a piece,
-    // we then check if the next piece is inside the previous piece's
-    // directory.
-    //
-    // An example of what this snippet does can be described as follows:
-    // input = {"Home", "User", "Test"}
-    //
-    // FileSystem Root = {"Home", "etc", "root"}
-    //                    "Home" <-- Found the first element
-    //
-    // FileSystem "Home" = {"..", "Test", "User"}
-    //                                    "User" <-- Found the second element
-    //
-    // FileSystem "User" = {"Test"}
-    //                      "Test" <-- Found the last element
-    //
-    // FileSystem "Test" = {"MyDir", "MyFolders", "Documents"}
-    //
-    // Now that we have the filesystem tell us what's inside that directory,
-    // we are done! We just need to return its findings :)
-    //
-    // output = {"MyDir", "MyFolders", "Documents"};
-    K_Vector<fs::dir_t> directories;
-    if (node.fs_type == fs::fs_node_t::EXT2) {
-        auto workingDirectory = ext2::get_root_directory(node);
-        bool FoundDirectory = false;
+    kout << "Root of node: " << (char*)request.storage << endl;
+
+    auto rep = vfs::RunRequest(node.index, vfs::request::LIST_ENTRIES, request);
 
 
-        // Just return the root directory
-        if (directoryStrings.size() == 0 && strlen(parent) == 1) {
-            FoundDirectory = true;
-        }
-        else {
+    K_Vector<fs::dir_t> dir;
 
-            // Goes through each piece of what we put into 'parent'
-            for (int i = 0; i < directoryStrings.size(); i++) {
+    if (rep.responseStatus == vfs::request::OK) {
+        auto unpacked_response = (request::buffer_t*)rep.buffer.storage;
 
-                // Looks to find if any of the actual files looks like
-                // the piece we put into our 'directoryStrings'
-                for (int e = 0; e < workingDirectory.size(); e++) {
-                    if (strcmp(workingDirectory[e]->name, directoryStrings[i]) == 0) {
-                        FoundDirectory = true;
-
-                        auto newdir = ext2::get_directories(node, workingDirectory[e]);
-
-                        // Make sure to clean everything up
-                        for (int f = 0; f < workingDirectory.size(); f++) {
-                            Memory::kfree(workingDirectory[f]->name);
-                            Memory::kfree(workingDirectory[f]);
-                        }
-                        workingDirectory.delete_all();
-
-                        // Copy over the new vector
-                        for (int f = 0; f < newdir.size(); f++ ) {
-                            workingDirectory.push_back(newdir[f]);
-                        }
-
-                        break;
-                    }
-                }
-            }
+        for (int i = 0; i < rep.buffer.size; i++) {
+            auto unpacked_entry = unpacked_response[i];
+            dir.push_back((fs::dir_t)unpacked_entry.storage);
         }
 
-        // Now just return the names
-        if (FoundDirectory) {
-            for (int i = 0; i < workingDirectory.size(); i++) {
-                char* name = (char *)(Memory::kmalloc(workingDirectory[i]->nameleng + 1));
-                name[workingDirectory[i]->nameleng] = '\0';
-                memcpy(name, workingDirectory[i]->name, workingDirectory[i]->nameleng + 1);
-
-                directories.push_back(name);
-            }
-        }
-
-        // Some more cleanup
-        for (int i = 0; i < workingDirectory.size(); i++) {
-            Memory::kfree(workingDirectory[i]->name);
-            Memory::kfree(workingDirectory[i]);
-        }
+        Memory::kfree(unpacked_response);
     }
 
-    // our last and final cleanup
-    for (int i = 0; i < directoryStrings.size(); i++) {
-        Memory::kfree(directoryStrings[i]);
-    }
+    Memory::kfree(rep.buffer.storage);
+    Memory::kfree(request.storage);
 
-    // finally, return the nice little vector we made
-    return directories;
+    return dir;
 }
 
-fs::fs_node_t fs::GetParentNode(const char *path) {
+fs::fs_node_t fs::GetChildNode(path_t path) {
     auto closest_path = fs::GetRootNode();
 
-    for (size_t i = 0; i < NodeList.size(); i++) {
-        auto &node = NodeList[i];
+    for (size_t i = 0; i < nodes.size(); i++) {
+
+        auto node = nodes[i];
 
         ASSERT(closest_path.mount_point);
         ASSERT(node.mount_point);
@@ -224,15 +158,16 @@ fs::fs_node_t fs::GetParentNode(const char *path) {
     return closest_path;
 }
 
-
 void fs::CreateFile(fs::dir_t parent, const char *name) {
 
 }
 
 fs::fs_node_t fs::GetRootNode() {
-    for (size_t i = 0; i < NodeList.size(); i++) {
-        if (strcmp(NodeList[i].mount_point, "/") == 0)
-            return NodeList[i];
+    ASSERT(nodes.size());
+
+    for (size_t i = 0; i < nodes.size(); i++) {
+        if (strcmp(nodes[i].mount_point, "/") == 0)
+            return nodes[i];
     }
 
     return {};
@@ -249,11 +184,9 @@ fs::File fs::OpenFile(fs::dir_t path) {
     // but if there are multiple nodes with mount points inside other
     // directories, then we need to find the node that is the highest up the
     // chain of mounted disks.
-    auto node = fs::GetParentNode(path);
+    auto node = fs::GetChildNode(path);
 
     auto directoryString = PathToVector(path);
-
-
 
 
 }
@@ -301,4 +234,51 @@ const char *fs::File::GetFileName() {
 
 fs::dir_t fs::File::GetPath() {
     return nullptr;
+}
+
+
+vfs::vfs_response_t System::fs::vfs::RunRequest(size_t index, vfs::request::type request, vfs::request::buffer_t buffer) {
+    auto private_data = prv_data[index];
+    auto server_func = RequestServer[index];
+    auto server_node = nodes[index];
+
+    kout << "[VFS]: Calling Handler!" << endl;
+
+    auto handler = (System::fs::vfs::vfs_response_t (*)(
+            void*, fs_node_t, request::type, request::buffer_t))(server_func);
+
+
+    return handler(private_data, server_node, request, buffer);
+}
+
+K_Vector<void *> &vfs::get_prv_data() {
+    return prv_data;
+}
+
+K_Vector<void *> &vfs::get_RequestServer() {
+    return RequestServer;
+}
+
+K_Vector<fs::fs_node_t> &vfs::get_nodes() {
+    return nodes;
+}
+
+request::buffer_t vfs::GetChildLocalPath(dir_t parent) {
+    // Get the node that is mounted closest to the parent
+    // If there is only one node that is mounted then it will be returned,
+    // but if there are multiple nodes with mount points inside other
+    // directories, then we need to find the node that is the highest up the
+    // chain of mounted disks.
+    auto node = fs::GetChildNode(parent);
+
+    request::buffer_t request;
+    request.size = (strlen(parent) - strlen(node.mount_point)) + 2;
+    request.storage = (u8*)Memory::kmalloc(request.size);
+    request.storage[request.size - 1] = '\0';
+    for (int i = 1; i < strlen(node.mount_point) + 1; i++) {
+        request.storage[i] = parent[(i - 1) + strlen((node.mount_point))];
+    }
+    request.storage[0] = '/';
+
+    return request;
 }

@@ -103,13 +103,13 @@ u8 PIO::ide_check_device(u8 bus, u8 drive) {
     do {
         status = Port::byte_in(io + ATA_REG_STATUS);
         if (status & ATA_SR_ERR) {
-            kout.printf("%s%s has ERROR BIT SET.\n", ((bus == ATA_PRIMARY) ? "Primary" : "Secondary"),
+            kout.printf("[PIO]: %s%s has ERROR BIT SET.\n", ((bus == ATA_PRIMARY) ? "Primary" : "Secondary"),
                         ((drive == ATA_PRIMARY) ? " master" : " slave"));
             return 0;
         }
     } while (!(status & ATA_SR_DRQ));
 
-    kout.printf("%s%s is online.\n", ((bus == ATA_PRIMARY) ? "Primary" : "Secondary"),
+    kout.printf("[PIO]: %s%s is online.\n", ((bus == ATA_PRIMARY) ? "Primary" : "Secondary"),
                 ((drive == ATA_PRIMARY) ? " master" : " slave"));
 
     // Now, actually read the data
@@ -293,14 +293,13 @@ void PIO::ide_init_all() {
 }
 
 void PIO::init_driver() {
-    kout << "Setting IRQ" << endl;
+    kout << "[PIO]: Setting IRQ" << endl;
     CPU::IRQ::installIRQ(ATA_PRIMARY_IRQ, System::Disk::PIO::ata_primary_irq);
     CPU::IRQ::installIRQ(ATA_SECONDARY_IRQ, System::Disk::PIO::ata_secondary_irq);
 
     ide_buf = (u8 *)(Memory::kmalloc(512));
 
-    kout << "Looking for all Disks.." << endl;
-
+    kout << "[PIO]: Looking for all Disks.." << endl;
     PIO::ide_init_all();
 }
 

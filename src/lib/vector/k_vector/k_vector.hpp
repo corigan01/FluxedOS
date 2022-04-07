@@ -58,8 +58,10 @@ class K_Vector {
 
         void ChangePointer(void* p);
         void free_pointer();
+        void construct_pointer();
 
     public:
+
 
         void push_back(T data);
         void pop_back();

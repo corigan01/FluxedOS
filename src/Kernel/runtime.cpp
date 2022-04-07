@@ -130,7 +130,7 @@ void Kernel::system_init() {
     Disk::init_all_disks();
 
     // Get disk 0
-    Disk::disk_t master = Disk::get_disk(0);
+    Disk::disk_t master = Disk::get_disk(ATA_PRIMARY | ATA_MASTER);
 
     // Read the partitions of disk 'master'
     fs::import_disk_partitions(master);
@@ -150,12 +150,15 @@ void Kernel::system_init() {
         if (file_system_node.partition->PartitionType == fs::EXT2) {
             file_system_node.mount_point = "/";
 
-            fs::add_node(file_system_node);
+            fs::vfs::AddNode<fs::ext2::ext2_info_t>(fs::ext2::FileSystemServer, file_system_node);
+
             break;
         }
     }
 
+
     fs::dir_t path = "/";
+    start_debug();
     for (int i = 0; i < 1; i++) {
         auto dirs = fs::ListEntires(path);
 
@@ -169,10 +172,11 @@ void Kernel::system_init() {
         }
 
         dirs.delete_all();
-
     }
+    end_debug();
 
-    fs::File file = fs::OpenFile("/Hello/Wow.txt");
+
+    //fs::File file = fs::OpenFile("/Hello/Wow.txt");
 
 
     kout << endl;
