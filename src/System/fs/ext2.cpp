@@ -458,6 +458,7 @@ vfs::vfs_response_t ext2::FileSystemServer (void* prv_data, fs_node_t node, vfs:
         response.buffer.size = root.size();
 
         for (size_t i = 0; i < root.size(); i++) {
+            Memory::kfree(root[i]->name);
             Memory::kfree(root[i]);
         }
         root.delete_all();

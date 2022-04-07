@@ -184,7 +184,7 @@ void* Memory::kmalloc(size_t size) {
                 MemoryMap[i].Used = true;
 
                 if (save_alloc) { // debugging mode
-                    MemoryDebug debug = {MemoryMap[i], EXACT_SIZE, i};
+                    MemoryDebug debug = {MemoryMap[i], EXACT_SIZE, MemoryMap[i].Start};
                     DebugMap.push_back(debug);
                 }
 
@@ -212,14 +212,10 @@ void* Memory::kmalloc(size_t size) {
 
                 if (save_alloc) { // debugging mode
 
-                    for (size_t e = i + 1; e < DebugMap.size(); e++) {
-                        DebugMap[e].id++;
-                    }
-
-                    MemoryDebug debug = {NewMemoryEntry, NEW, i};
+                    MemoryDebug debug = {NewMemoryEntry, NEW, NewMemoryEntry.Start};
                     DebugMap.push_back(debug);
 
-                    //debug = {CurrentMemoryEntry, RESIZE, i + 1};
+                    //debug = {CurrentMemoryEntry, RESIZE, CurrentMemoryEntry.Start};
                     //DebugMap.push_back(debug);
                 }
 
@@ -243,7 +239,7 @@ void Memory::kfree(void* ptr) {
             MemoryMap[i].Used = false;
 
             if (save_alloc) { // debugging mode
-                MemoryDebug debug = {MemoryMap[i], DEALLOC, i};
+                MemoryDebug debug = {MemoryMap[i], DEALLOC, MemoryMap[i].Start};
                 DebugMap.push_back(debug);
             }
 
@@ -301,8 +297,8 @@ void Memory::end_debug() {
     kout << "\tMEMORY REMAINING\t" << MemRemaining() / MB << "MB" << endl;
     kout << "\tMEMORY DIF      \t" << (sym == '+' ? kout.RED : kout.GREEN)  << sym << memory_diff << kout.YELLOW << endl;
     kout << "\tDEBUG MAP -- TOTAL EVENTS: " << DebugMap.size() << endl;
-    kout << "\t\t| EVENT |  STATUS  | ID | USED |" << endl;
-    kout << "\t\t|-------|----------|----|------|" << endl;
+    kout << "\t\t| EVENT |  STATUS  |     ID     | USED |" << endl;
+    kout << "\t\t|-------|----------|------------|------|" << endl;
     for (int i = 0; i < DebugMap.size(); i++) {
         char* stat = "";
 
@@ -314,7 +310,7 @@ void Memory::end_debug() {
                 stat = "CONJOIN";
                 break;
             case DEALLOC:
-                stat = "DEALLOC";
+                stat = "FREE   ";
                 break;
             case EXACT_SIZE:
                 stat = "EXACT  ";
@@ -330,11 +326,11 @@ void Memory::end_debug() {
                                                        << (DebugMap[i].entry.Used ? "USED" : "FREE") << kout.YELLOW
                                                        << kout.YELLOW << " |" << endl;
     }
-    kout << "\t\t|-------|----------|----|------|" << endl;
+    kout << "\t\t|-------|----------|------------|------|" << endl;
 
     kout << "\tSorted DEBUG MAP" << endl;
-    kout << "\t\t| ID | STATUS |  MEMORY |  STAT   |" << endl;
-    kout << "\t\t|----|--------|---------|---------|" << endl;
+    kout << "\t\t|     ID     | STATUS |  MEMORY |  STAT   |" << endl;
+    kout << "\t\t|------------|--------|---------|---------|" << endl;
     K_Vector<u32> already_used;
     u32 last_number = 0;
 
@@ -344,10 +340,10 @@ void Memory::end_debug() {
     bool state_of_last = false;
 
     for (int i = 0; i < DebugMap.size(); i++) {
-        u32 working_id = DebugMap[i].entry.Start;
+        u32 working_id = DebugMap[i].id;
 
         bool already_used_index = false;
-        for (int e = 0; e < already_used.size(); e++) {
+        for (size_t e = 0; e < already_used.size(); e++) {
             if (working_id == already_used[e]) {
                 already_used_index = true;
                 break;
@@ -359,18 +355,18 @@ void Memory::end_debug() {
 
         already_used.push_back(working_id);
 
-        if (last_number !=DebugMap[i].entry.Start) {
-            last_number = DebugMap[i].entry.Start;
+        if (last_number != DebugMap[i].id) {
+            last_number  = DebugMap[i].id;
             if (state_of_last)
                 kout << "\t\t|    |" << kout.BOLD_RED << "   --- LEAK: " << size_of_last << " "
                                        << subscript_of_last << (size_of_last > 9 ? (size_of_last > 99 ? "" : " " ) : "  ")
                                        << " ---" << kout.YELLOW << "    |" << endl;
             //kout << "\t\t|----|--------|---------|---------|" << endl;
-            kout << "\t\t|----|--------|---------|---------|" << endl;
+            kout << "\t\t|------------|--------|---------|---------|" << endl;
         }
 
         for (int e = 0; e < DebugMap.size(); e++) {
-            if (working_id == DebugMap[i].entry.Start) {
+            if (working_id == DebugMap[e].id) {
                 char* stat = "";
 
                 switch (DebugMap[e].status) {
@@ -381,7 +377,7 @@ void Memory::end_debug() {
                         stat = "CONJOIN";
                         break;
                     case DEALLOC:
-                        stat = "DEALLOC";
+                        stat = "FREE   ";
                         break;
                     case EXACT_SIZE:
                         stat = "EXACT  ";
@@ -397,7 +393,7 @@ void Memory::end_debug() {
                 size_of_last = (DebugMap[e].entry.End - DebugMap[e].entry.Start);
 
                 subscript_of_last = (char *)(size_of_last >= (1 _MB) ? " MB" : (size_of_last >= (1 _KB)
-                                                                                          ? " KB" : "  B"));
+                        ? " KB" : "  B"));
 
                 if (size_of_last >= (1 _MB)) size_of_last /= 1 _MB;
                 if (size_of_last >= (1 _KB)) size_of_last /= 1 _KB;
@@ -412,7 +408,7 @@ void Memory::end_debug() {
                 state_of_last = DebugMap[e].entry.Used;
             }
         }
-        kout << "\t\t|----|--------|---------|---------|" << endl;
+        kout << "\t\t|------------|--------|---------|---------|" << endl;
     }
     kout << endl;
 }

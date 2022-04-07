@@ -158,7 +158,7 @@ void Kernel::system_init() {
 
 
     fs::dir_t path = "/";
-    start_debug();
+    //start_debug();
     for (int i = 0; i < 1; i++) {
         auto dirs = fs::ListEntires(path);
 
@@ -173,7 +173,7 @@ void Kernel::system_init() {
 
         dirs.delete_all();
     }
-    end_debug();
+    //end_debug();
 
 
     //fs::File file = fs::OpenFile("/Hello/Wow.txt");
