@@ -361,7 +361,7 @@ K_Vector<directory_t*> ext2::get_directories(System::fs::fs_node_t node, directo
 }
 
 bool System::fs::ext2::test_node(System::fs::fs_node_t node) {
-    kout << "Testing node..." << endl;
+    kout << "[EXT2]: Testing node..." << endl;
 
     // Get the Superblock
     superblock_t *Superblock = read_superblock(node);
