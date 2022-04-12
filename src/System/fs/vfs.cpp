@@ -85,8 +85,6 @@ K_Vector<char*> fs::PathToVector(fs::dir_t path) {
     // &> output = {"Home", "User", "Test"}
     K_Vector<char*> directoryStrings;
 
-    directoryStrings.push_back("/");
-
     for (int i = 0; i < separators.size() - 1; i++) {
         size_t betweenSeperators = separators[i + 1] - separators[i];
         if (betweenSeperators > 0) {
@@ -117,10 +115,9 @@ K_Vector<fs::dir_t> fs::ListEntires(fs::dir_t parent) {
     auto node = GetChildNode(parent);
     auto request = GetChildLocalPath(parent);
 
-    kout << "Root of node: " << (char*)request.storage << endl;
+    kout << "Local Path of node: \'" << (char*)request.storage << "\'" << endl;
 
     auto rep = vfs::RunRequest(node.index, vfs::request::LIST_ENTRIES, request);
-
 
     K_Vector<fs::dir_t> dir;
 
@@ -264,19 +261,15 @@ K_Vector<fs::fs_node_t> &vfs::get_nodes() {
 }
 
 request::buffer_t vfs::GetChildLocalPath(dir_t parent) {
-    // Get the node that is mounted closest to the parent
-    // If there is only one node that is mounted then it will be returned,
-    // but if there are multiple nodes with mount points inside other
-    // directories, then we need to find the node that is the highest up the
-    // chain of mounted disks.
     auto node = fs::GetChildNode(parent);
 
     request::buffer_t request;
-    request.size = (strlen(parent) - strlen(node.mount_point)) + 2;
+
+    request.size = (strlen(parent) - strlen(node.mount_point)) + 1;
     request.storage = (u8*)Memory::kmalloc(request.size);
-    request.storage[request.size - 1] = '\0';
-    for (int i = 1; i < strlen(node.mount_point) + 1; i++) {
-        request.storage[i] = parent[(i - 1) + strlen((node.mount_point))];
+
+    for (size_t i = strlen(node.mount_point) - 1; i < strlen(parent); i++) {
+        request.storage[i - (strlen(node.mount_point) - 1)] = parent[i];
     }
     request.storage[0] = '/';
 

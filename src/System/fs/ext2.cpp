@@ -397,6 +397,7 @@ vfs::vfs_response_t ext2::FileSystemServer (void* prv_data, fs_node_t node, vfs:
             return {vfs::request::NOT_VALID};
         }
     }
+    // List files REQUEST
     else if (request == vfs::request::LIST_ENTRIES) {
 
         vfs::vfs_response_t response = {vfs::request::OK};
@@ -404,25 +405,33 @@ vfs::vfs_response_t ext2::FileSystemServer (void* prv_data, fs_node_t node, vfs:
         auto root = get_root_directory(node);
         auto split_up_fs = fs::PathToVector((path_t)buffer.storage);
 
+        for (int i = 0; i < split_up_fs.size(); i++) {
+            kout << "SPLIT: " << split_up_fs[i] << endl;
+        }
+
         bool found_next_entry = false;
-        if (split_up_fs.size() == 1) {
+        if (split_up_fs.size() == 0) {
             kout << "Root dir!" << endl;
         }
         else {
-            for (int i = 1; i < split_up_fs.size(); i++) {
+            for (int i = 0; i < split_up_fs.size(); i++) {
                 for (int e = 0; e < root.size(); e++) {
                     found_next_entry = false;
-                    if (split_up_fs[i] == root[e]->name) {
+                    if (strcmp(split_up_fs[i], root[e]->name) == 0) {
                         kout << "Found Entry: " << root[e]->name << endl;
 
+                        kout << "Updating path" << endl;
                         auto new_root = get_directories(node, root[e]);
 
+                        kout << "freeing old path" << endl;
                         for (size_t f = 0; f < root.size(); f++) {
                             Memory::kfree(root[f]->name);
                             Memory::kfree(root[f]);
                         }
                         root.delete_all();
 
+
+                        kout << "Pushing new path" << endl;
                         for (size_t f = 0; f < new_root.size(); f++) {
                             root.push_back(new_root[f]);
                         }
@@ -433,7 +442,7 @@ vfs::vfs_response_t ext2::FileSystemServer (void* prv_data, fs_node_t node, vfs:
                 }
 
                 if (!found_next_entry) {
-                    kout << "Could not find entry: " << split_up_fs[i] << " in our directory!" << endl;
+                    kout << "Could not find entry \"" << split_up_fs[i] << "\" in our directory!" << endl;
 
                     response.responseStatus = vfs::request::DOES_NOT_EXIST;
                     break;

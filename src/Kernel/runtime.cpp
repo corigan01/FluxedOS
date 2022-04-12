@@ -157,7 +157,7 @@ void Kernel::system_init() {
     }
 
 
-    fs::dir_t path = "/";
+    fs::dir_t path = "/Hello/";
     //start_debug();
     for (int i = 0; i < 1; i++) {
         auto dirs = fs::ListEntires(path);
