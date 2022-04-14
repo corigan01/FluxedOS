@@ -41,11 +41,14 @@ namespace System {
 
         typedef char* path_t;
         typedef path_t dir_t;
+        typedef path_t file_name_t;
 
         typedef struct {
             u8* block;
             u32 size;
         } data_block_t;
+
+
 
         class File {
         private:
@@ -119,7 +122,21 @@ namespace System {
                     INIT,
                     DISCONNECT
                 };
+
+                enum file_type {
+                    DIR = 0,
+                    FILE,
+                    DISK,
+                    VDEV
+                };
             }
+
+            typedef struct {
+                file_name_t fileName;
+                size_t size;
+                path_t path;
+                request::file_type fileType;
+            } vfs_file_info_t;
 
             typedef struct {
                 request::status responseStatus;
@@ -135,6 +152,8 @@ namespace System {
             K_Vector<fs::fs_node_t>& get_nodes();
 
             request::buffer_t GetChildLocalPath(dir_t parent);
+
+            vfs_file_info_t get_file_info(dir_t path);
 
             template<class T, typename server>
             bool AddNode(server s, fs_node_t node) {

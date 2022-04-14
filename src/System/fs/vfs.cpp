@@ -266,12 +266,35 @@ request::buffer_t vfs::GetChildLocalPath(dir_t parent) {
     request::buffer_t request;
 
     request.size = (strlen(parent) - strlen(node.mount_point)) + 1;
-    request.storage = (u8*)Memory::kmalloc(request.size);
+    request.storage = (u8*)Memory::kmalloc(request.size + 1);
 
     for (size_t i = strlen(node.mount_point) - 1; i < strlen(parent); i++) {
         request.storage[i - (strlen(node.mount_point) - 1)] = parent[i];
     }
+
+    // Make sure the first and last element are '/'
     request.storage[0] = '/';
+    request.storage[request.size - 1] = '/';
+
+    // Close the string with a null char
+    request.storage[request.size] = '\0';
 
     return request;
+}
+
+vfs::vfs_file_info_t vfs::get_file_info(dir_t path) {
+    ASSERT(strlen(path));
+    ASSERT(path[0] == '/');
+    ASSERT(path[strlen(path) - 1] == '/')
+
+    kout << "Listing Entires" << endl;
+
+    auto node = GetChildNode(path);
+    auto request = GetChildLocalPath(path);
+
+    kout << "Local Path of node: \'" << (char*)request.storage << "\'" << endl;
+
+    auto rep = vfs::RunRequest(node.index, vfs::request::GET_ENTRY, request);
+
+    return {};
 }

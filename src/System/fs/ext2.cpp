@@ -376,6 +376,106 @@ bool System::fs::ext2::test_node(System::fs::fs_node_t node) {
     return superblockSuccess;
 }
 
+K_Vector<directory_t*> System::fs::ext2::get_entries_from_path(path_t path, fs_node_t node) {
+    auto root = get_root_directory(node);
+    auto split_up_fs = fs::PathToVector(path);
+
+    for (int i = 0; i < split_up_fs.size(); i++) {
+        kout << "SPLIT: " << split_up_fs[i] << endl;
+    }
+
+    bool found_next_entry = false;
+    if (split_up_fs.size() == 0) {
+        kout << "Root dir!" << endl;
+
+    } else {
+        for (int i = 0; i < split_up_fs.size(); i++) {
+            for (int e = 0; e < root.size(); e++) {
+                found_next_entry = false;
+                if (strcmp(split_up_fs[i], root[e]->name) == 0) {
+
+                    auto new_root = get_directories(node, root[e]);
+
+                    for (size_t f = 0; f < root.size(); f++) {
+                        Memory::kfree(root[f]->name);
+                        Memory::kfree(root[f]);
+                    }
+                    root.delete_all();
+
+
+                    for (size_t f = 0; f < new_root.size(); f++) {
+                        root.push_back(new_root[f]);
+                    }
+
+                    found_next_entry = true;
+                    break;
+                }
+            }
+
+            if (!found_next_entry) {
+                kout << "Could not find entry \"" << split_up_fs[i] << "\" in our directory!" << endl;
+
+                return {};
+                break;
+            }
+        }
+    }
+
+    for (int i = 0; i < split_up_fs.size(); i++) {
+        Memory::kfree(split_up_fs[i]);
+    }
+
+    return root;
+}
+
+directory_t* get_entry_from_path(path_t path, fs_node_t node) {
+    path_t file_name;
+    size_t begin = 0;
+
+    for (size_t i = strlen(path) - 2; i > 0; i--) {
+        if (path[i] == '/') {
+            path[i + 1] = '\0';
+            begin = i;
+            break;
+        }
+    }
+    file_name = (path_t) Memory::kmalloc((strlen(path) - begin) * sizeof(path_t));
+
+    for (size_t i = begin; i < strlen(path); i++) {
+        file_name[i - begin] = path[i];
+    }
+
+    kout << "Directory: \"" << path << "\" File name: \"" << file_name << "\"" << endl;
+
+    directory_t* dir = nullptr;
+
+    if (strcmp(path, "/") == 0) {
+        kout << "Working in a root dir" << endl;
+    }
+
+    auto entries = get_entries_from_path(path, node);
+
+    kout << entries.size() << endl;
+
+    for (size_t i = 0; i < entries.size(); i++) {
+        kout << "Found Entry: " << entries[i]->name << endl;
+        if (strcmp(entries[i]->name, "..") == 0) {
+            dir = entries[i];
+        }
+    }
+
+    for (size_t i = 0; i < entries.size(); i++) {
+        if (entries[i] != dir) {
+            Memory::kfree(entries[i]->name);
+            Memory::kfree(entries[i]);
+        }
+    }
+
+    Memory::kfree(file_name);
+
+    return dir;
+}
+
 
 vfs::vfs_response_t ext2::FileSystemServer (void* prv_data, fs_node_t node, vfs::request::type request,
                                       vfs::request::buffer_t buffer) {
@@ -402,75 +502,33 @@ vfs::vfs_response_t ext2::FileSystemServer (void* prv_data, fs_node_t node, vfs:
 
         vfs::vfs_response_t response = {vfs::request::OK};
 
-        auto root = get_root_directory(node);
-        auto split_up_fs = fs::PathToVector((path_t)buffer.storage);
+        auto root = get_entries_from_path((path_t)buffer.storage, node);
 
-        for (int i = 0; i < split_up_fs.size(); i++) {
-            kout << "SPLIT: " << split_up_fs[i] << endl;
-        }
-
-        bool found_next_entry = false;
-        if (split_up_fs.size() == 0) {
-            kout << "Root dir!" << endl;
-        }
-        else {
-            for (int i = 0; i < split_up_fs.size(); i++) {
-                for (int e = 0; e < root.size(); e++) {
-                    found_next_entry = false;
-                    if (strcmp(split_up_fs[i], root[e]->name) == 0) {
-                        kout << "Found Entry: " << root[e]->name << endl;
-
-                        kout << "Updating path" << endl;
-                        auto new_root = get_directories(node, root[e]);
-
-                        kout << "freeing old path" << endl;
-                        for (size_t f = 0; f < root.size(); f++) {
-                            Memory::kfree(root[f]->name);
-                            Memory::kfree(root[f]);
-                        }
-                        root.delete_all();
-
-
-                        kout << "Pushing new path" << endl;
-                        for (size_t f = 0; f < new_root.size(); f++) {
-                            root.push_back(new_root[f]);
-                        }
-
-                        found_next_entry = true;
-                        break;
-                    }
-                }
-
-                if (!found_next_entry) {
-                    kout << "Could not find entry \"" << split_up_fs[i] << "\" in our directory!" << endl;
-
-                    response.responseStatus = vfs::request::DOES_NOT_EXIST;
-                    break;
-                }
-            }
-        }
-
-        for (int i = 0; i < split_up_fs.size(); i++) {
-            Memory::kfree(split_up_fs[i]);
-        }
-        split_up_fs.delete_all();
-
-        auto* resp = (vfs::request::buffer_t*) Memory::kmalloc(sizeof(vfs::request::buffer_t) * root.size() + sizeof(size_t));
+        auto *resp = (vfs::request::buffer_t *) Memory::kmalloc(
+                sizeof(vfs::request::buffer_t) * root.size() + sizeof(size_t));
         for (int i = 0; i < root.size(); i++) {
             resp[i].size = root[i]->nameleng + 1;
-            resp[i].storage = (u8*)Memory::kmalloc(resp[i].size);
+            resp[i].storage = (u8 *) Memory::kmalloc(resp[i].size);
 
             memcpy(resp[i].storage, root[i]->name, resp[i].size);
         }
 
-        response.buffer.storage = (u8*)resp;
+        response.buffer.storage = (u8 *) resp;
         response.buffer.size = root.size();
 
         for (size_t i = 0; i < root.size(); i++) {
             Memory::kfree(root[i]->name);
             Memory::kfree(root[i]);
         }
-        root.delete_all();
+
+        return response;
+    }
+    else if (request == vfs::request::GET_ENTRY) {
+        vfs::vfs_response_t response = {vfs::request::OK};
+
+        auto entry = get_entry_from_path((path_t)buffer.storage, node);
+
+        kout << "Looks like we got: " << entry->name << endl;
 
         return response;
     }

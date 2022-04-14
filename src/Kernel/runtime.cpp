@@ -157,9 +157,8 @@ void Kernel::system_init() {
     }
 
 
-    fs::dir_t path = "/Hello/";
-    //start_debug();
-    for (int i = 0; i < 1; i++) {
+    fs::dir_t path = "/";
+    {
         auto dirs = fs::ListEntires(path);
 
         kout << "Printing Directories!" << endl;
@@ -173,7 +172,11 @@ void Kernel::system_init() {
 
         dirs.delete_all();
     }
-    //end_debug();
+
+    start_debug();
+
+    auto file_info = fs::vfs::get_file_info(path);
+    end_debug();
 
 
     //fs::File file = fs::OpenFile("/Hello/Wow.txt");

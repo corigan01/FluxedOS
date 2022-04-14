@@ -204,12 +204,17 @@ T& K_Vector<T>::operator [](size_t s) {
 
 template <class T>
 K_Vector<T>& K_Vector<T>::operator =(K_Vector s) {
-    return *this;
+    // Basically delete our own class and start new
+    delete_all();
+
+    for (size_t i = 0; i < s.size(); i++) {
+        this->push_back(s[i]);
+    }
 }
 
 template <class T>
 void K_Vector<T>::delete_all() {
-    for (int i = 0; size() != 0; i++) {
+    while (this->size() != 0) {
         pop_back();
     }
 }
@@ -217,6 +222,30 @@ void K_Vector<T>::delete_all() {
 template<class T>
 void K_Vector<T>::construct_pointer() {
     ChangePointer(System::Memory::kmalloc((sizeof(T) * 1000) + (sizeof(data_base_t) * 10)));
+}
+
+template<class T>
+K_Vector<T>::K_Vector(K_Vector && vec)  noexcept {
+
+    // Basically delete our own class and start new
+    construct_pointer();
+    delete_all();
+
+
+    for (size_t i = 0; i < vec.size(); i++) {
+        this->push_back(vec[i]);
+    }
+}
+
+template<class T>
+K_Vector<T>::K_Vector(const K_Vector & vec) {
+    // Basically delete our own class and start new
+    construct_pointer();
+    delete_all();
+
+    for (size_t i = 0; i < vec.size(); i++) {
+        this->push_back(vec[i]);
+    }
 }
 
 

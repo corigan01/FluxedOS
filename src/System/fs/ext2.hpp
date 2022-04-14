@@ -141,10 +141,11 @@ namespace System {
 
             K_Vector<directory_t*> get_root_directory(System::fs::fs_node_t node);
             K_Vector<directory_t*> get_directories(fs_node_t node, directory_t *parent);
+            K_Vector<directory_t*> get_entries_from_path(path_t path, fs_node_t node);
 
 
 
-            typedef struct {
+                typedef struct {
                 superblock_t* superblock;
                 inode_t * current_directory_inode;
                 bool refresh_event;

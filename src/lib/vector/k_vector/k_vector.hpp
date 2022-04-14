@@ -53,6 +53,8 @@ class K_Vector {
 
         K_Vector(size_t loc);
         K_Vector();
+        K_Vector(K_Vector&&) noexcept ;
+        K_Vector(const K_Vector&);
         
         ~K_Vector();
 
