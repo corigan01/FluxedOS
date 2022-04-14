@@ -127,7 +127,8 @@ namespace System {
                     DIR = 0,
                     FILE,
                     DISK,
-                    VDEV
+                    VDEV,
+                    UNKNOWN
                 };
             }
 

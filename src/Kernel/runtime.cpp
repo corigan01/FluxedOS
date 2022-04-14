@@ -141,7 +141,6 @@ void Kernel::system_init() {
     // init vfs
     fs::init("/");
 
-
     // Look through all the partitions and find the one that is EXT2
     for (int i = 0; i < DiskList->size(); i ++) {
         fs::fs_node_t file_system_node;
@@ -157,7 +156,7 @@ void Kernel::system_init() {
     }
 
 
-    fs::dir_t path = "/";
+    fs::dir_t path = "/Hello/";
     {
         auto dirs = fs::ListEntires(path);
 

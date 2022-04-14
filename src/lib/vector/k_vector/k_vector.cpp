@@ -226,11 +226,9 @@ void K_Vector<T>::construct_pointer() {
 
 template<class T>
 K_Vector<T>::K_Vector(K_Vector && vec)  noexcept {
-
     // Basically delete our own class and start new
     construct_pointer();
     delete_all();
-
 
     for (size_t i = 0; i < vec.size(); i++) {
         this->push_back(vec[i]);
